@@ -1,19 +1,20 @@
-import { createSignal, Show, For } from 'solid-js';
+import { createSignal, Show } from 'solid-js';
 import { createRouteAction } from 'solid-start';
 
 import InputField from '~/components/InputField';
 import Button from '~/components/Button';
+import FieldList from '~/components/FieldList';
 
 import type { FormData } from 'undici';
 
-type CompanyField = { key: string; value: string };
+export type Field = { key: string; value: string };
 
-const initData: CompanyField = { key: '', value: '' };
+const initData: Field = { key: '', value: '' };
 
 export default function Home() {
 	const [showAddCompany, setShowAddCompay] = createSignal(false);
-	const [companyField, setCompanyField] = createSignal<CompanyField>(initData);
-	const [companyData, setCompanyData] = createSignal<CompanyField[]>([]);
+	const [companyField, setCompanyField] = createSignal<Field>(initData);
+	const [companyData, setCompanyData] = createSignal<Field[]>([]);
 
 	const [{ pending }, { Form }] = createRouteAction(
 		async (formData: FormData) => {
@@ -50,54 +51,45 @@ export default function Home() {
 			<h1 class="text-4xl">Simply Invoice</h1>
 
 			<Form>
-				<div>
-					<h3 class="text-2xl">Company Data</h3>
+				<h3 class="text-2xl">Company Data</h3>
 
-					<InputField id="company-name" label="Company Name" />
+				<InputField id="company-name" label="Company Name" />
+				<FieldList fields={companyData()} />
 
-					<For each={companyData()}>
-						{(data) => {
-							return (
-								<InputField id={data.key} label={data.key} value={data.value} />
-							);
-						}}
-					</For>
+				<div class="my-6">
+					<Show when={showAddCompany()}>
+						<InputField
+							id="company-field-title"
+							label="Field Title"
+							value={companyField().key}
+							handleOnInput={(value) => handleOnInput('key', value)}
+						/>
 
-					<div class="my-6">
-						<Show when={showAddCompany()}>
-							<InputField
-								id="company-field-title"
-								label="Field Title"
-								value={companyField().key}
-								handleOnInput={(value) => handleOnInput('key', value)}
-							/>
+						<InputField
+							id="company-field-value"
+							label="Field Value"
+							value={companyField().value}
+							handleOnInput={(value) => handleOnInput('value', value)}
+						/>
 
-							<InputField
-								id="company-field-value"
-								label="Field Value"
-								value={companyField().value}
-								handleOnInput={(value) => handleOnInput('value', value)}
-							/>
+						<Button text="Add New Company Field" onClick={AddCompanyField} />
+					</Show>
 
-							<Button text="Add New Company Field" onClick={AddCompanyField} />
-						</Show>
-
-						<div>
-							<Show
-								when={showAddCompany()}
-								fallback={
-									<Button
-										text="Show New Company Field"
-										onClick={() => toggleCompanyField(true)}
-									/>
-								}
-							>
+					<div>
+						<Show
+							when={showAddCompany()}
+							fallback={
 								<Button
-									text="Hide New Company Field"
-									onClick={() => toggleCompanyField(false)}
+									text="Show New Company Field"
+									onClick={() => toggleCompanyField(true)}
 								/>
-							</Show>
-						</div>
+							}
+						>
+							<Button
+								text="Hide New Company Field"
+								onClick={() => toggleCompanyField(false)}
+							/>
+						</Show>
 					</div>
 				</div>
 			</Form>
