@@ -1,6 +1,9 @@
 import { createSignal, Show, For } from 'solid-js';
 import { createRouteAction } from 'solid-start';
 
+import InputField from '~/components/InputField';
+import Button from '~/components/Button';
+
 import type { FormData } from 'undici';
 
 type CompanyField = { key: string; value: string };
@@ -21,8 +24,7 @@ export default function Home() {
 		},
 	);
 
-	const toggleField = (event: MouseEvent, toggleShow: boolean) => {
-		event.preventDefault();
+	const toggleCompanyField = (toggleShow: boolean) => {
 		setShowAddCompay(toggleShow);
 
 		if (!toggleShow) {
@@ -30,8 +32,14 @@ export default function Home() {
 		}
 	};
 
-	const AddCompanyField = (event: MouseEvent) => {
-		event.preventDefault();
+	const handleOnInput = (key: string, value: string) => {
+		setCompanyField({
+			...companyField(),
+			[key]: value,
+		});
+	};
+
+	const AddCompanyField = () => {
 		setCompanyData((data) => [...data, companyField()]);
 		setShowAddCompay(false);
 		setCompanyField(initData);
@@ -45,126 +53,52 @@ export default function Home() {
 				<div>
 					<h3 class="text-2xl">Company Data</h3>
 
-					<div class="my-6">
-						<label for="company-name">Company name:</label>
-						<input
-							type="text"
-							id="company-name"
-							name="company-name"
-							class="block rounded-md border-2 border-gray-500 px-4 py-2"
-						/>
-					</div>
+					<InputField id="company-name" label="Company Name" />
 
 					<For each={companyData()}>
 						{(data) => {
 							return (
-								<div class="my-6">
-									<label for={data.key}>{data.key}</label>
-									<input
-										type="text"
-										id={data.key}
-										name={data.key}
-										value={data.value}
-										readOnly
-										class="block rounded-md border-2 border-gray-500 px-4 py-2"
-									/>
-								</div>
+								<InputField id={data.key} label={data.key} value={data.value} />
 							);
 						}}
 					</For>
 
 					<div class="my-6">
 						<Show when={showAddCompany()}>
-							<div class="my-6">
-								<label for="company-field-title">Field Title:</label>
-								<input
-									type="text"
-									id="company-field-title"
-									name="company-field-title"
-									value={companyField().key}
-									onInput={(e) =>
-										setCompanyField({
-											...companyField(),
-											key: e.currentTarget.value,
-										})
-									}
-									class="block rounded-md border-2 border-gray-500 px-4 py-2"
-								/>
-							</div>
+							<InputField
+								id="company-field-title"
+								label="Field Title"
+								value={companyField().key}
+								handleOnInput={(value) => handleOnInput('key', value)}
+							/>
 
-							<div class="my-6">
-								<label for="company-field-value">Field Value:</label>
-								<input
-									type="text"
-									id="company-field-value"
-									name="company-field-value"
-									value={companyField().value}
-									onInput={(e) =>
-										setCompanyField({
-											...companyField(),
-											value: e.currentTarget.value,
-										})
-									}
-									class="block rounded-md border-2 border-gray-500 px-4 py-2"
-								/>
-							</div>
+							<InputField
+								id="company-field-value"
+								label="Field Value"
+								value={companyField().value}
+								handleOnInput={(value) => handleOnInput('value', value)}
+							/>
 
-							<button
-								type="button"
-								class="my-6 rounded-md bg-blue-400 px-6 py-2"
-								onClick={AddCompanyField}
-							>
-								Add New Company Field
-							</button>
+							<Button text="Add New Company Field" onClick={AddCompanyField} />
 						</Show>
 
 						<div>
 							<Show
 								when={showAddCompany()}
 								fallback={
-									<button
-										type="button"
-										class="rounded-md bg-blue-400 px-6 py-2"
-										onClick={(event) => toggleField(event, true)}
-									>
-										Show New Company Field
-									</button>
+									<Button
+										text="Show New Company Field"
+										onClick={() => toggleCompanyField(true)}
+									/>
 								}
 							>
-								<button
-									type="button"
-									class="rounded-md bg-blue-400 px-6 py-2"
-									onClick={(event) => toggleField(event, false)}
-								>
-									Hide New Company Field
-								</button>
+								<Button
+									text="Hide New Company Field"
+									onClick={() => toggleCompanyField(false)}
+								/>
 							</Show>
 						</div>
 					</div>
-				</div>
-
-				<div>
-					<h3 class="text-2xl">Client Data</h3>
-
-					<div class="my-6">
-						<label for="client-name">Client Name:</label>
-						<input
-							type="text"
-							id="client-name"
-							name="client-name"
-							class="block rounded-md border-2 border-gray-500 px-4 py-2"
-						/>
-					</div>
-				</div>
-
-				<div class="my-6">
-					<button
-						type="submit"
-						disabled={pending}
-						class="rounded-md bg-blue-400 px-6 py-2"
-					>
-						Submit
-					</button>
 				</div>
 			</Form>
 		</div>
