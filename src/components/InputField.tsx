@@ -5,7 +5,7 @@ type InputFieldProps = {
 	label: string;
 	type?: string;
 	value?: string;
-	handleOnInput?: (value: string) => void;
+	onInput?: (value: string) => void;
 };
 
 export default function InputField(props: InputFieldProps) {
@@ -14,8 +14,8 @@ export default function InputField(props: InputFieldProps) {
 	const handleInputChange: JSX.EventHandler<HTMLInputElement, InputEvent> = (
 		event,
 	) => {
-		if (props.handleOnInput) {
-			props.handleOnInput(event.currentTarget.value);
+		if (props.onInput) {
+			props.onInput(event.currentTarget.value);
 		}
 	};
 
