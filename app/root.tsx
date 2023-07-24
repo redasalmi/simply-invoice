@@ -7,7 +7,7 @@ import {
 	ScrollRestoration,
 } from '@remix-run/react';
 
-import { Navbar } from '~/components/Navbar';
+import { Navbar } from '~/components';
 
 import styles from '~/tailwind.css';
 
