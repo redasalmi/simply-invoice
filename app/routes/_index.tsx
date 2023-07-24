@@ -1,41 +1,34 @@
-import type { V2_MetaFunction } from '@remix-run/node';
+import { useFetcher } from '@remix-run/react';
 
-export const meta: V2_MetaFunction = () => {
-	return [
-		{ title: 'New Remix App' },
-		{ name: 'description', content: 'Welcome to Remix!' },
-	];
-};
+import { FormField, Button } from '~/components';
 
-export default function Index() {
+export default function Home() {
+	const fetcher = useFetcher();
+
 	return (
-		<div style={{ fontFamily: 'system-ui, sans-serif', lineHeight: '1.8' }}>
-			<h1>Welcome to Remix</h1>
-			<ul>
-				<li>
-					<a
-						target="_blank"
-						href="https://remix.run/tutorials/blog"
-						rel="noreferrer"
-					>
-						15m Quickstart Blog Tutorial
-					</a>
-				</li>
-				<li>
-					<a
-						target="_blank"
-						href="https://remix.run/tutorials/jokes"
-						rel="noreferrer"
-					>
-						Deep Dive Jokes App Tutorial
-					</a>
-				</li>
-				<li>
-					<a target="_blank" href="https://remix.run/docs" rel="noreferrer">
-						Remix Docs
-					</a>
-				</li>
-			</ul>
-		</div>
+		<main className="container mx-auto">
+			<h1 className="text-4xl">Simply Invoice</h1>
+
+			<fetcher.Form action="/pdf" method="POST">
+				<h3 className="mt-6 text-2xl">Company Data</h3>
+
+				<FormField
+					id="company-name"
+					name="company-name"
+					label="Name"
+					className="my-1"
+				/>
+				<FormField
+					id="company-address"
+					name="company-address"
+					label="Address"
+					className="my-1"
+				/>
+
+				<div className="my-2">
+					<Button text="Submit" type="submit" />
+				</div>
+			</fetcher.Form>
+		</main>
 	);
 }
