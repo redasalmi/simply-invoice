@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Form } from '@remix-run/react';
+import { useFetcher } from '@remix-run/react';
 
 import { FormField, Button } from '~/components';
 
@@ -14,6 +14,7 @@ const titleFieldId = 'field-title';
 const contentFieldId = 'field-content';
 
 export function AddFormField({ fieldPrefix, setFields }: AddFormFieldProps) {
+	const fetcher = useFetcher();
 	const [showField, setShowField] = React.useState(false);
 
 	const toggleField = () => setShowField((show) => !show);
@@ -39,7 +40,7 @@ export function AddFormField({ fieldPrefix, setFields }: AddFormFieldProps) {
 	};
 
 	return (
-		<Form onSubmit={handleSubmit}>
+		<fetcher.Form onSubmit={handleSubmit}>
 			{showField ? (
 				<>
 					<FormField name={titleFieldId} label="Field Title" className="my-1" />
@@ -63,6 +64,6 @@ export function AddFormField({ fieldPrefix, setFields }: AddFormFieldProps) {
 					<Button type="submit" text="Save New Field" className="ml-4" />
 				) : null}
 			</div>
-		</Form>
+		</fetcher.Form>
 	);
 }
