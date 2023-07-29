@@ -23,7 +23,7 @@ export const loader: LoaderFunction = async () => {
 	return json(`data:application/pdf;base64,${body.toString('base64')}`);
 };
 
-export default function Pdf() {
+export default function PdfRoute() {
 	const data = useLoaderData();
 
 	return (

@@ -8,7 +8,7 @@ import type { Field } from '~/types';
 
 const pdfFormId = 'pdf-form';
 
-export default function Home() {
+export default function HomeRoute() {
 	const fetcher = useFetcher();
 	const [fields, setFields] = React.useState<Field[]>([]);
 
@@ -23,7 +23,7 @@ export default function Home() {
 	}, [fetcher.state, fetcher.data]);
 
 	return (
-		<main className="container mx-auto">
+		<>
 			<h1 className="text-4xl">Simply Invoice</h1>
 
 			<fetcher.Form action="/pdf" method="GET" id={pdfFormId}>
@@ -56,6 +56,6 @@ export default function Home() {
 					}
 				/>
 			</div>
-		</main>
+		</>
 	);
 }

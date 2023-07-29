@@ -7,7 +7,7 @@ import {
 	ScrollRestoration,
 } from '@remix-run/react';
 
-import { Navbar } from '~/components';
+import { Layout } from '~/components';
 
 import styles from '~/tailwind.css';
 
@@ -22,16 +22,17 @@ export const links: LinksFunction = () => [
 
 export default function App() {
 	return (
-		<html lang="en">
+		<html lang="en" className="h-[100%]">
 			<head>
 				<meta charSet="utf-8" />
 				<meta name="viewport" content="width=device-width,initial-scale=1" />
 				<Meta />
 				<Links />
 			</head>
-			<body>
-				<Navbar />
-				<Outlet />
+			<body className="grid h-[100%] grid-rows-[auto_1fr_auto]">
+				<Layout>
+					<Outlet />
+				</Layout>
 				<ScrollRestoration />
 				<Scripts />
 				<LiveReload />
