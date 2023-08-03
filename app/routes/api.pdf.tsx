@@ -1,12 +1,11 @@
-import { json } from '@remix-run/node';
-import { useLoaderData } from '@remix-run/react';
 import { renderToStream } from '@react-pdf/renderer';
+import { json } from '@remix-run/node';
 
 import { PdfDocument } from '~/components';
 
-import type { LoaderFunction } from '@remix-run/node';
+import type { ActionFunction } from '@remix-run/node';
 
-export const loader: LoaderFunction = async () => {
+export const action: ActionFunction = async () => {
 	const stream = await renderToStream(<PdfDocument />);
 
 	const body: Buffer = await new Promise((resolve, reject) => {
@@ -22,15 +21,3 @@ export const loader: LoaderFunction = async () => {
 
 	return json(`data:application/pdf;base64,${body.toString('base64')}`);
 };
-
-export default function PdfRoute() {
-	const data = useLoaderData();
-
-	return (
-		<main className="container mx-auto">
-			<h1 className="text-4xl">PDF Viewer/Generator</h1>
-
-			<iframe src={`${data}#toolbar=0&navpanes=0`} />
-		</main>
-	);
-}

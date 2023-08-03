@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useFetcher } from '@remix-run/react';
 import { nanoid } from 'nanoid';
 
-import { FormField, Button, AddFormField } from '~/components';
+import { FormField, Button, AddFormField, ModalPdfViewer } from '~/components';
 
 import type { Field } from '~/types';
 
@@ -10,6 +10,7 @@ const pdfFormId = 'pdf-form';
 
 export default function NewInvoiceRoute() {
 	const fetcher = useFetcher();
+	const [pdfBase64, setPdfBase64] = React.useState('');
 	const [fields, setFields] = React.useState<Field[]>([]);
 
 	React.useEffect(() => {
@@ -22,9 +23,15 @@ export default function NewInvoiceRoute() {
 		}
 	}, [fetcher.state, fetcher.data]);
 
+	const getPdfBase64 = async () => {
+		const resp = await fetch('/api/pdf', { method: 'POST' });
+		const pdf = await resp.json();
+		setPdfBase64(pdf);
+	};
+
 	return (
 		<>
-			<fetcher.Form action="/pdf" method="GET" id={pdfFormId}>
+			<fetcher.Form action="/api/pdf" method="POST" id={pdfFormId}>
 				<h3 className="text-2xl">Company Data</h3>
 
 				<FormField name="company-name" label="Name" className="my-1" />
@@ -46,9 +53,17 @@ export default function NewInvoiceRoute() {
 			</div>
 
 			<div className="my-2">
+				<ModalPdfViewer
+					triggerText="Preview PDF"
+					triggerOnClick={getPdfBase64}
+					hasCloseBtn={false}
+					pdfBase64={pdfBase64}
+				/>
+
 				<Button
 					form={pdfFormId}
 					type="submit"
+					className="ml-4"
 					text={
 						fetcher.state === 'submitting' ? '...Loading PDF' : 'Download PDF'
 					}
