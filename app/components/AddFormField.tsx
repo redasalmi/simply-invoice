@@ -21,7 +21,6 @@ export function AddFormField({ fieldPrefix, setFields }: AddFormFieldProps) {
 
 	const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
-
 		const formData = new FormData(event.currentTarget);
 		const title = formData.get(titleFieldId);
 		const content = formData.get(contentFieldId);
@@ -57,7 +56,7 @@ export function AddFormField({ fieldPrefix, setFields }: AddFormFieldProps) {
 				<Button
 					type="button"
 					onClick={toggleField}
-					text={`${showField ? 'Hide' : 'Add'} New Field`}
+					text={`${showField ? 'Delete' : 'Add'} New Field`}
 				/>
 
 				{showField ? (

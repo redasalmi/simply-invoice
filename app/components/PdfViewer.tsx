@@ -24,6 +24,7 @@ type ModalPdfViewerProps = {
 	description?: string;
 	hasCloseBtn?: boolean;
 	pdfBase64: string;
+	isLoading: boolean;
 };
 
 export function ModalPdfViewer({
@@ -33,6 +34,7 @@ export function ModalPdfViewer({
 	description,
 	hasCloseBtn,
 	pdfBase64,
+	isLoading,
 }: ModalPdfViewerProps) {
 	return (
 		<Modal
@@ -42,7 +44,7 @@ export function ModalPdfViewer({
 			description={description}
 			hasCloseBtn={hasCloseBtn}
 		>
-			<PdfViewer pdfBase64={pdfBase64} />
+			{isLoading ? 'Loading...' : <PdfViewer pdfBase64={pdfBase64} />}
 		</Modal>
 	);
 }
