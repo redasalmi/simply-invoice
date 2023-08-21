@@ -19,9 +19,9 @@
 		"clsx": "^2.0.0",
 		"cross-env": "^7.0.3",
 		"isbot": "^3.6.13",
-		"nanoid": "^4.0.2",
 		"react": "^18.2.0",
-		"react-dom": "^18.2.0"
+		"react-dom": "^18.2.0",
+		"uuid": "^9.0.0"
 	},
 	"devDependencies": {
 		"@remix-run/dev": "^1.19.1",
@@ -29,6 +29,7 @@
 		"@remix-run/serve": "^1.19.1",
 		"@types/react": "^18.2.15",
 		"@types/react-dom": "^18.2.7",
+		"@types/uuid": "^9.0.2",
 		"autoprefixer": "^10.4.14",
 		"cssnano": "^6.0.1",
 		"eslint": "^8.45.0",

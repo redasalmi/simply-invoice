@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useFetcher } from '@remix-run/react';
-import { nanoid } from 'nanoid';
+import { v4 as uuidv4 } from 'uuid';
 
 import { FormField, Button, AddFormField, ModalPdfViewer } from '~/components';
 
@@ -38,10 +38,12 @@ export default function NewInvoiceRoute() {
 		<>
 			<fetcher.Form onSubmit={handleSubmit} id={pdfFormId}>
 				<h3 className="text-2xl">Company Data</h3>
+				<FormField name="company-name" label="Name" className="my-1" />
+				<FormField name="company-address" label="Address" className="my-1" />
 
 				{fields.map(({ name, label, defaultValue }) => (
 					<FormField
-						key={nanoid()}
+						key={uuidv4()}
 						name={name}
 						label={label}
 						defaultValue={defaultValue}
@@ -54,26 +56,24 @@ export default function NewInvoiceRoute() {
 				<AddFormField fieldPrefix="company" setFields={setFields} />
 			</div>
 
-			{fields.length ? (
-				<div className="my-2">
-					<ModalPdfViewer
-						triggerText="Preview PDF"
-						triggerOnClick={previewPdf}
-						hasCloseBtn={false}
-						pdfBase64={pdfBase64}
-						isLoading={fetcher.state === 'loading'}
-					/>
+			<div className="my-2">
+				<ModalPdfViewer
+					triggerText="Preview PDF"
+					triggerOnClick={previewPdf}
+					hasCloseBtn={false}
+					pdfBase64={pdfBase64}
+					isLoading={fetcher.state === 'loading'}
+				/>
 
-					<Button
-						form={pdfFormId}
-						type="submit"
-						className="ml-4"
-						text={
-							fetcher.state === 'submitting' ? '...Loading PDF' : 'Download PDF'
-						}
-					/>
-				</div>
-			) : null}
+				<Button
+					form={pdfFormId}
+					type="submit"
+					className="ml-4"
+					text={
+						fetcher.state === 'submitting' ? '...Loading PDF' : 'Download PDF'
+					}
+				/>
+			</div>
 		</>
 	);
 }

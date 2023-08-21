@@ -9,7 +9,6 @@ module.exports = {
 			: undefined,
 	serverBuildPath: '.netlify/functions-internal/server.js',
 	serverModuleFormat: 'cjs',
-	serverDependenciesToBundle: [/^nanoid.*/],
 	future: {
 		v2_dev: true,
 		v2_errorBoundary: true,
