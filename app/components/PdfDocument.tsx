@@ -12,15 +12,6 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		justifyContent: 'space-between',
 	},
-	w30: {
-		width: '30%',
-	},
-	w40: {
-		width: '40%',
-	},
-	w60: {
-		width: '60%',
-	},
 	title: {
 		fontSize: 24,
 	},
@@ -38,6 +29,38 @@ const styles = StyleSheet.create({
 	billInfo: {
 		marginTop: 24,
 	},
+	billDetail: {
+		marginTop: 24,
+	},
+
+	table: {
+		display: 'flex',
+		width: 'auto',
+		borderStyle: 'solid',
+		borderWidth: 1,
+		borderRightWidth: 0,
+		borderBottomWidth: 0,
+	},
+	tableRow: {
+		margin: 'auto',
+		flexDirection: 'row',
+	},
+	tableCol: {
+		width: '25%',
+		borderStyle: 'solid',
+		borderWidth: 1,
+		borderLeftWidth: 0,
+		borderTopWidth: 0,
+	},
+	tableCell: {
+		marginHorizontal: 'auto',
+		marginVertical: 5,
+		fontSize: 12,
+	},
+	tableCellLeft: {
+		marginHorizontal: 8,
+	},
+
 	pageNumber: {
 		position: 'absolute',
 		fontSize: 12,
@@ -46,6 +69,25 @@ const styles = StyleSheet.create({
 		right: 0,
 		textAlign: 'center',
 		color: 'grey',
+	},
+
+	w5: {
+		width: '5%',
+	},
+	w15: {
+		width: '15%',
+	},
+	w10: {
+		width: '10%',
+	},
+	w30: {
+		width: '30%',
+	},
+	w40: {
+		width: '40%',
+	},
+	w60: {
+		width: '60%',
 	},
 });
 
@@ -68,7 +110,9 @@ export function PdfDocument() {
 						<Text style={styles.grayText}>{invoiceId}</Text>
 					</View>
 
-					<View style={styles.w30}>// put logo or invoices dates here</View>
+					<View style={styles.w30}>
+						<Text>put company logo here if available</Text>
+					</View>
 				</View>
 
 				<View style={[styles.flexSection, styles.billInfo]}>
@@ -90,6 +134,50 @@ export function PdfDocument() {
 						<Text style={styles.text}>XXXXXXXXXXXXXXXXXXXXXXXX</Text>
 						<Text style={styles.text}>XXXXXXXXXXXXXX</Text>
 						<Text style={styles.text}>VAT ID: XXXXXXXXXXXXXXXXXXXXX</Text>
+					</View>
+				</View>
+
+				<View style={styles.billDetail}>
+					<View style={styles.table}>
+						<View style={styles.tableRow}>
+							<View style={[styles.tableCol, styles.w5]}>
+								<Text style={styles.tableCell}>#</Text>
+							</View>
+							<View style={[styles.tableCol, styles.w60]}>
+								<Text style={[styles.tableCell, styles.tableCellLeft]}>
+									Item & Description
+								</Text>
+							</View>
+							<View style={[styles.tableCol, styles.w15]}>
+								<Text style={styles.tableCell}>Quantity</Text>
+							</View>
+							<View style={[styles.tableCol, styles.w10]}>
+								<Text style={styles.tableCell}>Rate</Text>
+							</View>
+							<View style={[styles.tableCol, styles.w10]}>
+								<Text style={styles.tableCell}>Amount</Text>
+							</View>
+						</View>
+
+						<View style={styles.tableRow}>
+							<View style={[styles.tableCol, styles.w5]}>
+								<Text style={styles.tableCell}>1</Text>
+							</View>
+							<View style={[styles.tableCol, styles.w60]}>
+								<Text style={[styles.tableCell, styles.tableCellLeft]}>
+									Programming services related to software development
+								</Text>
+							</View>
+							<View style={[styles.tableCol, styles.w15]}>
+								<Text style={styles.tableCell}>1</Text>
+							</View>
+							<View style={[styles.tableCol, styles.w10]}>
+								<Text style={styles.tableCell}>2750</Text>
+							</View>
+							<View style={[styles.tableCol, styles.w10]}>
+								<Text style={styles.tableCell}>2750</Text>
+							</View>
+						</View>
 					</View>
 				</View>
 
