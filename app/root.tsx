@@ -8,17 +8,7 @@ import {
 } from '@remix-run/react';
 
 import { Layout } from '~/components';
-
-import styles from '~/tailwind.css';
-
-import type { LinksFunction } from '@remix-run/node';
-
-export const links: LinksFunction = () => [
-	{
-		rel: 'stylesheet',
-		href: styles,
-	},
-];
+import '~/tailwind.css';
 
 export default function App() {
 	return (
@@ -34,8 +24,8 @@ export default function App() {
 					<Outlet />
 				</Layout>
 				<ScrollRestoration />
-				<Scripts />
 				<LiveReload />
+				<Scripts />
 			</body>
 		</html>
 	);
