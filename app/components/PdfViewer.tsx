@@ -11,6 +11,7 @@ export function PdfViewer({ pdfBase64 }: PdfViewerProps) {
 
 	return (
 		<iframe
+			title="pdf viewer"
 			className="h-full w-full"
 			src={`${pdfBase64}#toolbar=0&navpanes=0`}
 		/>
