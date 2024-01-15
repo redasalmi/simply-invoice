@@ -1,6 +1,7 @@
 import { DialogTrigger } from '@radix-ui/react-dialog';
+
 import { Dialog, DialogContent } from '~/components/ui/dialog';
-import { Button } from './ui/button';
+import { Button } from '~/components/ui/button';
 
 type PdfViewerProps = {
 	pdfBase64: string;

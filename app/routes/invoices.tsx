@@ -1,9 +1,10 @@
 import { json } from '@remix-run/node';
 import { useLoaderData, Link } from '@remix-run/react';
 
-import type { LoaderFunction } from '@remix-run/node';
 import { buttonVariants } from '~/components/ui/button';
 import { cn } from '~/lib/utils';
+
+import type { LoaderFunction } from '@remix-run/node';
 
 export const loader: LoaderFunction = () => {
 	return json([]);

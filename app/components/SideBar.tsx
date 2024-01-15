@@ -1,5 +1,6 @@
 import { NavLink } from '@remix-run/react';
-import clsx from 'clsx';
+
+import { cn } from '~/lib/utils';
 
 type SideBarLinkProps = {
 	to: string;
@@ -10,7 +11,7 @@ function SideBarLink({ to, text }: SideBarLinkProps) {
 	return (
 		<NavLink
 			className={({ isActive }) =>
-				clsx(
+				cn(
 					'hover:text-blue-500 hover:underline',
 					isActive && 'text-blue-500 underline',
 				)
