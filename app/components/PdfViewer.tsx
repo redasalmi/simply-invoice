@@ -1,4 +1,6 @@
-import { Modal } from '~/components';
+import { DialogTrigger } from '@radix-ui/react-dialog';
+import { Dialog, DialogContent } from '~/components/ui/dialog';
+import { Button } from './ui/button';
 
 type PdfViewerProps = {
 	pdfBase64: string;
@@ -20,10 +22,7 @@ export function PdfViewer({ pdfBase64 }: PdfViewerProps) {
 
 type ModalPdfViewerProps = {
 	triggerText: string;
-	triggerOnClick?: () => void;
-	title?: string;
-	description?: string;
-	hasCloseBtn?: boolean;
+	triggerOnClick: () => void;
 	pdfBase64: string;
 	isLoading: boolean;
 };
@@ -31,21 +30,19 @@ type ModalPdfViewerProps = {
 export function ModalPdfViewer({
 	triggerText,
 	triggerOnClick,
-	title,
-	description,
-	hasCloseBtn,
 	pdfBase64,
 	isLoading,
 }: ModalPdfViewerProps) {
 	return (
-		<Modal
-			triggerText={triggerText}
-			triggerOnClick={triggerOnClick}
-			title={title}
-			description={description}
-			hasCloseBtn={hasCloseBtn}
-		>
-			{isLoading ? 'Loading...' : <PdfViewer pdfBase64={pdfBase64} />}
-		</Modal>
+		<Dialog>
+			<DialogTrigger>
+				<Button type="button" onClick={triggerOnClick}>
+					{triggerText}
+				</Button>
+			</DialogTrigger>
+			<DialogContent className="h-full max-h-[80%] max-w-[80%]">
+				{isLoading ? 'Loading...' : <PdfViewer pdfBase64={pdfBase64} />}
+			</DialogContent>
+		</Dialog>
 	);
 }

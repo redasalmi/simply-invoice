@@ -62,7 +62,6 @@ export default function NewInvoiceRoute() {
 				<ModalPdfViewer
 					triggerText="Preview PDF"
 					triggerOnClick={previewPdf}
-					hasCloseBtn={false}
 					pdfBase64={pdfBase64}
 					isLoading={fetcher.state === 'loading'}
 				/>
