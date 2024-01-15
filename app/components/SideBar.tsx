@@ -12,8 +12,8 @@ function SideBarLink({ to, text }: SideBarLinkProps) {
 		<NavLink
 			className={({ isActive }) =>
 				cn(
-					'hover:text-blue-500 hover:underline',
-					isActive && 'text-blue-500 underline',
+					'hover:text-primary hover:underline',
+					isActive && 'text-destructive underline',
 				)
 			}
 			to={to}
