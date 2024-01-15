@@ -1,6 +1,7 @@
 import * as React from 'react';
 
-import { Input } from '~/components';
+import { Label } from '~/components/ui/label';
+import { Input } from '~/components/ui/input';
 
 type FormFieldProps = {
 	label: string;
@@ -21,9 +22,9 @@ export function FormField({
 
 	return (
 		<div className={className}>
-			<label htmlFor={id} className="block">
+			<Label htmlFor={id} className="mb-1 block">
 				{label}
-			</label>
+			</Label>
 			<Input id={id} name={name} defaultValue={defaultValue} type={type} />
 		</div>
 	);

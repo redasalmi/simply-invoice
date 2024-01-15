@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useFetcher } from '@remix-run/react';
 
 import { Button } from '~/components/ui/button';
-import { FormField } from '~/components';
+import { FormField } from '~/components/ui/formField';
 
 import type { Field } from '~/types';
 

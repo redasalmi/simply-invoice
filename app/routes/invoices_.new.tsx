@@ -3,7 +3,8 @@ import { useFetcher } from '@remix-run/react';
 import { v4 as uuidv4 } from 'uuid';
 
 import { Button } from '~/components/ui/button';
-import { FormField, AddFormField, ModalPdfViewer } from '~/components';
+import { FormField } from '~/components/ui/formField';
+import { AddFormField, ModalPdfViewer } from '~/components';
 
 import type { Field } from '~/types';
 

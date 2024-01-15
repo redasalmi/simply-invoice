@@ -1,7 +1,5 @@
 export * from './AddFormField';
 export * from './Footer';
-export * from './FormField';
-export * from './Input';
 export * from './Layout';
 export * from './Modal';
 export * from './Navbar';
