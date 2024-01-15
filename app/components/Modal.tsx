@@ -2,6 +2,8 @@ import * as React from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import clsx from 'clsx';
 
+import { Button } from '~/components/ui/button';
+
 type ModalProps = {
 	triggerText: string;
 	triggerOnClick?: () => void;
@@ -22,13 +24,9 @@ export function Modal({
 	return (
 		<Dialog.Root>
 			<Dialog.Trigger asChild>
-				<button
-					type="button"
-					className="rounded-md bg-blue-400 px-4 py-2"
-					onClick={triggerOnClick}
-				>
+				<Button type="button" onClick={triggerOnClick}>
 					{triggerText}
-				</button>
+				</Button>
 			</Dialog.Trigger>
 			<Dialog.Portal>
 				<Dialog.Overlay className="fixed inset-0 z-20 bg-black/50" />
@@ -54,12 +52,7 @@ export function Modal({
 					{hasCloseBtn ? (
 						<div className="mt-4 flex justify-end">
 							<Dialog.Close asChild>
-								<button
-									type="button"
-									className="rounded-md bg-red-400 px-4 py-2"
-								>
-									Close
-								</button>
+								<Button type="button">Close</Button>
 							</Dialog.Close>
 						</div>
 					) : null}

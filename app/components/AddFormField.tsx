@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { useFetcher } from '@remix-run/react';
 
-import { FormField, Button } from '~/components';
+import { Button } from '~/components/ui/button';
+import { FormField } from '~/components';
 
 import type { Field } from '~/types';
 
@@ -53,14 +54,14 @@ export function AddFormField({ fieldPrefix, setFields }: AddFormFieldProps) {
 			) : null}
 
 			<div>
-				<Button
-					type="button"
-					onClick={toggleField}
-					text={`${showField ? 'Delete' : 'Add'} New Field`}
-				/>
+				<Button type="button" onClick={toggleField}>
+					{showField ? 'Delete' : 'Add'} New Field
+				</Button>
 
 				{showField ? (
-					<Button type="submit" text="Save New Field" className="ml-4" />
+					<Button type="submit" className="ml-2">
+						Save New Field
+					</Button>
 				) : null}
 			</div>
 		</fetcher.Form>

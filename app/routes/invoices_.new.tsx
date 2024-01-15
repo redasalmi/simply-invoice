@@ -2,7 +2,8 @@ import * as React from 'react';
 import { useFetcher } from '@remix-run/react';
 import { v4 as uuidv4 } from 'uuid';
 
-import { FormField, Button, AddFormField, ModalPdfViewer } from '~/components';
+import { Button } from '~/components/ui/button';
+import { FormField, AddFormField, ModalPdfViewer } from '~/components';
 
 import type { Field } from '~/types';
 
@@ -65,14 +66,9 @@ export default function NewInvoiceRoute() {
 					isLoading={fetcher.state === 'loading'}
 				/>
 
-				<Button
-					form={pdfFormId}
-					type="submit"
-					className="ml-4"
-					text={
-						fetcher.state === 'submitting' ? '...Loading PDF' : 'Download PDF'
-					}
-				/>
+				<Button form={pdfFormId} type="submit" className="ml-2">
+					{fetcher.state === 'submitting' ? '...Loading PDF' : 'Download PDF'}
+				</Button>
 			</div>
 		</>
 	);
