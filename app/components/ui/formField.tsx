@@ -25,7 +25,12 @@ export function FormField({
 			<Label htmlFor={id} className="mb-1 block">
 				{label}
 			</Label>
-			<Input id={id} name={name} defaultValue={defaultValue} type={type} />
+			<Input
+				id={id}
+				type={type}
+				name={name.replaceAll(' ', '-')}
+				defaultValue={defaultValue}
+			/>
 		</div>
 	);
 }

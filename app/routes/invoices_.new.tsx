@@ -39,9 +39,12 @@ export default function NewInvoiceRoute() {
 	return (
 		<>
 			<fetcher.Form onSubmit={handleSubmit} id={pdfFormId}>
-				<h3 className="text-2xl">Company Data</h3>
-				<FormField name="company-name" label="Name" className="my-1" />
-				<FormField name="company-address" label="Address" className="my-1" />
+				<h3 className="text-2xl">Customer Data</h3>
+				<p className="block text-sm">fill all of your customer data below</p>
+
+				<FormField name="customer-name" label="Name" className="my-2" />
+				<FormField name="customer-email" label="Email" className="my-2" />
+				<FormField name="customer-address" label="Address" className="my-2" />
 
 				{fields.map(({ name, label, defaultValue }) => (
 					<FormField
@@ -49,14 +52,12 @@ export default function NewInvoiceRoute() {
 						name={name}
 						label={label}
 						defaultValue={defaultValue}
-						className="my-1"
+						className="my-2"
 					/>
 				))}
-			</fetcher.Form>
 
-			<div className="my-2">
-				<AddFormField fieldPrefix="company" setFields={setFields} />
-			</div>
+				<AddFormField fieldPrefix="customer" setFields={setFields} />
+			</fetcher.Form>
 
 			<div className="my-2">
 				<ModalPdfViewer
