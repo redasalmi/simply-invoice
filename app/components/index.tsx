@@ -4,4 +4,3 @@ export * from './Layout';
 export * from './Navbar';
 export * from './PdfDocument';
 export * from './PdfViewer';
-export * from './SideBar';
