@@ -1,5 +1,5 @@
 import { Page, Text, View, Document, StyleSheet } from '@react-pdf/renderer';
-import { v4 as uuidv4 } from 'uuid';
+import { nanoid } from 'nanoid';
 
 const styles = StyleSheet.create({
 	body: {
@@ -98,7 +98,7 @@ export function PdfDocument() {
 		month: '2-digit',
 		year: 'numeric',
 	}).format(today);
-	const invoiceId = `invoice-${uuidv4()}`;
+	const invoiceId = `invoice-${nanoid()}`;
 
 	return (
 		<Document>

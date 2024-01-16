@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useFetcher } from '@remix-run/react';
-import { v4 as uuidv4 } from 'uuid';
+import { nanoid } from 'nanoid';
 
 import { Button } from '~/components/ui/button';
 import { FormField } from '~/components/ui/formField';
@@ -45,7 +45,7 @@ export default function NewInvoiceRoute() {
 
 				{fields.map(({ name, label, defaultValue }) => (
 					<FormField
-						key={uuidv4()}
+						key={nanoid()}
 						name={name}
 						label={label}
 						defaultValue={defaultValue}

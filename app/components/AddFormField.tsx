@@ -53,7 +53,7 @@ export function AddFormField({ fieldPrefix, setFields }: AddFormFieldProps) {
 				</>
 			) : null}
 
-			<div>
+			<div className="my-2">
 				<Button type="button" onClick={toggleField}>
 					{showField ? 'Delete' : 'Add'} New Field
 				</Button>
