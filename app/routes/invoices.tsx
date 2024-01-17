@@ -1,7 +1,7 @@
 import { json } from '@remix-run/node';
 import { useLoaderData, Link } from '@remix-run/react';
 
-import { buttonVariants } from '~/components/ui/button';
+import { buttonVariants } from '~/components/ui';
 import { cn } from '~/lib/utils';
 
 import type { LoaderFunction } from '@remix-run/node';

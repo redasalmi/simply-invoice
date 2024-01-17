@@ -2,8 +2,7 @@ import * as React from 'react';
 import { useFetcher } from '@remix-run/react';
 import { nanoid } from 'nanoid';
 
-import { Button } from '~/components/ui/button';
-import { FormField } from '~/components/ui/formField';
+import { Button, FormField } from '~/components/ui';
 import { AddFormField, ModalPdfViewer } from '~/components';
 
 import type { Field } from '~/types';
