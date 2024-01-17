@@ -7,7 +7,7 @@ import {
 	ScrollRestoration,
 } from '@remix-run/react';
 
-import { Layout } from '~/components';
+import { Footer, Navbar } from '~/components';
 import '~/tailwind.css';
 
 export default function App() {
@@ -20,9 +20,11 @@ export default function App() {
 				<Links />
 			</head>
 			<body className="grid h-[100%] grid-rows-[auto_1fr_auto]">
-				<Layout>
+				<Navbar />
+				<main className="container mx-auto py-8">
 					<Outlet />
-				</Layout>
+				</main>
+				<Footer />
 				<ScrollRestoration />
 				<LiveReload />
 				<Scripts />
