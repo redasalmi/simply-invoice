@@ -1,6 +1,8 @@
 import { Page, Text, View, Document, StyleSheet } from '@react-pdf/renderer';
 import { nanoid } from 'nanoid';
 
+import { capitalize } from '~/lib/utils';
+
 const styles = StyleSheet.create({
 	body: {
 		paddingTop: 35,
@@ -91,7 +93,20 @@ const styles = StyleSheet.create({
 	},
 });
 
-export function PdfDocument() {
+export type PdfEntry = {
+	value: string;
+	showTitle?: boolean;
+};
+
+type PdfDocumentProps = {
+	data: {
+		customer: Record<string, PdfEntry>;
+	};
+};
+
+export function PdfDocument({ data }: PdfDocumentProps) {
+	const { customer } = data;
+
 	const today = new Date();
 	const invoiceDate = new Intl.DateTimeFormat('en-US', {
 		day: '2-digit',
@@ -128,12 +143,12 @@ export function PdfDocument() {
 
 					<View style={styles.w40}>
 						<Text style={styles.text}>Billed to</Text>
-						<Text style={styles.subtitle}>Some Company</Text>
-						<Text style={styles.text}>CRN: XXXXXXXXXXXXXXXX</Text>
-						<Text style={styles.text}>XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</Text>
-						<Text style={styles.text}>XXXXXXXXXXXXXXXXXXXXXXXX</Text>
-						<Text style={styles.text}>XXXXXXXXXXXXXX</Text>
-						<Text style={styles.text}>VAT ID: XXXXXXXXXXXXXXXXXXXXX</Text>
+
+						{Object.entries(customer).map(([key, { value, showTitle }]) => (
+							<Text key={nanoid()} style={styles.text}>
+								{showTitle ? `${capitalize(key)}: ${value}` : value}
+							</Text>
+						))}
 					</View>
 				</View>
 

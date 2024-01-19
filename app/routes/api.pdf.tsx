@@ -1,16 +1,36 @@
 import { renderToStream } from '@react-pdf/renderer';
 import { json, redirect } from '@remix-run/node';
+import queryString from 'query-string';
 
-import { PdfDocument } from '~/components';
+import { type PdfEntry, PdfDocument } from '~/components';
 import { intents } from '~/types';
 
 import type { ActionFunctionArgs } from '@remix-run/node';
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-	const formData = await request.formData();
-	const intent = formData.get('intent')?.toString();
+	const formQueryString = await request.text();
+	const formData = queryString.parse(formQueryString);
+	const intent = formData.intent;
 
-	const stream = await renderToStream(<PdfDocument />);
+	const customer: Record<string, PdfEntry> = {};
+	for (const [key, value] of Object.entries(formData)) {
+		if (key.search('customer-') > -1 && value) {
+			const field = key.replace('customer-', '').replace('[]', '');
+
+			if (Array.isArray(value) && value[0]) {
+				customer[field] = {
+					value: value[0].trim(),
+					showTitle: value[1] === 'on',
+				};
+			} else if (typeof value === 'string' && value) {
+				customer[field] = {
+					value: value.trim(),
+				};
+			}
+		}
+	}
+
+	const stream = await renderToStream(<PdfDocument data={{ customer }} />);
 
 	const body: Buffer = await new Promise((resolve, reject) => {
 		const buffers: Uint8Array[] = [];
