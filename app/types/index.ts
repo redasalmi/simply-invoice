@@ -1,7 +1,9 @@
 export type Field = {
+	key: string;
 	name: string;
 	label: string;
-	defaultValue: string;
+	value: string;
+	showTitle: boolean;
 };
 
 export const intents = {

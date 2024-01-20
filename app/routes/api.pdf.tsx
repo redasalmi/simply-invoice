@@ -9,7 +9,7 @@ import type { ActionFunctionArgs } from '@remix-run/node';
 
 export const action = async ({ request }: ActionFunctionArgs) => {
 	const formQueryString = await request.text();
-	const formData = queryString.parse(formQueryString);
+	const formData = queryString.parse(formQueryString, { sort: false });
 	const intent = formData.intent;
 
 	const customer: Record<string, PdfEntry> = {};

@@ -7,9 +7,33 @@ import { AddFormField, ModalPdfViewer } from '~/components';
 
 import { intents, type Field, Intent } from '~/types';
 
+const defaultCustomerFields: Field[] = [
+	{
+		key: nanoid(),
+		name: 'customer-name',
+		label: 'Name',
+		value: '',
+		showTitle: false,
+	},
+	{
+		key: nanoid(),
+		name: 'customer-email',
+		label: 'Email',
+		value: '',
+		showTitle: false,
+	},
+	{
+		key: nanoid(),
+		name: 'customer-Address',
+		label: 'Address',
+		value: '',
+		showTitle: false,
+	},
+];
+
 export default function NewInvoiceRoute() {
 	const fetcher = useFetcher<string>();
-	const [fields, setFields] = React.useState<Field[]>([]);
+	const [fields, setFields] = React.useState<Field[]>(defaultCustomerFields);
 	const [intent, setIntent] = React.useState<Intent | null>(null);
 
 	const isLoading = fetcher.state !== 'idle';
@@ -24,26 +48,37 @@ export default function NewInvoiceRoute() {
 		}
 	}, [intent, pdfBase64]);
 
+	const addField = (field: Field) => {
+		setFields([...fields, field]);
+	};
+
+	const onFieldChange = (field: Field, fieldIndex: number) => {
+		setFields(Object.assign([], fields, { [fieldIndex]: field }));
+	};
+
+	const removeField = (fieldIndex: number) => {
+		setFields(fields.slice(0, fieldIndex).concat(fields.slice(fieldIndex + 1)));
+	};
+
 	return (
 		<fetcher.Form action="/api/pdf" method="post">
 			<h3 className="text-2xl">Customer Data</h3>
 			<p className="block text-sm">fill all of your customer data below</p>
 
-			<FormField name="customer-name" label="Name" className="my-2" />
-			<FormField name="customer-email" label="Email" className="my-2" />
-			<FormField name="customer-address" label="Address" className="my-2" />
-
-			{fields.map(({ name, label, defaultValue }) => (
+			{fields.map((field, index) => (
 				<FormField
-					key={nanoid()}
-					name={name}
-					label={label}
-					defaultValue={defaultValue}
+					key={field.key}
+					field={field}
+					onFieldChange={(updatedField) => onFieldChange(updatedField, index)}
+					removeField={() => removeField(index)}
 					className="my-2"
 				/>
 			))}
 
-			<AddFormField fieldPrefix="customer" setFields={setFields} />
+			<AddFormField
+				fieldPrefix="customer"
+				addField={(newField) => addField(newField)}
+			/>
 
 			<div className="mt-32 flex gap-2">
 				<ModalPdfViewer

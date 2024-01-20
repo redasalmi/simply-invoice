@@ -1,18 +1,19 @@
 import * as React from 'react';
+import { nanoid } from 'nanoid';
 
 import { Button, Label, Input } from '~/components/ui';
 
-import type { Field } from '~/types';
+import { type Field } from '~/types';
 
 type AddFormFieldProps = {
 	fieldPrefix: string;
-	setFields: React.Dispatch<React.SetStateAction<Field[]>>;
+	addField: (field: Field) => void;
 };
 
 const titleField = 'title-field';
 const contentField = 'content-field';
 
-export function AddFormField({ fieldPrefix, setFields }: AddFormFieldProps) {
+export function AddFormField({ fieldPrefix, addField }: AddFormFieldProps) {
 	const titleRef = React.useRef<HTMLInputElement>(null);
 	const contentRef = React.useRef<HTMLInputElement>(null);
 	const [showField, setShowField] = React.useState(false);
@@ -20,22 +21,23 @@ export function AddFormField({ fieldPrefix, setFields }: AddFormFieldProps) {
 	const titleFieldId = `${fieldPrefix}-${titleField}`;
 	const contentFieldId = `${fieldPrefix}-${contentField}`;
 
-	const toggleField = () => setShowField((show) => !show);
+	const toggleField = () => {
+		setShowField((show) => !show);
+	};
 
 	const addNewField = () => {
 		const title = titleRef.current?.value;
 		const content = contentRef.current?.value;
 
 		if (title && content) {
-			setFields((fields) => [
-				...fields,
-				{
-					name: `${fieldPrefix}-${title.trim()}`,
-					label: title.trim(),
-					defaultValue: content.trim(),
-				},
-			]);
-			toggleField();
+			addField({
+				key: nanoid(),
+				name: `${fieldPrefix}-${title.trim()}`,
+				label: title.trim(),
+				value: content.trim(),
+				showTitle: false,
+			});
+			setShowField(false);
 		}
 	};
 
