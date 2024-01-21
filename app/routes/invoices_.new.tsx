@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { useFetcher } from '@remix-run/react';
 import { nanoid } from 'nanoid';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 
 import { Button, FormField } from '~/components/ui';
 import { AddFormField, ModalPdfViewer } from '~/components';
@@ -52,6 +54,17 @@ export default function NewInvoiceRoute() {
 		setFields([...fields, field]);
 	};
 
+	const moveField = (dragIndex: number, hoverIndex: number) => {
+		setFields((prevFields) => {
+			const movedFields = Array.from(prevFields);
+			const temp = movedFields[dragIndex];
+			movedFields[dragIndex] = movedFields[hoverIndex];
+			movedFields[hoverIndex] = temp;
+
+			return movedFields;
+		});
+	};
+
 	const onFieldChange = (field: Field, fieldIndex: number) => {
 		setFields(Object.assign([], fields, { [fieldIndex]: field }));
 	};
@@ -65,20 +78,21 @@ export default function NewInvoiceRoute() {
 			<h3 className="text-2xl">Customer Data</h3>
 			<p className="block text-sm">fill all of your customer data below</p>
 
-			{fields.map((field, index) => (
-				<FormField
-					key={field.key}
-					field={field}
-					onFieldChange={(updatedField) => onFieldChange(updatedField, index)}
-					removeField={() => removeField(index)}
-					className="my-2"
-				/>
-			))}
+			<DndProvider backend={HTML5Backend}>
+				{fields.map((field, index) => (
+					<FormField
+						key={field.key}
+						field={field}
+						fieldIndex={index}
+						moveField={moveField}
+						onFieldChange={(updatedField) => onFieldChange(updatedField, index)}
+						removeField={() => removeField(index)}
+						className="my-2"
+					/>
+				))}
+			</DndProvider>
 
-			<AddFormField
-				fieldPrefix="customer"
-				addField={(newField) => addField(newField)}
-			/>
+			<AddFormField fieldPrefix="customer" addField={addField} />
 
 			<div className="mt-32 flex gap-2">
 				<ModalPdfViewer
