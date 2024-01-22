@@ -26,12 +26,12 @@ export default function InvoicesRoutes() {
 			</Link>
 			<div className="mt-6">
 				{invoices.length > 0 ? (
-					<>
-						Cool, you have {invoices.length} invoices
+					<p>
+						Cool, you have {invoices.length} invoice
 						{invoices.length > 1 ? 's' : ''}
-					</>
+					</p>
 				) : (
-					<p>No invoices found.</p>
+					<p>No invoice found.</p>
 				)}
 			</div>
 		</>

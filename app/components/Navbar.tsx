@@ -31,7 +31,7 @@ export function Navbar() {
 				<div className="flex gap-12">
 					<NavItem to="/invoices">Invoices</NavItem>
 					<NavItem to="/companies">Companies</NavItem>
-					<NavItem to="/clients">Clients</NavItem>
+					<NavItem to="/customers">Customers</NavItem>
 					<NavItem to="/services">Services</NavItem>
 				</div>
 			</div>
