@@ -33,25 +33,11 @@ const defaultCustomerFields: Field[] = [
 	},
 ];
 
-export default function NewInvoiceRoute() {
-	const fetcher = useFetcher<string>();
+function FormFields() {
 	const [fields, setFields] = React.useState<Field[]>(defaultCustomerFields);
-	const [intent, setIntent] = React.useState<Intent | null>(null);
-
-	const isLoading = fetcher.state !== 'idle';
-	const pdfBase64 = isLoading ? null : fetcher.data;
-
-	React.useEffect(() => {
-		if (intent === intents.download && pdfBase64) {
-			const link = document.createElement('a');
-			link.href = pdfBase64;
-			link.download = 'invoice.pdf';
-			link.click();
-		}
-	}, [intent, pdfBase64]);
 
 	const addField = (field: Field) => {
-		setFields([...fields, field]);
+		setFields(fields.concat(field));
 	};
 
 	const moveField = (dragIndex: number, hoverIndex: number) => {
@@ -74,25 +60,48 @@ export default function NewInvoiceRoute() {
 	};
 
 	return (
+		<>
+			{fields.map((field, index) => (
+				<FormField
+					key={field.key}
+					field={field}
+					fieldIndex={index}
+					moveField={moveField}
+					onFieldChange={(updatedField) => onFieldChange(updatedField, index)}
+					removeField={() => removeField(index)}
+					className="my-2"
+				/>
+			))}
+
+			<AddFormField fieldPrefix="customer" addField={addField} />
+		</>
+	);
+}
+
+export default function NewInvoiceRoute() {
+	const fetcher = useFetcher<string>();
+	const [intent, setIntent] = React.useState<Intent | null>(null);
+
+	const isLoading = fetcher.state !== 'idle';
+	const pdfBase64 = isLoading ? null : fetcher.data;
+
+	React.useEffect(() => {
+		if (intent === intents.download && pdfBase64) {
+			const link = document.createElement('a');
+			link.href = pdfBase64;
+			link.download = 'invoice.pdf';
+			link.click();
+		}
+	}, [intent, pdfBase64]);
+
+	return (
 		<fetcher.Form action="/api/pdf" method="post">
 			<h3 className="text-2xl">Customer Data</h3>
 			<p className="block text-sm">fill all of your customer data below</p>
 
 			<DndProvider backend={HTML5Backend}>
-				{fields.map((field, index) => (
-					<FormField
-						key={field.key}
-						field={field}
-						fieldIndex={index}
-						moveField={moveField}
-						onFieldChange={(updatedField) => onFieldChange(updatedField, index)}
-						removeField={() => removeField(index)}
-						className="my-2"
-					/>
-				))}
+				<FormFields />
 			</DndProvider>
-
-			<AddFormField fieldPrefix="customer" addField={addField} />
 
 			<div className="mt-32 flex gap-2">
 				<ModalPdfViewer
