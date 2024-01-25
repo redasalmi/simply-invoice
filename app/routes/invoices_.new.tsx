@@ -1,4 +1,6 @@
 import * as React from 'react';
+import queryString from 'query-string';
+import { redirect, type ActionFunctionArgs } from '@remix-run/node';
 import { useFetcher } from '@remix-run/react';
 import { PDFDownloadLink, PDFViewer } from '@react-pdf/renderer';
 import { nanoid } from 'nanoid';
@@ -6,10 +8,41 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
 import { Button, FormField, buttonVariants } from '~/components/ui';
-import { AddFormField, ClientOnly, InvoicePdf, Modal } from '~/components';
+import {
+	AddFormField,
+	ClientOnly,
+	InvoicePdf,
+	Modal,
+	PdfEntry,
+} from '~/components';
 import { cn } from '~/lib/utils';
 
 import { type Field } from '~/types';
+
+export async function action({ request }: ActionFunctionArgs) {
+	const formQueryString = await request.text();
+	const formData = queryString.parse(formQueryString, { sort: false });
+
+	const customer: Record<string, PdfEntry> = {};
+	for (const [key, value] of Object.entries(formData)) {
+		if (key.search('customer-') > -1 && value) {
+			const field = key.replace('customer-', '').replace('[]', '');
+
+			if (Array.isArray(value) && value[0]) {
+				customer[field] = {
+					value: value[0].trim(),
+					showTitle: value[1] === 'on',
+				};
+			} else if (typeof value === 'string' && value) {
+				customer[field] = {
+					value: value.trim(),
+				};
+			}
+		}
+	}
+
+	return redirect('/invoices');
+}
 
 const defaultCustomerFields: Field[] = [
 	{
@@ -85,7 +118,7 @@ export default function NewInvoiceRoute() {
 	const isLoading = fetcher.state !== 'idle';
 
 	return (
-		<fetcher.Form action="/api/pdf" method="post">
+		<fetcher.Form method="post">
 			<h3 className="text-2xl">Customer Data</h3>
 			<p className="block text-sm">fill all of your customer data below</p>
 
@@ -96,8 +129,8 @@ export default function NewInvoiceRoute() {
 			<div className="mt-32 flex gap-2">
 				<Modal
 					triggerText="Preview PDF"
-					triggerClassname="inline-flex h-10 items-center justify-center whitespace-nowrap rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground ring-offset-background transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
-					contentClassname="h-full max-h-[80%] max-w-[80%]"
+					triggerClassName="inline-flex h-10 items-center justify-center whitespace-nowrap rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground ring-offset-background transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
+					contentClassName="h-full max-h-[80%] max-w-[80%]"
 				>
 					<PDFViewer className="h-full w-full">
 						<InvoicePdf data={{ customer: {} }} />
