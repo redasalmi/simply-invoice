@@ -1,11 +1,18 @@
 import * as React from 'react';
 import { useFetcher } from '@remix-run/react';
+import { PDFDownloadLink } from '@react-pdf/renderer';
 import { nanoid } from 'nanoid';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
-import { Button, FormField } from '~/components/ui';
-import { AddFormField, ModalPdfViewer } from '~/components';
+import { Button, FormField, buttonVariants } from '~/components/ui';
+import {
+	AddFormField,
+	ClientOnly,
+	ModalPdfViewer,
+	PdfDocument,
+} from '~/components';
+import { cn } from '~/lib/utils';
 
 import { intents, type Field, Intent } from '~/types';
 
@@ -116,16 +123,25 @@ export default function NewInvoiceRoute() {
 					isLoading={isLoading && intent === intents.preview}
 				/>
 
-				<Button
-					type="submit"
-					name="intent"
-					value={intents.download}
-					onClick={() => setIntent(intents.download)}
+				<ClientOnly
+					fallback={
+						<Button type="button">
+							{isLoading && intent === intents.download
+								? '...Loading PDF'
+								: 'Download PDF'}
+						</Button>
+					}
 				>
-					{isLoading && intent === intents.download
-						? '...Loading PDF'
-						: 'Download PDF'}
-				</Button>
+					<PDFDownloadLink
+						fileName="invoice.pdf"
+						document={<PdfDocument data={{ customer: {} }} />}
+						className={cn(buttonVariants({ variant: 'default' }))}
+					>
+						{isLoading && intent === intents.download
+							? '...Loading PDF'
+							: 'Download PDF'}
+					</PDFDownloadLink>
+				</ClientOnly>
 
 				<Button
 					type="submit"

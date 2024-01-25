@@ -15,3 +15,5 @@ Under construction... 🚧
 - add multiple templates, an invoice will be saved with a given template but can
   still be downloaded and previewed with any available template
 - look into making this a PWA
+- add a client cache (using client loader/action) to store user data, this will
+  enable getting data in PWA mode

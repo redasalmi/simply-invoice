@@ -7,7 +7,7 @@ import { intents } from '~/types';
 
 import type { ActionFunctionArgs } from '@remix-run/node';
 
-export const action = async ({ request }: ActionFunctionArgs) => {
+export async function action({ request }: ActionFunctionArgs) {
 	const formQueryString = await request.text();
 	const formData = queryString.parse(formQueryString, { sort: false });
 	const intent = formData.intent;
@@ -48,4 +48,4 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 	}
 
 	return json(`data:application/pdf;base64,${body.toString('base64')}`);
-};
+}
