@@ -98,13 +98,13 @@ export type PdfEntry = {
 	showTitle?: boolean;
 };
 
-type PdfDocumentProps = {
+type InvoicePdfProps = {
 	data: {
 		customer: Record<string, PdfEntry>;
 	};
 };
 
-export function PdfDocument({ data }: PdfDocumentProps) {
+export function InvoicePdf({ data }: InvoicePdfProps) {
 	const { customer } = data;
 
 	const today = new Date();

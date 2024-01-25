@@ -1,20 +1,15 @@
 import * as React from 'react';
 import { useFetcher } from '@remix-run/react';
-import { PDFDownloadLink } from '@react-pdf/renderer';
+import { PDFDownloadLink, PDFViewer } from '@react-pdf/renderer';
 import { nanoid } from 'nanoid';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
 import { Button, FormField, buttonVariants } from '~/components/ui';
-import {
-	AddFormField,
-	ClientOnly,
-	ModalPdfViewer,
-	PdfDocument,
-} from '~/components';
+import { AddFormField, ClientOnly, InvoicePdf, Modal } from '~/components';
 import { cn } from '~/lib/utils';
 
-import { intents, type Field, Intent } from '~/types';
+import { type Field } from '~/types';
 
 const defaultCustomerFields: Field[] = [
 	{
@@ -87,19 +82,7 @@ function FormFields() {
 
 export default function NewInvoiceRoute() {
 	const fetcher = useFetcher<string>();
-	const [intent, setIntent] = React.useState<Intent | null>(null);
-
 	const isLoading = fetcher.state !== 'idle';
-	const pdfBase64 = isLoading ? null : fetcher.data;
-
-	React.useEffect(() => {
-		if (intent === intents.download && pdfBase64) {
-			const link = document.createElement('a');
-			link.href = pdfBase64;
-			link.download = 'invoice.pdf';
-			link.click();
-		}
-	}, [intent, pdfBase64]);
 
 	return (
 		<fetcher.Form action="/api/pdf" method="post">
@@ -111,47 +94,28 @@ export default function NewInvoiceRoute() {
 			</DndProvider>
 
 			<div className="mt-32 flex gap-2">
-				<ModalPdfViewer
-					trigger={{
-						text: 'Preview PDF',
-						name: 'intent',
-						value: intents.preview,
-						type: 'submit',
-						onClick: () => setIntent(intents.preview),
-					}}
-					pdfBase64={pdfBase64}
-					isLoading={isLoading && intent === intents.preview}
-				/>
-
-				<ClientOnly
-					fallback={
-						<Button type="button">
-							{isLoading && intent === intents.download
-								? '...Loading PDF'
-								: 'Download PDF'}
-						</Button>
-					}
+				<Modal
+					triggerText="Preview PDF"
+					triggerClassname="inline-flex h-10 items-center justify-center whitespace-nowrap rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground ring-offset-background transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
+					contentClassname="h-full max-h-[80%] max-w-[80%]"
 				>
+					<PDFViewer className="h-full w-full">
+						<InvoicePdf data={{ customer: {} }} />
+					</PDFViewer>
+				</Modal>
+
+				<ClientOnly fallback={<Button type="button">Download PDF</Button>}>
 					<PDFDownloadLink
 						fileName="invoice.pdf"
-						document={<PdfDocument data={{ customer: {} }} />}
+						document={<InvoicePdf data={{ customer: {} }} />}
 						className={cn(buttonVariants({ variant: 'default' }))}
 					>
-						{isLoading && intent === intents.download
-							? '...Loading PDF'
-							: 'Download PDF'}
+						Download PDF
 					</PDFDownloadLink>
 				</ClientOnly>
 
-				<Button
-					type="submit"
-					name="intent"
-					value={intents.save}
-					onClick={() => setIntent(intents.save)}
-				>
-					{isLoading && intent === intents.save
-						? '...Saving Invoice'
-						: 'Save Invoice'}
+				<Button type="submit">
+					{isLoading ? '...Saving Invoice' : 'Save Invoice'}
 				</Button>
 			</div>
 		</fetcher.Form>
