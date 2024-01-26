@@ -2,10 +2,9 @@ import * as React from 'react';
 import queryString from 'query-string';
 import { redirect, type ActionFunctionArgs } from '@remix-run/node';
 import { useFetcher } from '@remix-run/react';
+import { Reorder } from 'framer-motion';
 import { PDFDownloadLink, PDFViewer } from '@react-pdf/renderer';
 import { nanoid } from 'nanoid';
-import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
 
 import { Button, FormField, buttonVariants } from '~/components/ui';
 import {
@@ -68,22 +67,14 @@ const defaultCustomerFields: Field[] = [
 	},
 ];
 
-function FormFields() {
+export default function NewInvoiceRoute() {
+	const fetcher = useFetcher();
 	const [fields, setFields] = React.useState<Field[]>(defaultCustomerFields);
+
+	const isLoading = fetcher.state !== 'idle';
 
 	const addField = (field: Field) => {
 		setFields(fields.concat(field));
-	};
-
-	const moveField = (dragIndex: number, hoverIndex: number) => {
-		setFields((prevFields) => {
-			const movedFields = Array.from(prevFields);
-			const temp = movedFields[dragIndex];
-			movedFields[dragIndex] = movedFields[hoverIndex];
-			movedFields[hoverIndex] = temp;
-
-			return movedFields;
-		});
 	};
 
 	const onFieldChange = (field: Field, fieldIndex: number) => {
@@ -95,36 +86,27 @@ function FormFields() {
 	};
 
 	return (
-		<>
-			{fields.map((field, index) => (
-				<FormField
-					key={field.key}
-					field={field}
-					fieldIndex={index}
-					moveField={moveField}
-					onFieldChange={(updatedField) => onFieldChange(updatedField, index)}
-					removeField={() => removeField(index)}
-					className="my-2"
-				/>
-			))}
-
-			<AddFormField fieldPrefix="customer" addField={addField} />
-		</>
-	);
-}
-
-export default function NewInvoiceRoute() {
-	const fetcher = useFetcher<string>();
-	const isLoading = fetcher.state !== 'idle';
-
-	return (
 		<fetcher.Form method="post">
 			<h3 className="text-2xl">Customer Data</h3>
 			<p className="block text-sm">fill all of your customer data below</p>
 
-			<DndProvider backend={HTML5Backend}>
-				<FormFields />
-			</DndProvider>
+			<Reorder.Group values={fields} onReorder={setFields}>
+				{fields.map((field, index) => (
+					<Reorder.Item key={field.key} value={field}>
+						<FormField
+							key={field.key}
+							field={field}
+							className="my-2"
+							onFieldChange={(updatedField) =>
+								onFieldChange(updatedField, index)
+							}
+							removeField={() => removeField(index)}
+						/>
+					</Reorder.Item>
+				))}
+			</Reorder.Group>
+
+			<AddFormField fieldPrefix="customer" addField={addField} />
 
 			<div className="mt-32 flex gap-2">
 				<Modal
