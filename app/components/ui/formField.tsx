@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Trash2 } from 'lucide-react';
+import { Grip, Trash2 } from 'lucide-react';
 
 import {
 	Label,
@@ -25,6 +25,7 @@ type FormFieldProps = {
 const hideTitleText = 'Hide title in invoice';
 const showTitleText = 'Show title in invoice';
 const deleteFieldText = 'Delete field';
+const dragFieldText = 'Drag to move field';
 
 export function FormField({
 	field,
@@ -70,12 +71,13 @@ export function FormField({
 					name={inputName}
 					value={value}
 					onChange={handleInputChange}
+					className="mr-4"
 				/>
 
 				<TooltipProvider>
 					<Tooltip>
 						<TooltipTrigger asChild>
-							<div className="ml-6 flex items-center justify-center">
+							<div className="flex items-center justify-center">
 								<Switch
 									name={inputName}
 									checked={showTitle}
@@ -96,8 +98,26 @@ export function FormField({
 							<Button
 								type="button"
 								variant="ghost"
+								aria-label={dragFieldText}
+								className="px-2"
+							>
+								<Grip />
+							</Button>
+						</TooltipTrigger>
+						<TooltipContent>
+							<p>{dragFieldText}</p>
+						</TooltipContent>
+					</Tooltip>
+				</TooltipProvider>
+
+				<TooltipProvider>
+					<Tooltip>
+						<TooltipTrigger asChild>
+							<Button
+								type="button"
+								variant="ghost"
 								aria-label={deleteFieldText}
-								className="px-4 py-2"
+								className="p-0"
 								onClick={removeField}
 							>
 								<Trash2 />
