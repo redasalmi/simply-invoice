@@ -2,12 +2,14 @@ import { useLoaderData, Link } from '@remix-run/react';
 import localforage from 'localforage';
 
 import { buttonVariants } from '~/components/ui';
+import { invoicesKey } from '~/constants';
 import { cn } from '~/lib/utils';
-import { Invoice } from '~/types';
+
+import type { Invoice } from '~/types';
 
 export async function clientLoader() {
 	return {
-		invoices: await localforage.getItem<Array<Invoice>>('invoices'),
+		invoices: await localforage.getItem<Array<Invoice>>(invoicesKey),
 	};
 }
 

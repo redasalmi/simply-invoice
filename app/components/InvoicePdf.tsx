@@ -3,6 +3,8 @@ import { nanoid } from 'nanoid';
 
 import { capitalize } from '~/lib/utils';
 
+import type { InvoiceField } from '~/types';
+
 const styles = StyleSheet.create({
 	body: {
 		paddingTop: 35,
@@ -93,15 +95,9 @@ const styles = StyleSheet.create({
 	},
 });
 
-export type InvoicePdfEntry = {
-	label: string;
-	value: string;
-	showLabel?: boolean;
-};
-
 type InvoicePdfProps = {
 	data: {
-		customer: Array<InvoicePdfEntry>;
+		customer: Array<InvoiceField>;
 	};
 };
 

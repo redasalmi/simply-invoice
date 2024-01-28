@@ -1,34 +1,25 @@
 import * as React from 'react';
 import queryString from 'query-string';
-import { type ActionFunctionArgs } from '@remix-run/node';
-import {
-	type ClientActionFunctionArgs,
-	useFetcher,
-	redirect,
-} from '@remix-run/react';
+import { useFetcher, redirect } from '@remix-run/react';
 import { Reorder } from 'framer-motion';
 import { renderToStream } from '@react-pdf/renderer';
 import { nanoid } from 'nanoid';
 import localforage from 'localforage';
 
-import {
-	Button,
-	FormField,
-	Dialog,
-	DialogContent,
-	DialogTrigger,
-} from '~/components/ui';
-import { AddFormField, InvoicePdf, InvoicePdfEntry } from '~/components';
+import { Button, Dialog, DialogContent, DialogTrigger } from '~/components/ui';
+import { AddFormField, InvoicePdf, FormField } from '~/components';
+import { intents, type Intent, invoicesKey } from '~/constants';
 
-import { intents } from '~/types';
-import type { Intent, Field, Invoice } from '~/types';
+import type { ActionFunctionArgs } from '@remix-run/node';
+import type { ClientActionFunctionArgs } from '@remix-run/react';
+import type { Field, Invoice, InvoiceField } from '~/types';
 
 export async function action({ request }: ActionFunctionArgs) {
 	const formQueryString = await request.text();
 	const formData = queryString.parse(formQueryString, { sort: false });
 	const intent = formData?.intent?.toString();
 
-	const customer: Array<InvoicePdfEntry> = [];
+	const customer: Array<InvoiceField> = [];
 	for (const [key, value] of Object.entries(formData)) {
 		if (key.search('customer-') > -1 && value) {
 			const label = key.replace('customer-', '').replace('[]', '');
@@ -92,9 +83,9 @@ export async function clientAction({ serverAction }: ClientActionFunctionArgs) {
 		{ id: nanoid(), createdAt: today },
 		data.invoice,
 	);
-	const invoices = await localforage.getItem<Invoice[]>('invoices');
-	await localforage.setItem<Invoice[]>(
-		'invoices',
+	const invoices = await localforage.getItem<Array<Invoice>>(invoicesKey);
+	await localforage.setItem<Array<Invoice>>(
+		invoicesKey,
 		(invoices || []).concat(newInvoice),
 	);
 
@@ -107,42 +98,46 @@ const defaultCustomerFields: Field[] = [
 		name: 'customer-name',
 		label: 'Name',
 		value: '',
-		showTitle: false,
+		showLabel: false,
 	},
 	{
 		key: nanoid(),
 		name: 'customer-email',
 		label: 'Email',
 		value: '',
-		showTitle: false,
+		showLabel: false,
 	},
 	{
 		key: nanoid(),
 		name: 'customer-address',
 		label: 'Address',
 		value: '',
-		showTitle: false,
+		showLabel: false,
 	},
 ];
 
 export default function NewInvoiceRoute() {
 	const fetcher = useFetcher<typeof action>();
-	const [fields, setFields] = React.useState<Field[]>(defaultCustomerFields);
+	const [formFields, setFormFields] = React.useState<Field[]>(
+		defaultCustomerFields,
+	);
 	const [intent, setIntent] = React.useState<Intent | null>(null);
 
 	const isLoading = fetcher.state !== 'idle';
 	const invoicePdf = isLoading ? null : fetcher.data?.invoicePdf;
 
-	const addField = (field: Field) => {
-		setFields(fields.concat(field));
+	const addFormField = (field: Field) => {
+		setFormFields(formFields.concat(field));
 	};
 
-	const onFieldChange = (field: Field, fieldIndex: number) => {
-		setFields(Object.assign([], fields, { [fieldIndex]: field }));
+	const onFormFieldChange = (formField: Field, fieldIndex: number) => {
+		setFormFields(Object.assign([], formFields, { [fieldIndex]: formField }));
 	};
 
-	const removeField = (fieldIndex: number) => {
-		setFields(fields.slice(0, fieldIndex).concat(fields.slice(fieldIndex + 1)));
+	const removeFormField = (fieldIndex: number) => {
+		setFormFields(
+			formFields.slice(0, fieldIndex).concat(formFields.slice(fieldIndex + 1)),
+		);
 	};
 
 	React.useEffect(() => {
@@ -159,23 +154,23 @@ export default function NewInvoiceRoute() {
 			<h3 className="text-2xl">Customer Data</h3>
 			<p className="block text-sm">fill all of your customer data below</p>
 
-			<Reorder.Group values={fields} onReorder={setFields}>
-				{fields.map((field, index) => (
-					<Reorder.Item key={field.key} value={field}>
+			<Reorder.Group values={formFields} onReorder={setFormFields}>
+				{formFields.map((formField, index) => (
+					<Reorder.Item key={formField.key} value={formField}>
 						<FormField
-							key={field.key}
-							field={field}
+							key={formField.key}
+							formField={formField}
 							className="my-2"
-							onFieldChange={(updatedField) =>
-								onFieldChange(updatedField, index)
+							onFormFieldChange={(updatedFormField) =>
+								onFormFieldChange(updatedFormField, index)
 							}
-							removeField={() => removeField(index)}
+							removeFormField={() => removeFormField(index)}
 						/>
 					</Reorder.Item>
 				))}
 			</Reorder.Group>
 
-			<AddFormField fieldPrefix="customer" addField={addField} />
+			<AddFormField fieldNamePrefix="customer" addFormField={addFormField} />
 
 			<div className="mt-32 flex gap-2">
 				<Dialog>

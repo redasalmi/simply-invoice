@@ -13,13 +13,13 @@ import {
 } from '~/components/ui';
 import { cn } from '~/lib/utils';
 
-import { type Field } from '~/types';
+import type { Field } from '~/types';
 
 type FormFieldProps = {
-	field: Field;
+	formField: Field;
 	className?: string;
-	onFieldChange: (field: Field) => void;
-	removeField: () => void;
+	onFormFieldChange: (field: Field) => void;
+	removeFormField: () => void;
 };
 
 const hideTitleText = 'Hide title in invoice';
@@ -28,34 +28,34 @@ const deleteFieldText = 'Delete field';
 const dragFieldText = 'Drag to move field';
 
 export function FormField({
-	field,
+	formField,
 	className,
-	onFieldChange,
-	removeField,
+	onFormFieldChange,
+	removeFormField,
 }: FormFieldProps) {
 	const id = React.useId();
-	const { key, name, label, value, showTitle } = field;
+	const { key, name, label, value, showLabel } = formField;
 
 	const inputName = `${name.replaceAll(' ', '-')}[]`;
-	const switchTooltip = showTitle ? hideTitleText : showTitleText;
+	const switchTooltip = showLabel ? hideTitleText : showTitleText;
 
 	const handleInputChange = (event: React.FormEvent<HTMLInputElement>) => {
-		onFieldChange({
+		onFormFieldChange({
 			key,
 			name,
 			label,
 			value: event.currentTarget.value,
-			showTitle,
+			showLabel,
 		});
 	};
 
 	const handleSwitchChange = (show: boolean) => {
-		onFieldChange({
+		onFormFieldChange({
 			key,
 			name,
 			label,
 			value,
-			showTitle: show,
+			showLabel: show,
 		});
 	};
 
@@ -80,7 +80,7 @@ export function FormField({
 							<div className="flex items-center justify-center">
 								<Switch
 									name={inputName}
-									checked={showTitle}
+									checked={showLabel}
 									aria-label={switchTooltip}
 									onCheckedChange={handleSwitchChange}
 								/>
@@ -118,7 +118,7 @@ export function FormField({
 								variant="ghost"
 								aria-label={deleteFieldText}
 								className="p-0"
-								onClick={removeField}
+								onClick={removeFormField}
 							>
 								<Trash2 />
 							</Button>

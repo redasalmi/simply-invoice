@@ -2,13 +2,15 @@ import { renderToStream } from '@react-pdf/renderer';
 import { type ActionFunctionArgs } from '@remix-run/node';
 import queryString from 'query-string';
 
-import { InvoicePdf, type InvoicePdfEntry } from '~/components';
+import { InvoicePdf } from '~/components';
+
+import type { InvoiceField } from '~/types';
 
 export async function action({ request }: ActionFunctionArgs) {
 	const formQueryString = await request.text();
 	const formData = queryString.parse(formQueryString, { sort: false });
 
-	const customer: Array<InvoicePdfEntry> = [];
+	const customer: Array<InvoiceField> = [];
 	for (const [key, value] of Object.entries(formData)) {
 		if (key.search('customer-') > -1 && value) {
 			const label = key.replace('customer-', '').replace('[]', '');
@@ -41,5 +43,7 @@ export async function action({ request }: ActionFunctionArgs) {
 		stream.on('error', reject);
 	});
 
-	return `data:application/pdf;base64,${body.toString('base64')}`;
+	return {
+		invoicePdf: `data:application/pdf;base64,${body.toString('base64')}`,
+	};
 }
