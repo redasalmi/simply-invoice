@@ -1,3 +1,5 @@
+import { type InvoicePdfEntry } from '~/components';
+
 export type Field = {
 	key: string;
 	name: string;
@@ -13,3 +15,8 @@ export const intents = {
 } as const;
 
 export type Intent = (typeof intents)[keyof typeof intents];
+
+export type Invoice = {
+	id: string;
+	customer: Array<InvoicePdfEntry>;
+};

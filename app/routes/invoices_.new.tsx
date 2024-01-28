@@ -1,10 +1,15 @@
 import * as React from 'react';
 import queryString from 'query-string';
-import { redirect, type ActionFunctionArgs } from '@remix-run/node';
-import { useFetcher } from '@remix-run/react';
+import { type ActionFunctionArgs } from '@remix-run/node';
+import {
+	type ClientActionFunctionArgs,
+	useFetcher,
+	redirect,
+} from '@remix-run/react';
 import { Reorder } from 'framer-motion';
 import { renderToStream } from '@react-pdf/renderer';
 import { nanoid } from 'nanoid';
+import localforage from 'localforage';
 
 import {
 	Button,
@@ -13,35 +18,37 @@ import {
 	DialogContent,
 	DialogTrigger,
 } from '~/components/ui';
-import { AddFormField, InvoicePdf, PdfEntry } from '~/components';
+import { AddFormField, InvoicePdf, InvoicePdfEntry } from '~/components';
 
 import { intents } from '~/types';
-import type { Intent, Field } from '~/types';
+import type { Intent, Field, Invoice } from '~/types';
 
 export async function action({ request }: ActionFunctionArgs) {
 	const formQueryString = await request.text();
 	const formData = queryString.parse(formQueryString, { sort: false });
 	const intent = formData?.intent?.toString();
 
-	if (intent && [intents.download, intents.preview].includes(intent)) {
-		const customer: Record<string, PdfEntry> = {};
-		for (const [key, value] of Object.entries(formData)) {
-			if (key.search('customer-') > -1 && value) {
-				const field = key.replace('customer-', '').replace('[]', '');
+	const customer: Array<InvoicePdfEntry> = [];
+	for (const [key, value] of Object.entries(formData)) {
+		if (key.search('customer-') > -1 && value) {
+			const label = key.replace('customer-', '').replace('[]', '');
 
-				if (Array.isArray(value) && value[0]) {
-					customer[field] = {
-						value: value[0].trim(),
-						showTitle: value[1] === 'on',
-					};
-				} else if (typeof value === 'string' && value) {
-					customer[field] = {
-						value: value.trim(),
-					};
-				}
+			if (Array.isArray(value) && value[0]) {
+				customer.push({
+					label,
+					value: value[0].trim(),
+					showLabel: value[1] === 'on',
+				});
+			} else if (typeof value === 'string' && value) {
+				customer.push({
+					label,
+					value: value.trim(),
+				});
 			}
 		}
+	}
 
+	if (intent && [intents.download, intents.preview].includes(intent)) {
 		const stream = await renderToStream(<InvoicePdf data={{ customer }} />);
 
 		const body: Buffer = await new Promise((resolve, reject) => {
@@ -55,8 +62,37 @@ export async function action({ request }: ActionFunctionArgs) {
 			stream.on('error', reject);
 		});
 
-		return `data:application/pdf;base64,${body.toString('base64')}`;
+		return {
+			intent,
+			invoicePdf: `data:application/pdf;base64,${body.toString('base64')}`,
+			invoice: {
+				customer,
+			},
+		};
 	}
+
+	return {
+		intent,
+		invoicePdf: null,
+		invoice: {
+			customer,
+		},
+	};
+}
+
+export async function clientAction({ serverAction }: ClientActionFunctionArgs) {
+	const data = await serverAction<typeof action>();
+
+	if (data.intent !== intents.save) {
+		return data;
+	}
+
+	const newInvoice = Object.assign({ id: nanoid() }, data.invoice);
+	const invoices = await localforage.getItem<Invoice[]>('invoices');
+	await localforage.setItem<Invoice[]>(
+		'invoices',
+		(invoices || []).concat(newInvoice),
+	);
 
 	return redirect('/invoices');
 }
@@ -78,7 +114,7 @@ const defaultCustomerFields: Field[] = [
 	},
 	{
 		key: nanoid(),
-		name: 'customer-Address',
+		name: 'customer-address',
 		label: 'Address',
 		value: '',
 		showTitle: false,
@@ -86,12 +122,12 @@ const defaultCustomerFields: Field[] = [
 ];
 
 export default function NewInvoiceRoute() {
-	const fetcher = useFetcher<string>();
+	const fetcher = useFetcher<typeof action>();
 	const [fields, setFields] = React.useState<Field[]>(defaultCustomerFields);
 	const [intent, setIntent] = React.useState<Intent | null>(null);
 
 	const isLoading = fetcher.state !== 'idle';
-	const base64Pdf = isLoading ? null : fetcher.data;
+	const invoicePdf = isLoading ? null : fetcher.data?.invoicePdf;
 
 	const addField = (field: Field) => {
 		setFields(fields.concat(field));
@@ -106,13 +142,13 @@ export default function NewInvoiceRoute() {
 	};
 
 	React.useEffect(() => {
-		if (intent === intents.download && base64Pdf) {
+		if (intent === intents.download && invoicePdf) {
 			const link = document.createElement('a');
-			link.href = base64Pdf;
+			link.href = invoicePdf;
 			link.download = 'invoice.pdf';
 			link.click();
 		}
-	}, [intent, base64Pdf]);
+	}, [intent, invoicePdf]);
 
 	return (
 		<fetcher.Form method="post">
@@ -151,11 +187,11 @@ export default function NewInvoiceRoute() {
 							: 'Preview PDF'}
 					</DialogTrigger>
 					<DialogContent className="h-full max-h-[80%] max-w-[80%]">
-						{base64Pdf ? (
+						{invoicePdf ? (
 							<iframe
 								title="invoice pdf"
 								className="h-full w-full"
-								src={`${base64Pdf}#toolbar=0&navpanes=0`}
+								src={`${invoicePdf}#toolbar=0&navpanes=0`}
 							/>
 						) : null}
 					</DialogContent>

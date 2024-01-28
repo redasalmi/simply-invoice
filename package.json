@@ -25,6 +25,7 @@
 		"cross-env": "^7.0.3",
 		"framer-motion": "^11.0.3",
 		"isbot": "^4.4.0",
+		"localforage": "^1.10.0",
 		"lucide-react": "^0.314.0",
 		"nanoid": "^5.0.4",
 		"query-string": "^8.1.0",

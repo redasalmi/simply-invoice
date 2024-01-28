@@ -93,14 +93,15 @@ const styles = StyleSheet.create({
 	},
 });
 
-export type PdfEntry = {
+export type InvoicePdfEntry = {
+	label: string;
 	value: string;
-	showTitle?: boolean;
+	showLabel?: boolean;
 };
 
 type InvoicePdfProps = {
 	data: {
-		customer: Record<string, PdfEntry>;
+		customer: Array<InvoicePdfEntry>;
 	};
 };
 
@@ -144,9 +145,9 @@ export function InvoicePdf({ data }: InvoicePdfProps) {
 					<View style={styles.w40}>
 						<Text style={styles.text}>Billed to</Text>
 
-						{Object.entries(customer).map(([key, { value, showTitle }]) => (
+						{customer.map(({ label, value, showLabel }) => (
 							<Text key={nanoid()} style={styles.text}>
-								{showTitle ? `${capitalize(key)}: ${value}` : value}
+								{showLabel ? `${capitalize(label)}: ${value}` : value}
 							</Text>
 						))}
 					</View>
