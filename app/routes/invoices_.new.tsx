@@ -87,7 +87,11 @@ export async function clientAction({ serverAction }: ClientActionFunctionArgs) {
 		return data;
 	}
 
-	const newInvoice = Object.assign({ id: nanoid() }, data.invoice);
+	const today = new Date().toLocaleDateString();
+	const newInvoice: Invoice = Object.assign(
+		{ id: nanoid(), createdAt: today },
+		data.invoice,
+	);
 	const invoices = await localforage.getItem<Invoice[]>('invoices');
 	await localforage.setItem<Invoice[]>(
 		'invoices',

@@ -18,5 +18,6 @@ export type Intent = (typeof intents)[keyof typeof intents];
 
 export type Invoice = {
 	id: string;
+	createdAt: string;
 	customer: Array<InvoicePdfEntry>;
 };
