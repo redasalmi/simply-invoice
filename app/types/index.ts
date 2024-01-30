@@ -12,8 +12,14 @@ export type InvoiceField = {
 	showLabel?: boolean;
 };
 
+export type Customer = {
+	name: string;
+	email: string;
+	custom: Array<InvoiceField>;
+};
+
 export type Invoice = {
 	id: string;
 	createdAt: string;
-	customer: Array<InvoiceField>;
+	customer: Customer;
 };

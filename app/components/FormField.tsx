@@ -15,6 +15,11 @@ import { cn } from '~/lib/utils';
 
 import type { Field } from '~/types';
 
+type UncontrolledFormField = {
+	formField: Pick<Field, 'name' | 'label'>;
+	className?: string;
+};
+
 type FormFieldProps = {
 	formField: Field;
 	className?: string;
@@ -27,6 +32,26 @@ const showTitleText = 'Show title in invoice';
 const deleteFieldText = 'Delete field';
 const dragFieldText = 'Drag to move field';
 
+export function UncontrolledFormField({
+	formField,
+	className,
+}: UncontrolledFormField) {
+	const id = React.useId();
+	const { name, label } = formField;
+	const inputName = `${name.replaceAll(' ', '-')}`;
+
+	return (
+		<div className={cn(className)}>
+			<Label htmlFor={id} className="mb-1 block">
+				{label}
+			</Label>
+			<div className="flex gap-2">
+				<Input id={id} autoComplete="off" name={inputName} className="mr-4" />
+			</div>
+		</div>
+	);
+}
+
 export function FormField({
 	formField,
 	className,
@@ -36,7 +61,7 @@ export function FormField({
 	const id = React.useId();
 	const { key, name, label, value, showLabel } = formField;
 
-	const inputName = `${name.replaceAll(' ', '-')}[]`;
+	const inputName = `${name.replaceAll(' ', '-')}`;
 	const switchTooltip = showLabel ? hideTitleText : showTitleText;
 
 	const handleInputChange = (event: React.FormEvent<HTMLInputElement>) => {

@@ -3,7 +3,7 @@ import { nanoid } from 'nanoid';
 
 import { capitalize } from '~/lib/utils';
 
-import type { InvoiceField } from '~/types';
+import type { Customer } from '~/types';
 
 const styles = StyleSheet.create({
 	body: {
@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
 
 type InvoicePdfProps = {
 	data: {
-		customer: Array<InvoiceField>;
+		customer: Customer;
 	};
 };
 
@@ -140,8 +140,9 @@ export function InvoicePdf({ data }: InvoicePdfProps) {
 
 					<View style={styles.w40}>
 						<Text style={styles.text}>Billed to</Text>
-
-						{customer.map(({ label, value, showLabel }) => (
+						<Text style={styles.text}>{customer.name}</Text>
+						<Text style={styles.text}>{customer.email}</Text>
+						{customer.custom.map(({ label, value, showLabel }) => (
 							<Text key={nanoid()} style={styles.text}>
 								{showLabel ? `${capitalize(label)}: ${value}` : value}
 							</Text>

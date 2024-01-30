@@ -10,18 +10,18 @@ type AddFormFieldProps = {
 	addFormField: (field: Field) => void;
 };
 
-const titleField = 'title-field';
+const labelField = 'label-field';
 const contentField = 'content-field';
 
 export function AddFormField({
 	fieldNamePrefix,
 	addFormField,
 }: AddFormFieldProps) {
-	const titleRef = React.useRef<HTMLInputElement>(null);
+	const labelRef = React.useRef<HTMLInputElement>(null);
 	const contentRef = React.useRef<HTMLInputElement>(null);
 	const [showField, setShowField] = React.useState(false);
 
-	const titleFieldId = `${fieldNamePrefix}-${titleField}`;
+	const labelFieldId = `${fieldNamePrefix}-${labelField}`;
 	const contentFieldId = `${fieldNamePrefix}-${contentField}`;
 
 	const toggleField = () => {
@@ -29,14 +29,14 @@ export function AddFormField({
 	};
 
 	const addNewField = () => {
-		const title = titleRef.current?.value;
+		const label = labelRef.current?.value;
 		const content = contentRef.current?.value;
 
-		if (title && content) {
+		if (label && content) {
 			addFormField({
 				key: nanoid(),
-				name: `${fieldNamePrefix}-${title.trim()}`,
-				label: title.trim(),
+				name: `${fieldNamePrefix}-custom[${label.trim()}]`,
+				label: label.trim(),
 				value: content.trim(),
 				showLabel: false,
 			});
@@ -49,10 +49,10 @@ export function AddFormField({
 			{showField ? (
 				<div className="my-2">
 					<div className="my-2">
-						<Label htmlFor={titleFieldId} className="mb-1 block">
-							Title
+						<Label htmlFor={labelFieldId} className="mb-1 block">
+							Label
 						</Label>
-						<Input ref={titleRef} id={titleFieldId} name={titleFieldId} />
+						<Input ref={labelRef} id={labelFieldId} name={labelFieldId} />
 					</div>
 
 					<div className="my-2">

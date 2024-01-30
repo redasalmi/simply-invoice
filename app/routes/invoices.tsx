@@ -13,7 +13,7 @@ import {
 import { invoicesKey } from '~/constants';
 import { cn } from '~/lib/utils';
 
-import type { Invoice, InvoiceField } from '~/types';
+import type { Invoice } from '~/types';
 
 export async function clientLoader() {
 	return {
@@ -26,10 +26,6 @@ const formatter = new Intl.DateTimeFormat('en-GB', {
 	day: '2-digit',
 	year: 'numeric',
 });
-
-const getEmail = (customer: Array<InvoiceField>) => {
-	return customer.find(({ label }) => label === 'email')?.value;
-};
 
 export default function InvoicesRoutes() {
 	const { invoices } = useLoaderData<typeof clientLoader>();
@@ -62,7 +58,7 @@ export default function InvoicesRoutes() {
 								<TableRow key={id}>
 									<TableCell>{id}</TableCell>
 									<TableCell>{formatter.format(new Date(createdAt))}</TableCell>
-									<TableCell>{getEmail(customer)}</TableCell>
+									<TableCell>{customer.email}</TableCell>
 								</TableRow>
 							))}
 						</TableBody>

@@ -7,31 +7,44 @@ import { nanoid } from 'nanoid';
 import localforage from 'localforage';
 
 import { Button, Dialog, DialogContent, DialogTrigger } from '~/components/ui';
-import { AddFormField, InvoicePdf, FormField } from '~/components';
+import {
+	AddFormField,
+	InvoicePdf,
+	FormField,
+	UncontrolledFormField,
+} from '~/components';
 import { intents, type Intent, invoicesKey } from '~/constants';
 
 import type { ActionFunctionArgs } from '@remix-run/node';
 import type { ClientActionFunctionArgs } from '@remix-run/react';
-import type { Field, Invoice, InvoiceField } from '~/types';
+import type { Customer, Field, Invoice } from '~/types';
 
 export async function action({ request }: ActionFunctionArgs) {
 	const formQueryString = await request.text();
 	const formData = queryString.parse(formQueryString, { sort: false });
 	const intent = formData?.intent?.toString();
 
-	const customer: Array<InvoiceField> = [];
+	const customer: Customer = {
+		name: formData['customer[name]']?.toString(),
+		email: formData['customer[email]']?.toString(),
+		custom: [],
+	};
+
 	for (const [key, value] of Object.entries(formData)) {
-		if (key.search('customer-') > -1 && value) {
-			const label = key.replace('customer-', '').replace('[]', '');
+		if (key.search('customer-custom') > -1 && value) {
+			const label = key
+				.replace('customer-custom[', '')
+				.replaceAll('-', ' ')
+				.replace(']', '');
 
 			if (Array.isArray(value) && value[0]) {
-				customer.push({
+				customer.custom.push({
 					label,
 					value: value[0].trim(),
 					showLabel: value[1] === 'on',
 				});
 			} else if (typeof value === 'string' && value) {
-				customer.push({
+				customer.custom.push({
 					label,
 					value: value.trim(),
 				});
@@ -92,35 +105,20 @@ export async function clientAction({ serverAction }: ClientActionFunctionArgs) {
 	return redirect('/invoices');
 }
 
-const defaultCustomerFields: Field[] = [
-	{
-		key: nanoid(),
-		name: 'customer-name',
+const customerFields: Record<string, Pick<Field, 'name' | 'label'>> = {
+	name: {
+		name: 'customer[name]',
 		label: 'Name',
-		value: '',
-		showLabel: false,
 	},
-	{
-		key: nanoid(),
-		name: 'customer-email',
+	email: {
+		name: 'customer[email]',
 		label: 'Email',
-		value: '',
-		showLabel: false,
 	},
-	{
-		key: nanoid(),
-		name: 'customer-address',
-		label: 'Address',
-		value: '',
-		showLabel: false,
-	},
-];
+};
 
 export default function NewInvoiceRoute() {
 	const fetcher = useFetcher<typeof action>();
-	const [formFields, setFormFields] = React.useState<Field[]>(
-		defaultCustomerFields,
-	);
+	const [formFields, setFormFields] = React.useState<Field[]>([]);
 	const [intent, setIntent] = React.useState<Intent | null>(null);
 
 	const isLoading = fetcher.state !== 'idle';
@@ -153,6 +151,12 @@ export default function NewInvoiceRoute() {
 		<fetcher.Form method="post">
 			<h3 className="text-2xl">Customer Data</h3>
 			<p className="block text-sm">fill all of your customer data below</p>
+
+			<UncontrolledFormField formField={customerFields.name} className="my-2" />
+			<UncontrolledFormField
+				formField={customerFields.email}
+				className="my-2"
+			/>
 
 			<Reorder.Group values={formFields} onReorder={setFormFields}>
 				{formFields.map((formField, index) => (
