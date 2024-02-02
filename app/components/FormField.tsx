@@ -45,8 +45,8 @@ export function UncontrolledFormField({
 			<Label htmlFor={id} className="mb-1 block">
 				{label}
 			</Label>
-			<div className="flex gap-2">
-				<Input id={id} autoComplete="off" name={inputName} className="mr-4" />
+			<div>
+				<Input id={id} autoComplete="off" name={inputName} />
 			</div>
 		</div>
 	);

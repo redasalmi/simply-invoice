@@ -8,6 +8,7 @@ import type { Field } from '~/types';
 type AddFormFieldProps = {
 	fieldNamePrefix: string;
 	addFormField: (field: Field) => void;
+	children?: React.ReactNode;
 };
 
 const labelField = 'label-field';
@@ -16,6 +17,7 @@ const contentField = 'content-field';
 export function AddFormField({
 	fieldNamePrefix,
 	addFormField,
+	children,
 }: AddFormFieldProps) {
 	const labelRef = React.useRef<HTMLInputElement>(null);
 	const contentRef = React.useRef<HTMLInputElement>(null);
@@ -45,7 +47,9 @@ export function AddFormField({
 	};
 
 	return (
-		<>
+		<div className="my-2">
+			{children}
+
 			{showField ? (
 				<div className="my-2">
 					<div className="my-2">
@@ -64,17 +68,15 @@ export function AddFormField({
 				</div>
 			) : null}
 
-			<div className="my-2">
-				<Button type="button" onClick={toggleField}>
-					{showField ? 'Delete' : 'Add'} New Field
-				</Button>
+			<Button type="button" onClick={toggleField}>
+				{showField ? 'Delete' : 'Add'} New Field
+			</Button>
 
-				{showField ? (
-					<Button type="button" onClick={addNewField} className="ml-2">
-						Save New Field
-					</Button>
-				) : null}
-			</div>
-		</>
+			{showField ? (
+				<Button type="button" onClick={addNewField} className="ml-2">
+					Save New Field
+				</Button>
+			) : null}
+		</div>
 	);
 }

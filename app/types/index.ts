@@ -23,3 +23,12 @@ export type Invoice = {
 	createdAt: string;
 	customer: Customer;
 };
+
+export type Address = {
+	address1: string;
+	address2: string;
+	city: string;
+	country: string;
+	province: string;
+	zip: string;
+};

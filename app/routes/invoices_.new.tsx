@@ -105,16 +105,51 @@ export async function clientAction({ serverAction }: ClientActionFunctionArgs) {
 	return redirect('/invoices');
 }
 
-const customerFields: Record<string, Pick<Field, 'name' | 'label'>> = {
-	name: {
+const customerFields: Array<Pick<Field, 'key' | 'name' | 'label'>> = [
+	{
+		key: nanoid(),
 		name: 'customer[name]',
 		label: 'Name',
 	},
-	email: {
+	{
+		key: nanoid(),
 		name: 'customer[email]',
 		label: 'Email',
 	},
-};
+];
+
+const addressFields: Array<Pick<Field, 'key' | 'name' | 'label'>> = [
+	{
+		key: nanoid(),
+		name: 'address1',
+		label: 'Address 1',
+	},
+	{
+		key: nanoid(),
+		name: 'address2',
+		label: 'Address 2',
+	},
+	{
+		key: nanoid(),
+		name: 'country',
+		label: 'Country',
+	},
+	{
+		key: nanoid(),
+		name: 'province',
+		label: 'Province',
+	},
+	{
+		key: nanoid(),
+		name: 'city',
+		label: 'City',
+	},
+	{
+		key: nanoid(),
+		name: 'zip',
+		label: 'Zip',
+	},
+];
 
 export default function NewInvoiceRoute() {
 	const fetcher = useFetcher<typeof action>();
@@ -149,32 +184,60 @@ export default function NewInvoiceRoute() {
 
 	return (
 		<fetcher.Form method="post">
-			<h3 className="text-2xl">Customer Data</h3>
-			<p className="block text-sm">fill all of your customer data below</p>
+			<div>
+				<h3 className="text-2xl">Customer Data</h3>
+				<p className="block text-sm">Fill your customer data </p>
 
-			<UncontrolledFormField formField={customerFields.name} className="my-2" />
-			<UncontrolledFormField
-				formField={customerFields.email}
-				className="my-2"
-			/>
-
-			<Reorder.Group values={formFields} onReorder={setFormFields}>
-				{formFields.map((formField, index) => (
-					<Reorder.Item key={formField.key} value={formField}>
-						<FormField
-							key={formField.key}
-							formField={formField}
+				<div>
+					{customerFields.map((field) => (
+						<UncontrolledFormField
+							key={field.key}
 							className="my-2"
-							onFormFieldChange={(updatedFormField) =>
-								onFormFieldChange(updatedFormField, index)
-							}
-							removeFormField={() => removeFormField(index)}
+							formField={field}
 						/>
-					</Reorder.Item>
-				))}
-			</Reorder.Group>
+					))}
+				</div>
+			</div>
 
-			<AddFormField fieldNamePrefix="customer" addFormField={addFormField} />
+			<div>
+				<h3 className="text-2xl">Address</h3>
+				<p className="block text-sm">Fill your customer address </p>
+
+				<div>
+					{addressFields.map((field) => (
+						<UncontrolledFormField
+							key={field.key}
+							className="my-2"
+							formField={field}
+						/>
+					))}
+				</div>
+			</div>
+
+			<AddFormField fieldNamePrefix="customer" addFormField={addFormField}>
+				<h3 className="text-2xl">Custom fields</h3>
+				<p className="mb-2 block text-sm">
+					Add any custom fields and order them
+				</p>
+
+				{formFields.length ? (
+					<Reorder.Group values={formFields} onReorder={setFormFields}>
+						{formFields.map((formField, index) => (
+							<Reorder.Item key={formField.key} value={formField}>
+								<FormField
+									key={formField.key}
+									formField={formField}
+									className="my-2"
+									onFormFieldChange={(updatedFormField) =>
+										onFormFieldChange(updatedFormField, index)
+									}
+									removeFormField={() => removeFormField(index)}
+								/>
+							</Reorder.Item>
+						))}
+					</Reorder.Group>
+				) : null}
+			</AddFormField>
 
 			<div className="mt-32 flex gap-2">
 				<Dialog>
