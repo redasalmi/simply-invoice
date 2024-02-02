@@ -1,3 +1,3 @@
 export default function HomeRoute() {
-	return <>Home Page Under construction... 🚧</>;
+	return <section>Home Page Under construction... 🚧</section>;
 }

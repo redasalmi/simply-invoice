@@ -31,7 +31,7 @@ export default function InvoicesRoutes() {
 	const { invoices } = useLoaderData<typeof clientLoader>();
 
 	return (
-		<>
+		<section>
 			<div className="flex justify-end">
 				<Link
 					to="/invoices/new"
@@ -67,6 +67,6 @@ export default function InvoicesRoutes() {
 					<p>No invoice found.</p>
 				)}
 			</div>
-		</>
+		</section>
 	);
 }

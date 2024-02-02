@@ -1,3 +1,3 @@
 export default function ServicesRoute() {
-	return <>Services Under construction... 🚧</>;
+	return <section>Services Under construction... 🚧</section>;
 }

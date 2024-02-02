@@ -1,3 +1,3 @@
 export default function CustomersRoute() {
-	return <>Customers Under construction... 🚧</>;
+	return <section>Customers Under construction... 🚧</section>;
 }

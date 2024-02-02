@@ -29,10 +29,10 @@ export function Navbar() {
 				</Link>
 
 				<div className="flex gap-12">
-					<NavItem to="/invoices">Invoices</NavItem>
 					<NavItem to="/companies">Companies</NavItem>
 					<NavItem to="/customers">Customers</NavItem>
 					<NavItem to="/services">Services</NavItem>
+					<NavItem to="/invoices">Invoices</NavItem>
 				</div>
 			</div>
 		</nav>

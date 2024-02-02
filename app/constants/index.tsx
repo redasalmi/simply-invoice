@@ -7,3 +7,4 @@ export const intents = {
 export type Intent = (typeof intents)[keyof typeof intents];
 
 export const invoicesKey = 'invoices';
+export const companiesKey = 'companies';

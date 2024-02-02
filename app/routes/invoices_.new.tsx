@@ -183,108 +183,110 @@ export default function NewInvoiceRoute() {
 	}, [intent, invoicePdf]);
 
 	return (
-		<fetcher.Form method="post">
-			<div>
-				<h3 className="text-2xl">Customer Data</h3>
-				<p className="block text-sm">Fill your customer data </p>
-
+		<section>
+			<fetcher.Form method="post">
 				<div>
-					{customerFields.map((field) => (
-						<UncontrolledFormField
-							key={field.key}
-							className="my-2"
-							formField={field}
-						/>
-					))}
-				</div>
-			</div>
+					<h3 className="text-2xl">Customer Data</h3>
+					<p className="block text-sm">Fill your customer data </p>
 
-			<div>
-				<h3 className="text-2xl">Address</h3>
-				<p className="block text-sm">Fill your customer address </p>
-
-				<div>
-					{addressFields.map((field) => (
-						<UncontrolledFormField
-							key={field.key}
-							className="my-2"
-							formField={field}
-						/>
-					))}
-				</div>
-			</div>
-
-			<AddFormField fieldNamePrefix="customer" addFormField={addFormField}>
-				<h3 className="text-2xl">Custom fields</h3>
-				<p className="mb-2 block text-sm">
-					Add any custom fields and order them
-				</p>
-
-				{formFields.length ? (
-					<Reorder.Group values={formFields} onReorder={setFormFields}>
-						{formFields.map((formField, index) => (
-							<Reorder.Item key={formField.key} value={formField}>
-								<FormField
-									key={formField.key}
-									formField={formField}
-									className="my-2"
-									onFormFieldChange={(updatedFormField) =>
-										onFormFieldChange(updatedFormField, index)
-									}
-									removeFormField={() => removeFormField(index)}
-								/>
-							</Reorder.Item>
+					<div>
+						{customerFields.map((field) => (
+							<UncontrolledFormField
+								key={field.key}
+								className="my-2"
+								formField={field}
+							/>
 						))}
-					</Reorder.Group>
-				) : null}
-			</AddFormField>
+					</div>
+				</div>
 
-			<div className="mt-32 flex gap-2">
-				<Dialog>
-					<DialogTrigger
+				<div>
+					<h3 className="text-2xl">Address</h3>
+					<p className="block text-sm">Fill your customer address </p>
+
+					<div>
+						{addressFields.map((field) => (
+							<UncontrolledFormField
+								key={field.key}
+								className="my-2"
+								formField={field}
+							/>
+						))}
+					</div>
+				</div>
+
+				<AddFormField fieldNamePrefix="customer" addFormField={addFormField}>
+					<h3 className="text-2xl">Custom fields</h3>
+					<p className="mb-2 block text-sm">
+						Add any custom fields and order them
+					</p>
+
+					{formFields.length ? (
+						<Reorder.Group values={formFields} onReorder={setFormFields}>
+							{formFields.map((formField, index) => (
+								<Reorder.Item key={formField.key} value={formField}>
+									<FormField
+										key={formField.key}
+										formField={formField}
+										className="my-2"
+										onFormFieldChange={(updatedFormField) =>
+											onFormFieldChange(updatedFormField, index)
+										}
+										removeFormField={() => removeFormField(index)}
+									/>
+								</Reorder.Item>
+							))}
+						</Reorder.Group>
+					) : null}
+				</AddFormField>
+
+				<div className="mt-32 flex gap-2">
+					<Dialog>
+						<DialogTrigger
+							type="submit"
+							name="intent"
+							value={intents.preview}
+							onClick={() => setIntent(intents.preview)}
+							className="inline-flex h-10 items-center justify-center whitespace-nowrap rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground ring-offset-background transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
+						>
+							{isLoading && intent === intents.preview
+								? '...Loading PDF'
+								: 'Preview PDF'}
+						</DialogTrigger>
+						<DialogContent className="h-full max-h-[80%] max-w-[80%]">
+							{invoicePdf ? (
+								<iframe
+									title="invoice pdf"
+									className="h-full w-full"
+									src={`${invoicePdf}#toolbar=0&navpanes=0`}
+								/>
+							) : null}
+						</DialogContent>
+					</Dialog>
+
+					<Button
 						type="submit"
 						name="intent"
-						value={intents.preview}
-						onClick={() => setIntent(intents.preview)}
-						className="inline-flex h-10 items-center justify-center whitespace-nowrap rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground ring-offset-background transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
+						value={intents.download}
+						onClick={() => setIntent(intents.download)}
 					>
-						{isLoading && intent === intents.preview
-							? '...Loading PDF'
-							: 'Preview PDF'}
-					</DialogTrigger>
-					<DialogContent className="h-full max-h-[80%] max-w-[80%]">
-						{invoicePdf ? (
-							<iframe
-								title="invoice pdf"
-								className="h-full w-full"
-								src={`${invoicePdf}#toolbar=0&navpanes=0`}
-							/>
-						) : null}
-					</DialogContent>
-				</Dialog>
+						{isLoading && intent === intents.download
+							? '...Downloading PDF'
+							: 'Download PDF'}
+					</Button>
 
-				<Button
-					type="submit"
-					name="intent"
-					value={intents.download}
-					onClick={() => setIntent(intents.download)}
-				>
-					{isLoading && intent === intents.download
-						? '...Downloading PDF'
-						: 'Download PDF'}
-				</Button>
-
-				<Button
-					type="submit"
-					name="intent"
-					value={intents.save}
-					onClick={() => setIntent(intents.save)}
-				>
-					{isLoading && intent === intents.save
-						? '...Saving Invoice'
-						: 'Save Invoice'}
-				</Button>
-			</div>
-		</fetcher.Form>
+					<Button
+						type="submit"
+						name="intent"
+						value={intents.save}
+						onClick={() => setIntent(intents.save)}
+					>
+						{isLoading && intent === intents.save
+							? '...Saving Invoice'
+							: 'Save Invoice'}
+					</Button>
+				</div>
+			</fetcher.Form>
+		</section>
 	);
 }

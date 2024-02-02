@@ -32,3 +32,11 @@ export type Address = {
 	province: string;
 	zip: string;
 };
+
+export type Company = {
+	id: string;
+	name: string;
+	email: string;
+	address: Address;
+	custom: Array<InvoiceField>;
+};
