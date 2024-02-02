@@ -1,6 +1,5 @@
 import {
 	Links,
-	LiveReload,
 	Meta,
 	Outlet,
 	Scripts,
@@ -26,7 +25,6 @@ export default function App() {
 				</main>
 				<Footer />
 				<ScrollRestoration />
-				<LiveReload />
 				<Scripts />
 			</body>
 		</html>
