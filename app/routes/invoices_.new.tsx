@@ -56,7 +56,7 @@ export async function action({ request }: ActionFunctionArgs) {
 		const stream = await renderToStream(<InvoicePdf data={{ customer }} />);
 
 		const body: Buffer = await new Promise((resolve, reject) => {
-			const buffers: Uint8Array[] = [];
+			const buffers: Array<Uint8Array> = [];
 			stream.on('data', (data) => {
 				buffers.push(data);
 			});
@@ -153,7 +153,7 @@ const addressFields: Array<Pick<Field, 'key' | 'name' | 'label'>> = [
 
 export default function NewInvoiceRoute() {
 	const fetcher = useFetcher<typeof action>();
-	const [formFields, setFormFields] = React.useState<Field[]>([]);
+	const [formFields, setFormFields] = React.useState<Array<Field>>([]);
 	const [intent, setIntent] = React.useState<Intent | null>(null);
 
 	const isLoading = fetcher.state !== 'idle';

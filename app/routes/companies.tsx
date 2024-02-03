@@ -42,15 +42,13 @@ export default function CompaniesRoute() {
 					<Table>
 						<TableHeader>
 							<TableRow>
-								<TableHead>ID</TableHead>
-								<TableHead>Date</TableHead>
+								<TableHead>Name</TableHead>
 								<TableHead>Email</TableHead>
 							</TableRow>
 						</TableHeader>
 						<TableBody>
 							{companies.map(({ id, email, name }) => (
 								<TableRow key={id}>
-									<TableCell>{id}</TableCell>
 									<TableCell>{name}</TableCell>
 									<TableCell>{email}</TableCell>
 								</TableRow>
