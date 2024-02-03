@@ -1,5 +1,4 @@
 import { useLoaderData, Link } from '@remix-run/react';
-import localforage from 'localforage';
 
 import {
 	buttonVariants,
@@ -10,14 +9,14 @@ import {
 	TableHeader,
 	TableRow,
 } from '~/components/ui';
-import { invoicesKey } from '~/constants';
+import { getAllItems, invoicesStore } from '~/lib/stores';
 import { cn } from '~/lib/utils';
 
 import type { Invoice } from '~/types';
 
 export async function clientLoader() {
 	return {
-		invoices: await localforage.getItem<Array<Invoice>>(invoicesKey),
+		invoices: await getAllItems<Invoice>(invoicesStore),
 	};
 }
 
@@ -49,7 +48,7 @@ export default function InvoicesRoutes() {
 						<TableHeader>
 							<TableRow>
 								<TableHead>ID</TableHead>
-								<TableHead>Date</TableHead>
+								<TableHead>Creation Date</TableHead>
 								<TableHead>Email</TableHead>
 							</TableRow>
 						</TableHeader>

@@ -4,7 +4,6 @@ import { useFetcher, redirect } from '@remix-run/react';
 import { Reorder } from 'framer-motion';
 import { renderToStream } from '@react-pdf/renderer';
 import { nanoid } from 'nanoid';
-import localforage from 'localforage';
 
 import { Button, Dialog, DialogContent, DialogTrigger } from '~/components/ui';
 import {
@@ -13,11 +12,19 @@ import {
 	FormField,
 	UncontrolledFormField,
 } from '~/components';
-import { intents, type Intent, invoicesKey } from '~/constants';
+import { invoicesStore } from '~/lib/stores';
 
 import type { ActionFunctionArgs } from '@remix-run/node';
 import type { ClientActionFunctionArgs } from '@remix-run/react';
 import type { Customer, Field, Invoice } from '~/types';
+
+const intents = {
+	preview: 'preview',
+	download: 'download',
+	save: 'save',
+} as const;
+
+type Intent = (typeof intents)[keyof typeof intents];
 
 export async function action({ request }: ActionFunctionArgs) {
 	const formQueryString = await request.text();
@@ -91,16 +98,17 @@ export async function clientAction({ serverAction }: ClientActionFunctionArgs) {
 		return data;
 	}
 
+	const invoiceId = nanoid();
 	const today = new Date().toLocaleDateString();
-	const newInvoice: Invoice = Object.assign(
-		{ id: nanoid(), createdAt: today },
+	const newInvoice = Object.assign(
+		{
+			id: invoiceId,
+			createdAt: today,
+		},
 		data.invoice,
 	);
-	const invoices = await localforage.getItem<Array<Invoice>>(invoicesKey);
-	await localforage.setItem<Array<Invoice>>(
-		invoicesKey,
-		(invoices || []).concat(newInvoice),
-	);
+
+	await invoicesStore.setItem<Invoice>(invoiceId, newInvoice);
 
 	return redirect('/invoices');
 }

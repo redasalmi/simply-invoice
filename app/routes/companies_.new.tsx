@@ -2,12 +2,11 @@ import * as React from 'react';
 import { redirect, useFetcher } from '@remix-run/react';
 import queryString from 'query-string';
 import { nanoid } from 'nanoid';
-import localforage from 'localforage';
 import { Reorder } from 'framer-motion';
 
 import { AddFormField, FormField, UncontrolledFormField } from '~/components';
 import { Button } from '~/components/ui';
-import { companiesKey } from '~/constants';
+import { companiesStore } from '~/lib/stores';
 
 import type { ClientActionFunctionArgs } from '@remix-run/react';
 import type { Company, Field } from '~/types';
@@ -16,8 +15,9 @@ export async function clientAction({ request }: ClientActionFunctionArgs) {
 	const formQueryString = await request.text();
 	const formData = queryString.parse(formQueryString, { sort: false });
 
+	const companyId = nanoid();
 	const newCompany: Company = {
-		id: nanoid(),
+		id: companyId,
 		name: formData['name']?.toString(),
 		email: formData['email']?.toString(),
 		address: {
@@ -53,11 +53,7 @@ export async function clientAction({ request }: ClientActionFunctionArgs) {
 		}
 	}
 
-	const companies = await localforage.getItem<Array<Company>>(companiesKey);
-	await localforage.setItem<Array<Company>>(
-		companiesKey,
-		(companies || []).concat(newCompany),
-	);
+	await companiesStore.setItem<Company>(companyId, newCompany);
 
 	return redirect('/companies');
 }

@@ -1,5 +1,4 @@
 import { Link, useLoaderData } from '@remix-run/react';
-import localforage from 'localforage';
 
 import {
 	buttonVariants,
@@ -10,14 +9,14 @@ import {
 	TableHeader,
 	TableRow,
 } from '~/components/ui';
-import { companiesKey } from '~/constants';
+import { companiesStore, getAllItems } from '~/lib/stores';
 import { cn } from '~/lib/utils';
 
 import type { Company } from '~/types';
 
 export async function clientLoader() {
 	return {
-		companies: await localforage.getItem<Array<Company>>(companiesKey),
+		companies: await getAllItems<Company>(companiesStore),
 	};
 }
 
