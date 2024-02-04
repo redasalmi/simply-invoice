@@ -4,13 +4,13 @@ import queryString from 'query-string';
 
 import { InvoicePdf } from '~/components';
 
-import type { InvoiceField } from '~/types';
+import type { CustomField } from '~/types';
 
 export async function action({ request }: ActionFunctionArgs) {
 	const formQueryString = await request.text();
 	const formData = queryString.parse(formQueryString, { sort: false });
 
-	const customer: Array<InvoiceField> = [];
+	const customer: Array<CustomField> = [];
 	for (const [key, value] of Object.entries(formData)) {
 		if (key.search('customer-') > -1 && value) {
 			const label = key.replace('customer-', '').replace('[]', '');
