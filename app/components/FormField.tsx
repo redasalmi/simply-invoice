@@ -13,24 +13,12 @@ import {
 } from '~/components/ui';
 import { cn } from '~/lib/utils';
 
-import type { Field } from '~/types';
+import type { Field, CustomField } from '~/types';
 
 type UncontrolledFormField = {
-	formField: Pick<Field, 'name' | 'label'>;
-	className?: string;
-};
-
-type FormFieldProps = {
 	formField: Field;
 	className?: string;
-	onFormFieldChange: (field: Field) => void;
-	removeFormField: () => void;
 };
-
-const hideTitleText = 'Hide title in invoice';
-const showTitleText = 'Show title in invoice';
-const deleteFieldText = 'Delete field';
-const dragFieldText = 'Drag to move field';
 
 export function UncontrolledFormField({
 	formField,
@@ -52,59 +40,93 @@ export function UncontrolledFormField({
 	);
 }
 
+type FormFieldProps = {
+	formField: CustomField;
+	className?: string;
+	onFormFieldChange: (field: CustomField) => void;
+	removeFormField: () => void;
+};
+
+const hideLabelText = 'Hide label in invoice';
+const showLabelText = 'Show label in invoice';
+const deleteFieldText = 'Delete field';
+const dragFieldText = 'Drag to move field';
+
 export function FormField({
 	formField,
 	className,
 	onFormFieldChange,
 	removeFormField,
 }: FormFieldProps) {
-	const id = React.useId();
-	const { key, name, label, value, showLabel } = formField;
+	const labelId = React.useId();
+	const contentId = React.useId();
+	const { id, label, content, showLabel } = formField;
 
-	const inputName = `${name.replaceAll(' ', '-')}`;
-	const switchTooltip = showLabel ? hideTitleText : showTitleText;
+	const switchTooltip = showLabel ? hideLabelText : showLabelText;
 
-	const handleInputChange = (event: React.FormEvent<HTMLInputElement>) => {
+	const handleLabelChange = (event: React.FormEvent<HTMLInputElement>) => {
 		onFormFieldChange({
-			key,
-			name,
+			id,
+			label: event.currentTarget.value,
+			content,
+			showLabel,
+		});
+	};
+
+	const handleContentChange = (event: React.FormEvent<HTMLInputElement>) => {
+		onFormFieldChange({
+			id,
 			label,
-			value: event.currentTarget.value,
+			content: event.currentTarget.value,
 			showLabel,
 		});
 	};
 
 	const handleSwitchChange = (show: boolean) => {
 		onFormFieldChange({
-			key,
-			name,
+			id,
 			label,
-			value,
+			content,
 			showLabel: show,
 		});
 	};
 
 	return (
-		<div className={cn(className)}>
-			<Label htmlFor={id} className="mb-1 block">
-				{label}
-			</Label>
-			<div className="flex gap-2">
+		<div className={cn(className, 'flex items-center gap-2')}>
+			<div className="flex-1">
+				<Label htmlFor={labelId} className="mb-1 block">
+					Label
+				</Label>
 				<Input
-					id={id}
+					id={labelId}
 					autoComplete="off"
-					name={inputName}
-					value={value}
-					onChange={handleInputChange}
+					name={`custom-label-${id}`}
+					value={label}
+					onChange={handleLabelChange}
+				/>
+			</div>
+
+			<div className="flex-1">
+				<Label htmlFor={contentId} className="mb-1 block">
+					Content
+				</Label>
+				<Input
+					id={contentId}
+					autoComplete="off"
+					name={`custom-content-${id}`}
+					value={content}
+					onChange={handleContentChange}
 					className="mr-4"
 				/>
+			</div>
 
+			<div className="mt-auto flex">
 				<TooltipProvider>
 					<Tooltip>
 						<TooltipTrigger asChild>
 							<div className="flex items-center justify-center">
 								<Switch
-									name={inputName}
+									name={`custom-show-label-${id}`}
 									checked={showLabel}
 									aria-label={switchTooltip}
 									onCheckedChange={handleSwitchChange}

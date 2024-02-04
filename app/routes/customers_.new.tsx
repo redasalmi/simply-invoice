@@ -9,7 +9,7 @@ import { Button } from '~/components/ui';
 import { customersStore } from '~/lib/stores';
 
 import type { ClientActionFunctionArgs } from '@remix-run/react';
-import type { Customer, Field } from '~/types';
+import type { Customer, Field, CustomField } from '~/types';
 
 export async function clientAction({ request }: ClientActionFunctionArgs) {
 	const formQueryString = await request.text();
@@ -28,29 +28,36 @@ export async function clientAction({ request }: ClientActionFunctionArgs) {
 			province: formData['province']?.toString(),
 			zip: formData['zip']?.toString(),
 		},
-		custom: [],
 	};
 
+	const customFields: Record<string, CustomField> = {};
 	for (const [key, value] of Object.entries(formData)) {
-		if (key.search('customer-custom') > -1 && value) {
-			const label = key
-				.replace('customer-custom[', '')
-				.replaceAll('-', ' ')
-				.replace(']', '');
+		if (key.search('custom-') !== -1) {
+			const id = key
+				.replace('custom-', '')
+				.replace('show-label-', '')
+				.replace('label-', '')
+				.replace('content-', '');
 
-			if (Array.isArray(value) && value[0]) {
-				newCustomer.custom.push({
-					label,
-					value: value[0].trim(),
-					showLabel: value[1] === 'on',
-				});
-			} else if (typeof value === 'string' && value) {
-				newCustomer.custom.push({
-					label,
-					value: value.trim(),
-				});
+			if (!customFields[id]) {
+				customFields[id] = {
+					id,
+				};
+			}
+
+			if (key.search('show-label-') !== -1) {
+				customFields[id].showLabel = value === 'on';
+			} else if (key.search('label-') !== -1) {
+				customFields[id].label = value;
+			} else if (key.search('content-') !== -1) {
+				customFields[id].content = value;
 			}
 		}
+	}
+
+	const customFieldsValues = Object.values(customFields);
+	if (customFieldsValues.length) {
+		newCustomer.custom = customFieldsValues;
 	}
 
 	await customersStore.setItem<Customer>(customerId, newCustomer);
@@ -58,47 +65,47 @@ export async function clientAction({ request }: ClientActionFunctionArgs) {
 	return redirect('/customers');
 }
 
-const customerFields: Array<Pick<Field, 'key' | 'name' | 'label'>> = [
+const customerFields: Array<Field> = [
 	{
-		key: nanoid(),
+		id: nanoid(),
 		name: 'name',
 		label: 'Name',
 	},
 	{
-		key: nanoid(),
+		id: nanoid(),
 		name: 'email',
 		label: 'Email',
 	},
 ];
 
-const addressFields: Array<Pick<Field, 'key' | 'name' | 'label'>> = [
+const addressFields: Array<Field> = [
 	{
-		key: nanoid(),
+		id: nanoid(),
 		name: 'address1',
 		label: 'Address 1',
 	},
 	{
-		key: nanoid(),
+		id: nanoid(),
 		name: 'address2',
 		label: 'Address 2',
 	},
 	{
-		key: nanoid(),
+		id: nanoid(),
 		name: 'country',
 		label: 'Country',
 	},
 	{
-		key: nanoid(),
+		id: nanoid(),
 		name: 'province',
 		label: 'Province',
 	},
 	{
-		key: nanoid(),
+		id: nanoid(),
 		name: 'city',
 		label: 'City',
 	},
 	{
-		key: nanoid(),
+		id: nanoid(),
 		name: 'zip',
 		label: 'Zip',
 	},
@@ -108,13 +115,13 @@ export default function NewCustomerRoute() {
 	const fetcher = useFetcher<typeof clientAction>();
 	const isLoading = fetcher.state !== 'idle';
 
-	const [formFields, setFormFields] = React.useState<Array<Field>>([]);
+	const [formFields, setFormFields] = React.useState<Array<CustomField>>([]);
 
-	const addFormField = (field: Field) => {
+	const addFormField = (field: CustomField) => {
 		setFormFields(formFields.concat(field));
 	};
 
-	const onFormFieldChange = (formField: Field, fieldIndex: number) => {
+	const onFormFieldChange = (formField: CustomField, fieldIndex: number) => {
 		setFormFields(Object.assign([], formFields, { [fieldIndex]: formField }));
 	};
 
@@ -130,7 +137,7 @@ export default function NewCustomerRoute() {
 				<div>
 					{customerFields.map((field) => (
 						<UncontrolledFormField
-							key={field.key}
+							key={field.id}
 							className="my-2"
 							formField={field}
 						/>
@@ -143,7 +150,7 @@ export default function NewCustomerRoute() {
 					<div>
 						{addressFields.map((field) => (
 							<UncontrolledFormField
-								key={field.key}
+								key={field.id}
 								className="my-2"
 								formField={field}
 							/>
@@ -151,7 +158,7 @@ export default function NewCustomerRoute() {
 					</div>
 				</div>
 
-				<AddFormField fieldNamePrefix="customer" addFormField={addFormField}>
+				<AddFormField addFormField={addFormField}>
 					<h3 className="text-2xl">Custom fields</h3>
 					<p className="mb-2 block text-sm">
 						Add any custom fields and order them
@@ -160,9 +167,8 @@ export default function NewCustomerRoute() {
 					{formFields.length ? (
 						<Reorder.Group values={formFields} onReorder={setFormFields}>
 							{formFields.map((formField, index) => (
-								<Reorder.Item key={formField.key} value={formField}>
+								<Reorder.Item key={formField.id} value={formField}>
 									<FormField
-										key={formField.key}
 										formField={formField}
 										className="my-2"
 										onFormFieldChange={(updatedFormField) =>

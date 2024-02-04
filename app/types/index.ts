@@ -1,9 +1,14 @@
 export type Field = {
-	key: string;
+	id: string;
 	name: string;
 	label: string;
-	value: string;
-	showLabel: boolean;
+};
+
+export type CustomField = {
+	id: string;
+	label: string;
+	content: string;
+	showLabel?: boolean;
 };
 
 export type Address = {
@@ -15,18 +20,12 @@ export type Address = {
 	zip: string;
 };
 
-export type CustomField = {
-	label: string;
-	value: string;
-	showLabel?: boolean;
-};
-
 export type Company = {
 	id: string;
 	name: string;
 	email: string;
 	address: Address;
-	custom: Array<CustomField>;
+	custom?: Array<CustomField>;
 };
 
 export type Customer = {
@@ -34,7 +33,7 @@ export type Customer = {
 	name: string;
 	email: string;
 	address: Address;
-	custom: Array<CustomField>;
+	custom?: Array<CustomField>;
 };
 
 export type Invoice = {

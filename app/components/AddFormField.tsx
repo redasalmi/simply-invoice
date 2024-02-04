@@ -3,28 +3,19 @@ import { nanoid } from 'nanoid';
 
 import { Button, Label, Input } from '~/components/ui';
 
-import type { Field } from '~/types';
+import type { CustomField } from '~/types';
 
 type AddFormFieldProps = {
-	fieldNamePrefix: string;
-	addFormField: (field: Field) => void;
+	addFormField: (field: CustomField) => void;
 	children?: React.ReactNode;
 };
 
-const labelField = 'label-field';
-const contentField = 'content-field';
-
-export function AddFormField({
-	fieldNamePrefix,
-	addFormField,
-	children,
-}: AddFormFieldProps) {
+export function AddFormField({ addFormField, children }: AddFormFieldProps) {
+	const labelId = React.useId();
+	const contentId = React.useId();
 	const labelRef = React.useRef<HTMLInputElement>(null);
 	const contentRef = React.useRef<HTMLInputElement>(null);
 	const [showField, setShowField] = React.useState(false);
-
-	const labelFieldId = `${fieldNamePrefix}-${labelField}`;
-	const contentFieldId = `${fieldNamePrefix}-${contentField}`;
 
 	const toggleField = () => {
 		setShowField((show) => !show);
@@ -36,10 +27,9 @@ export function AddFormField({
 
 		if (label && content) {
 			addFormField({
-				key: nanoid(),
-				name: `${fieldNamePrefix}-custom[${label.trim()}]`,
+				id: nanoid(),
 				label: label.trim(),
-				value: content.trim(),
+				content: content.trim(),
 				showLabel: false,
 			});
 			setShowField(false);
@@ -53,17 +43,17 @@ export function AddFormField({
 			{showField ? (
 				<div className="my-2">
 					<div className="my-2">
-						<Label htmlFor={labelFieldId} className="mb-1 block">
+						<Label htmlFor={labelId} className="mb-1 block">
 							Label
 						</Label>
-						<Input ref={labelRef} id={labelFieldId} name={labelFieldId} />
+						<Input ref={labelRef} id={labelId} />
 					</div>
 
 					<div className="my-2">
-						<Label htmlFor={contentFieldId} className="mb-1 block">
+						<Label htmlFor={contentId} className="mb-1 block">
 							Content
 						</Label>
-						<Input ref={contentRef} id={contentFieldId} name={contentFieldId} />
+						<Input ref={contentRef} id={contentId} />
 					</div>
 				</div>
 			) : null}
