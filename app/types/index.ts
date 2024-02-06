@@ -36,6 +36,11 @@ export type Customer = {
 	custom?: Array<CustomField>;
 };
 
+export type Service = {
+	id: string;
+	name: string;
+};
+
 export type Invoice = {
 	id: string;
 	createdAt: string;
