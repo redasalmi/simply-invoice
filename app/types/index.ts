@@ -39,6 +39,8 @@ export type Customer = {
 export type Service = {
 	id: string;
 	name: string;
+	description: string;
+	price: number;
 };
 
 export type Invoice = {
