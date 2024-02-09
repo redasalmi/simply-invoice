@@ -34,7 +34,12 @@ export function UncontrolledFormField({
 				{label}
 			</Label>
 			<div>
-				<Input id={id} autoComplete="off" name={inputName} />
+				<Input
+					id={id}
+					autoComplete="off"
+					name={inputName}
+					{...formField.input}
+				/>
 			</div>
 		</div>
 	);

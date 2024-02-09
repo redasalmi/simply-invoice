@@ -42,12 +42,14 @@ export default function ServicesRoute() {
 						<TableHeader>
 							<TableRow>
 								<TableHead>Name</TableHead>
+								<TableHead>Price</TableHead>
 							</TableRow>
 						</TableHeader>
 						<TableBody>
-							{services.map(({ id, name }) => (
+							{services.map(({ id, name, price }) => (
 								<TableRow key={id}>
 									<TableCell>{name}</TableCell>
+									<TableCell>{price}</TableCell>
 								</TableRow>
 							))}
 						</TableBody>

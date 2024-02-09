@@ -2,6 +2,7 @@ export type Field = {
 	id: string;
 	name: string;
 	label: string;
+	input?: React.InputHTMLAttributes<HTMLInputElement>;
 };
 
 export type CustomField = {
