@@ -1,11 +1,11 @@
-import type { ActionFunctionArgs } from '@remix-run/node';
-import { Form, redirect } from '@remix-run/react';
+import { Form, redirect, useNavigation } from '@remix-run/react';
 import { nanoid } from 'nanoid';
 
 import { UncontrolledFormField } from '~/components';
 import { Button } from '~/components/ui';
 import { servicesStore } from '~/lib/stores';
 
+import type { ActionFunctionArgs } from '@remix-run/node';
 import type { Field, Service } from '~/types';
 
 export async function clientAction({ request }: ActionFunctionArgs) {
@@ -45,6 +45,9 @@ const servicesFields: Array<Field> = [
 ];
 
 export default function NewServiceRoute() {
+	const navigation = useNavigation();
+	const isLoading = navigation.state !== 'idle';
+
 	return (
 		<section>
 			<Form method="POST">
@@ -56,7 +59,9 @@ export default function NewServiceRoute() {
 					/>
 				))}
 
-				<Button type="submit">Save Service</Button>
+				<Button type="submit">
+					{isLoading ? 'Saving Service...' : 'Save Service'}
+				</Button>
 			</Form>
 		</section>
 	);

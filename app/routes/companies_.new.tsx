@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { redirect, useFetcher } from '@remix-run/react';
+import { Form, redirect, useNavigation } from '@remix-run/react';
 import queryString from 'query-string';
 import { nanoid } from 'nanoid';
 import { Reorder } from 'framer-motion';
@@ -112,8 +112,8 @@ const addressFields: Array<Field> = [
 ];
 
 export default function NewCompanyRoute() {
-	const fetcher = useFetcher<typeof clientAction>();
-	const isLoading = fetcher.state !== 'idle';
+	const navigation = useNavigation();
+	const isLoading = navigation.state !== 'idle';
 
 	const [formFields, setFormFields] = React.useState<Array<CustomField>>([]);
 
@@ -133,7 +133,7 @@ export default function NewCompanyRoute() {
 
 	return (
 		<section>
-			<fetcher.Form method="post">
+			<Form method="post">
 				<div>
 					{companyFields.map((field) => (
 						<UncontrolledFormField
@@ -187,7 +187,7 @@ export default function NewCompanyRoute() {
 						{isLoading ? '...Saving Company' : 'Save Company'}
 					</Button>
 				</div>
-			</fetcher.Form>
+			</Form>
 		</section>
 	);
 }
