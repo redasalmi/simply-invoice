@@ -3,6 +3,7 @@ export type Field = {
 	name: string;
 	label: string;
 	input?: React.InputHTMLAttributes<HTMLInputElement>;
+	error?: string;
 };
 
 export type CustomField = {
@@ -10,15 +11,17 @@ export type CustomField = {
 	label: string;
 	content: string;
 	showLabel?: boolean;
+	labelError?: string;
+	contentError?: string;
 };
 
 export type Address = {
 	address1: string;
-	address2: string;
-	city: string;
+	address2?: string;
+	city?: string;
 	country: string;
-	province: string;
-	zip: string;
+	province?: string;
+	zip?: string;
 };
 
 export type Company = {

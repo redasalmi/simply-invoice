@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Grip, Trash2 } from 'lucide-react';
+import { Grip, SpaceIcon, Trash2 } from 'lucide-react';
 
 import {
 	Label,
@@ -25,19 +25,20 @@ export function UncontrolledFormField({
 	className,
 }: UncontrolledFormField) {
 	const id = React.useId();
-	const { name, label } = formField;
+	const { name, label, error } = formField;
 	const inputName = `${name.replaceAll(' ', '-')}`;
 
 	return (
 		<div className={cn(className)}>
 			<Label htmlFor={id} className="mb-1 block">
-				{label}
+				{label} {error ? <span className="text-red-500">({error})</span> : null}
 			</Label>
 			<div>
 				<Input
 					id={id}
 					autoComplete="off"
 					name={inputName}
+					variant={error ? 'error' : 'default'}
 					{...formField.input}
 				/>
 			</div>
@@ -100,7 +101,10 @@ export function FormField({
 		<div className={cn(className, 'flex items-center gap-2')}>
 			<div className="flex-1">
 				<Label htmlFor={labelId} className="mb-1 block">
-					Label
+					Label *{' '}
+					{formField.labelError ? (
+						<span className="text-red-500">({formField.labelError})</span>
+					) : null}
 				</Label>
 				<Input
 					id={labelId}
@@ -108,12 +112,16 @@ export function FormField({
 					name={`custom-label-${id}`}
 					value={label}
 					onChange={handleLabelChange}
+					variant={formField.labelError ? 'error' : 'default'}
 				/>
 			</div>
 
 			<div className="flex-1">
 				<Label htmlFor={contentId} className="mb-1 block">
-					Content
+					Content *{' '}
+					{formField.contentError ? (
+						<span className="text-red-500">({formField.contentError})</span>
+					) : null}
 				</Label>
 				<Input
 					id={contentId}
@@ -122,6 +130,7 @@ export function FormField({
 					value={content}
 					onChange={handleContentChange}
 					className="mr-4"
+					variant={formField.contentError ? 'error' : 'default'}
 				/>
 			</div>
 

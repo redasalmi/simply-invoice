@@ -16,6 +16,8 @@ export function AddFormField({ addFormField, children }: AddFormFieldProps) {
 	const labelRef = React.useRef<HTMLInputElement>(null);
 	const contentRef = React.useRef<HTMLInputElement>(null);
 	const [showField, setShowField] = React.useState(false);
+	const [labelError, setLabelError] = React.useState(false);
+	const [contentError, setContentError] = React.useState(false);
 
 	const toggleField = () => {
 		setShowField((show) => !show);
@@ -24,6 +26,8 @@ export function AddFormField({ addFormField, children }: AddFormFieldProps) {
 	const addNewField = () => {
 		const label = labelRef.current?.value;
 		const content = contentRef.current?.value;
+		setLabelError(!label);
+		setContentError(!content);
 
 		if (label && content) {
 			addFormField({
@@ -44,16 +48,30 @@ export function AddFormField({ addFormField, children }: AddFormFieldProps) {
 				<div className="my-2">
 					<div className="my-2">
 						<Label htmlFor={labelId} className="mb-1 block">
-							Label
+							Label *{' '}
+							{labelError ? (
+								<span className="text-red-500">(Label is required)</span>
+							) : null}
 						</Label>
-						<Input ref={labelRef} id={labelId} />
+						<Input
+							ref={labelRef}
+							id={labelId}
+							variant={labelError ? 'error' : 'default'}
+						/>
 					</div>
 
 					<div className="my-2">
 						<Label htmlFor={contentId} className="mb-1 block">
-							Content
+							Content *{' '}
+							{contentError ? (
+								<span className="text-red-500">(Content is required)</span>
+							) : null}
 						</Label>
-						<Input ref={contentRef} id={contentId} />
+						<Input
+							ref={contentRef}
+							id={contentId}
+							variant={contentError ? 'error' : 'default'}
+						/>
 					</div>
 				</div>
 			) : null}

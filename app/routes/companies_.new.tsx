@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { Form, redirect, useNavigation } from '@remix-run/react';
+import { Form, redirect, useActionData, useNavigation } from '@remix-run/react';
 import queryString from 'query-string';
 import { nanoid } from 'nanoid';
 import { Reorder } from 'framer-motion';
+import { z } from 'zod';
 
 import { AddFormField, FormField, UncontrolledFormField } from '~/components';
 import { Button } from '~/components/ui';
@@ -11,70 +12,148 @@ import { companiesStore } from '~/lib/stores';
 import type { ClientActionFunctionArgs } from '@remix-run/react';
 import type { Company, CustomField, Field } from '~/types';
 
+type ActionErrors = {
+	name?: string;
+	email?: string;
+	address1?: string;
+	country?: string;
+	custom?: Record<string, { label?: string; content?: string }>;
+};
+
+const compamySchema = z.object({
+	id: z.string(),
+	name: z.string().min(1, 'Name is required'),
+	email: z.string().email(),
+	address: z.object({
+		address1: z.string().min(1, 'Address 1 is required'),
+		address2: z.string().optional(),
+		city: z.string().optional(),
+		country: z.string().min(1, 'Country is required'),
+		province: z.string().optional(),
+		zip: z.string().optional(),
+	}),
+	custom: z
+		.array(
+			z.object({
+				id: z.string(),
+				label: z.string().min(1, 'Label is required'),
+				content: z.string().min(1, 'Content is required'),
+				showLabel: z.boolean().optional(),
+			}),
+		)
+		.optional(),
+});
+type CompanySchemaErrors = z.inferFormattedError<typeof compamySchema>;
+
 export async function clientAction({ request }: ClientActionFunctionArgs) {
-	const formQueryString = await request.text();
-	const formData = queryString.parse(formQueryString, { sort: false });
+	try {
+		const formQueryString = await request.text();
+		const formData = queryString.parse(formQueryString, { sort: false });
 
-	const companyId = nanoid();
-	const newCompany: Company = {
-		id: companyId,
-		name: formData['name']?.toString(),
-		email: formData['email']?.toString(),
-		address: {
-			address1: formData['address1']?.toString(),
-			address2: formData['address2']?.toString(),
-			city: formData['city']?.toString(),
-			country: formData['country']?.toString(),
-			province: formData['province']?.toString(),
-			zip: formData['zip']?.toString(),
-		},
-	};
+		const customFields: Record<string, CustomField> = {};
+		for (const [key, value] of Object.entries(formData)) {
+			if (key.search('custom-') !== -1) {
+				const id = key
+					.replace('custom-', '')
+					.replace('show-label-', '')
+					.replace('label-', '')
+					.replace('content-', '');
 
-	const customFields: Record<string, CustomField> = {};
-	for (const [key, value] of Object.entries(formData)) {
-		if (key.search('custom-') !== -1) {
-			const id = key
-				.replace('custom-', '')
-				.replace('show-label-', '')
-				.replace('label-', '')
-				.replace('content-', '');
+				if (!customFields[id]) {
+					customFields[id] = {
+						id,
+					};
+				}
 
-			if (!customFields[id]) {
-				customFields[id] = {
-					id,
-				};
-			}
-
-			if (key.search('show-label-') !== -1) {
-				customFields[id].showLabel = value === 'on';
-			} else if (key.search('label-') !== -1) {
-				customFields[id].label = value;
-			} else if (key.search('content-') !== -1) {
-				customFields[id].content = value;
+				if (key === `custom-label-${id}`) {
+					customFields[id].label = value;
+				} else if (key === `custom-content-${id}`) {
+					customFields[id].content = value;
+				} else if (key === `custom-show-label-${id}`) {
+					customFields[id].showLabel = value === 'on';
+				}
 			}
 		}
+
+		const newCompany = compamySchema.parse({
+			id: nanoid(),
+			name: formData['name']?.toString(),
+			email: formData['email']?.toString(),
+			address: {
+				address1: formData['address1']?.toString(),
+				address2: formData['address2']?.toString(),
+				city: formData['city']?.toString(),
+				country: formData['country']?.toString(),
+				province: formData['province']?.toString(),
+				zip: formData['zip']?.toString(),
+			},
+			...(Object.keys(customFields).length
+				? { custom: Object.values(customFields) }
+				: undefined),
+		});
+		await companiesStore.setItem<Company>(newCompany.id, newCompany);
+
+		return redirect('/companies');
+	} catch (err) {
+		if (err instanceof z.ZodError) {
+			const zodErrors: CompanySchemaErrors = err.format();
+			const customErrors: Record<string, { label?: string; content?: string }> =
+				{};
+
+			if (zodErrors.custom) {
+				for (const [key, value] of Object.entries(zodErrors.custom)) {
+					if (key === '_errors') {
+						continue;
+					}
+
+					customErrors[key] = {};
+					if (value?.label?._errors?.[0]) {
+						customErrors[key].label = value?.label?._errors?.[0];
+					}
+
+					if (value?.content?._errors?.[0]) {
+						customErrors[key].content = value?.content?._errors?.[0];
+					}
+				}
+			}
+
+			const errors: ActionErrors = {};
+			if (zodErrors.name?._errors?.[0]) {
+				errors.name = zodErrors.name._errors[0];
+			}
+			if (zodErrors.email?._errors?.[0]) {
+				errors.email = zodErrors.email._errors[0];
+			}
+			if (zodErrors.address?.address1?._errors?.[0]) {
+				errors.address1 = zodErrors.address.address1._errors[0];
+			}
+			if (zodErrors.address?.country?._errors?.[0]) {
+				errors.country = zodErrors.address.country._errors[0];
+			}
+			if (Object.keys(customErrors).length) {
+				errors.custom = customErrors;
+			}
+
+			return {
+				errors,
+			};
+		}
 	}
-
-	const customFieldsValues = Object.values(customFields);
-	if (customFieldsValues.length) {
-		newCompany.custom = customFieldsValues;
-	}
-
-	await companiesStore.setItem<Company>(companyId, newCompany);
-
-	return redirect('/companies');
 }
 
 const companyFields: Array<Field> = [
 	{
 		id: nanoid(),
 		name: 'name',
-		label: 'Name',
+		label: 'Name *',
 	},
 	{
 		id: nanoid(),
 		name: 'email',
-		label: 'Email',
+		label: 'Email *',
+		input: {
+			type: 'email',
+		},
 	},
 ];
 
@@ -82,7 +161,7 @@ const addressFields: Array<Field> = [
 	{
 		id: nanoid(),
 		name: 'address1',
-		label: 'Address 1',
+		label: 'Address 1 *',
 	},
 	{
 		id: nanoid(),
@@ -92,7 +171,7 @@ const addressFields: Array<Field> = [
 	{
 		id: nanoid(),
 		name: 'country',
-		label: 'Country',
+		label: 'Country *',
 	},
 	{
 		id: nanoid(),
@@ -112,6 +191,7 @@ const addressFields: Array<Field> = [
 ];
 
 export default function NewCompanyRoute() {
+	const actionData = useActionData<typeof clientAction>();
 	const navigation = useNavigation();
 	const isLoading = navigation.state !== 'idle';
 
@@ -139,7 +219,10 @@ export default function NewCompanyRoute() {
 						<UncontrolledFormField
 							key={field.id}
 							className="my-2"
-							formField={field}
+							formField={{
+								...field,
+								error: actionData?.errors?.[field.name],
+							}}
 						/>
 					))}
 				</div>
@@ -152,7 +235,10 @@ export default function NewCompanyRoute() {
 							<UncontrolledFormField
 								key={field.id}
 								className="my-2"
-								formField={field}
+								formField={{
+									...field,
+									error: actionData?.errors?.[field.name],
+								}}
 							/>
 						))}
 					</div>
@@ -169,7 +255,12 @@ export default function NewCompanyRoute() {
 							{formFields.map((formField, index) => (
 								<Reorder.Item key={formField.id} value={formField}>
 									<FormField
-										formField={formField}
+										formField={{
+											...formField,
+											labelError: actionData?.errors?.custom?.[index]?.label,
+											contentError:
+												actionData?.errors?.custom?.[index]?.content,
+										}}
 										className="my-2"
 										onFormFieldChange={(updatedFormField) =>
 											onFormFieldChange(updatedFormField, index)
