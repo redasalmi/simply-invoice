@@ -1,4 +1,5 @@
-import { Link, useLoaderData } from '@remix-run/react';
+import { Link, Outlet, useLoaderData } from '@remix-run/react';
+import { Eye } from 'lucide-react';
 
 import {
 	buttonVariants,
@@ -24,40 +25,52 @@ export default function CompaniesRoute() {
 	const { companies } = useLoaderData<typeof clientLoader>();
 
 	return (
-		<section>
-			<div className="flex justify-end">
-				<Link
-					to="/companies/new"
-					className={cn(
-						'rounded-lg bg-blue-300 px-4 py-2',
-						buttonVariants({ variant: 'default' }),
-					)}
-				>
-					Create New Company
-				</Link>
-			</div>
-			<div className="mt-6">
-				{companies && companies.length > 0 ? (
-					<Table>
-						<TableHeader>
-							<TableRow>
-								<TableHead>Name</TableHead>
-								<TableHead>Email</TableHead>
-							</TableRow>
-						</TableHeader>
-						<TableBody>
-							{companies.map(({ id, email, name }) => (
-								<TableRow key={id}>
-									<TableCell>{name}</TableCell>
-									<TableCell>{email}</TableCell>
+		<>
+			<section>
+				<div className="flex justify-end">
+					<Link
+						to="/companies/new"
+						className={cn(
+							'rounded-lg bg-blue-300 px-4 py-2',
+							buttonVariants({ variant: 'default' }),
+						)}
+					>
+						Create New Company
+					</Link>
+				</div>
+				<div className="mt-6">
+					{companies && companies.length > 0 ? (
+						<Table>
+							<TableHeader>
+								<TableRow>
+									<TableHead>Name</TableHead>
+									<TableHead>Email</TableHead>
+									<TableHead>View</TableHead>
 								</TableRow>
-							))}
-						</TableBody>
-					</Table>
-				) : (
-					<p>No Company found.</p>
-				)}
-			</div>
-		</section>
+							</TableHeader>
+							<TableBody>
+								{companies.map(({ id, email, name }) => (
+									<TableRow key={id}>
+										<TableCell>{name}</TableCell>
+										<TableCell>{email}</TableCell>
+										<TableCell>
+											<Link
+												to={`/companies/${id}`}
+												aria-label={`view ${name} company details`}
+											>
+												<Eye />
+											</Link>
+										</TableCell>
+									</TableRow>
+								))}
+							</TableBody>
+						</Table>
+					) : (
+						<p>No Company found.</p>
+					)}
+				</div>
+			</section>
+			<Outlet />
+		</>
 	);
 }

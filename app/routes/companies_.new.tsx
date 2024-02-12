@@ -245,7 +245,7 @@ export default function NewCompanyRoute() {
 				</div>
 
 				<AddFormField addFormField={addFormField}>
-					<h3 className="text-2xl">Custom fields</h3>
+					<h3 className="text-2xl">Custom Fields</h3>
 					<p className="mb-2 block text-sm">
 						Add any custom fields and order them
 					</p>
