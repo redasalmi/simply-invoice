@@ -1,5 +1,5 @@
 import { Link, Outlet, useLoaderData } from '@remix-run/react';
-import { Eye } from 'lucide-react';
+import { Eye, Pencil } from 'lucide-react';
 
 import {
 	buttonVariants,
@@ -45,7 +45,6 @@ export default function CompaniesRoute() {
 								<TableRow>
 									<TableHead>Name</TableHead>
 									<TableHead>Email</TableHead>
-									<TableHead>View</TableHead>
 								</TableRow>
 							</TableHeader>
 							<TableBody>
@@ -53,12 +52,18 @@ export default function CompaniesRoute() {
 									<TableRow key={id}>
 										<TableCell>{name}</TableCell>
 										<TableCell>{email}</TableCell>
-										<TableCell>
+										<TableCell className="flex items-center gap-4">
 											<Link
 												to={`/companies/${id}`}
 												aria-label={`view ${name} company details`}
 											>
 												<Eye />
+											</Link>
+											<Link
+												to={`/companies/${id}/edit`}
+												aria-label={`edit ${name} company`}
+											>
+												<Pencil />
 											</Link>
 										</TableCell>
 									</TableRow>

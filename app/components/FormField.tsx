@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Grip, SpaceIcon, Trash2 } from 'lucide-react';
+import { Grip, Trash2 } from 'lucide-react';
 
 import {
 	Label,
