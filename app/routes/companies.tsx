@@ -1,5 +1,5 @@
 import { Link, Outlet, useLoaderData } from '@remix-run/react';
-import { Eye, Pencil } from 'lucide-react';
+import { Eye, Pencil, Trash } from 'lucide-react';
 
 import {
 	buttonVariants,
@@ -64,6 +64,12 @@ export default function CompaniesRoute() {
 												aria-label={`edit ${name} company`}
 											>
 												<Pencil />
+											</Link>
+											<Link
+												to={`/companies/${id}/delete`}
+												aria-label={`delete ${name} company`}
+											>
+												<Trash />
 											</Link>
 										</TableCell>
 									</TableRow>
