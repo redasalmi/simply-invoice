@@ -60,8 +60,8 @@ export default function CustomersRoute() {
 												<Eye />
 											</Link>
 											<Link
-												to={`/customers/${id}/edit`}
-												aria-label={`edit ${name} customer`}
+												to={`/customers/${id}/update`}
+												aria-label={`update ${name} customer`}
 											>
 												<Pencil />
 											</Link>

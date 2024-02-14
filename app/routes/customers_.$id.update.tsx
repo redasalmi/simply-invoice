@@ -10,14 +10,14 @@ import {
 import queryString from 'query-string';
 import { z } from 'zod';
 
-import { companiesStore } from '~/lib/stores';
+import { customersStore } from '~/lib/stores';
 
 import type {
 	ClientActionFunctionArgs,
 	ClientLoaderFunctionArgs,
 } from '@remix-run/react';
 
-import type { Company, CustomField, Field } from '~/types';
+import type { Customer, CustomField, Field } from '~/types';
 import { nanoid } from 'nanoid';
 import { Button } from '~/components/ui';
 import { AddFormField, FormField, UncontrolledFormField } from '~/components';
@@ -31,7 +31,7 @@ type ActionErrors = {
 	custom?: Record<string, { label?: string; content?: string }>;
 };
 
-const compamySchema = z.object({
+const customerSchema = z.object({
 	id: z.string(),
 	name: z.string().min(1, 'Name is required'),
 	email: z.string().email(),
@@ -54,14 +54,14 @@ const compamySchema = z.object({
 		)
 		.optional(),
 });
-type CompanySchemaErrors = z.inferFormattedError<typeof compamySchema>;
+type CustomerSchemaErrors = z.inferFormattedError<typeof customerSchema>;
 
 export async function clientLoader({ params }: ClientLoaderFunctionArgs) {
-	const companyId = params.id;
+	const customerId = params.id;
 
 	return {
-		company: companyId
-			? await companiesStore.getItem<Company>(companyId)
+		customer: customerId
+			? await customersStore.getItem<Customer>(customerId)
 			: null,
 	};
 }
@@ -70,10 +70,10 @@ export async function clientAction({
 	params,
 	request,
 }: ClientActionFunctionArgs) {
-	let updatedCompany: Company | null = null;
+	let updatedCustomer: Customer | null = null;
 
 	try {
-		const companyId = params.id;
+		const customerId = params.id;
 		const formQueryString = await request.text();
 		const formData = queryString.parse(formQueryString, { sort: false });
 
@@ -102,8 +102,8 @@ export async function clientAction({
 			}
 		}
 
-		updatedCompany = {
-			id: companyId,
+		updatedCustomer = {
+			id: customerId,
 			name: formData['name']?.toString(),
 			email: formData['email']?.toString(),
 			address: {
@@ -119,13 +119,13 @@ export async function clientAction({
 				: undefined),
 		};
 
-		compamySchema.parse(updatedCompany);
-		await companiesStore.setItem<Company>(updatedCompany.id, updatedCompany);
+		customerSchema.parse(updatedCustomer);
+		await customersStore.setItem<Customer>(updatedCustomer.id, updatedCustomer);
 
-		return redirect('/companies');
+		return redirect('/customers');
 	} catch (err) {
 		if (err instanceof z.ZodError) {
-			const zodErrors: CompanySchemaErrors = err.format();
+			const zodErrors: CustomerSchemaErrors = err.format();
 			const customErrors: Record<string, { label?: string; content?: string }> =
 				{};
 
@@ -165,7 +165,7 @@ export async function clientAction({
 
 			return {
 				errors,
-				updatedCompany,
+				updatedCustomer,
 			};
 		}
 	}
@@ -180,8 +180,8 @@ const provinceId = nanoid();
 const cityId = nanoid();
 const zipId = nanoid();
 
-export default function EditCompanyRoute() {
-	const { company } = useLoaderData<typeof clientLoader>();
+export default function CustomerUpdateRoute() {
+	const { customer } = useLoaderData<typeof clientLoader>();
 	const actionData = useActionData<typeof clientAction>();
 	const navigation = useNavigation();
 	const isLoading = navigation.state !== 'idle';
@@ -190,7 +190,7 @@ export default function EditCompanyRoute() {
 
 	React.useEffect(() => {
 		const customFields: Array<CustomField> =
-			(actionData?.updatedCompany?.custom || company?.custom)?.map(
+			(actionData?.updatedCustomer?.custom || customer?.custom)?.map(
 				(field, index) => ({
 					id: field.id,
 					label: field.label,
@@ -203,37 +203,37 @@ export default function EditCompanyRoute() {
 		setFormFields(customFields);
 	}, [
 		actionData?.errors?.custom,
-		actionData?.updatedCompany?.custom,
-		company?.custom,
+		actionData?.updatedCustomer?.custom,
+		customer?.custom,
 	]);
 
-	if (!company) {
+	if (!customer) {
 		return (
 			<section>
 				<div>
 					<p className="m-12">
-						Sorry, but no company with this ID was found! Please click{' '}
+						Sorry, but no customer with this ID was found! Please click{' '}
 						<Link
-							to="/companies"
-							aria-label="companies list"
+							to="/customers"
+							aria-label="customers list"
 							className="hover:underline"
 						>
 							Here
 						</Link>{' '}
-						to navigate back to your companies list.
+						to navigate back to your customers list.
 					</p>
 				</div>
 			</section>
 		);
 	}
 
-	const companyFields: Array<Field> = [
+	const customerFields: Array<Field> = [
 		{
 			id: nameId,
 			name: 'name',
 			label: 'Name *',
 			input: {
-				defaultValue: actionData?.updatedCompany?.name || company.name,
+				defaultValue: actionData?.updatedCustomer?.name || customer.name,
 			},
 		},
 		{
@@ -242,7 +242,7 @@ export default function EditCompanyRoute() {
 			label: 'Email *',
 			input: {
 				type: 'email',
-				defaultValue: actionData?.updatedCompany?.email || company.email,
+				defaultValue: actionData?.updatedCustomer?.email || customer.email,
 			},
 		},
 	];
@@ -254,8 +254,8 @@ export default function EditCompanyRoute() {
 			label: 'Address 1 *',
 			input: {
 				defaultValue:
-					actionData?.updatedCompany?.address.address1 ||
-					company.address.address1,
+					actionData?.updatedCustomer?.address.address1 ||
+					customer.address.address1,
 			},
 		},
 		{
@@ -264,8 +264,8 @@ export default function EditCompanyRoute() {
 			label: 'Address 2',
 			input: {
 				defaultValue:
-					actionData?.updatedCompany?.address.address2 ||
-					company.address.address2,
+					actionData?.updatedCustomer?.address.address2 ||
+					customer.address.address2,
 			},
 		},
 		{
@@ -274,8 +274,8 @@ export default function EditCompanyRoute() {
 			label: 'Country *',
 			input: {
 				defaultValue:
-					actionData?.updatedCompany?.address.country ||
-					company.address.country,
+					actionData?.updatedCustomer?.address.country ||
+					customer.address.country,
 			},
 		},
 		{
@@ -284,8 +284,8 @@ export default function EditCompanyRoute() {
 			label: 'Province',
 			input: {
 				defaultValue:
-					actionData?.updatedCompany?.address.province ||
-					company.address.province,
+					actionData?.updatedCustomer?.address.province ||
+					customer.address.province,
 			},
 		},
 		{
@@ -294,7 +294,7 @@ export default function EditCompanyRoute() {
 			label: 'City',
 			input: {
 				defaultValue:
-					actionData?.updatedCompany?.address.city || company.address.city,
+					actionData?.updatedCustomer?.address.city || customer.address.city,
 			},
 		},
 		{
@@ -303,7 +303,7 @@ export default function EditCompanyRoute() {
 			label: 'Zip',
 			input: {
 				defaultValue:
-					actionData?.updatedCompany?.address.zip || company.address.zip,
+					actionData?.updatedCustomer?.address.zip || customer.address.zip,
 			},
 		},
 	];
@@ -326,7 +326,7 @@ export default function EditCompanyRoute() {
 		<section>
 			<Form method="post">
 				<div>
-					{companyFields.map((field) => (
+					{customerFields.map((field) => (
 						<UncontrolledFormField
 							key={field.id}
 							className="my-2"
@@ -381,7 +381,7 @@ export default function EditCompanyRoute() {
 
 				<div>
 					<Button type="submit">
-						{isLoading ? '...Updating Company' : 'Update Company'}
+						{isLoading ? '...Updating Customer' : 'Update Customer'}
 					</Button>
 				</div>
 			</Form>

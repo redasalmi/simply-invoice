@@ -60,8 +60,8 @@ export default function CompaniesRoute() {
 												<Eye />
 											</Link>
 											<Link
-												to={`/companies/${id}/edit`}
-												aria-label={`edit ${name} company`}
+												to={`/companies/${id}/update`}
+												aria-label={`update ${name} company`}
 											>
 												<Pencil />
 											</Link>
