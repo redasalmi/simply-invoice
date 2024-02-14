@@ -21,71 +21,71 @@ import {
 	AlertDialogTitle,
 } from '~/components/ui';
 
-import { companiesStore } from '~/lib/stores';
+import { customersStore } from '~/lib/stores';
 
-import type { Company } from '~/types';
+import type { Customer } from '~/types';
 
 export async function clientLoader({ params }: ClientLoaderFunctionArgs) {
-	invariant(params.id, 'Company ID is required');
-	const companyId = params.id;
+	invariant(params.id, 'Customer ID is required');
+	const customerId = params.id;
 
 	return {
-		company: await companiesStore.getItem<Company>(companyId),
+		customer: await customersStore.getItem<Customer>(customerId),
 	};
 }
 
 export async function clientAction({ params }: ClientActionFunctionArgs) {
 	try {
-		invariant(params.id, 'Company ID is required');
+		invariant(params.id, 'Customer ID is required');
 
-		const companyId = params.id;
-		const company = await companiesStore.getItem<Company>(companyId);
-		if (!company) {
+		const customerId = params.id;
+		const customer = await customersStore.getItem<Customer>(customerId);
+		if (!customer) {
 			return {
 				error: {
-					message: 'No Company Found!',
-					description: `Sorry but no company with this ID: ${companyId} was found. Click the continue button to navigate back to your companies list.`,
+					message: 'No Customer Found!',
+					description: `Sorry but no customer with this ID: ${customerId} was found. Click the continue button to navigate back to your customers list.`,
 				},
 			};
 		}
 
-		await companiesStore.removeItem(companyId);
+		await customersStore.removeItem(customerId);
 
-		return redirect('/companies');
+		return redirect('/customers');
 	} catch (err) {
 		return {
 			error: {
-				message: 'Error Deleting the Company!',
+				message: 'Error Deleting the Customer!',
 				description:
-					'An error happened while deleting your company, please try again later.',
+					'An error happened while deleting your customer, please try again later.',
 			},
 		};
 	}
 }
 
-export default function CompanyDeleteRoute() {
-	const { company } = useLoaderData<typeof clientLoader>();
+export default function CustomerDeleteRoute() {
+	const { customer } = useLoaderData<typeof clientLoader>();
 	const actionData = useActionData<typeof clientAction>();
 	const navigate = useNavigate();
 	const navigation = useNavigation();
 	const isLoading = navigation.state !== 'idle';
 
 	const closeAlert = () => {
-		navigate('/companies');
+		navigate('/customers');
 	};
 
 	return (
 		<AlertDialog open>
 			<AlertDialogContent>
-				{!company ? (
+				{!customer ? (
 					<>
 						<AlertDialogHeader>
 							<AlertDialogTitle>
-								{actionData?.error.message || 'Error Deleting Company!'}
+								{actionData?.error.message || 'Error Deleting Customer!'}
 							</AlertDialogTitle>
 							<AlertDialogDescription>
 								{actionData?.error.description ||
-									'An error happened while deleting your company, please try again later.'}
+									'An error happened while deleting your customer, please try again later.'}
 							</AlertDialogDescription>
 						</AlertDialogHeader>
 						<AlertDialogFooter>
@@ -98,7 +98,7 @@ export default function CompanyDeleteRoute() {
 							<AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
 							<AlertDialogDescription>
 								This action cannot be undone. This will permanently delete the{' '}
-								<span className="font-bold">{company.name}</span> company.
+								<span className="font-bold">{customer.name}</span> customer.
 							</AlertDialogDescription>
 						</AlertDialogHeader>
 						<AlertDialogFooter>
