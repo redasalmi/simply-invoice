@@ -1,5 +1,5 @@
 import { Link, Outlet, useLoaderData } from '@remix-run/react';
-import { Eye, Trash } from 'lucide-react';
+import { Eye, Pencil, Trash } from 'lucide-react';
 
 import {
 	buttonVariants,
@@ -58,6 +58,12 @@ export default function ServicesRoute() {
 												aria-label={`view ${name} service details`}
 											>
 												<Eye />
+											</Link>
+											<Link
+												to={`/services/${id}/update`}
+												aria-label={`update ${name} service`}
+											>
+												<Pencil />
 											</Link>
 											<Link
 												to={`/services/${id}/delete`}
