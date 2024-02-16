@@ -1,4 +1,4 @@
-import { useLoaderData, Link } from '@remix-run/react';
+import { Link, useLoaderData } from '@remix-run/react';
 
 import {
 	buttonVariants,
@@ -9,10 +9,10 @@ import {
 	TableHeader,
 	TableRow,
 } from '~/components/ui';
-import { getAllItems, invoicesStore } from '~/lib/stores';
-import { cn } from '~/lib/utils';
 
+import { getAllItems, invoicesStore } from '~/lib/stores';
 import type { Invoice } from '~/lib/types';
+import { cn } from '~/lib/utils';
 
 export async function clientLoader() {
 	return {

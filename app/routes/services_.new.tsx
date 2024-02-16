@@ -1,14 +1,15 @@
+import type { ActionFunctionArgs } from '@remix-run/node';
 import { Form, redirect, useActionData, useNavigation } from '@remix-run/react';
 import { nanoid } from 'nanoid';
+import { z } from 'zod';
 
 import { UncontrolledFormField } from '~/components';
 import { Button } from '~/components/ui';
-import { servicesStore } from '~/lib/stores';
 
-import type { ActionFunctionArgs } from '@remix-run/node';
+import { serviceSchema } from '~/lib/schemas';
+import type { ServiceSchemaErrors } from '~/lib/schemas';
+import { servicesStore } from '~/lib/stores';
 import type { Field, Service } from '~/lib/types';
-import { ServiceSchemaErrors, serviceSchema } from '~/lib/schemas';
-import { z } from 'zod';
 
 type ActionErrors = {
 	name?: string;

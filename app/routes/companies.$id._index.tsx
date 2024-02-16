@@ -1,4 +1,6 @@
 import { Link, useLoaderData, useNavigate } from '@remix-run/react';
+import type { ClientLoaderFunctionArgs } from '@remix-run/react';
+import invariant from 'tiny-invariant';
 
 import {
 	Dialog,
@@ -8,11 +10,9 @@ import {
 	TableCell,
 	TableRow,
 } from '~/components/ui';
-import { companiesStore } from '~/lib/stores';
 
-import type { ClientLoaderFunctionArgs } from '@remix-run/react';
+import { companiesStore } from '~/lib/stores';
 import type { Company } from '~/lib/types';
-import invariant from 'tiny-invariant';
 
 export async function clientLoader({ params }: ClientLoaderFunctionArgs) {
 	invariant(params.id, 'Company ID is required');

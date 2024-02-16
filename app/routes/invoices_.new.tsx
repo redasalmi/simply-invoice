@@ -1,21 +1,22 @@
 import * as React from 'react';
-import queryString from 'query-string';
-import { useFetcher, redirect } from '@remix-run/react';
-import { Reorder } from 'framer-motion';
-import { renderToStream } from '@react-pdf/renderer';
-import { nanoid } from 'nanoid';
 
-import { Button, Dialog, DialogContent, DialogTrigger } from '~/components/ui';
+import { renderToStream } from '@react-pdf/renderer';
+import type { ActionFunctionArgs } from '@remix-run/node';
+import { redirect, useFetcher } from '@remix-run/react';
+import type { ClientActionFunctionArgs } from '@remix-run/react';
+import { Reorder } from 'framer-motion';
+import { nanoid } from 'nanoid';
+import queryString from 'query-string';
+
 import {
 	AddFormField,
-	InvoicePdf,
 	FormField,
+	InvoicePdf,
 	UncontrolledFormField,
 } from '~/components';
-import { invoicesStore } from '~/lib/stores';
+import { Button, Dialog, DialogContent, DialogTrigger } from '~/components/ui';
 
-import type { ActionFunctionArgs } from '@remix-run/node';
-import type { ClientActionFunctionArgs } from '@remix-run/react';
+import { invoicesStore } from '~/lib/stores';
 import type { Customer, Field, Invoice } from '~/lib/types';
 
 const intents = {

@@ -1,9 +1,8 @@
-import { Page, Text, View, Document, StyleSheet } from '@react-pdf/renderer';
+import { Document, Page, StyleSheet, Text, View } from '@react-pdf/renderer';
 import { nanoid } from 'nanoid';
 
-import { capitalize } from '~/lib/utils';
-
 import type { Customer } from '~/lib/types';
+import { capitalize } from '~/lib/utils';
 
 const styles = StyleSheet.create({
 	body: {

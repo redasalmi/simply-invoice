@@ -1,4 +1,5 @@
 import * as React from 'react';
+
 import {
 	Form,
 	Link,
@@ -7,23 +8,23 @@ import {
 	useLoaderData,
 	useNavigation,
 } from '@remix-run/react';
-import queryString from 'query-string';
-import { z } from 'zod';
-
-import { companiesStore } from '~/lib/stores';
-
 import type {
 	ClientActionFunctionArgs,
 	ClientLoaderFunctionArgs,
 } from '@remix-run/react';
-
-import type { Company, CustomField, Field } from '~/lib/types';
-import { nanoid } from 'nanoid';
-import { Button } from '~/components/ui';
-import { AddFormField, FormField, UncontrolledFormField } from '~/components';
 import { Reorder } from 'framer-motion';
-import { CompanySchemaErrors, compamySchema } from '~/lib/schemas';
+import { nanoid } from 'nanoid';
+import queryString from 'query-string';
 import invariant from 'tiny-invariant';
+import { z } from 'zod';
+
+import { AddFormField, FormField, UncontrolledFormField } from '~/components';
+import { Button } from '~/components/ui';
+
+import { compamySchema } from '~/lib/schemas';
+import type { CompanySchemaErrors } from '~/lib/schemas';
+import { companiesStore } from '~/lib/stores';
+import type { Company, CustomField, Field } from '~/lib/types';
 
 type ActionErrors = {
 	name?: string;

@@ -6,20 +6,20 @@ import {
 	useLoaderData,
 	useNavigation,
 } from '@remix-run/react';
-import invariant from 'tiny-invariant';
-import { nanoid } from 'nanoid';
-import { z } from 'zod';
-import { servicesStore } from '~/lib/stores';
-
-import { UncontrolledFormField } from '~/components';
-import { Button } from '~/components/ui';
-
 import type {
 	ClientActionFunctionArgs,
 	ClientLoaderFunctionArgs,
 } from '@remix-run/react';
+import { nanoid } from 'nanoid';
+import invariant from 'tiny-invariant';
+import { z } from 'zod';
+
+import { UncontrolledFormField } from '~/components';
+import { Button } from '~/components/ui';
+
+import { serviceSchema, ServiceSchemaErrors } from '~/lib/schemas';
+import { servicesStore } from '~/lib/stores';
 import type { Field, Service } from '~/lib/types';
-import { ServiceSchemaErrors, serviceSchema } from '~/lib/schemas';
 
 type ActionErrors = {
 	name?: string;

@@ -1,17 +1,19 @@
 import * as React from 'react';
+
 import { Form, redirect, useActionData, useNavigation } from '@remix-run/react';
-import queryString from 'query-string';
-import { nanoid } from 'nanoid';
+import type { ClientActionFunctionArgs } from '@remix-run/react';
 import { Reorder } from 'framer-motion';
+import { nanoid } from 'nanoid';
+import queryString from 'query-string';
 import { z } from 'zod';
 
 import { AddFormField, FormField, UncontrolledFormField } from '~/components';
 import { Button } from '~/components/ui';
-import { companiesStore } from '~/lib/stores';
 
-import type { ClientActionFunctionArgs } from '@remix-run/react';
+import { compamySchema } from '~/lib/schemas';
+import type { CompanySchemaErrors } from '~/lib/schemas';
+import { companiesStore } from '~/lib/stores';
 import type { Company, CustomField, Field } from '~/lib/types';
-import { CompanySchemaErrors, compamySchema } from '~/lib/schemas';
 
 type ActionErrors = {
 	name?: string;

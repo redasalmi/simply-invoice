@@ -1,12 +1,14 @@
 import {
-	ClientActionFunctionArgs,
-	ClientLoaderFunctionArgs,
 	Form,
 	redirect,
 	useActionData,
 	useLoaderData,
 	useNavigate,
 	useNavigation,
+} from '@remix-run/react';
+import type {
+	ClientActionFunctionArgs,
+	ClientLoaderFunctionArgs,
 } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
@@ -22,7 +24,6 @@ import {
 } from '~/components/ui';
 
 import { servicesStore } from '~/lib/stores';
-
 import type { Service } from '~/lib/types';
 
 export async function clientLoader({ params }: ClientLoaderFunctionArgs) {

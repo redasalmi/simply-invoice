@@ -10,10 +10,10 @@ import {
 	TableHeader,
 	TableRow,
 } from '~/components/ui';
-import { servicesStore, getAllItems } from '~/lib/stores';
-import { cn } from '~/lib/utils';
 
+import { getAllItems, servicesStore } from '~/lib/stores';
 import type { Service } from '~/lib/types';
+import { cn } from '~/lib/utils';
 
 export async function clientLoader() {
 	return {

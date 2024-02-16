@@ -1,19 +1,20 @@
 import * as React from 'react';
+
 import { Grip, Trash2 } from 'lucide-react';
 
 import {
-	Label,
-	Input,
 	Button,
-	TooltipProvider,
-	Tooltip,
-	TooltipTrigger,
-	TooltipContent,
+	Input,
+	Label,
 	Switch,
+	Tooltip,
+	TooltipContent,
+	TooltipProvider,
+	TooltipTrigger,
 } from '~/components/ui';
-import { cn } from '~/lib/utils';
 
-import type { Field, CustomField } from '~/lib/types';
+import type { CustomField, Field } from '~/lib/types';
+import { cn } from '~/lib/utils';
 
 type UncontrolledFormField = {
 	formField: Field;

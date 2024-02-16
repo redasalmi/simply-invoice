@@ -1,7 +1,8 @@
 import * as React from 'react';
+
 import { nanoid } from 'nanoid';
 
-import { Button, Label, Input } from '~/components/ui';
+import { Button, Input, Label } from '~/components/ui';
 
 import type { CustomField } from '~/lib/types';
 

@@ -7,6 +7,7 @@ import {
 } from '@remix-run/react';
 
 import { Footer, Navbar } from '~/components';
+
 import '~/tailwind.css';
 
 export default function App() {
