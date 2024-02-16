@@ -23,6 +23,7 @@ import { Button } from '~/components/ui';
 import { AddFormField, FormField, UncontrolledFormField } from '~/components';
 import { Reorder } from 'framer-motion';
 import { customerSchema } from '~/lib/schemas';
+import invariant from 'tiny-invariant';
 
 type ActionErrors = {
 	name?: string;
@@ -35,12 +36,11 @@ type ActionErrors = {
 type CustomerSchemaErrors = z.inferFormattedError<typeof customerSchema>;
 
 export async function clientLoader({ params }: ClientLoaderFunctionArgs) {
+	invariant(params.id, 'Customer ID is required');
 	const customerId = params.id;
 
 	return {
-		customer: customerId
-			? await customersStore.getItem<Customer>(customerId)
-			: null,
+		customer: await customersStore.getItem<Customer>(customerId),
 	};
 }
 
@@ -48,8 +48,6 @@ export async function clientAction({
 	params,
 	request,
 }: ClientActionFunctionArgs) {
-	let updatedCustomer: Customer | null = null;
-
 	try {
 		const customerId = params.id;
 		const formQueryString = await request.text();
@@ -80,7 +78,7 @@ export async function clientAction({
 			}
 		}
 
-		updatedCustomer = {
+		const updatedCustomer = customerSchema.parse({
 			id: customerId,
 			name: formData['name']?.toString(),
 			email: formData['email']?.toString(),
@@ -95,9 +93,7 @@ export async function clientAction({
 			...(Object.keys(customFields).length
 				? { custom: Object.values(customFields) }
 				: undefined),
-		};
-
-		customerSchema.parse(updatedCustomer);
+		});
 		await customersStore.setItem<Customer>(updatedCustomer.id, updatedCustomer);
 
 		return redirect('/customers');
@@ -143,7 +139,6 @@ export async function clientAction({
 
 			return {
 				errors,
-				updatedCustomer,
 			};
 		}
 	}
@@ -168,22 +163,16 @@ export default function CustomerUpdateRoute() {
 
 	React.useEffect(() => {
 		const customFields: Array<CustomField> =
-			(actionData?.updatedCustomer?.custom || customer?.custom)?.map(
-				(field, index) => ({
-					id: field.id,
-					label: field.label,
-					content: field.content,
-					showLabel: field.showLabel,
-					labelError: actionData?.errors?.custom?.[index]?.label,
-					contentError: actionData?.errors?.custom?.[index]?.content,
-				}),
-			) || [];
+			customer?.custom?.map((field, index) => ({
+				id: field.id,
+				label: field.label,
+				content: field.content,
+				showLabel: field.showLabel,
+				labelError: actionData?.errors?.custom?.[index]?.label,
+				contentError: actionData?.errors?.custom?.[index]?.content,
+			})) || [];
 		setFormFields(customFields);
-	}, [
-		actionData?.errors?.custom,
-		actionData?.updatedCustomer?.custom,
-		customer?.custom,
-	]);
+	}, [actionData?.errors?.custom, customer?.custom]);
 
 	if (!customer) {
 		return (
@@ -211,8 +200,10 @@ export default function CustomerUpdateRoute() {
 			name: 'name',
 			label: 'Name *',
 			input: {
-				defaultValue: actionData?.updatedCustomer?.name || customer.name,
+				required: true,
+				defaultValue: customer.name,
 			},
+			error: actionData?.errors.name,
 		},
 		{
 			id: emailId,
@@ -220,8 +211,10 @@ export default function CustomerUpdateRoute() {
 			label: 'Email *',
 			input: {
 				type: 'email',
-				defaultValue: actionData?.updatedCustomer?.email || customer.email,
+				required: true,
+				defaultValue: customer.email,
 			},
+			error: actionData?.errors.email,
 		},
 	];
 
@@ -231,19 +224,17 @@ export default function CustomerUpdateRoute() {
 			name: 'address1',
 			label: 'Address 1 *',
 			input: {
-				defaultValue:
-					actionData?.updatedCustomer?.address.address1 ||
-					customer.address.address1,
+				required: true,
+				defaultValue: customer.address.address1,
 			},
+			error: actionData?.errors.address1,
 		},
 		{
 			id: address2Id,
 			name: 'address2',
 			label: 'Address 2',
 			input: {
-				defaultValue:
-					actionData?.updatedCustomer?.address.address2 ||
-					customer.address.address2,
+				defaultValue: customer.address.address2,
 			},
 		},
 		{
@@ -251,19 +242,17 @@ export default function CustomerUpdateRoute() {
 			name: 'country',
 			label: 'Country *',
 			input: {
-				defaultValue:
-					actionData?.updatedCustomer?.address.country ||
-					customer.address.country,
+				required: true,
+				defaultValue: customer.address.country,
 			},
+			error: actionData?.errors.country,
 		},
 		{
 			id: provinceId,
 			name: 'province',
 			label: 'Province',
 			input: {
-				defaultValue:
-					actionData?.updatedCustomer?.address.province ||
-					customer.address.province,
+				defaultValue: customer.address.province,
 			},
 		},
 		{
@@ -271,8 +260,7 @@ export default function CustomerUpdateRoute() {
 			name: 'city',
 			label: 'City',
 			input: {
-				defaultValue:
-					actionData?.updatedCustomer?.address.city || customer.address.city,
+				defaultValue: customer.address.city,
 			},
 		},
 		{
@@ -280,8 +268,7 @@ export default function CustomerUpdateRoute() {
 			name: 'zip',
 			label: 'Zip',
 			input: {
-				defaultValue:
-					actionData?.updatedCustomer?.address.zip || customer.address.zip,
+				defaultValue: customer.address.zip,
 			},
 		},
 	];
@@ -308,10 +295,7 @@ export default function CustomerUpdateRoute() {
 						<UncontrolledFormField
 							key={field.id}
 							className="my-2"
-							formField={{
-								...field,
-								error: actionData?.errors?.[field.name],
-							}}
+							formField={field}
 						/>
 					))}
 				</div>
@@ -324,10 +308,7 @@ export default function CustomerUpdateRoute() {
 							<UncontrolledFormField
 								key={field.id}
 								className="my-2"
-								formField={{
-									...field,
-									error: actionData?.errors?.[field.name],
-								}}
+								formField={field}
 							/>
 						))}
 					</div>

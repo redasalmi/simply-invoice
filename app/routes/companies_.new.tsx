@@ -124,6 +124,9 @@ const companyFields: Array<Field> = [
 		id: nanoid(),
 		name: 'name',
 		label: 'Name *',
+		input: {
+			required: true,
+		},
 	},
 	{
 		id: nanoid(),
@@ -131,6 +134,7 @@ const companyFields: Array<Field> = [
 		label: 'Email *',
 		input: {
 			type: 'email',
+			required: true,
 		},
 	},
 ];
@@ -140,6 +144,9 @@ const addressFields: Array<Field> = [
 		id: nanoid(),
 		name: 'address1',
 		label: 'Address 1 *',
+		input: {
+			required: true,
+		},
 	},
 	{
 		id: nanoid(),
@@ -150,6 +157,9 @@ const addressFields: Array<Field> = [
 		id: nanoid(),
 		name: 'country',
 		label: 'Country *',
+		input: {
+			required: true,
+		},
 	},
 	{
 		id: nanoid(),

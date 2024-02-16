@@ -107,6 +107,7 @@ export function FormField({
 					) : null}
 				</Label>
 				<Input
+					required
 					id={labelId}
 					autoComplete="off"
 					name={`custom-label-${id}`}
@@ -124,6 +125,7 @@ export function FormField({
 					) : null}
 				</Label>
 				<Input
+					required
 					id={contentId}
 					autoComplete="off"
 					name={`custom-content-${id}`}

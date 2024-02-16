@@ -23,6 +23,7 @@ import { Button } from '~/components/ui';
 import { AddFormField, FormField, UncontrolledFormField } from '~/components';
 import { Reorder } from 'framer-motion';
 import { compamySchema } from '~/lib/schemas';
+import invariant from 'tiny-invariant';
 
 type ActionErrors = {
 	name?: string;
@@ -35,12 +36,11 @@ type ActionErrors = {
 type CompanySchemaErrors = z.inferFormattedError<typeof compamySchema>;
 
 export async function clientLoader({ params }: ClientLoaderFunctionArgs) {
+	invariant(params.id, 'Company ID is required');
 	const companyId = params.id;
 
 	return {
-		company: companyId
-			? await companiesStore.getItem<Company>(companyId)
-			: null,
+		company: await companiesStore.getItem<Company>(companyId),
 	};
 }
 
@@ -48,8 +48,6 @@ export async function clientAction({
 	params,
 	request,
 }: ClientActionFunctionArgs) {
-	let updatedCompany: Company | null = null;
-
 	try {
 		const companyId = params.id;
 		const formQueryString = await request.text();
@@ -80,7 +78,7 @@ export async function clientAction({
 			}
 		}
 
-		updatedCompany = {
+		const updatedCompany = compamySchema.parse({
 			id: companyId,
 			name: formData['name']?.toString(),
 			email: formData['email']?.toString(),
@@ -95,9 +93,7 @@ export async function clientAction({
 			...(Object.keys(customFields).length
 				? { custom: Object.values(customFields) }
 				: undefined),
-		};
-
-		compamySchema.parse(updatedCompany);
+		});
 		await companiesStore.setItem<Company>(updatedCompany.id, updatedCompany);
 
 		return redirect('/companies');
@@ -143,7 +139,6 @@ export async function clientAction({
 
 			return {
 				errors,
-				updatedCompany,
 			};
 		}
 	}
@@ -168,22 +163,16 @@ export default function CompanyUpdateRoute() {
 
 	React.useEffect(() => {
 		const customFields: Array<CustomField> =
-			(actionData?.updatedCompany?.custom || company?.custom)?.map(
-				(field, index) => ({
-					id: field.id,
-					label: field.label,
-					content: field.content,
-					showLabel: field.showLabel,
-					labelError: actionData?.errors?.custom?.[index]?.label,
-					contentError: actionData?.errors?.custom?.[index]?.content,
-				}),
-			) || [];
+			company?.custom?.map((field, index) => ({
+				id: field.id,
+				label: field.label,
+				content: field.content,
+				showLabel: field.showLabel,
+				labelError: actionData?.errors?.custom?.[index]?.label,
+				contentError: actionData?.errors?.custom?.[index]?.content,
+			})) || [];
 		setFormFields(customFields);
-	}, [
-		actionData?.errors?.custom,
-		actionData?.updatedCompany?.custom,
-		company?.custom,
-	]);
+	}, [actionData?.errors?.custom, company?.custom]);
 
 	if (!company) {
 		return (
@@ -211,8 +200,10 @@ export default function CompanyUpdateRoute() {
 			name: 'name',
 			label: 'Name *',
 			input: {
-				defaultValue: actionData?.updatedCompany?.name || company.name,
+				required: true,
+				defaultValue: company.name,
 			},
+			error: actionData?.errors.name,
 		},
 		{
 			id: emailId,
@@ -220,8 +211,10 @@ export default function CompanyUpdateRoute() {
 			label: 'Email *',
 			input: {
 				type: 'email',
-				defaultValue: actionData?.updatedCompany?.email || company.email,
+				required: true,
+				defaultValue: company.email,
 			},
+			error: actionData?.errors.email,
 		},
 	];
 
@@ -231,19 +224,17 @@ export default function CompanyUpdateRoute() {
 			name: 'address1',
 			label: 'Address 1 *',
 			input: {
-				defaultValue:
-					actionData?.updatedCompany?.address.address1 ||
-					company.address.address1,
+				required: true,
+				defaultValue: company.address.address1,
 			},
+			error: actionData?.errors.address1,
 		},
 		{
 			id: address2Id,
 			name: 'address2',
 			label: 'Address 2',
 			input: {
-				defaultValue:
-					actionData?.updatedCompany?.address.address2 ||
-					company.address.address2,
+				defaultValue: company.address.address2,
 			},
 		},
 		{
@@ -251,19 +242,17 @@ export default function CompanyUpdateRoute() {
 			name: 'country',
 			label: 'Country *',
 			input: {
-				defaultValue:
-					actionData?.updatedCompany?.address.country ||
-					company.address.country,
+				required: true,
+				defaultValue: company.address.country,
 			},
+			error: actionData?.errors.country,
 		},
 		{
 			id: provinceId,
 			name: 'province',
 			label: 'Province',
 			input: {
-				defaultValue:
-					actionData?.updatedCompany?.address.province ||
-					company.address.province,
+				defaultValue: company.address.province,
 			},
 		},
 		{
@@ -271,8 +260,7 @@ export default function CompanyUpdateRoute() {
 			name: 'city',
 			label: 'City',
 			input: {
-				defaultValue:
-					actionData?.updatedCompany?.address.city || company.address.city,
+				defaultValue: company.address.city,
 			},
 		},
 		{
@@ -280,8 +268,7 @@ export default function CompanyUpdateRoute() {
 			name: 'zip',
 			label: 'Zip',
 			input: {
-				defaultValue:
-					actionData?.updatedCompany?.address.zip || company.address.zip,
+				defaultValue: company.address.zip,
 			},
 		},
 	];
@@ -308,10 +295,7 @@ export default function CompanyUpdateRoute() {
 						<UncontrolledFormField
 							key={field.id}
 							className="my-2"
-							formField={{
-								...field,
-								error: actionData?.errors?.[field.name],
-							}}
+							formField={field}
 						/>
 					))}
 				</div>
@@ -324,10 +308,7 @@ export default function CompanyUpdateRoute() {
 							<UncontrolledFormField
 								key={field.id}
 								className="my-2"
-								formField={{
-									...field,
-									error: actionData?.errors?.[field.name],
-								}}
+								formField={field}
 							/>
 						))}
 					</div>

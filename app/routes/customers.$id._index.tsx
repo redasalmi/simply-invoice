@@ -12,14 +12,14 @@ import { customersStore } from '~/lib/stores';
 
 import type { ClientLoaderFunctionArgs } from '@remix-run/react';
 import type { Customer } from '~/lib/types';
+import invariant from 'tiny-invariant';
 
 export async function clientLoader({ params }: ClientLoaderFunctionArgs) {
+	invariant(params.id, 'Customer ID is required');
 	const customerId = params.id;
 
 	return {
-		customer: customerId
-			? await customersStore.getItem<Customer>(customerId)
-			: null,
+		customer: await customersStore.getItem<Customer>(customerId),
 	};
 }
 
