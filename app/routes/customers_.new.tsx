@@ -11,6 +11,7 @@ import { customersStore } from '~/lib/stores';
 
 import type { ClientActionFunctionArgs } from '@remix-run/react';
 import type { Customer, Field, CustomField } from '~/lib/types';
+import { customerSchema } from '~/lib/schemas';
 
 type ActionErrors = {
 	name?: string;
@@ -20,29 +21,6 @@ type ActionErrors = {
 	custom?: Record<string, { label?: string; content?: string }>;
 };
 
-const customerSchema = z.object({
-	id: z.string(),
-	name: z.string().min(1, 'Name is required'),
-	email: z.string().email(),
-	address: z.object({
-		address1: z.string().min(1, 'Address 1 is required'),
-		address2: z.string().optional(),
-		city: z.string().optional(),
-		country: z.string().min(1, 'Country is required'),
-		province: z.string().optional(),
-		zip: z.string().optional(),
-	}),
-	custom: z
-		.array(
-			z.object({
-				id: z.string(),
-				label: z.string().min(1, 'Label is required'),
-				content: z.string().min(1, 'Content is required'),
-				showLabel: z.boolean().optional(),
-			}),
-		)
-		.optional(),
-});
 type customerSchemaErrors = z.inferFormattedError<typeof customerSchema>;
 
 export async function clientAction({ request }: ClientActionFunctionArgs) {

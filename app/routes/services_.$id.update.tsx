@@ -19,18 +19,13 @@ import type {
 	ClientLoaderFunctionArgs,
 } from '@remix-run/react';
 import type { Field, Service } from '~/lib/types';
+import { serviceSchema } from '~/lib/schemas';
 
 type ActionErrors = {
 	name?: string;
 	price?: string;
 };
 
-const serviceSchema = z.object({
-	id: z.string(),
-	name: z.string().min(1, 'Name is required'),
-	description: z.string().optional(),
-	price: z.number().min(0, 'Price must be greater than or equal to 0'),
-});
 type ServiceSchemaErrors = z.inferFormattedError<typeof serviceSchema>;
 
 export async function clientLoader({ params }: ClientLoaderFunctionArgs) {
