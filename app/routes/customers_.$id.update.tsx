@@ -22,7 +22,7 @@ import { nanoid } from 'nanoid';
 import { Button } from '~/components/ui';
 import { AddFormField, FormField, UncontrolledFormField } from '~/components';
 import { Reorder } from 'framer-motion';
-import { customerSchema } from '~/lib/schemas';
+import { customerSchema, CustomerSchemaErrors } from '~/lib/schemas';
 import invariant from 'tiny-invariant';
 
 type ActionErrors = {
@@ -32,8 +32,6 @@ type ActionErrors = {
 	country?: string;
 	custom?: Record<string, { label?: string; content?: string }>;
 };
-
-type CustomerSchemaErrors = z.inferFormattedError<typeof customerSchema>;
 
 export async function clientLoader({ params }: ClientLoaderFunctionArgs) {
 	invariant(params.id, 'Customer ID is required');
@@ -48,6 +46,8 @@ export async function clientAction({
 	params,
 	request,
 }: ClientActionFunctionArgs) {
+	invariant(params.id, 'Customer ID is required');
+
 	try {
 		const customerId = params.id;
 		const formQueryString = await request.text();
@@ -168,11 +168,11 @@ export default function CustomerUpdateRoute() {
 				label: field.label,
 				content: field.content,
 				showLabel: field.showLabel,
-				labelError: actionData?.errors?.custom?.[index]?.label,
-				contentError: actionData?.errors?.custom?.[index]?.content,
+				labelError: actionData?.errors.custom?.[index]?.label,
+				contentError: actionData?.errors.custom?.[index]?.content,
 			})) || [];
 		setFormFields(customFields);
-	}, [actionData?.errors?.custom, customer?.custom]);
+	}, [actionData?.errors.custom, customer?.custom]);
 
 	if (!customer) {
 		return (

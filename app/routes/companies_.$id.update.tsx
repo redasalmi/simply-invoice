@@ -22,7 +22,7 @@ import { nanoid } from 'nanoid';
 import { Button } from '~/components/ui';
 import { AddFormField, FormField, UncontrolledFormField } from '~/components';
 import { Reorder } from 'framer-motion';
-import { compamySchema } from '~/lib/schemas';
+import { CompanySchemaErrors, compamySchema } from '~/lib/schemas';
 import invariant from 'tiny-invariant';
 
 type ActionErrors = {
@@ -32,8 +32,6 @@ type ActionErrors = {
 	country?: string;
 	custom?: Record<string, { label?: string; content?: string }>;
 };
-
-type CompanySchemaErrors = z.inferFormattedError<typeof compamySchema>;
 
 export async function clientLoader({ params }: ClientLoaderFunctionArgs) {
 	invariant(params.id, 'Company ID is required');
@@ -48,6 +46,8 @@ export async function clientAction({
 	params,
 	request,
 }: ClientActionFunctionArgs) {
+	invariant(params.id, 'Company ID is required');
+
 	try {
 		const companyId = params.id;
 		const formQueryString = await request.text();
@@ -168,11 +168,11 @@ export default function CompanyUpdateRoute() {
 				label: field.label,
 				content: field.content,
 				showLabel: field.showLabel,
-				labelError: actionData?.errors?.custom?.[index]?.label,
-				contentError: actionData?.errors?.custom?.[index]?.content,
+				labelError: actionData?.errors.custom?.[index]?.label,
+				contentError: actionData?.errors.custom?.[index]?.content,
 			})) || [];
 		setFormFields(customFields);
-	}, [actionData?.errors?.custom, company?.custom]);
+	}, [actionData?.errors.custom, company?.custom]);
 
 	if (!company) {
 		return (

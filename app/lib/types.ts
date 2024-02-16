@@ -43,7 +43,7 @@ export type Customer = {
 export type Service = {
 	id: string;
 	name: string;
-	description: string;
+	description?: string;
 	price: number;
 };
 

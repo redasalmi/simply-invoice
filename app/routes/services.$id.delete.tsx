@@ -35,9 +35,9 @@ export async function clientLoader({ params }: ClientLoaderFunctionArgs) {
 }
 
 export async function clientAction({ params }: ClientActionFunctionArgs) {
-	try {
-		invariant(params.id, 'Service ID is required');
+	invariant(params.id, 'Service ID is required');
 
+	try {
 		const serviceId = params.id;
 		const service = await servicesStore.getItem<Service>(serviceId);
 		if (!service) {

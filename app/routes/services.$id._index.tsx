@@ -12,12 +12,14 @@ import { servicesStore } from '~/lib/stores';
 
 import type { ClientLoaderFunctionArgs } from '@remix-run/react';
 import type { Service } from '~/lib/types';
+import invariant from 'tiny-invariant';
 
 export async function clientLoader({ params }: ClientLoaderFunctionArgs) {
+	invariant(params.id, 'Service ID is required');
 	const serviceId = params.id;
 
 	return {
-		service: serviceId ? await servicesStore.getItem<Service>(serviceId) : null,
+		service: await servicesStore.getItem<Service>(serviceId),
 	};
 }
 

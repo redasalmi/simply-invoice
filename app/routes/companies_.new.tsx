@@ -11,7 +11,7 @@ import { companiesStore } from '~/lib/stores';
 
 import type { ClientActionFunctionArgs } from '@remix-run/react';
 import type { Company, CustomField, Field } from '~/lib/types';
-import { compamySchema } from '~/lib/schemas';
+import { CompanySchemaErrors, compamySchema } from '~/lib/schemas';
 
 type ActionErrors = {
 	name?: string;
@@ -20,8 +20,6 @@ type ActionErrors = {
 	country?: string;
 	custom?: Record<string, { label?: string; content?: string }>;
 };
-
-type CompanySchemaErrors = z.inferFormattedError<typeof compamySchema>;
 
 export async function clientAction({ request }: ClientActionFunctionArgs) {
 	try {

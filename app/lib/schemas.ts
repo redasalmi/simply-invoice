@@ -23,6 +23,7 @@ export const compamySchema = z.object({
 		)
 		.optional(),
 });
+export type CompanySchemaErrors = z.inferFormattedError<typeof compamySchema>;
 
 export const customerSchema = z.object({
 	id: z.string(),
@@ -47,6 +48,7 @@ export const customerSchema = z.object({
 		)
 		.optional(),
 });
+export type CustomerSchemaErrors = z.inferFormattedError<typeof customerSchema>;
 
 export const serviceSchema = z.object({
 	id: z.string(),
@@ -54,3 +56,4 @@ export const serviceSchema = z.object({
 	description: z.string().optional(),
 	price: z.number().min(0, 'Price must be greater than or equal to 0'),
 });
+export type ServiceSchemaErrors = z.inferFormattedError<typeof serviceSchema>;

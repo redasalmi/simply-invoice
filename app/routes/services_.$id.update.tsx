@@ -19,14 +19,12 @@ import type {
 	ClientLoaderFunctionArgs,
 } from '@remix-run/react';
 import type { Field, Service } from '~/lib/types';
-import { serviceSchema } from '~/lib/schemas';
+import { ServiceSchemaErrors, serviceSchema } from '~/lib/schemas';
 
 type ActionErrors = {
 	name?: string;
 	price?: string;
 };
-
-type ServiceSchemaErrors = z.inferFormattedError<typeof serviceSchema>;
 
 export async function clientLoader({ params }: ClientLoaderFunctionArgs) {
 	invariant(params.id, 'Service ID is required');
@@ -41,22 +39,18 @@ export async function clientAction({
 	params,
 	request,
 }: ClientActionFunctionArgs) {
-	let updatedService: Service | null = null;
+	invariant(params.id, 'Service ID is required');
 
 	try {
-		invariant(params.id, 'Service ID is required');
-
 		const serviceId = params.id;
 		const formData = await request.formData();
 
-		updatedService = {
+		const updatedService = serviceSchema.parse({
 			id: serviceId,
 			name: String(formData.get('name')),
 			description: String(formData.get('description')),
 			price: Number(formData.get('price')),
-		};
-
-		serviceSchema.parse(updatedService);
+		});
 		await servicesStore.setItem<Service>(updatedService.id, updatedService);
 
 		return redirect('/services');
@@ -74,7 +68,6 @@ export async function clientAction({
 
 			return {
 				errors,
-				updatedService,
 			};
 		}
 	}
@@ -116,16 +109,17 @@ export default function ServiceUpdateRoute() {
 			label: 'Name *',
 			name: 'name',
 			input: {
-				defaultValue: actionData?.updatedService?.name || service.name,
+				required: true,
+				defaultValue: service.name,
 			},
+			error: actionData?.errors.name,
 		},
 		{
 			id: descriptionId,
 			label: 'Description',
 			name: 'description',
 			input: {
-				defaultValue:
-					actionData?.updatedService?.description || service.description,
+				defaultValue: service.description,
 			},
 		},
 		{
@@ -134,8 +128,10 @@ export default function ServiceUpdateRoute() {
 			name: 'price',
 			input: {
 				type: 'number',
-				defaultValue: actionData?.updatedService?.price || service.price,
+				required: true,
+				defaultValue: service.price,
 			},
+			error: actionData?.errors.price,
 		},
 	];
 
@@ -146,10 +142,7 @@ export default function ServiceUpdateRoute() {
 					<UncontrolledFormField
 						key={field.id}
 						className="my-2"
-						formField={{
-							...field,
-							error: actionData?.errors?.[field.name],
-						}}
+						formField={field}
 					/>
 				))}
 

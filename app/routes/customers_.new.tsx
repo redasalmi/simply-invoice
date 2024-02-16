@@ -11,7 +11,7 @@ import { customersStore } from '~/lib/stores';
 
 import type { ClientActionFunctionArgs } from '@remix-run/react';
 import type { Customer, Field, CustomField } from '~/lib/types';
-import { customerSchema } from '~/lib/schemas';
+import { CustomerSchemaErrors, customerSchema } from '~/lib/schemas';
 
 type ActionErrors = {
 	name?: string;
@@ -20,8 +20,6 @@ type ActionErrors = {
 	country?: string;
 	custom?: Record<string, { label?: string; content?: string }>;
 };
-
-type customerSchemaErrors = z.inferFormattedError<typeof customerSchema>;
 
 export async function clientAction({ request }: ClientActionFunctionArgs) {
 	try {
@@ -74,7 +72,7 @@ export async function clientAction({ request }: ClientActionFunctionArgs) {
 		return redirect('/customers');
 	} catch (err) {
 		if (err instanceof z.ZodError) {
-			const zodErrors: customerSchemaErrors = err.format();
+			const zodErrors: CustomerSchemaErrors = err.format();
 			const customErrors: Record<string, { label?: string; content?: string }> =
 				{};
 
