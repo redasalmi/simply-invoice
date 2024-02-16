@@ -18,7 +18,7 @@ import type {
 	ClientActionFunctionArgs,
 	ClientLoaderFunctionArgs,
 } from '@remix-run/react';
-import type { Field, Service } from '~/types';
+import type { Field, Service } from '~/lib/types';
 
 type ActionErrors = {
 	name?: string;

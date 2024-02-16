@@ -23,7 +23,7 @@ import {
 
 import { servicesStore } from '~/lib/stores';
 
-import type { Service } from '~/types';
+import type { Service } from '~/lib/types';
 
 export async function clientLoader({ params }: ClientLoaderFunctionArgs) {
 	invariant(params.id, 'Service ID is required');

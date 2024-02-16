@@ -3,7 +3,7 @@ import { nanoid } from 'nanoid';
 
 import { Button, Label, Input } from '~/components/ui';
 
-import type { CustomField } from '~/types';
+import type { CustomField } from '~/lib/types';
 
 type AddFormFieldProps = {
 	addFormField: (field: CustomField) => void;

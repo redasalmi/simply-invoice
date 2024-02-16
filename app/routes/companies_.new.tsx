@@ -10,7 +10,7 @@ import { Button } from '~/components/ui';
 import { companiesStore } from '~/lib/stores';
 
 import type { ClientActionFunctionArgs } from '@remix-run/react';
-import type { Company, CustomField, Field } from '~/types';
+import type { Company, CustomField, Field } from '~/lib/types';
 
 type ActionErrors = {
 	name?: string;

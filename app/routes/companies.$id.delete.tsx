@@ -23,7 +23,7 @@ import {
 
 import { companiesStore } from '~/lib/stores';
 
-import type { Company } from '~/types';
+import type { Company } from '~/lib/types';
 
 export async function clientLoader({ params }: ClientLoaderFunctionArgs) {
 	invariant(params.id, 'Company ID is required');

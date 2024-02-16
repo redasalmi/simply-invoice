@@ -6,7 +6,7 @@ import { Button } from '~/components/ui';
 import { servicesStore } from '~/lib/stores';
 
 import type { ActionFunctionArgs } from '@remix-run/node';
-import type { Field, Service } from '~/types';
+import type { Field, Service } from '~/lib/types';
 
 export async function clientAction({ request }: ActionFunctionArgs) {
 	const formData = await request.formData();

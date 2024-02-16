@@ -16,7 +16,7 @@ import { invoicesStore } from '~/lib/stores';
 
 import type { ActionFunctionArgs } from '@remix-run/node';
 import type { ClientActionFunctionArgs } from '@remix-run/react';
-import type { Customer, Field, Invoice } from '~/types';
+import type { Customer, Field, Invoice } from '~/lib/types';
 
 const intents = {
 	preview: 'preview',

@@ -23,7 +23,7 @@ import {
 
 import { customersStore } from '~/lib/stores';
 
-import type { Customer } from '~/types';
+import type { Customer } from '~/lib/types';
 
 export async function clientLoader({ params }: ClientLoaderFunctionArgs) {
 	invariant(params.id, 'Customer ID is required');

@@ -12,7 +12,7 @@ import {
 import { getAllItems, invoicesStore } from '~/lib/stores';
 import { cn } from '~/lib/utils';
 
-import type { Invoice } from '~/types';
+import type { Invoice } from '~/lib/types';
 
 export async function clientLoader() {
 	return {

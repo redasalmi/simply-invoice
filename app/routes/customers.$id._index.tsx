@@ -11,7 +11,7 @@ import {
 import { customersStore } from '~/lib/stores';
 
 import type { ClientLoaderFunctionArgs } from '@remix-run/react';
-import type { Customer } from '~/types';
+import type { Customer } from '~/lib/types';
 
 export async function clientLoader({ params }: ClientLoaderFunctionArgs) {
 	const customerId = params.id;

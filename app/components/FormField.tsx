@@ -13,7 +13,7 @@ import {
 } from '~/components/ui';
 import { cn } from '~/lib/utils';
 
-import type { Field, CustomField } from '~/types';
+import type { Field, CustomField } from '~/lib/types';
 
 type UncontrolledFormField = {
 	formField: Field;

@@ -11,7 +11,7 @@ import {
 import { servicesStore } from '~/lib/stores';
 
 import type { ClientLoaderFunctionArgs } from '@remix-run/react';
-import type { Service } from '~/types';
+import type { Service } from '~/lib/types';
 
 export async function clientLoader({ params }: ClientLoaderFunctionArgs) {
 	const serviceId = params.id;

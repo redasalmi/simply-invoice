@@ -17,7 +17,7 @@ import type {
 	ClientLoaderFunctionArgs,
 } from '@remix-run/react';
 
-import type { Customer, CustomField, Field } from '~/types';
+import type { Customer, CustomField, Field } from '~/lib/types';
 import { nanoid } from 'nanoid';
 import { Button } from '~/components/ui';
 import { AddFormField, FormField, UncontrolledFormField } from '~/components';

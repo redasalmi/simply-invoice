@@ -13,7 +13,7 @@ import {
 import { customersStore, getAllItems } from '~/lib/stores';
 import { cn } from '~/lib/utils';
 
-import type { Customer } from '~/types';
+import type { Customer } from '~/lib/types';
 
 export async function clientLoader() {
 	return {

@@ -3,7 +3,7 @@ import { nanoid } from 'nanoid';
 
 import { capitalize } from '~/lib/utils';
 
-import type { Customer } from '~/types';
+import type { Customer } from '~/lib/types';
 
 const styles = StyleSheet.create({
 	body: {
