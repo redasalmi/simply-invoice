@@ -23,15 +23,14 @@ import {
 	AlertDialogTitle,
 } from '~/components/ui';
 
-import { customersStore } from '~/lib/stores';
-import type { Customer } from '~/lib/types';
+import { db } from '~/lib/stores';
 
 export async function clientLoader({ params }: ClientLoaderFunctionArgs) {
 	invariant(params.id, 'Customer ID is required');
 	const customerId = params.id;
 
 	return {
-		customer: await customersStore.getItem<Customer>(customerId),
+		customer: await db.customers.get(customerId),
 	};
 }
 
@@ -40,7 +39,7 @@ export async function clientAction({ params }: ClientActionFunctionArgs) {
 
 	try {
 		const customerId = params.id;
-		const customer = await customersStore.getItem<Customer>(customerId);
+		const customer = await db.customers.get(customerId);
 		if (!customer) {
 			return {
 				error: {
@@ -50,7 +49,7 @@ export async function clientAction({ params }: ClientActionFunctionArgs) {
 			};
 		}
 
-		await customersStore.removeItem(customerId);
+		await db.customers.delete(customerId);
 
 		return redirect('/customers');
 	} catch (err) {

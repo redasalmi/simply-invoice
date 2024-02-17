@@ -23,15 +23,14 @@ import {
 	AlertDialogTitle,
 } from '~/components/ui';
 
-import { servicesStore } from '~/lib/stores';
-import type { Service } from '~/lib/types';
+import { db } from '~/lib/stores';
 
 export async function clientLoader({ params }: ClientLoaderFunctionArgs) {
 	invariant(params.id, 'Service ID is required');
 	const serviceId = params.id;
 
 	return {
-		service: await servicesStore.getItem<Service>(serviceId),
+		service: await db.services.get(serviceId),
 	};
 }
 
@@ -40,7 +39,7 @@ export async function clientAction({ params }: ClientActionFunctionArgs) {
 
 	try {
 		const serviceId = params.id;
-		const service = await servicesStore.getItem<Service>(serviceId);
+		const service = await db.services.get(serviceId);
 		if (!service) {
 			return {
 				error: {
@@ -50,7 +49,7 @@ export async function clientAction({ params }: ClientActionFunctionArgs) {
 			};
 		}
 
-		await servicesStore.removeItem(serviceId);
+		await db.services.delete(serviceId);
 
 		return redirect('/services');
 	} catch (err) {

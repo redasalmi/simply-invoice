@@ -23,15 +23,14 @@ import {
 	AlertDialogTitle,
 } from '~/components/ui';
 
-import { companiesStore } from '~/lib/stores';
-import type { Company } from '~/lib/types';
+import { db } from '~/lib/stores';
 
 export async function clientLoader({ params }: ClientLoaderFunctionArgs) {
 	invariant(params.id, 'Company ID is required');
 	const companyId = params.id;
 
 	return {
-		company: await companiesStore.getItem<Company>(companyId),
+		company: await db.companies.get(companyId),
 	};
 }
 
@@ -40,7 +39,7 @@ export async function clientAction({ params }: ClientActionFunctionArgs) {
 
 	try {
 		const companyId = params.id;
-		const company = await companiesStore.getItem<Company>(companyId);
+		const company = await db.companies.get(companyId);
 		if (!company) {
 			return {
 				error: {
@@ -50,7 +49,7 @@ export async function clientAction({ params }: ClientActionFunctionArgs) {
 			};
 		}
 
-		await companiesStore.removeItem(companyId);
+		await db.companies.delete(companyId);
 
 		return redirect('/companies');
 	} catch (err) {

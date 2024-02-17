@@ -7,6 +7,7 @@ import type { ClientActionFunctionArgs } from '@remix-run/react';
 import { Reorder } from 'framer-motion';
 import { nanoid } from 'nanoid';
 import queryString from 'query-string';
+import { ulid } from 'ulid';
 
 import {
 	AddFormField,
@@ -16,8 +17,8 @@ import {
 } from '~/components';
 import { Button, Dialog, DialogContent, DialogTrigger } from '~/components/ui';
 
-import { invoicesStore } from '~/lib/stores';
-import type { Customer, Field, Invoice } from '~/lib/types';
+import { db } from '~/lib/stores';
+import type { Customer, Field } from '~/lib/types';
 
 const intents = {
 	preview: 'preview',
@@ -99,17 +100,16 @@ export async function clientAction({ serverAction }: ClientActionFunctionArgs) {
 		return data;
 	}
 
-	const invoiceId = nanoid();
 	const today = new Date().toLocaleDateString();
 	const newInvoice = Object.assign(
 		{
-			id: invoiceId,
+			id: ulid(),
 			createdAt: today,
 		},
 		data.invoice,
 	);
 
-	await invoicesStore.setItem<Invoice>(invoiceId, newInvoice);
+	await db.invoices.add(newInvoice);
 
 	return redirect('/invoices');
 }

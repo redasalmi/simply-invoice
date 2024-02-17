@@ -5,6 +5,7 @@ import type { ClientActionFunctionArgs } from '@remix-run/react';
 import { Reorder } from 'framer-motion';
 import { nanoid } from 'nanoid';
 import queryString from 'query-string';
+import { ulid } from 'ulid';
 import { z } from 'zod';
 
 import { AddFormField, FormField, UncontrolledFormField } from '~/components';
@@ -12,8 +13,8 @@ import { Button } from '~/components/ui';
 
 import { compamySchema } from '~/lib/schemas';
 import type { CompanySchemaErrors } from '~/lib/schemas';
-import { companiesStore } from '~/lib/stores';
-import type { Company, CustomField, Field } from '~/lib/types';
+import { db } from '~/lib/stores';
+import type { CustomField, Field } from '~/lib/types';
 
 type ActionErrors = {
 	name?: string;
@@ -54,7 +55,7 @@ export async function clientAction({ request }: ClientActionFunctionArgs) {
 		}
 
 		const newCompany = compamySchema.parse({
-			id: nanoid(),
+			id: ulid(),
 			name: formData['name']?.toString(),
 			email: formData['email']?.toString(),
 			address: {
@@ -69,7 +70,7 @@ export async function clientAction({ request }: ClientActionFunctionArgs) {
 				? { custom: Object.values(customFields) }
 				: undefined),
 		});
-		await companiesStore.setItem<Company>(newCompany.id, newCompany);
+		await db.companies.add(newCompany);
 
 		return redirect('/companies');
 	} catch (err) {

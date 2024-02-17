@@ -11,13 +11,12 @@ import {
 	TableRow,
 } from '~/components/ui';
 
-import { companiesStore, getAllItems } from '~/lib/stores';
-import type { Company } from '~/lib/types';
+import { db, getPage } from '~/lib/stores';
 import { cn } from '~/lib/utils';
 
 export async function clientLoader() {
 	return {
-		companies: await getAllItems<Company>(companiesStore),
+		companies: await getPage(db.companies, 1),
 	};
 }
 
@@ -39,7 +38,7 @@ export default function CompaniesRoute() {
 					</Link>
 				</div>
 				<div className="mt-6">
-					{companies && companies.length > 0 ? (
+					{companies && companies.items.length > 0 ? (
 						<Table>
 							<TableHeader>
 								<TableRow>
@@ -48,7 +47,7 @@ export default function CompaniesRoute() {
 								</TableRow>
 							</TableHeader>
 							<TableBody>
-								{companies.map(({ id, email, name }) => (
+								{companies.items.map(({ id, email, name }) => (
 									<TableRow key={id}>
 										<TableCell>{name}</TableCell>
 										<TableCell>{email}</TableCell>

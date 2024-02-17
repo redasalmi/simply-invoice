@@ -11,13 +11,12 @@ import {
 	TableRow,
 } from '~/components/ui';
 
-import { customersStore, getAllItems } from '~/lib/stores';
-import type { Customer } from '~/lib/types';
+import { db, getPage } from '~/lib/stores';
 import { cn } from '~/lib/utils';
 
 export async function clientLoader() {
 	return {
-		customers: await getAllItems<Customer>(customersStore),
+		customers: await getPage(db.customers, 1),
 	};
 }
 
@@ -39,7 +38,7 @@ export default function CustomersRoute() {
 					</Link>
 				</div>
 				<div className="mt-6">
-					{customers && customers.length > 0 ? (
+					{customers && customers.items.length > 0 ? (
 						<Table>
 							<TableHeader>
 								<TableRow>
@@ -48,7 +47,7 @@ export default function CustomersRoute() {
 								</TableRow>
 							</TableHeader>
 							<TableBody>
-								{customers.map(({ id, email, name }) => (
+								{customers.items.map(({ id, email, name }) => (
 									<TableRow key={id}>
 										<TableCell>{name}</TableCell>
 										<TableCell>{email}</TableCell>

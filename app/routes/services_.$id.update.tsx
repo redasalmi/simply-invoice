@@ -18,8 +18,8 @@ import { UncontrolledFormField } from '~/components';
 import { Button } from '~/components/ui';
 
 import { serviceSchema, ServiceSchemaErrors } from '~/lib/schemas';
-import { servicesStore } from '~/lib/stores';
-import type { Field, Service } from '~/lib/types';
+import { db } from '~/lib/stores';
+import type { Field } from '~/lib/types';
 
 type ActionErrors = {
 	name?: string;
@@ -31,7 +31,7 @@ export async function clientLoader({ params }: ClientLoaderFunctionArgs) {
 	const serviceId = params.id;
 
 	return {
-		service: await servicesStore.getItem<Service>(serviceId),
+		service: await db.services.get(serviceId),
 	};
 }
 
@@ -51,7 +51,7 @@ export async function clientAction({
 			description: String(formData.get('description')),
 			price: Number(formData.get('price')),
 		});
-		await servicesStore.setItem<Service>(updatedService.id, updatedService);
+		await db.services.update(updatedService.id, updatedService);
 
 		return redirect('/services');
 	} catch (err) {

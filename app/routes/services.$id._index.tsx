@@ -11,15 +11,14 @@ import {
 	TableRow,
 } from '~/components/ui';
 
-import { servicesStore } from '~/lib/stores';
-import type { Service } from '~/lib/types';
+import { db } from '~/lib/stores';
 
 export async function clientLoader({ params }: ClientLoaderFunctionArgs) {
 	invariant(params.id, 'Service ID is required');
 	const serviceId = params.id;
 
 	return {
-		service: await servicesStore.getItem<Service>(serviceId),
+		service: await db.services.get(serviceId),
 	};
 }
 

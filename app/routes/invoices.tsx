@@ -10,13 +10,12 @@ import {
 	TableRow,
 } from '~/components/ui';
 
-import { getAllItems, invoicesStore } from '~/lib/stores';
-import type { Invoice } from '~/lib/types';
+import { db, getPage } from '~/lib/stores';
 import { cn } from '~/lib/utils';
 
 export async function clientLoader() {
 	return {
-		invoices: await getAllItems<Invoice>(invoicesStore),
+		invoices: await getPage(db.invoices, 1),
 	};
 }
 
@@ -43,7 +42,7 @@ export default function InvoicesRoutes() {
 				</Link>
 			</div>
 			<div className="mt-6">
-				{invoices && invoices.length > 0 ? (
+				{invoices && invoices.items.length > 0 ? (
 					<Table>
 						<TableHeader>
 							<TableRow>
@@ -53,7 +52,7 @@ export default function InvoicesRoutes() {
 							</TableRow>
 						</TableHeader>
 						<TableBody>
-							{invoices.map(({ id, createdAt, customer }) => (
+							{invoices.items.map(({ id, createdAt, customer }) => (
 								<TableRow key={id}>
 									<TableCell>{id}</TableCell>
 									<TableCell>{formatter.format(new Date(createdAt))}</TableCell>

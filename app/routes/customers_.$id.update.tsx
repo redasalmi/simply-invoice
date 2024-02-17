@@ -23,8 +23,8 @@ import { Button } from '~/components/ui';
 
 import { customerSchema } from '~/lib/schemas';
 import type { CustomerSchemaErrors } from '~/lib/schemas';
-import { customersStore } from '~/lib/stores';
-import type { Customer, CustomField, Field } from '~/lib/types';
+import { db } from '~/lib/stores';
+import type { CustomField, Field } from '~/lib/types';
 
 type ActionErrors = {
 	name?: string;
@@ -39,7 +39,7 @@ export async function clientLoader({ params }: ClientLoaderFunctionArgs) {
 	const customerId = params.id;
 
 	return {
-		customer: await customersStore.getItem<Customer>(customerId),
+		customer: await db.customers.get(customerId),
 	};
 }
 
@@ -95,7 +95,7 @@ export async function clientAction({
 				? { custom: Object.values(customFields) }
 				: undefined),
 		});
-		await customersStore.setItem<Customer>(updatedCustomer.id, updatedCustomer);
+		await db.customers.update(updatedCustomer.id, updatedCustomer);
 
 		return redirect('/customers');
 	} catch (err) {

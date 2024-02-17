@@ -23,8 +23,8 @@ import { Button } from '~/components/ui';
 
 import { compamySchema } from '~/lib/schemas';
 import type { CompanySchemaErrors } from '~/lib/schemas';
-import { companiesStore } from '~/lib/stores';
-import type { Company, CustomField, Field } from '~/lib/types';
+import { db } from '~/lib/stores';
+import type { CustomField, Field } from '~/lib/types';
 
 type ActionErrors = {
 	name?: string;
@@ -39,7 +39,7 @@ export async function clientLoader({ params }: ClientLoaderFunctionArgs) {
 	const companyId = params.id;
 
 	return {
-		company: await companiesStore.getItem<Company>(companyId),
+		company: await db.companies.get(companyId),
 	};
 }
 
@@ -95,7 +95,7 @@ export async function clientAction({
 				? { custom: Object.values(customFields) }
 				: undefined),
 		});
-		await companiesStore.setItem<Company>(updatedCompany.id, updatedCompany);
+		await db.companies.update(updatedCompany.id, updatedCompany);
 
 		return redirect('/companies');
 	} catch (err) {

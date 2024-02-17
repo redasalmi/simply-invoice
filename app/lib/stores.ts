@@ -1,26 +1,78 @@
-import localforage from 'localforage';
+import Dexie from 'dexie';
+import type { Table } from 'dexie';
 
-export const invoicesStore = localforage.createInstance({
-	name: 'invoices',
-});
+import type { Company, Customer, Invoice, Service } from '~/lib/types';
 
-export const companiesStore = localforage.createInstance({
-	name: 'companies',
-});
+class DexieDB extends Dexie {
+	companies!: Table<Company>;
+	customers!: Table<Customer>;
+	services!: Table<Service>;
+	invoices!: Table<Invoice>;
 
-export const customersStore = localforage.createInstance({
-	name: 'customers',
-});
+	constructor() {
+		super('SimplyInvoice');
+		this.version(1).stores({
+			companies: '++id, name, email',
+			customers: '++id, name, email',
+			services: '++id, name, price',
+			invoices: '++id',
+		});
+	}
+}
 
-export const servicesStore = localforage.createInstance({
-	name: 'services',
-});
+export const db = new DexieDB();
 
-export async function getAllItems<T>(store: LocalForage): Promise<Array<T>> {
-	const items: Array<T> = [];
-	await store.iterate((item: T) => {
-		items.push(item);
-	});
+function fastForward<T>(
+	lastItemID: string,
+	filterCallback?: (item: T) => boolean,
+) {
+	let fastForwardComplete = false;
 
-	return items;
+	return (item: T) => {
+		if (fastForwardComplete) {
+			return filterCallback ? filterCallback(item) : true;
+		}
+
+		if (item.id === lastItemID) {
+			fastForwardComplete = true;
+		}
+
+		return false;
+	};
+}
+
+const ITEMS_PER_PAGE = 10;
+
+export async function getPage<T>(
+	table: Table<T>,
+	page: number,
+	lastItemID?: string,
+	filterCallback: (item: T) => boolean = () => true,
+) {
+	let items = null;
+	const count = await table.count();
+
+	if (!lastItemID) {
+		items = await table
+			.orderBy('id')
+			.reverse()
+			.filter(filterCallback)
+			.limit(ITEMS_PER_PAGE)
+			.toArray();
+	} else {
+		items = await table
+			.where('id')
+			.belowOrEqual(lastItemID)
+			.reverse()
+			.filter(fastForward(lastItemID, filterCallback))
+			.limit(ITEMS_PER_PAGE)
+			.toArray();
+	}
+
+	return {
+		items,
+		page,
+		total: count,
+		hasNextPage: page * ITEMS_PER_PAGE < count,
+	};
 }

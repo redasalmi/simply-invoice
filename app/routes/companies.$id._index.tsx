@@ -11,15 +11,14 @@ import {
 	TableRow,
 } from '~/components/ui';
 
-import { companiesStore } from '~/lib/stores';
-import type { Company } from '~/lib/types';
+import { db } from '~/lib/stores';
 
 export async function clientLoader({ params }: ClientLoaderFunctionArgs) {
 	invariant(params.id, 'Company ID is required');
 	const companyId = params.id;
 
 	return {
-		company: await companiesStore.getItem<Company>(companyId),
+		company: await db.companies.get(companyId),
 	};
 }
 

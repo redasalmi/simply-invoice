@@ -5,6 +5,7 @@ import type { ClientActionFunctionArgs } from '@remix-run/react';
 import { Reorder } from 'framer-motion';
 import { nanoid } from 'nanoid';
 import queryString from 'query-string';
+import { ulid } from 'ulid';
 import { z } from 'zod';
 
 import { AddFormField, FormField, UncontrolledFormField } from '~/components';
@@ -12,8 +13,8 @@ import { Button } from '~/components/ui';
 
 import { customerSchema } from '~/lib/schemas';
 import type { CustomerSchemaErrors } from '~/lib/schemas';
-import { customersStore } from '~/lib/stores';
-import type { Customer, CustomField, Field } from '~/lib/types';
+import { db } from '~/lib/stores';
+import type { CustomField, Field } from '~/lib/types';
 
 type ActionErrors = {
 	name?: string;
@@ -54,7 +55,7 @@ export async function clientAction({ request }: ClientActionFunctionArgs) {
 		}
 
 		const newCustomer = customerSchema.parse({
-			id: nanoid(),
+			id: ulid(),
 			name: formData['name']?.toString(),
 			email: formData['email']?.toString(),
 			address: {
@@ -69,7 +70,7 @@ export async function clientAction({ request }: ClientActionFunctionArgs) {
 				? { custom: Object.values(customFields) }
 				: undefined),
 		});
-		await customersStore.setItem<Customer>(newCustomer.id, newCustomer);
+		await db.customers.add(newCustomer);
 
 		return redirect('/customers');
 	} catch (err) {
@@ -143,7 +144,7 @@ const addressFields: Array<Field> = [
 	{
 		id: nanoid(),
 		name: 'address1',
-		label: 'Address 1',
+		label: 'Address 1 *',
 		input: {
 			required: true,
 		},

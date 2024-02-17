@@ -1,6 +1,7 @@
 import type { ActionFunctionArgs } from '@remix-run/node';
 import { Form, redirect, useActionData, useNavigation } from '@remix-run/react';
 import { nanoid } from 'nanoid';
+import { ulid } from 'ulid';
 import { z } from 'zod';
 
 import { UncontrolledFormField } from '~/components';
@@ -8,8 +9,8 @@ import { Button } from '~/components/ui';
 
 import { serviceSchema } from '~/lib/schemas';
 import type { ServiceSchemaErrors } from '~/lib/schemas';
-import { servicesStore } from '~/lib/stores';
-import type { Field, Service } from '~/lib/types';
+import { db } from '~/lib/stores';
+import type { Field } from '~/lib/types';
 
 type ActionErrors = {
 	name?: string;
@@ -21,12 +22,12 @@ export async function clientAction({ request }: ActionFunctionArgs) {
 		const formData = await request.formData();
 
 		const newService = serviceSchema.parse({
-			id: nanoid(),
+			id: ulid(),
 			name: String(formData.get('name')),
 			description: String(formData.get('description')),
 			price: Number(formData.get('price')),
 		});
-		await servicesStore.setItem<Service>(newService.id, newService);
+		await db.services.add(newService);
 
 		return redirect('/services');
 	} catch (err) {
