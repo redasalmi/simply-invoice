@@ -57,3 +57,12 @@ export const serviceSchema = z.object({
 	price: z.number().min(0, 'Price must be greater than or equal to 0'),
 });
 export type ServiceSchemaErrors = z.inferFormattedError<typeof serviceSchema>;
+
+export const newInvoiceLoaderSchema = z.object({
+	companiesLength: z.number().min(1),
+	customersLength: z.number().min(1),
+	servicesLength: z.number().min(1),
+});
+export type NewInvoiceLoaderSchemaErrors = z.inferFormattedError<
+	typeof newInvoiceLoaderSchema
+>;

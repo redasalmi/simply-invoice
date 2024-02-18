@@ -2,12 +2,13 @@ import * as React from 'react';
 
 import { renderToStream } from '@react-pdf/renderer';
 import type { ActionFunctionArgs } from '@remix-run/node';
-import { redirect, useFetcher } from '@remix-run/react';
+import { redirect, useFetcher, useLoaderData } from '@remix-run/react';
 import type { ClientActionFunctionArgs } from '@remix-run/react';
 import { Reorder } from 'framer-motion';
 import { nanoid } from 'nanoid';
 import queryString from 'query-string';
 import { ulid } from 'ulid';
+import { z } from 'zod';
 
 import {
 	AddFormField,
@@ -17,7 +18,9 @@ import {
 } from '~/components';
 import { Button, Dialog, DialogContent, DialogTrigger } from '~/components/ui';
 
-import { db } from '~/lib/stores';
+import { newInvoiceLoaderSchema } from '~/lib/schemas';
+import type { NewInvoiceLoaderSchemaErrors } from '~/lib/schemas';
+import { db, getPage } from '~/lib/stores';
 import type { Customer, Field } from '~/lib/types';
 
 const intents = {
@@ -27,6 +30,52 @@ const intents = {
 } as const;
 
 type Intent = (typeof intents)[keyof typeof intents];
+
+export async function clientLoader() {
+	try {
+		const [companies, customers, services] = await Promise.all([
+			getPage(db.companies, 1),
+			getPage(db.customers, 1),
+			getPage(db.services, 1),
+		]);
+		newInvoiceLoaderSchema.parse({
+			companiesLength: companies.items.length,
+			customersLength: customers.items.length,
+			servicesLength: services.items.length,
+		});
+
+		return {
+			companies,
+			customers,
+			services,
+			error: null,
+		};
+	} catch (err) {
+		if (err instanceof z.ZodError) {
+			const zodErrors: NewInvoiceLoaderSchemaErrors = err.format();
+			const errorsType: Array<string> = [];
+
+			if (zodErrors.companiesLength?._errors?.[0]) {
+				errorsType.push('company');
+			}
+			if (zodErrors.customersLength?._errors?.[0]) {
+				errorsType.push('customer');
+			}
+			if (zodErrors.servicesLength?._errors?.[0]) {
+				errorsType.push('service');
+			}
+
+			const error = `At least one ${errorsType.join(', ')} need${errorsType.length > 1 ? 's' : ''} to be available to create an invoice! Please create the needed data to move forward and enable invoice creation.`;
+
+			return {
+				companies: null,
+				customers: null,
+				services: null,
+				error,
+			};
+		}
+	}
+}
 
 export async function action({ request }: ActionFunctionArgs) {
 	const formQueryString = await request.text();
@@ -162,6 +211,8 @@ const addressFields: Array<Pick<Field, 'key' | 'name' | 'label'>> = [
 
 export default function NewInvoiceRoute() {
 	const fetcher = useFetcher<typeof action>();
+	const { error } = useLoaderData<typeof clientLoader>();
+
 	const [formFields, setFormFields] = React.useState<Array<Field>>([]);
 	const [intent, setIntent] = React.useState<Intent | null>(null);
 
@@ -190,6 +241,16 @@ export default function NewInvoiceRoute() {
 			link.click();
 		}
 	}, [intent, invoicePdf]);
+
+	if (error) {
+		return (
+			<section>
+				<div>
+					<p>{error}</p>
+				</div>
+			</section>
+		);
+	}
 
 	return (
 		<section>
