@@ -8,7 +8,11 @@ import {
 
 import { Footer, Navbar } from '~/components';
 
-import '~/tailwind.css';
+import styles from '~/tailwind.css?url';
+
+export const links = () => {
+	return [{ rel: 'stylesheet', href: styles }];
+};
 
 export default function App() {
 	return (
