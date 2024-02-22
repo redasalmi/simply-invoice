@@ -16,11 +16,17 @@ import {
 	InvoicePdf,
 	UncontrolledFormField,
 } from '~/components';
-import { Button, Dialog, DialogContent, DialogTrigger } from '~/components/ui';
+import {
+	Button,
+	Combobox,
+	Dialog,
+	DialogContent,
+	DialogTrigger,
+} from '~/components/ui';
 
 import { newInvoiceLoaderSchema } from '~/lib/schemas';
 import type { NewInvoiceLoaderSchemaErrors } from '~/lib/schemas';
-import { db, getPage } from '~/lib/stores';
+import { db } from '~/lib/stores';
 import type { Customer, Field } from '~/lib/types';
 
 const intents = {
@@ -34,14 +40,14 @@ type Intent = (typeof intents)[keyof typeof intents];
 export async function clientLoader() {
 	try {
 		const [companies, customers, services] = await Promise.all([
-			getPage(db.companies, 1),
-			getPage(db.customers, 1),
-			getPage(db.services, 1),
+			db.companies.toArray(),
+			db.customers.toArray(),
+			db.services.toArray(),
 		]);
 		newInvoiceLoaderSchema.parse({
-			companiesLength: companies.items.length,
-			customersLength: customers.items.length,
-			servicesLength: services.items.length,
+			companiesLength: companies.length,
+			customersLength: customers.length,
+			servicesLength: services.length,
 		});
 
 		return {
@@ -68,9 +74,9 @@ export async function clientLoader() {
 			const error = `At least one ${errorsType.join(', ')} need${errorsType.length > 1 ? 's' : ''} to be available to create an invoice! Please create the needed data to move forward and enable invoice creation.`;
 
 			return {
-				companies: null,
-				customers: null,
-				services: null,
+				companies: [],
+				customers: [],
+				services: [],
 				error,
 			};
 		}
@@ -211,7 +217,8 @@ const addressFields: Array<Pick<Field, 'key' | 'name' | 'label'>> = [
 
 export default function NewInvoiceRoute() {
 	const fetcher = useFetcher<typeof action>();
-	const { error } = useLoaderData<typeof clientLoader>();
+	const { companies, customers, services, error } =
+		useLoaderData<typeof clientLoader>();
 
 	const [formFields, setFormFields] = React.useState<Array<Field>>([]);
 	const [intent, setIntent] = React.useState<Intent | null>(null);
@@ -252,10 +259,44 @@ export default function NewInvoiceRoute() {
 		);
 	}
 
+	const compniesData = companies?.map(({ id, name }) => ({
+		label: name,
+		value: id,
+	}));
+
+	const customersData = customers?.map(({ id, name }) => ({
+		label: name,
+		value: id,
+	}));
+
+	const servicesData = services?.map(({ id, name }) => ({
+		label: name,
+		value: id,
+	}));
+
 	return (
 		<section>
 			<fetcher.Form method="post">
-				<div>
+				<div className="flex items-center gap-8">
+					<div>
+						<Combobox
+							label="Company"
+							inputName="company-id"
+							inputPlaceholder="Choose a Company"
+							list={compniesData}
+						/>
+					</div>
+					<div>
+						<Combobox
+							label="Customer"
+							inputName="customer-id"
+							inputPlaceholder="Choose a Customer"
+							list={customersData}
+						/>
+					</div>
+				</div>
+
+				{/* <div>
 					<h3 className="text-2xl">Customer Data</h3>
 					<p className="block text-sm">Fill your customer data </p>
 
@@ -355,7 +396,7 @@ export default function NewInvoiceRoute() {
 							? '...Saving Invoice'
 							: 'Save Invoice'}
 					</Button>
-				</div>
+				</div> */}
 			</fetcher.Form>
 		</section>
 	);

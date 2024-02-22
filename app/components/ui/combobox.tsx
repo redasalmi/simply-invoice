@@ -53,7 +53,7 @@ export const Combobox = ({
 				<Command>
 					<CommandInput placeholder={inputPlaceholder} />
 					<CommandEmpty>No result found.</CommandEmpty>
-					<CommandGroup>
+					<CommandGroup className="max-h-72 overflow-y-auto">
 						{list.map((listItem) => (
 							<CommandItem
 								key={listItem.value}
