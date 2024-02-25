@@ -15,11 +15,12 @@ import invariant from 'tiny-invariant';
 import { z } from 'zod';
 
 import { UncontrolledFormField } from '~/components';
-import { Button } from '~/components/ui';
+import { Button, labelVariants, Skeleton } from '~/components/ui';
 
 import { serviceSchema, ServiceSchemaErrors } from '~/lib/schemas';
 import { db } from '~/lib/stores';
 import type { Field } from '~/lib/types';
+import { cn } from '~/lib/utils';
 
 type ActionErrors = {
 	name?: string;
@@ -71,6 +72,31 @@ export async function clientAction({
 			};
 		}
 	}
+}
+
+export function HydrateFallback() {
+	return (
+		<section>
+			<div>
+				<div className="my-2">
+					<p className={cn(labelVariants(), 'mb-1')}>Name *</p>
+					<Skeleton className="h-10" />
+				</div>
+				<div className="my-2">
+					<p className={cn(labelVariants(), 'mb-1')}>Description</p>
+					<Skeleton className="h-10" />
+				</div>
+				<div className="my-2">
+					<p className={cn(labelVariants(), 'mb-1')}>Price *</p>
+					<Skeleton className="h-10" />
+				</div>
+			</div>
+
+			<div>
+				<Button type="button">Update Service</Button>
+			</div>
+		</section>
+	);
 }
 
 const nameId = nanoid();

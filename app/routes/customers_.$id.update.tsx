@@ -19,12 +19,13 @@ import invariant from 'tiny-invariant';
 import { z } from 'zod';
 
 import { AddFormField, FormField, UncontrolledFormField } from '~/components';
-import { Button } from '~/components/ui';
+import { Button, labelVariants, Skeleton } from '~/components/ui';
 
 import { customerSchema } from '~/lib/schemas';
 import type { CustomerSchemaErrors } from '~/lib/schemas';
 import { db } from '~/lib/stores';
 import type { CustomField, Field } from '~/lib/types';
+import { cn } from '~/lib/utils';
 
 type ActionErrors = {
 	name?: string;
@@ -143,6 +144,66 @@ export async function clientAction({
 			};
 		}
 	}
+}
+
+export function HydrateFallback() {
+	return (
+		<section>
+			<div>
+				<div className="my-2">
+					<p className={cn(labelVariants(), 'mb-1')}>Name *</p>
+					<Skeleton className="h-10" />
+				</div>
+				<div className="my-2">
+					<p className={cn(labelVariants(), 'mb-1')}>Email *</p>
+					<Skeleton className="h-10" />
+				</div>
+			</div>
+
+			<div>
+				<h3 className="text-2xl">Address</h3>
+
+				<div className="my-2">
+					<p className={cn(labelVariants(), 'mb-1')}>Address 1 *</p>
+					<Skeleton className="h-10" />
+				</div>
+				<div className="my-2">
+					<p className={cn(labelVariants(), 'mb-1')}>Address 2</p>
+					<Skeleton className="h-10" />
+				</div>
+				<div className="my-2">
+					<p className={cn(labelVariants(), 'mb-1')}>Country *</p>
+					<Skeleton className="h-10" />
+				</div>
+				<div className="my-2">
+					<p className={cn(labelVariants(), 'mb-1')}>Province</p>
+					<Skeleton className="h-10" />
+				</div>
+				<div className="my-2">
+					<p className={cn(labelVariants(), 'mb-1')}>City</p>
+					<Skeleton className="h-10" />
+				</div>
+				<div className="my-2">
+					<p className={cn(labelVariants(), 'mb-1')}>Zip</p>
+					<Skeleton className="h-10" />
+				</div>
+			</div>
+
+			<div className="my-2">
+				<h3 className="text-2xl">Custom Fields</h3>
+				<p className="mb-2 block text-sm">
+					Add any custom fields and order them
+				</p>
+				<div>
+					<Button type="button">Add New Field</Button>
+				</div>
+			</div>
+
+			<div>
+				<Button type="button">Update Customer</Button>
+			</div>
+		</section>
+	);
 }
 
 const nameId = nanoid();
