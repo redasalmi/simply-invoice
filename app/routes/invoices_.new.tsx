@@ -19,6 +19,7 @@ import {
 import {
 	Button,
 	Combobox,
+	DatePicker,
 	Dialog,
 	DialogContent,
 	DialogTrigger,
@@ -215,6 +216,10 @@ const addressFields: Array<Pick<Field, 'key' | 'name' | 'label'>> = [
 	},
 ];
 
+export function HydrateFallback() {
+	return null;
+}
+
 export default function NewInvoiceRoute() {
 	const fetcher = useFetcher<typeof action>();
 	const { companies, customers, services, error } =
@@ -277,7 +282,7 @@ export default function NewInvoiceRoute() {
 	return (
 		<section>
 			<fetcher.Form method="post">
-				<div className="flex items-center gap-8">
+				<div className="flex flex-col gap-2">
 					<div>
 						<Combobox
 							label="Company"
@@ -293,6 +298,18 @@ export default function NewInvoiceRoute() {
 							inputPlaceholder="Choose a Customer"
 							list={customersData}
 						/>
+					</div>
+				</div>
+
+				<div className="my-4">
+					<div className="my-2">
+						<p>Invoice Date</p>
+						<DatePicker />
+					</div>
+
+					<div className="my-2">
+						<p>Due Date</p>
+						<DatePicker />
 					</div>
 				</div>
 

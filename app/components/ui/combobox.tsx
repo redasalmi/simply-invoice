@@ -59,7 +59,14 @@ export const Combobox = ({
 								key={listItem.value}
 								value={listItem.value}
 								onSelect={(currentValue) => {
-									setValue(currentValue === value ? '' : currentValue);
+									setValue(
+										currentValue === value
+											? ''
+											: list.find(
+													(listItem) =>
+														listItem.value.toLowerCase() === currentValue,
+												)?.value || '',
+									);
 									setOpen(false);
 								}}
 							>
