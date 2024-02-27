@@ -61,14 +61,14 @@ export default function ServicesRoute() {
 							<TableHeader>
 								<TableRow>
 									<TableHead>Name</TableHead>
-									<TableHead>Price</TableHead>
+									<TableHead>Rate</TableHead>
 								</TableRow>
 							</TableHeader>
 							<TableBody>
-								{services.items.map(({ id, name, price }) => (
+								{services.items.map(({ id, name, rate }) => (
 									<TableRow key={id}>
 										<TableCell>{name}</TableCell>
-										<TableCell>{price}</TableCell>
+										<TableCell>{rate}</TableCell>
 										<TableCell className="flex items-center gap-4">
 											<Link
 												to={`/services/${id}`}

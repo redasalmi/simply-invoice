@@ -14,7 +14,7 @@ import type { Field } from '~/lib/types';
 
 type ActionErrors = {
 	name?: string;
-	price?: string;
+	rate?: string;
 };
 
 export async function clientAction({ request }: ActionFunctionArgs) {
@@ -25,7 +25,7 @@ export async function clientAction({ request }: ActionFunctionArgs) {
 			id: ulid(),
 			name: String(formData.get('name')),
 			description: String(formData.get('description')),
-			price: Number(formData.get('price')),
+			rate: Number(formData.get('rate')),
 		});
 		await db.services.add(newService);
 
@@ -38,8 +38,8 @@ export async function clientAction({ request }: ActionFunctionArgs) {
 			if (zodErrors.name?._errors?.[0]) {
 				errors.name = zodErrors.name._errors[0];
 			}
-			if (zodErrors.price?._errors?.[0]) {
-				errors.price = zodErrors.price._errors[0];
+			if (zodErrors.rate?._errors?.[0]) {
+				errors.rate = zodErrors.rate._errors[0];
 			}
 
 			return {
@@ -65,8 +65,8 @@ const servicesFields: Array<Field> = [
 	},
 	{
 		id: nanoid(),
-		label: 'Price *',
-		name: 'price',
+		label: 'Rate *',
+		name: 'rate',
 		input: {
 			type: 'number',
 			required: true,

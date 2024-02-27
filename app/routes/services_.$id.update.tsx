@@ -24,7 +24,7 @@ import { cn } from '~/lib/utils';
 
 type ActionErrors = {
 	name?: string;
-	price?: string;
+	rate?: string;
 };
 
 export async function clientLoader({ params }: ClientLoaderFunctionArgs) {
@@ -50,7 +50,7 @@ export async function clientAction({
 			id: serviceId,
 			name: String(formData.get('name')),
 			description: String(formData.get('description')),
-			price: Number(formData.get('price')),
+			rate: Number(formData.get('rate')),
 		});
 		await db.services.update(updatedService.id, updatedService);
 
@@ -63,8 +63,8 @@ export async function clientAction({
 			if (zodErrors.name?._errors?.[0]) {
 				errors.name = zodErrors.name._errors[0];
 			}
-			if (zodErrors.price?._errors?.[0]) {
-				errors.price = zodErrors.price._errors[0];
+			if (zodErrors.rate?._errors?.[0]) {
+				errors.rate = zodErrors.rate._errors[0];
 			}
 
 			return {
@@ -87,7 +87,7 @@ export function HydrateFallback() {
 					<Skeleton className="h-10" />
 				</div>
 				<div className="my-2">
-					<p className={cn(labelVariants(), 'mb-1')}>Price *</p>
+					<p className={cn(labelVariants(), 'mb-1')}>Rate *</p>
 					<Skeleton className="h-10" />
 				</div>
 			</div>
@@ -101,7 +101,7 @@ export function HydrateFallback() {
 
 const nameId = nanoid();
 const descriptionId = nanoid();
-const priceId = nanoid();
+const rateId = nanoid();
 
 export default function ServiceUpdateRoute() {
 	const { service } = useLoaderData<typeof clientLoader>();
@@ -149,15 +149,15 @@ export default function ServiceUpdateRoute() {
 			},
 		},
 		{
-			id: priceId,
-			label: 'Price *',
-			name: 'price',
+			id: rateId,
+			label: 'Rate *',
+			name: 'rate',
 			input: {
 				type: 'number',
 				required: true,
-				defaultValue: service.price,
+				defaultValue: service.rate,
 			},
-			error: actionData?.errors.price,
+			error: actionData?.errors.rate,
 		},
 	];
 

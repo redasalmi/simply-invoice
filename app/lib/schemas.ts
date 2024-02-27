@@ -54,7 +54,7 @@ export const serviceSchema = z.object({
 	id: z.string(),
 	name: z.string().min(1, 'Name is required'),
 	description: z.string().optional(),
-	price: z.number().min(0, 'Price must be greater than or equal to 0'),
+	rate: z.number().min(0, 'Rate must be greater than or equal to 0'),
 });
 export type ServiceSchemaErrors = z.inferFormattedError<typeof serviceSchema>;
 

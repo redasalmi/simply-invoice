@@ -44,11 +44,39 @@ export type Service = {
 	id: string;
 	name: string;
 	description?: string;
-	price: number;
+	rate: number;
 };
+
+const idTypes = {
+	incremental: 'incremental',
+	random: 'random',
+} as const;
+type IdTypes = (typeof idTypes)[keyof typeof idTypes];
+
+const locales = {
+	en: 'en-US',
+	fr: 'fr-FR',
+} as const;
+type Locales = (typeof locales)[keyof typeof locales];
 
 export type Invoice = {
 	id: string;
-	createdAt: string;
+	invoiceId: string;
+	invoiceIdType: IdTypes;
+	locale: Locales;
+	invoiceDate: string;
+	dueDate: string;
+	company: Company;
 	customer: Customer;
+	services: Array<Service & { quantity: number }>;
+	cost: {
+		currencyCode: string;
+		subtotalAmount: number;
+		totalAmount: number;
+		tax: number;
+		shipping: number;
+	};
+	custom?: Array<CustomField>;
+	createdAt: string;
+	updatedAt: string;
 };

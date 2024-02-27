@@ -60,8 +60,8 @@ export default function ServiceRoute() {
 									<TableCell>{service.description}</TableCell>
 								</TableRow>
 								<TableRow>
-									<TableCell>Price:</TableCell>
-									<TableCell>{service.price}</TableCell>
+									<TableCell>Rate:</TableCell>
+									<TableCell>{service.rate}</TableCell>
 								</TableRow>
 							</TableBody>
 						</Table>
