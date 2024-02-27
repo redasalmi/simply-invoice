@@ -20,6 +20,12 @@ export function AddFormField({ addFormField, children }: AddFormFieldProps) {
 	const [labelError, setLabelError] = React.useState(false);
 	const [contentError, setContentError] = React.useState(false);
 
+	React.useEffect(() => {
+		if (showField) {
+			labelRef.current?.focus();
+		}
+	}, [showField]);
+
 	const toggleField = () => {
 		setShowField((show) => !show);
 	};
