@@ -15,6 +15,7 @@ import { customerSchema } from '~/lib/schemas';
 import type { CustomerSchemaErrors } from '~/lib/schemas';
 import { db } from '~/lib/stores';
 import type { CustomField, Field } from '~/lib/types';
+import { extractCustomFields } from '~/lib/utils';
 
 type ActionErrors = {
 	name?: string;
@@ -29,31 +30,7 @@ export async function clientAction({ request }: ClientActionFunctionArgs) {
 		const formQueryString = await request.text();
 		const formData = queryString.parse(formQueryString, { sort: false });
 
-		const customFields: Record<string, CustomField> = {};
-		for (const [key, value] of Object.entries(formData)) {
-			if (key.search('custom-') !== -1) {
-				const id = key
-					.replace('custom-', '')
-					.replace('show-label-', '')
-					.replace('label-', '')
-					.replace('content-', '');
-
-				if (!customFields[id]) {
-					customFields[id] = {
-						id,
-					};
-				}
-
-				if (key === `custom-label-${id}`) {
-					customFields[id].label = value;
-				} else if (key === `custom-content-${id}`) {
-					customFields[id].content = value;
-				} else if (key === `custom-show-label-${id}`) {
-					customFields[id].showLabel = value === 'on';
-				}
-			}
-		}
-
+		const customFields = extractCustomFields(formData);
 		const newCustomer = customerSchema.parse({
 			id: ulid(),
 			name: formData['name']?.toString(),
