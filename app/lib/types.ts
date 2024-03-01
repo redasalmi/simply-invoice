@@ -55,11 +55,17 @@ const idTypes = {
 } as const;
 type IdTypes = (typeof idTypes)[keyof typeof idTypes];
 
-const locales = {
-	en: 'en-US',
-	fr: 'fr-FR',
-} as const;
-type Locales = (typeof locales)[keyof typeof locales];
+const locales = [
+	{
+		label: 'English',
+		value: 'en-US',
+	},
+	{
+		label: 'French',
+		value: 'fr-FR',
+	},
+] as const;
+type Locales = (typeof locales)[number]['value'];
 
 export type Invoice = {
 	id: string;
