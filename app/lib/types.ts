@@ -1,8 +1,10 @@
+import * as React from 'react';
+
 export type Field = {
 	id: string;
 	name: string;
 	label: string;
-	input?: React.InputHTMLAttributes<HTMLInputElement>;
+	input?: React.ComponentPropsWithoutRef<'input'>;
 	error?: string;
 };
 
