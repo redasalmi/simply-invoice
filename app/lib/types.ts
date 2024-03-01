@@ -1,5 +1,7 @@
 import * as React from 'react';
 
+import type { IdTypes, Locales } from '~/lib/constants';
+
 export type Field = {
 	id: string;
 	name: string;
@@ -48,24 +50,6 @@ export type Service = {
 	description?: string;
 	rate: number;
 };
-
-const idTypes = {
-	incremental: 'incremental',
-	random: 'random',
-} as const;
-type IdTypes = (typeof idTypes)[keyof typeof idTypes];
-
-const locales = [
-	{
-		label: 'English',
-		value: 'en-US',
-	},
-	{
-		label: 'French',
-		value: 'fr-FR',
-	},
-] as const;
-type Locales = (typeof locales)[number]['value'];
 
 export type Invoice = {
 	id: string;

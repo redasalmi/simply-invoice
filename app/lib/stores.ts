@@ -14,7 +14,7 @@ class DexieDB extends Dexie {
 		this.version(1).stores({
 			companies: '++id, name, email',
 			customers: '++id, name, email',
-			services: '++id, name, price',
+			services: '++id, name, rate',
 			invoices: '++id',
 		});
 	}
