@@ -2,7 +2,7 @@ export const idTypes = {
 	incremental: 'incremental',
 	random: 'random',
 } as const;
-export type IdTypes = (typeof idTypes)[keyof typeof idTypes];
+export type IdType = (typeof idTypes)[keyof typeof idTypes];
 
 export const locales = [
 	{
@@ -14,4 +14,4 @@ export const locales = [
 		value: 'fr-FR',
 	},
 ] as const;
-export type Locales = (typeof locales)[number];
+export type Locale = (typeof locales)[number]['value'];

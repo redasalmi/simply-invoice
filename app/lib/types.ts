@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import type { IdTypes, Locales } from '~/lib/constants';
+import type { IdType, Locale } from '~/lib/constants';
 
 export type Field = {
 	id: string;
@@ -60,15 +60,20 @@ export type Service = {
 export type Invoice = {
 	id: string;
 	invoiceId: string;
-	invoiceIdType: IdTypes;
-	locale: Locales;
+	invoiceIdType: IdType;
+	locale: Locale;
+
 	invoiceDate: string;
 	dueDate: string;
+	dateFormat: string;
+
 	company: Omit<Company, 'createdAt' | 'updatedAt'>;
 	customer: Omit<Customer, 'createdAt' | 'updatedAt'>;
 	services: Array<
 		Omit<Service, 'createdAt' | 'updatedAt'> & { quantity: number }
 	>;
+	note?: string;
+
 	cost: {
 		currencyCode: string;
 		subtotalAmount: number;
@@ -76,7 +81,7 @@ export type Invoice = {
 		tax: number;
 		shipping: number;
 	};
-	note?: string;
+
 	createdAt: string;
 	updatedAt: string;
 };
