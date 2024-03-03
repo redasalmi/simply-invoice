@@ -12,9 +12,9 @@ class DexieDB extends Dexie {
 	constructor() {
 		super('SimplyInvoice');
 		this.version(1).stores({
-			companies: '++id, name, email',
-			customers: '++id, name, email',
-			services: '++id, name, rate',
+			companies: '++id, name, email, createdAt, updatedAt',
+			customers: '++id, name, email, createdAt, updatedAt',
+			services: '++id, name, rate, createdAt, updatedAt',
 			invoices: '++id',
 		});
 	}

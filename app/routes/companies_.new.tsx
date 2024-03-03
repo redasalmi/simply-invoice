@@ -11,9 +11,9 @@ import { z } from 'zod';
 import { AddFormField, FormField, UncontrolledFormField } from '~/components';
 import { Button } from '~/components/ui';
 
-import { compamySchema } from '~/lib/schemas';
-import type { CompanySchemaErrors } from '~/lib/schemas';
-import { db } from '~/lib/stores';
+import { db } from '~/lib/db';
+import { createCompamySchema } from '~/lib/schemas';
+import type { CreateCompanySchemaErrors } from '~/lib/schemas';
 import type { CustomField, Field } from '~/lib/types';
 import { extractCustomFields } from '~/lib/utils';
 
@@ -30,8 +30,9 @@ export async function clientAction({ request }: ClientActionFunctionArgs) {
 		const formQueryString = await request.text();
 		const formData = queryString.parse(formQueryString, { sort: false });
 
+		const today = new Date().toLocaleDateString();
 		const customFields = extractCustomFields(formData);
-		const newCompany = compamySchema.parse({
+		const newCompany = createCompamySchema.parse({
 			id: ulid(),
 			name: formData['name']?.toString(),
 			email: formData['email']?.toString(),
@@ -46,13 +47,15 @@ export async function clientAction({ request }: ClientActionFunctionArgs) {
 			...(Object.keys(customFields).length
 				? { custom: Object.values(customFields) }
 				: undefined),
+			createdAt: today,
+			updatedAt: today,
 		});
 		await db.companies.add(newCompany);
 
 		return redirect('/companies');
 	} catch (err) {
 		if (err instanceof z.ZodError) {
-			const zodErrors: CompanySchemaErrors = err.format();
+			const zodErrors: CreateCompanySchemaErrors = err.format();
 			const customErrors: Record<string, { label?: string; content?: string }> =
 				{};
 

@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const compamySchema = z.object({
+export const createCompamySchema = z.object({
 	id: z.string(),
 	name: z.string().min(1, 'Name is required'),
 	email: z.string().email(),
@@ -22,10 +22,20 @@ export const compamySchema = z.object({
 			}),
 		)
 		.optional(),
+	createdAt: z.string(),
+	updatedAt: z.string(),
 });
-export type CompanySchemaErrors = z.inferFormattedError<typeof compamySchema>;
+export const updateCompanySchema = createCompamySchema.omit({
+	createdAt: true,
+});
+export type CreateCompanySchemaErrors = z.inferFormattedError<
+	typeof createCompamySchema
+>;
+export type UpdateCompanySchemaErrors = z.inferFormattedError<
+	typeof updateCompanySchema
+>;
 
-export const customerSchema = z.object({
+export const createCustomerSchema = z.object({
 	id: z.string(),
 	name: z.string().min(1, 'Name is required'),
 	email: z.string().email(),
@@ -47,16 +57,36 @@ export const customerSchema = z.object({
 			}),
 		)
 		.optional(),
+	createdAt: z.string(),
+	updatedAt: z.string(),
 });
-export type CustomerSchemaErrors = z.inferFormattedError<typeof customerSchema>;
+export const updateCustomerSchema = createCustomerSchema.omit({
+	createdAt: true,
+});
+export type CreateCustomerSchemaErrors = z.inferFormattedError<
+	typeof createCustomerSchema
+>;
+export type UpdateCustomerSchemaErrors = z.inferFormattedError<
+	typeof updateCustomerSchema
+>;
 
-export const serviceSchema = z.object({
+export const createServiceSchema = z.object({
 	id: z.string(),
 	name: z.string().min(1, 'Name is required'),
 	description: z.string().optional(),
 	rate: z.number().min(0, 'Rate must be greater than or equal to 0'),
+	createdAt: z.string(),
+	updatedAt: z.string(),
 });
-export type ServiceSchemaErrors = z.inferFormattedError<typeof serviceSchema>;
+export const updateServiceSchema = createServiceSchema.omit({
+	createdAt: true,
+});
+export type CreateServiceSchemaErrors = z.inferFormattedError<
+	typeof createServiceSchema
+>;
+export type UpdateServiceSchemaErrors = z.inferFormattedError<
+	typeof updateServiceSchema
+>;
 
 export const newInvoiceLoaderSchema = z.object({
 	companiesLength: z.number().min(1),

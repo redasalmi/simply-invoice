@@ -23,7 +23,7 @@ import {
 	AlertDialogTitle,
 } from '~/components/ui';
 
-import { db } from '~/lib/stores';
+import { db } from '~/lib/db';
 
 export async function clientLoader({ params }: ClientLoaderFunctionArgs) {
 	invariant(params.id, 'Service ID is required');

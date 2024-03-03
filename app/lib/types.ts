@@ -34,6 +34,8 @@ export type Company = {
 	email: string;
 	address: Address;
 	custom?: Array<CustomField>;
+	createdAt: string;
+	updatedAt: string;
 };
 
 export type Customer = {
@@ -42,6 +44,8 @@ export type Customer = {
 	email: string;
 	address: Address;
 	custom?: Array<CustomField>;
+	createdAt: string;
+	updatedAt: string;
 };
 
 export type Service = {
@@ -49,6 +53,8 @@ export type Service = {
 	name: string;
 	description?: string;
 	rate: number;
+	createdAt: string;
+	updatedAt: string;
 };
 
 export type Invoice = {
@@ -58,9 +64,11 @@ export type Invoice = {
 	locale: Locales;
 	invoiceDate: string;
 	dueDate: string;
-	company: Company;
-	customer: Customer;
-	services: Array<Service & { quantity: number }>;
+	company: Omit<Company, 'createdAt' | 'updatedAt'>;
+	customer: Omit<Customer, 'createdAt' | 'updatedAt'>;
+	services: Array<
+		Omit<Service, 'createdAt' | 'updatedAt'> & { quantity: number }
+	>;
 	cost: {
 		currencyCode: string;
 		subtotalAmount: number;
@@ -68,7 +76,7 @@ export type Invoice = {
 		tax: number;
 		shipping: number;
 	};
-	custom?: Array<CustomField>;
+	note?: string;
 	createdAt: string;
 	updatedAt: string;
 };

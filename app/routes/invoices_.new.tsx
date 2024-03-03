@@ -25,9 +25,9 @@ import {
 	DialogTrigger,
 } from '~/components/ui';
 
+import { db } from '~/lib/db';
 import { newInvoiceLoaderSchema } from '~/lib/schemas';
 import type { NewInvoiceLoaderSchemaErrors } from '~/lib/schemas';
-import { db } from '~/lib/stores';
 import type { Customer, Field } from '~/lib/types';
 
 const intents = {

@@ -10,7 +10,7 @@ import {
 	TableRow,
 } from '~/components/ui';
 
-import { db, getPage } from '~/lib/stores';
+import { db, getPage } from '~/lib/db';
 import { cn } from '~/lib/utils';
 
 export async function clientLoader() {

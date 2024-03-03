@@ -17,8 +17,9 @@ import { z } from 'zod';
 import { UncontrolledFormField } from '~/components';
 import { Button, labelVariants, Skeleton } from '~/components/ui';
 
-import { serviceSchema, ServiceSchemaErrors } from '~/lib/schemas';
-import { db } from '~/lib/stores';
+import { db } from '~/lib/db';
+import { updateServiceSchema } from '~/lib/schemas';
+import type { UpdateServiceSchemaErrors } from '~/lib/schemas';
 import type { Field } from '~/lib/types';
 import { cn } from '~/lib/utils';
 
@@ -46,18 +47,20 @@ export async function clientAction({
 		const serviceId = params.id;
 		const formData = await request.formData();
 
-		const updatedService = serviceSchema.parse({
+		const today = new Date().toLocaleDateString();
+		const updatedService = updateServiceSchema.parse({
 			id: serviceId,
-			name: String(formData.get('name')),
-			description: String(formData.get('description')),
+			name: formData.get('name')?.toString(),
+			description: formData.get('description')?.toString(),
 			rate: Number(formData.get('rate')),
+			updatedAt: today,
 		});
 		await db.services.update(updatedService.id, updatedService);
 
 		return redirect('/services');
 	} catch (err) {
 		if (err instanceof z.ZodError) {
-			const zodErrors: ServiceSchemaErrors = err.format();
+			const zodErrors: UpdateServiceSchemaErrors = err.format();
 			const errors: ActionErrors = {};
 
 			if (zodErrors.name?._errors?.[0]) {

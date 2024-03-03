@@ -7,9 +7,9 @@ import { z } from 'zod';
 import { UncontrolledFormField } from '~/components';
 import { Button } from '~/components/ui';
 
-import { serviceSchema } from '~/lib/schemas';
-import type { ServiceSchemaErrors } from '~/lib/schemas';
-import { db } from '~/lib/stores';
+import { db } from '~/lib/db';
+import { createServiceSchema } from '~/lib/schemas';
+import type { CreateServiceSchemaErrors } from '~/lib/schemas';
 import type { Field } from '~/lib/types';
 
 type ActionErrors = {
@@ -21,18 +21,21 @@ export async function clientAction({ request }: ActionFunctionArgs) {
 	try {
 		const formData = await request.formData();
 
-		const newService = serviceSchema.parse({
+		const today = new Date().toLocaleDateString();
+		const newService = createServiceSchema.parse({
 			id: ulid(),
-			name: String(formData.get('name')),
-			description: String(formData.get('description')),
+			name: formData.get('name')?.toString(),
+			description: formData.get('description')?.toString(),
 			rate: Number(formData.get('rate')),
+			createdAt: today,
+			updatedAt: today,
 		});
 		await db.services.add(newService);
 
 		return redirect('/services');
 	} catch (err) {
 		if (err instanceof z.ZodError) {
-			const zodErrors: ServiceSchemaErrors = err.format();
+			const zodErrors: CreateServiceSchemaErrors = err.format();
 			const errors: ActionErrors = {};
 
 			if (zodErrors.name?._errors?.[0]) {

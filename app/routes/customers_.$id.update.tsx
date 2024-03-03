@@ -21,9 +21,9 @@ import { z } from 'zod';
 import { AddFormField, FormField, UncontrolledFormField } from '~/components';
 import { Button, labelVariants, Skeleton } from '~/components/ui';
 
-import { customerSchema } from '~/lib/schemas';
-import type { CustomerSchemaErrors } from '~/lib/schemas';
-import { db } from '~/lib/stores';
+import { db } from '~/lib/db';
+import { updateCustomerSchema } from '~/lib/schemas';
+import type { UpdateCustomerSchemaErrors } from '~/lib/schemas';
 import type { CustomField, Field } from '~/lib/types';
 import { cn, extractCustomFields } from '~/lib/utils';
 
@@ -55,8 +55,9 @@ export async function clientAction({
 		const formQueryString = await request.text();
 		const formData = queryString.parse(formQueryString, { sort: false });
 
+		const today = new Date().toLocaleDateString();
 		const customFields = extractCustomFields(formData);
-		const updatedCustomer = customerSchema.parse({
+		const updatedCustomer = updateCustomerSchema.parse({
 			id: customerId,
 			name: formData['name']?.toString(),
 			email: formData['email']?.toString(),
@@ -71,13 +72,14 @@ export async function clientAction({
 			...(Object.keys(customFields).length
 				? { custom: Object.values(customFields) }
 				: undefined),
+			updatedAt: today,
 		});
 		await db.customers.update(updatedCustomer.id, updatedCustomer);
 
 		return redirect('/customers');
 	} catch (err) {
 		if (err instanceof z.ZodError) {
-			const zodErrors: CustomerSchemaErrors = err.format();
+			const zodErrors: UpdateCustomerSchemaErrors = err.format();
 			const customErrors: Record<string, { label?: string; content?: string }> =
 				{};
 
