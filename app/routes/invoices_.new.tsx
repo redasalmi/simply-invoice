@@ -25,6 +25,7 @@ import {
 	DialogTrigger,
 } from '~/components/ui';
 
+import { countries } from '~/lib/currencies';
 import { db } from '~/lib/db';
 import { newInvoiceLoaderSchema } from '~/lib/schemas';
 import type { NewInvoiceLoaderSchemaErrors } from '~/lib/schemas';
@@ -220,6 +221,13 @@ export function HydrateFallback() {
 	return null;
 }
 
+const currencies = countries.map(
+	({ countryName, currencySymbol, countryCode }) => ({
+		label: `${countryName} - ${currencySymbol}`,
+		value: countryCode,
+	}),
+);
+
 export default function NewInvoiceRoute() {
 	const fetcher = useFetcher<typeof action>();
 	const { companies, customers, services, error } =
@@ -264,7 +272,7 @@ export default function NewInvoiceRoute() {
 		);
 	}
 
-	const compniesData = companies?.map(({ id, name }) => ({
+	const companiesData = companies?.map(({ id, name }) => ({
 		label: name,
 		value: id,
 	}));
@@ -288,7 +296,7 @@ export default function NewInvoiceRoute() {
 							label="Company"
 							inputName="company-id"
 							inputPlaceholder="Choose a Company"
-							list={compniesData}
+							list={companiesData}
 						/>
 					</div>
 					<div>
@@ -297,6 +305,14 @@ export default function NewInvoiceRoute() {
 							inputName="customer-id"
 							inputPlaceholder="Choose a Customer"
 							list={customersData}
+						/>
+					</div>
+					<div>
+						<Combobox
+							label="Currency"
+							inputName="country-code"
+							inputPlaceholder="Choose a Currency"
+							list={currencies}
 						/>
 					</div>
 				</div>
