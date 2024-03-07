@@ -1,3 +1,5 @@
+import * as React from 'react';
+
 import {
 	Links,
 	Meta,
@@ -14,7 +16,11 @@ export const links = () => {
 	return [{ rel: 'stylesheet', href: styles }];
 };
 
-export default function App() {
+type LayoutProps = {
+	children: React.ReactNode;
+};
+
+export function Layout({ children }: LayoutProps) {
 	return (
 		<html lang="en" className="h-[100%]">
 			<head>
@@ -25,13 +31,15 @@ export default function App() {
 			</head>
 			<body className="grid h-[100%] grid-rows-[auto_1fr_auto]">
 				<Navbar />
-				<main className="container mx-auto py-8">
-					<Outlet />
-				</main>
+				<main className="container mx-auto py-8">{children}</main>
 				<Footer />
 				<ScrollRestoration />
 				<Scripts />
 			</body>
 		</html>
 	);
+}
+
+export default function App() {
+	return <Outlet />;
 }
