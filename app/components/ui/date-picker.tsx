@@ -14,7 +14,11 @@ import { useClickAway } from '~/hooks/useClickAway';
 
 import { cn, dateFormatter } from '~/lib/utils';
 
-export function DatePicker() {
+type DatePickerProps = {
+	inputName?: string;
+};
+
+export function DatePicker({ inputName }: DatePickerProps) {
 	const datePickerRef = React.useRef<HTMLDivElement>(null);
 
 	const [open, setIsOpen] = React.useState(false);
@@ -47,6 +51,7 @@ export function DatePicker() {
 								type="date"
 								hidden
 								readOnly
+								name={inputName}
 								value={dateFormatter('en-US', {
 									month: '2-digit',
 									day: '2-digit',

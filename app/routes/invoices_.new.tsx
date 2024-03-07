@@ -212,29 +212,11 @@ export default function NewInvoiceRoute() {
 	return (
 		<section>
 			<fetcher.Form method="post">
-				<div className="flex flex-col gap-2">
-					<div>
-						<Combobox
-							label="Company"
-							inputName="company-id"
-							inputPlaceholder="Choose a Company"
-							list={companiesData}
-						/>
-					</div>
-
-					<div>
-						<Combobox
-							label="Customer"
-							inputName="customer-id"
-							inputPlaceholder="Choose a Customer"
-							list={customersData}
-						/>
-					</div>
-
-					<div>
+				<div>
+					<div className="my-4">
 						<Combobox
 							label="ID type"
-							inputName="idType"
+							inputName="invoice-id-type"
 							inputPlaceholder="Choose Invoice ID Type"
 							list={idTypes}
 						/>
@@ -262,12 +244,32 @@ export default function NewInvoiceRoute() {
 				<div className="my-4">
 					<div className="my-2">
 						<p>Invoice Date</p>
-						<DatePicker />
+						<DatePicker inputName="invoice-date" />
 					</div>
 
 					<div className="my-2">
 						<p>Due Date</p>
-						<DatePicker />
+						<DatePicker inputName="due-date" />
+					</div>
+				</div>
+
+				<div className="my-4 flex flex-col gap-2">
+					<div>
+						<Combobox
+							label="Company"
+							inputName="company-id"
+							inputPlaceholder="Choose a Company"
+							list={companiesData}
+						/>
+					</div>
+
+					<div>
+						<Combobox
+							label="Customer"
+							inputName="customer-id"
+							inputPlaceholder="Choose a Customer"
+							list={customersData}
+						/>
 					</div>
 				</div>
 
