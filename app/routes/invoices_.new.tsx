@@ -13,6 +13,7 @@ import { InvoicePdf } from '~/components/InvoicePdf';
 import { Combobox } from '~/components/ui/combobox';
 import { DatePicker } from '~/components/ui/date-picker';
 
+import { idTypes, locales } from '~/lib/constants';
 import { countries } from '~/lib/currencies';
 import { db } from '~/lib/db';
 import { newInvoiceLoaderSchema } from '~/lib/schemas';
@@ -287,6 +288,7 @@ export default function NewInvoiceRoute() {
 							list={companiesData}
 						/>
 					</div>
+
 					<div>
 						<Combobox
 							label="Customer"
@@ -295,6 +297,25 @@ export default function NewInvoiceRoute() {
 							list={customersData}
 						/>
 					</div>
+
+					<div>
+						<Combobox
+							label="ID type"
+							inputName="idType"
+							inputPlaceholder="Choose Invoice ID Type"
+							list={idTypes}
+						/>
+					</div>
+
+					<div>
+						<Combobox
+							label="Invoice Language"
+							inputName="locale"
+							inputPlaceholder="Choose a Language"
+							list={locales}
+						/>
+					</div>
+
 					<div>
 						<Combobox
 							label="Currency"

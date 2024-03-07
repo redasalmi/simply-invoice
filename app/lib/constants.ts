@@ -1,8 +1,14 @@
-export const idTypes = {
-	incremental: 'incremental',
-	random: 'random',
-} as const;
-export type IdType = (typeof idTypes)[keyof typeof idTypes];
+export const idTypes = [
+	{
+		label: 'Incremental ID',
+		value: 'incremental',
+	},
+	{
+		label: 'Random ID',
+		value: 'random',
+	},
+] as const;
+export type IdType = (typeof idTypes)[number]['value'];
 
 export const locales = [
 	{
