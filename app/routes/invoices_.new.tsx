@@ -12,6 +12,8 @@ import { z } from 'zod';
 import { InvoicePdf } from '~/components/InvoicePdf';
 import { Combobox } from '~/components/ui/combobox';
 import { DatePicker } from '~/components/ui/date-picker';
+import { Label } from '~/components/ui/label';
+import { Textarea } from '~/components/ui/textarea';
 
 import { idTypes, locales } from '~/lib/constants';
 import { countries } from '~/lib/currencies';
@@ -336,6 +338,13 @@ export default function NewInvoiceRoute() {
 						<p>Due Date</p>
 						<DatePicker />
 					</div>
+				</div>
+
+				<div className="my-4">
+					<Label>
+						<span>Note</span>
+						<Textarea name="note" />
+					</Label>
 				</div>
 
 				{/* <div>
