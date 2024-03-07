@@ -4,7 +4,6 @@ import { renderToStream } from '@react-pdf/renderer';
 import type { ActionFunctionArgs } from '@remix-run/node';
 import { redirect, useFetcher, useLoaderData } from '@remix-run/react';
 import type { ClientActionFunctionArgs } from '@remix-run/react';
-import { nanoid } from 'nanoid';
 import queryString from 'query-string';
 import { ulid } from 'ulid';
 import { z } from 'zod';
@@ -15,20 +14,13 @@ import { DatePicker } from '~/components/ui/date-picker';
 import { Label } from '~/components/ui/label';
 import { Textarea } from '~/components/ui/textarea';
 
-import { idTypes, locales } from '~/lib/constants';
+import { idTypes, intents, locales } from '~/lib/constants';
+import type { Intent } from '~/lib/constants';
 import { countries } from '~/lib/currencies';
 import { db } from '~/lib/db';
 import { newInvoiceLoaderSchema } from '~/lib/schemas';
 import type { NewInvoiceLoaderSchemaErrors } from '~/lib/schemas';
-import type { Customer, Field } from '~/lib/types';
-
-const intents = {
-	preview: 'preview',
-	download: 'download',
-	save: 'save',
-} as const;
-
-type Intent = (typeof intents)[keyof typeof intents];
+import type { Customer } from '~/lib/types';
 
 export async function clientLoader() {
 	try {
@@ -162,52 +154,6 @@ export async function clientAction({ serverAction }: ClientActionFunctionArgs) {
 	return redirect('/invoices');
 }
 
-const customerFields: Array<Pick<Field, 'key' | 'name' | 'label'>> = [
-	{
-		key: nanoid(),
-		name: 'customer[name]',
-		label: 'Name',
-	},
-	{
-		key: nanoid(),
-		name: 'customer[email]',
-		label: 'Email',
-	},
-];
-
-const addressFields: Array<Pick<Field, 'key' | 'name' | 'label'>> = [
-	{
-		key: nanoid(),
-		name: 'address1',
-		label: 'Address 1',
-	},
-	{
-		key: nanoid(),
-		name: 'address2',
-		label: 'Address 2',
-	},
-	{
-		key: nanoid(),
-		name: 'country',
-		label: 'Country',
-	},
-	{
-		key: nanoid(),
-		name: 'province',
-		label: 'Province',
-	},
-	{
-		key: nanoid(),
-		name: 'city',
-		label: 'City',
-	},
-	{
-		key: nanoid(),
-		name: 'zip',
-		label: 'Zip',
-	},
-];
-
 export function HydrateFallback() {
 	return null;
 }
@@ -224,25 +170,10 @@ export default function NewInvoiceRoute() {
 	const { companies, customers, services, error } =
 		useLoaderData<typeof clientLoader>();
 
-	const [formFields, setFormFields] = React.useState<Array<Field>>([]);
 	const [intent, setIntent] = React.useState<Intent | null>(null);
 
 	const isLoading = fetcher.state !== 'idle';
 	const invoicePdf = isLoading ? null : fetcher.data?.invoicePdf;
-
-	const addFormField = (field: Field) => {
-		setFormFields(formFields.concat(field));
-	};
-
-	const onFormFieldChange = (formField: Field, fieldIndex: number) => {
-		setFormFields(Object.assign([], formFields, { [fieldIndex]: formField }));
-	};
-
-	const removeFormField = (fieldIndex: number) => {
-		setFormFields(
-			formFields.slice(0, fieldIndex).concat(formFields.slice(fieldIndex + 1)),
-		);
-	};
 
 	React.useEffect(() => {
 		if (intent === intents.download && invoicePdf) {
@@ -346,108 +277,6 @@ export default function NewInvoiceRoute() {
 						<Textarea name="note" />
 					</Label>
 				</div>
-
-				{/* <div>
-					<h3 className="text-2xl">Customer Data</h3>
-					<p className="block text-sm">Fill your customer data </p>
-
-					<div>
-						{customerFields.map((field) => (
-							<UncontrolledFormField
-								key={field.key}
-								className="my-2"
-								formField={field}
-							/>
-						))}
-					</div>
-				</div>
-
-				<div>
-					<h3 className="text-2xl">Address</h3>
-					<p className="block text-sm">Fill your customer address </p>
-
-					<div>
-						{addressFields.map((field) => (
-							<UncontrolledFormField
-								key={field.key}
-								className="my-2"
-								formField={field}
-							/>
-						))}
-					</div>
-				</div>
-
-				<AddFormField fieldNamePrefix="customer" addFormField={addFormField}>
-					<h3 className="text-2xl">Custom fields</h3>
-					<p className="mb-2 block text-sm">
-						Add any custom fields and order them
-					</p>
-
-					{formFields.length ? (
-						<Reorder.Group values={formFields} onReorder={setFormFields}>
-							{formFields.map((formField, index) => (
-								<Reorder.Item key={formField.key} value={formField}>
-									<FormField
-										key={formField.key}
-										formField={formField}
-										className="my-2"
-										onFormFieldChange={(updatedFormField) =>
-											onFormFieldChange(updatedFormField, index)
-										}
-										removeFormField={() => removeFormField(index)}
-									/>
-								</Reorder.Item>
-							))}
-						</Reorder.Group>
-					) : null}
-				</AddFormField>
-
-				<div className="mt-32 flex gap-2">
-					<Dialog>
-						<DialogTrigger
-							type="submit"
-							name="intent"
-							value={intents.preview}
-							onClick={() => setIntent(intents.preview)}
-							className="inline-flex h-10 items-center justify-center whitespace-nowrap rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground ring-offset-background transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
-						>
-							{isLoading && intent === intents.preview
-								? '...Loading PDF'
-								: 'Preview PDF'}
-						</DialogTrigger>
-						<DialogContent className="h-full max-h-[80%] max-w-[80%]">
-							{invoicePdf ? (
-								<iframe
-									title="invoice pdf"
-									className="h-full w-full"
-									src={`${invoicePdf}#toolbar=0&navpanes=0`}
-								/>
-							) : null}
-						</DialogContent>
-					</Dialog>
-
-					<Button
-						type="submit"
-						name="intent"
-						value={intents.download}
-						onClick={() => setIntent(intents.download)}
-					>
-						{isLoading && intent === intents.download
-							? '...Downloading PDF'
-							: 'Download PDF'}
-					</Button>
-
-					<Button
-						type="submit"
-						name="intent"
-						value={intents.save}
-						onClick={() => setIntent(intents.save)}
-					>
-						{isLoading && intent === intents.save
-							? '...Saving Invoice'
-							: 'Save Invoice'}
-					</Button>
-				</div> */}
 			</fetcher.Form>
 		</section>
 	);

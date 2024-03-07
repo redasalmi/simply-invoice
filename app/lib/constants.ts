@@ -21,3 +21,10 @@ export const locales = [
 	},
 ] as const;
 export type Locale = (typeof locales)[number]['value'];
+
+export const intents = {
+	preview: 'preview',
+	download: 'download',
+	save: 'save',
+} as const;
+export type Intent = (typeof intents)[keyof typeof intents];
