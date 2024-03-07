@@ -4,8 +4,8 @@ import { nanoid } from 'nanoid';
 import { ulid } from 'ulid';
 import { z } from 'zod';
 
-import { UncontrolledFormField } from '~/components';
-import { Button } from '~/components/ui';
+import { UncontrolledFormField } from '~/components/FormField';
+import { Button } from '~/components/ui/button';
 
 import { db } from '~/lib/db';
 import { createServiceSchema } from '~/lib/schemas';

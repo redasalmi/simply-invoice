@@ -1,14 +1,14 @@
 import { Link, useLoaderData } from '@remix-run/react';
 
+import { buttonVariants } from '~/components/ui/button';
 import {
-	buttonVariants,
 	Table,
 	TableBody,
 	TableCell,
 	TableHead,
 	TableHeader,
 	TableRow,
-} from '~/components/ui';
+} from '~/components/ui/table';
 
 import { db, getPage } from '~/lib/db';
 import { cn } from '~/lib/utils';

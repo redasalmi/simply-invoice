@@ -8,7 +8,8 @@ import {
 	ScrollRestoration,
 } from '@remix-run/react';
 
-import { Footer, Navbar } from '~/components';
+import { Footer } from '~/components/Footer';
+import { Navbar } from '~/components/Navbar';
 
 import styles from '~/tailwind.css?url';
 

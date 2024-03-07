@@ -24,6 +24,7 @@
 		"^react",
 		"<THIRD_PARTY_MODULES>",
 		"^~/components",
+		"~/hooks",
 		"^~/lib",
 		"~/tailwind"
 	],

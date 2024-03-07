@@ -8,8 +8,9 @@ import queryString from 'query-string';
 import { ulid } from 'ulid';
 import { z } from 'zod';
 
-import { AddFormField, FormField, UncontrolledFormField } from '~/components';
-import { Button } from '~/components/ui';
+import { AddFormField } from '~/components/AddFormField';
+import { FormField, UncontrolledFormField } from '~/components/FormField';
+import { Button } from '~/components/ui/button';
 
 import { db } from '~/lib/db';
 import { createCompamySchema } from '~/lib/schemas';

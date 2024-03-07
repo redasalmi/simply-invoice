@@ -14,8 +14,10 @@ import { nanoid } from 'nanoid';
 import invariant from 'tiny-invariant';
 import { z } from 'zod';
 
-import { UncontrolledFormField } from '~/components';
-import { Button, labelVariants, Skeleton } from '~/components/ui';
+import { UncontrolledFormField } from '~/components/FormField';
+import { Button } from '~/components/ui/button';
+import { labelVariants } from '~/components/ui/label';
+import { Skeleton } from '~/components/ui/skeleton';
 
 import { db } from '~/lib/db';
 import { updateServiceSchema } from '~/lib/schemas';

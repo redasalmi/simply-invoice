@@ -2,7 +2,7 @@ import { renderToStream } from '@react-pdf/renderer';
 import { type ActionFunctionArgs } from '@remix-run/node';
 import queryString from 'query-string';
 
-import { InvoicePdf } from '~/components';
+import { InvoicePdf } from '~/components/InvoicePdf';
 
 import type { CustomField } from '~/lib/types';
 

@@ -2,16 +2,16 @@ import * as React from 'react';
 
 import { Grip, Trash2 } from 'lucide-react';
 
+import { Button } from '~/components/ui/button';
+import { Input } from '~/components/ui/input';
+import { Label } from '~/components/ui/label';
+import { Switch } from '~/components/ui/switch';
 import {
-	Button,
-	Input,
-	Label,
-	Switch,
 	Tooltip,
 	TooltipContent,
 	TooltipProvider,
 	TooltipTrigger,
-} from '~/components/ui';
+} from '~/components/ui/tooltip';
 
 import type { CustomField, Field } from '~/lib/types';
 import { cn } from '~/lib/utils';

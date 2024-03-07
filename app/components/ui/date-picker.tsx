@@ -1,9 +1,6 @@
-'use client';
-
 import * as React from 'react';
 
 import { Calendar as CalendarIcon } from 'lucide-react';
-import { useClickAway } from '~/hooks';
 
 import { Button } from '~/components/ui/button';
 import { Calendar } from '~/components/ui/calendar';
@@ -12,6 +9,8 @@ import {
 	PopoverContent,
 	PopoverTrigger,
 } from '~/components/ui/popover';
+
+import { useClickAway } from '~/hooks/useClickAway';
 
 import { cn, dateFormatter } from '~/lib/utils';
 

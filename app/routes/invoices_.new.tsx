@@ -4,26 +4,14 @@ import { renderToStream } from '@react-pdf/renderer';
 import type { ActionFunctionArgs } from '@remix-run/node';
 import { redirect, useFetcher, useLoaderData } from '@remix-run/react';
 import type { ClientActionFunctionArgs } from '@remix-run/react';
-import { Reorder } from 'framer-motion';
 import { nanoid } from 'nanoid';
 import queryString from 'query-string';
 import { ulid } from 'ulid';
 import { z } from 'zod';
 
-import {
-	AddFormField,
-	FormField,
-	InvoicePdf,
-	UncontrolledFormField,
-} from '~/components';
-import {
-	Button,
-	Combobox,
-	DatePicker,
-	Dialog,
-	DialogContent,
-	DialogTrigger,
-} from '~/components/ui';
+import { InvoicePdf } from '~/components/InvoicePdf';
+import { Combobox } from '~/components/ui/combobox';
+import { DatePicker } from '~/components/ui/date-picker';
 
 import { countries } from '~/lib/currencies';
 import { db } from '~/lib/db';

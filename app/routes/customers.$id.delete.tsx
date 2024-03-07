@@ -21,7 +21,7 @@ import {
 	AlertDialogFooter,
 	AlertDialogHeader,
 	AlertDialogTitle,
-} from '~/components/ui';
+} from '~/components/ui/alert-dialog';
 
 import { db } from '~/lib/db';
 
