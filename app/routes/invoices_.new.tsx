@@ -15,7 +15,7 @@ import { Label } from '~/components/ui/label';
 import { Textarea } from '~/components/ui/textarea';
 
 import { idTypes, intents, locales } from '~/lib/constants';
-import type { Intent } from '~/lib/constants';
+import type { IdType, Intent } from '~/lib/constants';
 import { countries } from '~/lib/currencies';
 import { db } from '~/lib/db';
 import { newInvoiceLoaderSchema } from '~/lib/schemas';
@@ -24,10 +24,11 @@ import type { Customer } from '~/lib/types';
 
 export async function clientLoader() {
 	try {
-		const [companies, customers, services] = await Promise.all([
+		const [companies, customers, services, invoice] = await Promise.all([
 			db.companies.toArray(),
 			db.customers.toArray(),
 			db.services.toArray(),
+			db.invoices.where({ invoiceIdType: 'incremental' as IdType }).last(),
 		]);
 		newInvoiceLoaderSchema.parse({
 			companiesLength: companies.length,
@@ -36,9 +37,19 @@ export async function clientLoader() {
 		});
 
 		return {
-			companies,
-			customers,
-			services,
+			companies: companies.map(({ id, name }) => ({
+				label: name,
+				value: id,
+			})),
+			customers: customers.map(({ id, name }) => ({
+				label: name,
+				value: id,
+			})),
+			services: services.map(({ id, name }) => ({
+				label: name,
+				value: id,
+			})),
+			lastInvoiceId: invoice?.id ? Number(invoice.id) : 0,
 			error: null,
 		};
 	} catch (err) {
@@ -62,6 +73,7 @@ export async function clientLoader() {
 				companies: [],
 				customers: [],
 				services: [],
+				lastInvoiceId: 0,
 				error,
 			};
 		}
@@ -167,7 +179,7 @@ const currencies = countries.map(
 
 export default function NewInvoiceRoute() {
 	const fetcher = useFetcher<typeof action>();
-	const { companies, customers, services, error } =
+	const { companies, customers, services, lastInvoiceId, error } =
 		useLoaderData<typeof clientLoader>();
 
 	const [intent, setIntent] = React.useState<Intent | null>(null);
@@ -193,21 +205,6 @@ export default function NewInvoiceRoute() {
 			</section>
 		);
 	}
-
-	const companiesData = companies?.map(({ id, name }) => ({
-		label: name,
-		value: id,
-	}));
-
-	const customersData = customers?.map(({ id, name }) => ({
-		label: name,
-		value: id,
-	}));
-
-	const servicesData = services?.map(({ id, name }) => ({
-		label: name,
-		value: id,
-	}));
 
 	return (
 		<section>
@@ -259,7 +256,7 @@ export default function NewInvoiceRoute() {
 							label="Company"
 							inputName="company-id"
 							inputPlaceholder="Choose a Company"
-							list={companiesData}
+							list={companies}
 						/>
 					</div>
 
@@ -268,7 +265,7 @@ export default function NewInvoiceRoute() {
 							label="Customer"
 							inputName="customer-id"
 							inputPlaceholder="Choose a Customer"
-							list={customersData}
+							list={customers}
 						/>
 					</div>
 				</div>

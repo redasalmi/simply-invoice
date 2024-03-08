@@ -15,7 +15,7 @@ class DexieDB extends Dexie {
 			companies: '++id, name, email, createdAt, updatedAt',
 			customers: '++id, name, email, createdAt, updatedAt',
 			services: '++id, name, rate, createdAt, updatedAt',
-			invoices: '++id',
+			invoices: '++id, invoiceId, invoiceIdType',
 		});
 	}
 }
