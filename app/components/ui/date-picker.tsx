@@ -11,6 +11,7 @@ import {
 } from '~/components/ui/popover';
 
 import { useClickAway } from '~/hooks/useClickAway';
+import { useKeyPress } from '~/hooks/useKeyPress';
 
 import { cn, dateFormatter } from '~/lib/utils';
 
@@ -25,6 +26,7 @@ export function DatePicker({ inputName }: DatePickerProps) {
 	const [date, setDate] = React.useState<Date>();
 
 	useClickAway(datePickerRef, () => setIsOpen(false));
+	useKeyPress('Escape', () => setIsOpen(false));
 
 	const updateDate = (newDate?: Date) => {
 		if (newDate) {
