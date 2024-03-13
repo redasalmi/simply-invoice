@@ -4,6 +4,7 @@ import { renderToStream } from '@react-pdf/renderer';
 import type { ActionFunctionArgs } from '@remix-run/node';
 import { redirect, useFetcher, useLoaderData } from '@remix-run/react';
 import type { ClientActionFunctionArgs } from '@remix-run/react';
+import { nanoid } from 'nanoid';
 import queryString from 'query-string';
 import { ulid } from 'ulid';
 import { z } from 'zod';
@@ -11,6 +12,7 @@ import { z } from 'zod';
 import { InvoicePdf } from '~/components/InvoicePdf';
 import { Combobox } from '~/components/ui/combobox';
 import { DatePicker } from '~/components/ui/date-picker';
+import { Input } from '~/components/ui/input';
 import { Label } from '~/components/ui/label';
 import { Textarea } from '~/components/ui/textarea';
 
@@ -182,6 +184,7 @@ export default function NewInvoiceRoute() {
 	const { companies, customers, services, lastInvoiceId, error } =
 		useLoaderData<typeof clientLoader>();
 
+	const invoiceIdRef = React.useRef<HTMLInputElement>(null);
 	const [intent, setIntent] = React.useState<Intent | null>(null);
 
 	const isLoading = fetcher.state !== 'idle';
@@ -206,6 +209,19 @@ export default function NewInvoiceRoute() {
 		);
 	}
 
+	const handleInvoiceIdTypeChange = (idType: IdType) => {
+		let invoiceId: string | null = null;
+		if (idType === 'incremental') {
+			invoiceId = String(lastInvoiceId + 1);
+		} else if (idType === 'random') {
+			invoiceId = nanoid();
+		}
+
+		if (invoiceIdRef.current && invoiceId) {
+			invoiceIdRef.current.value = invoiceId;
+		}
+	};
+
 	return (
 		<section>
 			<fetcher.Form method="post">
@@ -216,7 +232,15 @@ export default function NewInvoiceRoute() {
 							inputName="invoice-id-type"
 							inputPlaceholder="Choose Invoice ID Type"
 							list={idTypes}
+							onSelectCallback={handleInvoiceIdTypeChange}
 						/>
+					</div>
+
+					<div className="my-4">
+						<Label>
+							<span>Invoice ID</span>
+							<Input ref={invoiceIdRef} name="invoice-id" readOnly />
+						</Label>
 					</div>
 
 					<div>
