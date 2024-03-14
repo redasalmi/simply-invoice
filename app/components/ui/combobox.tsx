@@ -40,7 +40,7 @@ export const Combobox = ({
 		const newValue =
 			currentValue === value
 				? ''
-				: list.find((listItem) => listItem.value.toLowerCase() === currentValue)
+				: list.find((listItem) => listItem.label.toLowerCase() === currentValue)
 						?.value || '';
 
 		setValue(newValue);
@@ -75,7 +75,7 @@ export const Combobox = ({
 						{list.map((listItem) => (
 							<CommandItem
 								key={listItem.value}
-								value={listItem.value}
+								value={listItem.label}
 								onSelect={onSelect}
 							>
 								<Check
