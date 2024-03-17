@@ -225,8 +225,8 @@ export default function NewInvoiceRoute() {
 	return (
 		<section>
 			<fetcher.Form method="post">
-				<div>
-					<div className="my-4">
+				<div className="my-4 flex gap-3">
+					<div>
 						<Combobox
 							label="ID type"
 							inputName="invoice-id-type"
@@ -236,13 +236,15 @@ export default function NewInvoiceRoute() {
 						/>
 					</div>
 
-					<div className="my-4">
+					<div>
 						<Label>
 							<span>Invoice ID</span>
 							<Input ref={invoiceIdRef} name="invoice-id" readOnly />
 						</Label>
 					</div>
+				</div>
 
+				<div className="my-4 flex gap-3">
 					<div>
 						<Combobox
 							label="Invoice Language"
@@ -262,19 +264,19 @@ export default function NewInvoiceRoute() {
 					</div>
 				</div>
 
-				<div className="my-4">
-					<div className="my-2">
+				<div className="my-4 flex gap-3">
+					<div>
 						<p>Invoice Date</p>
 						<DatePicker inputName="invoice-date" />
 					</div>
 
-					<div className="my-2">
+					<div>
 						<p>Due Date</p>
 						<DatePicker inputName="due-date" />
 					</div>
 				</div>
 
-				<div className="my-4 flex flex-col gap-2">
+				<div className="my-4 flex gap-3">
 					<div>
 						<Combobox
 							label="Company"
