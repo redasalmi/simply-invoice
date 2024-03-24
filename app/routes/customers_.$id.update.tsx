@@ -25,10 +25,9 @@ import { labelVariants } from '~/components/ui/label';
 import { Skeleton } from '~/components/ui/skeleton';
 
 import { db } from '~/lib/db';
-import { updateCustomerSchema } from '~/lib/schemas';
 import type { UpdateCustomerSchemaErrors } from '~/lib/schemas';
 import type { CustomField, Field } from '~/lib/types';
-import { cn, extractCustomFields } from '~/lib/utils';
+import { cn, updateCustomer } from '~/lib/utils';
 
 type ActionErrors = {
 	name?: string;
@@ -57,26 +56,7 @@ export async function clientAction({
 		const customerId = params.id;
 		const formQueryString = await request.text();
 		const formData = queryString.parse(formQueryString, { sort: false });
-
-		const today = new Date().toLocaleDateString();
-		const customFields = extractCustomFields(formData);
-		const updatedCustomer = updateCustomerSchema.parse({
-			id: customerId,
-			name: formData['name']?.toString(),
-			email: formData['email']?.toString(),
-			address: {
-				address1: formData['address1']?.toString(),
-				address2: formData['address2']?.toString(),
-				city: formData['city']?.toString(),
-				country: formData['country']?.toString(),
-				province: formData['province']?.toString(),
-				zip: formData['zip']?.toString(),
-			},
-			...(Object.keys(customFields).length
-				? { custom: Object.values(customFields) }
-				: undefined),
-			updatedAt: today,
-		});
+		const updatedCustomer = updateCustomer(customerId, formData);
 		await db.customers.update(updatedCustomer.id, updatedCustomer);
 
 		return redirect('/customers');

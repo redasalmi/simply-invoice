@@ -25,10 +25,9 @@ import { labelVariants } from '~/components/ui/label';
 import { Skeleton } from '~/components/ui/skeleton';
 
 import { db } from '~/lib/db';
-import { updateCompanySchema } from '~/lib/schemas';
 import type { UpdateCompanySchemaErrors } from '~/lib/schemas';
 import type { CustomField, Field } from '~/lib/types';
-import { cn, extractCustomFields } from '~/lib/utils';
+import { cn, updateCompany } from '~/lib/utils';
 
 type ActionErrors = {
 	name?: string;
@@ -57,26 +56,7 @@ export async function clientAction({
 		const companyId = params.id;
 		const formQueryString = await request.text();
 		const formData = queryString.parse(formQueryString, { sort: false });
-
-		const today = new Date().toLocaleDateString();
-		const customFields = extractCustomFields(formData);
-		const updatedCompany = updateCompanySchema.parse({
-			id: companyId,
-			name: formData['name']?.toString(),
-			email: formData['email']?.toString(),
-			address: {
-				address1: formData['address1']?.toString(),
-				address2: formData['address2']?.toString(),
-				city: formData['city']?.toString(),
-				country: formData['country']?.toString(),
-				province: formData['province']?.toString(),
-				zip: formData['zip']?.toString(),
-			},
-			...(Object.keys(customFields).length
-				? { custom: Object.values(customFields) }
-				: undefined),
-			updatedAt: today,
-		});
+		const updatedCompany = updateCompany(companyId, formData);
 		await db.companies.update(updatedCompany.id, updatedCompany);
 
 		return redirect('/companies');

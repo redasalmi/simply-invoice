@@ -8,6 +8,9 @@ import {
 	createCompamySchema,
 	createCustomerSchema,
 	createServiceSchema,
+	updateCompanySchema,
+	updateCustomerSchema,
+	updateServiceSchema,
 } from '~/lib/schemas';
 import { CustomField } from '~/lib/types';
 
@@ -131,4 +134,71 @@ export const createService = (formData: FormData) => {
 	});
 
 	return newService;
+};
+
+export const updateCompany = (
+	companyId: string,
+	formData: ParsedQuery<string>,
+) => {
+	const today = new Date().toLocaleDateString();
+	const customFields = extractCustomFields(formData);
+	const updatedCompany = updateCompanySchema.parse({
+		id: companyId,
+		name: formData['name']?.toString(),
+		email: formData['email']?.toString(),
+		address: {
+			address1: formData['address1']?.toString(),
+			address2: formData['address2']?.toString(),
+			city: formData['city']?.toString(),
+			country: formData['country']?.toString(),
+			province: formData['province']?.toString(),
+			zip: formData['zip']?.toString(),
+		},
+		...(Object.keys(customFields).length
+			? { custom: Object.values(customFields) }
+			: undefined),
+		updatedAt: today,
+	});
+
+	return updatedCompany;
+};
+
+export const updateCustomer = (
+	customerId: string,
+	formData: ParsedQuery<string>,
+) => {
+	const today = new Date().toLocaleDateString();
+	const customFields = extractCustomFields(formData);
+	const updatedCustomer = updateCustomerSchema.parse({
+		id: customerId,
+		name: formData['name']?.toString(),
+		email: formData['email']?.toString(),
+		address: {
+			address1: formData['address1']?.toString(),
+			address2: formData['address2']?.toString(),
+			city: formData['city']?.toString(),
+			country: formData['country']?.toString(),
+			province: formData['province']?.toString(),
+			zip: formData['zip']?.toString(),
+		},
+		...(Object.keys(customFields).length
+			? { custom: Object.values(customFields) }
+			: undefined),
+		updatedAt: today,
+	});
+
+	return updatedCustomer;
+};
+
+export const updateService = (serviceId: string, formData: FormData) => {
+	const today = new Date().toLocaleDateString();
+	const updatedService = updateServiceSchema.parse({
+		id: serviceId,
+		name: formData.get('name')?.toString(),
+		description: formData.get('description')?.toString(),
+		rate: Number(formData.get('rate')),
+		updatedAt: today,
+	});
+
+	return updatedService;
 };

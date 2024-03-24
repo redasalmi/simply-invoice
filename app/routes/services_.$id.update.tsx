@@ -20,10 +20,9 @@ import { labelVariants } from '~/components/ui/label';
 import { Skeleton } from '~/components/ui/skeleton';
 
 import { db } from '~/lib/db';
-import { updateServiceSchema } from '~/lib/schemas';
 import type { UpdateServiceSchemaErrors } from '~/lib/schemas';
 import type { Field } from '~/lib/types';
-import { cn } from '~/lib/utils';
+import { cn, updateService } from '~/lib/utils';
 
 type ActionErrors = {
 	name?: string;
@@ -48,15 +47,7 @@ export async function clientAction({
 	try {
 		const serviceId = params.id;
 		const formData = await request.formData();
-
-		const today = new Date().toLocaleDateString();
-		const updatedService = updateServiceSchema.parse({
-			id: serviceId,
-			name: formData.get('name')?.toString(),
-			description: formData.get('description')?.toString(),
-			rate: Number(formData.get('rate')),
-			updatedAt: today,
-		});
+		const updatedService = updateService(serviceId, formData);
 		await db.services.update(updatedService.id, updatedService);
 
 		return redirect('/services');
