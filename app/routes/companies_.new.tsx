@@ -5,7 +5,6 @@ import type { ClientActionFunctionArgs } from '@remix-run/react';
 import { Reorder } from 'framer-motion';
 import { nanoid } from 'nanoid';
 import queryString from 'query-string';
-import { ulid } from 'ulid';
 import { z } from 'zod';
 
 import { AddFormField } from '~/components/AddFormField';
@@ -13,10 +12,9 @@ import { FormField, UncontrolledFormField } from '~/components/FormField';
 import { Button } from '~/components/ui/button';
 
 import { db } from '~/lib/db';
-import { createCompamySchema } from '~/lib/schemas';
 import type { CreateCompanySchemaErrors } from '~/lib/schemas';
 import type { CustomField, Field } from '~/lib/types';
-import { extractCustomFields } from '~/lib/utils';
+import { createCompany } from '~/lib/utils';
 
 type ActionErrors = {
 	name?: string;
@@ -30,27 +28,7 @@ export async function clientAction({ request }: ClientActionFunctionArgs) {
 	try {
 		const formQueryString = await request.text();
 		const formData = queryString.parse(formQueryString, { sort: false });
-
-		const today = new Date().toLocaleDateString();
-		const customFields = extractCustomFields(formData);
-		const newCompany = createCompamySchema.parse({
-			id: ulid(),
-			name: formData['name']?.toString(),
-			email: formData['email']?.toString(),
-			address: {
-				address1: formData['address1']?.toString(),
-				address2: formData['address2']?.toString(),
-				city: formData['city']?.toString(),
-				country: formData['country']?.toString(),
-				province: formData['province']?.toString(),
-				zip: formData['zip']?.toString(),
-			},
-			...(Object.keys(customFields).length
-				? { custom: Object.values(customFields) }
-				: undefined),
-			createdAt: today,
-			updatedAt: today,
-		});
+		const newCompany = createCompany(formData);
 		await db.companies.add(newCompany);
 
 		return redirect('/companies');

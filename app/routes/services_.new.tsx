@@ -1,16 +1,15 @@
 import type { ActionFunctionArgs } from '@remix-run/node';
 import { Form, redirect, useActionData, useNavigation } from '@remix-run/react';
 import { nanoid } from 'nanoid';
-import { ulid } from 'ulid';
 import { z } from 'zod';
 
 import { UncontrolledFormField } from '~/components/FormField';
 import { Button } from '~/components/ui/button';
 
 import { db } from '~/lib/db';
-import { createServiceSchema } from '~/lib/schemas';
 import type { CreateServiceSchemaErrors } from '~/lib/schemas';
 import type { Field } from '~/lib/types';
+import { createService } from '~/lib/utils';
 
 type ActionErrors = {
 	name?: string;
@@ -20,16 +19,7 @@ type ActionErrors = {
 export async function clientAction({ request }: ActionFunctionArgs) {
 	try {
 		const formData = await request.formData();
-
-		const today = new Date().toLocaleDateString();
-		const newService = createServiceSchema.parse({
-			id: ulid(),
-			name: formData.get('name')?.toString(),
-			description: formData.get('description')?.toString(),
-			rate: Number(formData.get('rate')),
-			createdAt: today,
-			updatedAt: today,
-		});
+		const newService = createService(formData);
 		await db.services.add(newService);
 
 		return redirect('/services');

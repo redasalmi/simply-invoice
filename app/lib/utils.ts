@@ -2,7 +2,13 @@ import { clsx } from 'clsx';
 import type { ClassValue } from 'clsx';
 import type { ParsedQuery } from 'query-string';
 import { twMerge } from 'tailwind-merge';
+import { ulid } from 'ulid';
 
+import {
+	createCompamySchema,
+	createCustomerSchema,
+	createServiceSchema,
+} from '~/lib/schemas';
 import { CustomField } from '~/lib/types';
 
 export function cn(...inputs: Array<ClassValue>) {
@@ -62,3 +68,67 @@ export function extractCustomFields(formData: ParsedQuery<string>) {
 
 	return customFields;
 }
+
+export const createCompany = (formData: ParsedQuery<string>) => {
+	const today = new Date().toLocaleDateString();
+	const customFields = extractCustomFields(formData);
+	const newCompany = createCompamySchema.parse({
+		id: ulid(),
+		name: formData['name']?.toString(),
+		email: formData['email']?.toString(),
+		address: {
+			address1: formData['address1']?.toString(),
+			address2: formData['address2']?.toString(),
+			city: formData['city']?.toString(),
+			country: formData['country']?.toString(),
+			province: formData['province']?.toString(),
+			zip: formData['zip']?.toString(),
+		},
+		...(Object.keys(customFields).length
+			? { custom: Object.values(customFields) }
+			: undefined),
+		createdAt: today,
+		updatedAt: today,
+	});
+
+	return newCompany;
+};
+
+export const createCustomer = (formData: ParsedQuery<string>) => {
+	const today = new Date().toLocaleDateString();
+	const customFields = extractCustomFields(formData);
+	const newCustomer = createCustomerSchema.parse({
+		id: ulid(),
+		name: formData['name']?.toString(),
+		email: formData['email']?.toString(),
+		address: {
+			address1: formData['address1']?.toString(),
+			address2: formData['address2']?.toString(),
+			city: formData['city']?.toString(),
+			country: formData['country']?.toString(),
+			province: formData['province']?.toString(),
+			zip: formData['zip']?.toString(),
+		},
+		...(Object.keys(customFields).length
+			? { custom: Object.values(customFields) }
+			: undefined),
+		createdAt: today,
+		updatedAt: today,
+	});
+
+	return newCustomer;
+};
+
+export const createService = (formData: FormData) => {
+	const today = new Date().toLocaleDateString();
+	const newService = createServiceSchema.parse({
+		id: ulid(),
+		name: formData.get('name')?.toString(),
+		description: formData.get('description')?.toString(),
+		rate: Number(formData.get('rate')),
+		createdAt: today,
+		updatedAt: today,
+	});
+
+	return newService;
+};
