@@ -2,7 +2,6 @@ import { clsx } from 'clsx';
 import type { ClassValue } from 'clsx';
 import type { ParsedQuery } from 'query-string';
 import { twMerge } from 'tailwind-merge';
-
 import type { CustomField } from '~/lib/types';
 
 export function cn(...inputs: Array<ClassValue>) {

@@ -1,8 +1,6 @@
 import { ParsedQuery } from 'query-string';
 import { ulid } from 'ulid';
-
 import { createCustomerSchema, updateCustomerSchema } from '~/lib/schemas';
-
 import { extractCustomFields } from '~/utils/shared';
 
 export const createCustomer = (formData: ParsedQuery<string>) => {

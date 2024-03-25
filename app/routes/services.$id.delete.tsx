@@ -11,7 +11,6 @@ import type {
 	ClientLoaderFunctionArgs,
 } from '@remix-run/react';
 import invariant from 'tiny-invariant';
-
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -22,7 +21,6 @@ import {
 	AlertDialogHeader,
 	AlertDialogTitle,
 } from '~/components/ui/alert-dialog';
-
 import { db } from '~/lib/db';
 
 export async function clientLoader({ params }: ClientLoaderFunctionArgs) {

@@ -1,5 +1,4 @@
 import { ulid } from 'ulid';
-
 import { createServiceSchema, updateServiceSchema } from '~/lib/schemas';
 
 export const createService = (formData: FormData) => {

@@ -1,5 +1,4 @@
 import * as React from 'react';
-
 import {
 	Links,
 	Meta,
@@ -7,10 +6,8 @@ import {
 	Scripts,
 	ScrollRestoration,
 } from '@remix-run/react';
-
 import { Footer } from '~/components/Footer';
 import { Navbar } from '~/components/Navbar';
-
 import styles from '~/tailwind.css?url';
 
 export const links = () => {

@@ -1,5 +1,4 @@
 import * as React from 'react';
-
 import type { IdType, Locale } from '~/lib/constants';
 import type { CountryCode } from '~/lib/currencies';
 

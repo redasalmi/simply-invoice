@@ -1,6 +1,5 @@
 import { Link, Outlet, useLoaderData } from '@remix-run/react';
 import { Eye, Pencil, Trash } from 'lucide-react';
-
 import { buttonVariants } from '~/components/ui/button';
 import {
 	Table,
@@ -10,9 +9,7 @@ import {
 	TableHeader,
 	TableRow,
 } from '~/components/ui/table';
-
 import { db, getPage } from '~/lib/db';
-
 import { cn } from '~/utils/shared';
 
 export async function clientLoader() {

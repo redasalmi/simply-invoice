@@ -1,7 +1,5 @@
 import * as React from 'react';
-
 import { Calendar as CalendarIcon } from 'lucide-react';
-
 import { Button } from '~/components/ui/button';
 import { Calendar } from '~/components/ui/calendar';
 import {
@@ -9,10 +7,8 @@ import {
 	PopoverContent,
 	PopoverTrigger,
 } from '~/components/ui/popover';
-
 import { useClickAway } from '~/hooks/useClickAway';
 import { useKeyPress } from '~/hooks/useKeyPress';
-
 import { cn, dateFormatter } from '~/utils/shared';
 
 type DatePickerProps = {

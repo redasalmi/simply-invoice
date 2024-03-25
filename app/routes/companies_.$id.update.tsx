@@ -1,5 +1,4 @@
 import * as React from 'react';
-
 import {
 	Form,
 	Link,
@@ -17,17 +16,14 @@ import { nanoid } from 'nanoid';
 import queryString from 'query-string';
 import invariant from 'tiny-invariant';
 import { z } from 'zod';
-
 import { AddFormField } from '~/components/AddFormField';
 import { FormField, UncontrolledFormField } from '~/components/FormField';
 import { Button } from '~/components/ui/button';
 import { labelVariants } from '~/components/ui/label';
 import { Skeleton } from '~/components/ui/skeleton';
-
 import { db } from '~/lib/db';
 import type { UpdateCompanySchemaErrors } from '~/lib/schemas';
 import type { CustomField, Field } from '~/lib/types';
-
 import { updateCompany } from '~/utils/company';
 import { cn } from '~/utils/shared';
 

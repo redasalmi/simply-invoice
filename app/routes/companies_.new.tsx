@@ -1,20 +1,16 @@
 import * as React from 'react';
-
 import { Form, redirect, useActionData, useNavigation } from '@remix-run/react';
 import type { ClientActionFunctionArgs } from '@remix-run/react';
 import { Reorder } from 'framer-motion';
 import { nanoid } from 'nanoid';
 import queryString from 'query-string';
 import { z } from 'zod';
-
 import { AddFormField } from '~/components/AddFormField';
 import { FormField, UncontrolledFormField } from '~/components/FormField';
 import { Button } from '~/components/ui/button';
-
 import { db } from '~/lib/db';
 import type { CreateCompanySchemaErrors } from '~/lib/schemas';
 import type { CustomField, Field } from '~/lib/types';
-
 import { createCompany } from '~/utils/company';
 
 type ActionErrors = {

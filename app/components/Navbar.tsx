@@ -1,5 +1,4 @@
 import { Link, NavLink } from '@remix-run/react';
-
 import { cn } from '~/utils/shared';
 
 type SideBarLinkProps = {

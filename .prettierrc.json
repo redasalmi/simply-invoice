@@ -29,7 +29,7 @@
 		"^~/utils",
 		"^~/tailwind"
 	],
-	"importOrderSeparation": true,
+	"importOrderSeparation": false,
 	"importOrderSortSpecifiers": true,
 	"importOrderCaseInsensitive": true,
 	"tailwindConfig": "./tailwind.config.ts"
