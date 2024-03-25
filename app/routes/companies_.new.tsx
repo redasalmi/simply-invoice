@@ -14,7 +14,8 @@ import { Button } from '~/components/ui/button';
 import { db } from '~/lib/db';
 import type { CreateCompanySchemaErrors } from '~/lib/schemas';
 import type { CustomField, Field } from '~/lib/types';
-import { createCompany } from '~/lib/utils';
+
+import { createCompany } from '~/utils/company';
 
 type ActionErrors = {
 	name?: string;

@@ -14,15 +14,8 @@ import { Button } from '~/components/ui/button';
 import { db } from '~/lib/db';
 import type { CreateCustomerSchemaErrors } from '~/lib/schemas';
 import type { CustomField, Field } from '~/lib/types';
-import { createCustomer } from '~/lib/utils';
 
-type ActionErrors = {
-	name?: string;
-	email?: string;
-	address1?: string;
-	country?: string;
-	custom?: Record<string, { label?: string; content?: string }>;
-};
+import { createCustomer } from '~/utils/customer';
 
 export async function clientAction({ request }: ClientActionFunctionArgs) {
 	try {

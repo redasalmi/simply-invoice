@@ -24,9 +24,10 @@
 		"^react",
 		"<THIRD_PARTY_MODULES>",
 		"^~/components",
-		"~/hooks",
+		"^~/hooks",
 		"^~/lib",
-		"~/tailwind"
+		"^~/utils",
+		"^~/tailwind"
 	],
 	"importOrderSeparation": true,
 	"importOrderSortSpecifiers": true,

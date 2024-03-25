@@ -1,6 +1,6 @@
 import { Link, NavLink } from '@remix-run/react';
 
-import { cn } from '~/lib/utils';
+import { cn } from '~/utils/shared';
 
 type SideBarLinkProps = {
 	to: string;

@@ -22,7 +22,9 @@ import { Skeleton } from '~/components/ui/skeleton';
 import { db } from '~/lib/db';
 import type { UpdateServiceSchemaErrors } from '~/lib/schemas';
 import type { Field } from '~/lib/types';
-import { cn, updateService } from '~/lib/utils';
+
+import { updateService } from '~/utils/service';
+import { cn } from '~/utils/shared';
 
 type ActionErrors = {
 	name?: string;

@@ -14,7 +14,8 @@ import {
 } from '~/components/ui/tooltip';
 
 import type { CustomField, Field } from '~/lib/types';
-import { cn } from '~/lib/utils';
+
+import { cn } from '~/utils/shared';
 
 type UncontrolledFormField = {
 	formField: Field;

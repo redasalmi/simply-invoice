@@ -9,7 +9,8 @@ import { Button } from '~/components/ui/button';
 import { db } from '~/lib/db';
 import type { CreateServiceSchemaErrors } from '~/lib/schemas';
 import type { Field } from '~/lib/types';
-import { createService } from '~/lib/utils';
+
+import { createService } from '~/utils/service';
 
 type ActionErrors = {
 	name?: string;

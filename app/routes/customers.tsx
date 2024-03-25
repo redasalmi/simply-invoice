@@ -12,7 +12,8 @@ import {
 } from '~/components/ui/table';
 
 import { db, getPage } from '~/lib/db';
-import { cn } from '~/lib/utils';
+
+import { cn } from '~/utils/shared';
 
 export async function clientLoader() {
 	return {

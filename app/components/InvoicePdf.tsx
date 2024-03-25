@@ -2,7 +2,8 @@ import { Document, Page, StyleSheet, Text, View } from '@react-pdf/renderer';
 import { nanoid } from 'nanoid';
 
 import type { Customer } from '~/lib/types';
-import { capitalize } from '~/lib/utils';
+
+import { capitalize } from '~/utils/shared';
 
 const styles = StyleSheet.create({
 	body: {

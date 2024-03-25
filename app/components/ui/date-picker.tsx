@@ -13,7 +13,7 @@ import {
 import { useClickAway } from '~/hooks/useClickAway';
 import { useKeyPress } from '~/hooks/useKeyPress';
 
-import { cn, dateFormatter } from '~/lib/utils';
+import { cn, dateFormatter } from '~/utils/shared';
 
 type DatePickerProps = {
 	inputName?: string;

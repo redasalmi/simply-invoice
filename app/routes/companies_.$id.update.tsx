@@ -27,7 +27,9 @@ import { Skeleton } from '~/components/ui/skeleton';
 import { db } from '~/lib/db';
 import type { UpdateCompanySchemaErrors } from '~/lib/schemas';
 import type { CustomField, Field } from '~/lib/types';
-import { cn, updateCompany } from '~/lib/utils';
+
+import { updateCompany } from '~/utils/company';
+import { cn } from '~/utils/shared';
 
 type ActionErrors = {
 	name?: string;
