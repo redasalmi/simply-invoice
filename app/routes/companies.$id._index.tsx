@@ -1,5 +1,9 @@
-import { Link, useLoaderData, useNavigate } from '@remix-run/react';
-import type { ClientLoaderFunctionArgs } from '@remix-run/react';
+import {
+	type ClientLoaderFunctionArgs,
+	Link,
+	useLoaderData,
+	useNavigate,
+} from '@remix-run/react';
 import invariant from 'tiny-invariant';
 import { Dialog, DialogContent } from '~/components/ui/dialog';
 import { Table, TableBody, TableCell, TableRow } from '~/components/ui/table';

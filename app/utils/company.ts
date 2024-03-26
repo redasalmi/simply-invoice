@@ -1,11 +1,11 @@
-import { ParsedQuery } from 'query-string';
+import { type ParsedQuery } from 'query-string';
 import { ulid } from 'ulid';
 import type { ZodError } from 'zod';
 import {
 	createCompanySchema,
-	CreateCompanySchemaErrors,
+	type CreateCompanySchemaErrors,
 	updateCompanySchema,
-	UpdateCompanySchemaErrors,
+	type UpdateCompanySchemaErrors,
 } from '~/lib/schemas';
 import { extractCustomFields } from '~/utils/shared';
 

@@ -2,9 +2,9 @@ import { ulid } from 'ulid';
 import { type ZodError } from 'zod';
 import {
 	createServiceSchema,
-	CreateServiceSchemaErrors,
+	type CreateServiceSchemaErrors,
 	updateServiceSchema,
-	UpdateServiceSchemaErrors,
+	type UpdateServiceSchemaErrors,
 } from '~/lib/schemas';
 
 type ZodErrors<T extends 'create' | 'update'> = T extends 'create'

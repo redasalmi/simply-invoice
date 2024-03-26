@@ -79,6 +79,7 @@ module.exports = {
 
 	rules: {
 		'prefer-const': ERROR,
+		'no-duplicate-imports': ERROR,
 		'react/prop-types': ERROR,
 		'react/display-name': ERROR,
 		'@typescript-eslint/no-unused-vars': ERROR,

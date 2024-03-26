@@ -140,11 +140,13 @@ export function InvoicePdf({ data }: InvoicePdfProps) {
 						<Text style={styles.text}>Billed to</Text>
 						<Text style={styles.text}>{customer.name}</Text>
 						<Text style={styles.text}>{customer.email}</Text>
-						{customer.custom.map(({ label, value, showLabel }) => (
-							<Text key={nanoid()} style={styles.text}>
-								{showLabel ? `${capitalize(label)}: ${value}` : value}
-							</Text>
-						))}
+						{customer.custom
+							? customer.custom.map(({ label, content, showLabel }) => (
+									<Text key={nanoid()} style={styles.text}>
+										{showLabel ? `${capitalize(label)}: ${content}` : content}
+									</Text>
+								))
+							: null}
 					</View>
 				</View>
 

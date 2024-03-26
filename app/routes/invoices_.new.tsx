@@ -1,8 +1,12 @@
 import * as React from 'react';
 import { renderToStream } from '@react-pdf/renderer';
 import type { ActionFunctionArgs } from '@remix-run/node';
-import { redirect, useFetcher, useLoaderData } from '@remix-run/react';
-import type { ClientActionFunctionArgs } from '@remix-run/react';
+import {
+	type ClientActionFunctionArgs,
+	redirect,
+	useFetcher,
+	useLoaderData,
+} from '@remix-run/react';
 import { nanoid } from 'nanoid';
 import queryString from 'query-string';
 import { ulid } from 'ulid';
@@ -13,12 +17,19 @@ import { DatePicker } from '~/components/ui/date-picker';
 import { Input } from '~/components/ui/input';
 import { Label } from '~/components/ui/label';
 import { Textarea } from '~/components/ui/textarea';
-import { idTypes, intents, locales } from '~/lib/constants';
-import type { IdType, Intent } from '~/lib/constants';
+import {
+	type IdType,
+	idTypes,
+	type Intent,
+	intents,
+	locales,
+} from '~/lib/constants';
 import { countries } from '~/lib/currencies';
 import { db } from '~/lib/db';
-import { newInvoiceLoaderSchema } from '~/lib/schemas';
-import type { NewInvoiceLoaderSchemaErrors } from '~/lib/schemas';
+import {
+	newInvoiceLoaderSchema,
+	type NewInvoiceLoaderSchemaErrors,
+} from '~/lib/schemas';
 import type { Customer } from '~/lib/types';
 
 export async function clientLoader() {

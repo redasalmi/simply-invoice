@@ -1,6 +1,11 @@
 import * as React from 'react';
-import { Form, redirect, useActionData, useNavigation } from '@remix-run/react';
-import type { ClientActionFunctionArgs } from '@remix-run/react';
+import {
+	type ClientActionFunctionArgs,
+	Form,
+	redirect,
+	useActionData,
+	useNavigation,
+} from '@remix-run/react';
 import { Reorder } from 'framer-motion';
 import { nanoid } from 'nanoid';
 import queryString from 'query-string';

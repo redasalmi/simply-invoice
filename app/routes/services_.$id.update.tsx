@@ -1,14 +1,12 @@
 import {
+	type ClientActionFunctionArgs,
+	type ClientLoaderFunctionArgs,
 	Form,
 	Link,
 	redirect,
 	useActionData,
 	useLoaderData,
 	useNavigation,
-} from '@remix-run/react';
-import type {
-	ClientActionFunctionArgs,
-	ClientLoaderFunctionArgs,
 } from '@remix-run/react';
 import { nanoid } from 'nanoid';
 import invariant from 'tiny-invariant';

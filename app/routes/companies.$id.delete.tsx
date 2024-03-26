@@ -1,14 +1,12 @@
 import {
+	type ClientActionFunctionArgs,
+	type ClientLoaderFunctionArgs,
 	Form,
 	redirect,
 	useActionData,
 	useLoaderData,
 	useNavigate,
 	useNavigation,
-} from '@remix-run/react';
-import type {
-	ClientActionFunctionArgs,
-	ClientLoaderFunctionArgs,
 } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 import {

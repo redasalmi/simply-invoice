@@ -1,15 +1,13 @@
 import * as React from 'react';
 import {
+	type ClientActionFunctionArgs,
+	type ClientLoaderFunctionArgs,
 	Form,
 	Link,
 	redirect,
 	useActionData,
 	useLoaderData,
 	useNavigation,
-} from '@remix-run/react';
-import type {
-	ClientActionFunctionArgs,
-	ClientLoaderFunctionArgs,
 } from '@remix-run/react';
 import { Reorder } from 'framer-motion';
 import { nanoid } from 'nanoid';
