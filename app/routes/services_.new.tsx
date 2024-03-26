@@ -5,14 +5,8 @@ import { z } from 'zod';
 import { UncontrolledFormField } from '~/components/FormField';
 import { Button } from '~/components/ui/button';
 import { db } from '~/lib/db';
-import type { CreateServiceSchemaErrors } from '~/lib/schemas';
 import type { Field } from '~/lib/types';
-import { createService } from '~/utils/service';
-
-type ActionErrors = {
-	name?: string;
-	rate?: string;
-};
+import { createService, getServiceActionErrors } from '~/utils/service';
 
 export async function clientAction({ request }: ActionFunctionArgs) {
 	try {
@@ -23,15 +17,7 @@ export async function clientAction({ request }: ActionFunctionArgs) {
 		return redirect('/services');
 	} catch (err) {
 		if (err instanceof z.ZodError) {
-			const zodErrors: CreateServiceSchemaErrors = err.format();
-			const errors: ActionErrors = {};
-
-			if (zodErrors.name?._errors?.[0]) {
-				errors.name = zodErrors.name._errors[0];
-			}
-			if (zodErrors.rate?._errors?.[0]) {
-				errors.rate = zodErrors.rate._errors[0];
-			}
+			const errors = getServiceActionErrors<'create'>(err);
 
 			return {
 				errors,

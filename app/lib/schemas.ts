@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const createCompamySchema = z.object({
+export const createCompanySchema = z.object({
 	id: z.string(),
 	name: z.string().min(1, 'Name is required'),
 	email: z.string().email(),
@@ -25,11 +25,11 @@ export const createCompamySchema = z.object({
 	createdAt: z.string(),
 	updatedAt: z.string(),
 });
-export const updateCompanySchema = createCompamySchema.omit({
+export const updateCompanySchema = createCompanySchema.omit({
 	createdAt: true,
 });
 export type CreateCompanySchemaErrors = z.inferFormattedError<
-	typeof createCompamySchema
+	typeof createCompanySchema
 >;
 export type UpdateCompanySchemaErrors = z.inferFormattedError<
 	typeof updateCompanySchema

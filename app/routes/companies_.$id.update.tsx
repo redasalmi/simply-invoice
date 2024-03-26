@@ -22,18 +22,9 @@ import { Button } from '~/components/ui/button';
 import { labelVariants } from '~/components/ui/label';
 import { Skeleton } from '~/components/ui/skeleton';
 import { db } from '~/lib/db';
-import type { UpdateCompanySchemaErrors } from '~/lib/schemas';
 import type { CustomField, Field } from '~/lib/types';
-import { updateCompany } from '~/utils/company';
+import { getCompanyActionErrors, updateCompany } from '~/utils/company';
 import { cn } from '~/utils/shared';
-
-type ActionErrors = {
-	name?: string;
-	email?: string;
-	address1?: string;
-	country?: string;
-	custom?: Record<string, { label?: string; content?: string }>;
-};
 
 export async function clientLoader({ params }: ClientLoaderFunctionArgs) {
 	invariant(params.id, 'Company ID is required');
@@ -60,43 +51,7 @@ export async function clientAction({
 		return redirect('/companies');
 	} catch (err) {
 		if (err instanceof z.ZodError) {
-			const zodErrors: UpdateCompanySchemaErrors = err.format();
-			const customErrors: Record<string, { label?: string; content?: string }> =
-				{};
-
-			if (zodErrors.custom) {
-				for (const [key, value] of Object.entries(zodErrors.custom)) {
-					if (key === '_errors') {
-						continue;
-					}
-
-					customErrors[key] = {};
-					if (value?.label?._errors?.[0]) {
-						customErrors[key].label = value?.label?._errors?.[0];
-					}
-
-					if (value?.content?._errors?.[0]) {
-						customErrors[key].content = value?.content?._errors?.[0];
-					}
-				}
-			}
-
-			const errors: ActionErrors = {};
-			if (zodErrors.name?._errors?.[0]) {
-				errors.name = zodErrors.name._errors[0];
-			}
-			if (zodErrors.email?._errors?.[0]) {
-				errors.email = zodErrors.email._errors[0];
-			}
-			if (zodErrors.address?.address1?._errors?.[0]) {
-				errors.address1 = zodErrors.address.address1._errors[0];
-			}
-			if (zodErrors.address?.country?._errors?.[0]) {
-				errors.country = zodErrors.address.country._errors[0];
-			}
-			if (Object.keys(customErrors).length) {
-				errors.custom = customErrors;
-			}
+			const errors = getCompanyActionErrors<'update'>(err);
 
 			return {
 				errors,

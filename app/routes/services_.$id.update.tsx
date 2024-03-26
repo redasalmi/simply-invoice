@@ -18,15 +18,9 @@ import { Button } from '~/components/ui/button';
 import { labelVariants } from '~/components/ui/label';
 import { Skeleton } from '~/components/ui/skeleton';
 import { db } from '~/lib/db';
-import type { UpdateServiceSchemaErrors } from '~/lib/schemas';
 import type { Field } from '~/lib/types';
-import { updateService } from '~/utils/service';
+import { getServiceActionErrors, updateService } from '~/utils/service';
 import { cn } from '~/utils/shared';
-
-type ActionErrors = {
-	name?: string;
-	rate?: string;
-};
 
 export async function clientLoader({ params }: ClientLoaderFunctionArgs) {
 	invariant(params.id, 'Service ID is required');
@@ -52,15 +46,7 @@ export async function clientAction({
 		return redirect('/services');
 	} catch (err) {
 		if (err instanceof z.ZodError) {
-			const zodErrors: UpdateServiceSchemaErrors = err.format();
-			const errors: ActionErrors = {};
-
-			if (zodErrors.name?._errors?.[0]) {
-				errors.name = zodErrors.name._errors[0];
-			}
-			if (zodErrors.rate?._errors?.[0]) {
-				errors.rate = zodErrors.rate._errors[0];
-			}
+			const errors = getServiceActionErrors<'update'>(err);
 
 			return {
 				errors,
