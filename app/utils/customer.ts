@@ -24,7 +24,7 @@ type ActionErrors = {
 };
 
 export const createCustomer = (formData: ParsedQuery<string>) => {
-	const today = new Date().toLocaleDateString();
+	const today = new Date().toISOString();
 	const customFields = extractCustomFields(formData);
 	const newCustomer = createCustomerSchema.parse({
 		id: ulid(),
@@ -52,7 +52,7 @@ export const updateCustomer = (
 	customerId: string,
 	formData: ParsedQuery<string>,
 ) => {
-	const today = new Date().toLocaleDateString();
+	const today = new Date().toISOString();
 	const customFields = extractCustomFields(formData);
 	const updatedCustomer = updateCustomerSchema.parse({
 		id: customerId,

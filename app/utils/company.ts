@@ -24,7 +24,7 @@ type ActionErrors = {
 };
 
 export const createCompany = (formData: ParsedQuery<string>) => {
-	const today = new Date().toLocaleDateString();
+	const today = new Date().toISOString();
 	const customFields = extractCustomFields(formData);
 	const newCompany = createCompanySchema.parse({
 		id: ulid(),
@@ -52,7 +52,7 @@ export const updateCompany = (
 	companyId: string,
 	formData: ParsedQuery<string>,
 ) => {
-	const today = new Date().toLocaleDateString();
+	const today = new Date().toISOString();
 	const customFields = extractCustomFields(formData);
 	const updatedCompany = updateCompanySchema.parse({
 		id: companyId,

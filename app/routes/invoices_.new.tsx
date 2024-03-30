@@ -162,7 +162,7 @@ export async function clientAction({ serverAction }: ClientActionFunctionArgs) {
 		return data;
 	}
 
-	const today = new Date().toLocaleDateString();
+	const today = new Date().toISOString();
 	const newInvoice = Object.assign(
 		{
 			id: ulid(),

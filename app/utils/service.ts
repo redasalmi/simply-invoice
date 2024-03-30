@@ -17,7 +17,7 @@ type ActionErrors = {
 };
 
 export const createService = (formData: FormData) => {
-	const today = new Date().toLocaleDateString();
+	const today = new Date().toISOString();
 	const newService = createServiceSchema.parse({
 		id: ulid(),
 		name: formData.get('name')?.toString(),
@@ -31,7 +31,7 @@ export const createService = (formData: FormData) => {
 };
 
 export const updateService = (serviceId: string, formData: FormData) => {
-	const today = new Date().toLocaleDateString();
+	const today = new Date().toISOString();
 	const updatedService = updateServiceSchema.parse({
 		id: serviceId,
 		name: formData.get('name')?.toString(),
