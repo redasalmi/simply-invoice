@@ -1,3 +1,4 @@
+import * as React from 'react';
 import {
 	type ClientActionFunctionArgs,
 	type ClientLoaderFunctionArgs,
@@ -15,6 +16,7 @@ import { UncontrolledFormField } from '~/components/FormField';
 import { Button } from '~/components/ui/button';
 import { labelVariants } from '~/components/ui/label';
 import { Skeleton } from '~/components/ui/skeleton';
+import { useToast } from '~/components/ui/use-toast';
 import { db } from '~/lib/db';
 import type { Field } from '~/lib/types';
 import { getServiceActionErrors, updateService } from '~/utils/service';
@@ -85,8 +87,28 @@ const rateId = nanoid();
 export default function ServiceUpdateRoute() {
 	const { service } = useLoaderData<typeof clientLoader>();
 	const actionData = useActionData<typeof clientAction>();
+	const { toast } = useToast();
+	const dismissRef = React.useRef<(() => void) | null>(null);
+
 	const navigation = useNavigation();
 	const isLoading = navigation.state !== 'idle';
+	const isSubmitting = navigation.state === 'submitting';
+
+	React.useEffect(() => {
+		if (isSubmitting) {
+			dismissRef.current = toast({
+				title: 'Updating Service',
+			}).dismiss;
+		}
+	}, [toast, isSubmitting]);
+
+	React.useEffect(() => {
+		return () => {
+			if (dismissRef.current) {
+				dismissRef.current();
+			}
+		};
+	}, []);
 
 	if (!service) {
 		return (
@@ -151,7 +173,7 @@ export default function ServiceUpdateRoute() {
 					/>
 				))}
 
-				<Button type="submit">
+				<Button disabled={isSubmitting} type="submit">
 					{isLoading ? 'Updating Service...' : 'Update Service'}
 				</Button>
 			</Form>
