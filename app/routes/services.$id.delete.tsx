@@ -65,6 +65,7 @@ export default function ServiceDeleteRoute() {
 	const navigate = useNavigate();
 	const navigation = useNavigation();
 	const isLoading = navigation.state !== 'idle';
+	const isSubmitting = navigation.state === 'submitting';
 
 	const closeAlert = () => {
 		navigate('/services');
@@ -98,9 +99,11 @@ export default function ServiceDeleteRoute() {
 							</AlertDialogDescription>
 						</AlertDialogHeader>
 						<AlertDialogFooter>
-							<AlertDialogCancel onClick={closeAlert}>Cancel</AlertDialogCancel>
+							<AlertDialogCancel disabled={isSubmitting} onClick={closeAlert}>
+								Cancel
+							</AlertDialogCancel>
 							<Form method="POST">
-								<AlertDialogAction type="submit">
+								<AlertDialogAction disabled={isSubmitting} type="submit">
 									{isLoading ? '...Deleting' : 'Delete'}
 								</AlertDialogAction>
 							</Form>
