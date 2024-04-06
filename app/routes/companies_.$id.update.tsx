@@ -17,13 +17,11 @@ import { z } from 'zod';
 import { AddFormField } from '~/components/AddFormField';
 import { FormField, UncontrolledFormField } from '~/components/FormField';
 import { Button } from '~/components/ui/button';
-import { labelVariants } from '~/components/ui/label';
 import { Skeleton } from '~/components/ui/skeleton';
 import { useToast } from '~/components/ui/use-toast';
 import { db } from '~/lib/db';
 import type { CustomField, Field } from '~/lib/types';
 import { getCompanyActionErrors, updateCompany } from '~/utils/company';
-import { cn } from '~/utils/shared';
 
 export async function clientLoader({ params }: ClientLoaderFunctionArgs) {
 	invariant(params.id, 'Company ID is required');
@@ -64,11 +62,15 @@ export function HydrateFallback() {
 		<section>
 			<div>
 				<div className="my-2">
-					<p className={cn(labelVariants(), 'mb-1')}>Name *</p>
+					<p className="mb-1 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+						Name *
+					</p>
 					<Skeleton className="h-10" />
 				</div>
 				<div className="my-2">
-					<p className={cn(labelVariants(), 'mb-1')}>Email *</p>
+					<p className="mb-1 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+						Email *
+					</p>
 					<Skeleton className="h-10" />
 				</div>
 			</div>
@@ -77,27 +79,39 @@ export function HydrateFallback() {
 				<h3 className="text-2xl">Address</h3>
 
 				<div className="my-2">
-					<p className={cn(labelVariants(), 'mb-1')}>Address 1 *</p>
+					<p className="mb-1 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+						Address 1 *
+					</p>
 					<Skeleton className="h-10" />
 				</div>
 				<div className="my-2">
-					<p className={cn(labelVariants(), 'mb-1')}>Address 2</p>
+					<p className="mb-1 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+						Address 2
+					</p>
 					<Skeleton className="h-10" />
 				</div>
 				<div className="my-2">
-					<p className={cn(labelVariants(), 'mb-1')}>Country *</p>
+					<p className="mb-1 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+						Country *
+					</p>
 					<Skeleton className="h-10" />
 				</div>
 				<div className="my-2">
-					<p className={cn(labelVariants(), 'mb-1')}>Province</p>
+					<p className="mb-1 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+						Province
+					</p>
 					<Skeleton className="h-10" />
 				</div>
 				<div className="my-2">
-					<p className={cn(labelVariants(), 'mb-1')}>City</p>
+					<p className="mb-1 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+						City
+					</p>
 					<Skeleton className="h-10" />
 				</div>
 				<div className="my-2">
-					<p className={cn(labelVariants(), 'mb-1')}>Zip</p>
+					<p className="mb-1 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+						Zip
+					</p>
 					<Skeleton className="h-10" />
 				</div>
 			</div>

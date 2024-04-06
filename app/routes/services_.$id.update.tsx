@@ -14,13 +14,11 @@ import invariant from 'tiny-invariant';
 import { z } from 'zod';
 import { UncontrolledFormField } from '~/components/FormField';
 import { Button } from '~/components/ui/button';
-import { labelVariants } from '~/components/ui/label';
 import { Skeleton } from '~/components/ui/skeleton';
 import { useToast } from '~/components/ui/use-toast';
 import { db } from '~/lib/db';
 import type { Field } from '~/lib/types';
 import { getServiceActionErrors, updateService } from '~/utils/service';
-import { cn } from '~/utils/shared';
 
 export async function clientLoader({ params }: ClientLoaderFunctionArgs) {
 	invariant(params.id, 'Service ID is required');
@@ -60,15 +58,21 @@ export function HydrateFallback() {
 		<section>
 			<div>
 				<div className="my-2">
-					<p className={cn(labelVariants(), 'mb-1')}>Name *</p>
+					<p className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+						Name *
+					</p>
 					<Skeleton className="h-10" />
 				</div>
 				<div className="my-2">
-					<p className={cn(labelVariants(), 'mb-1')}>Description</p>
+					<p className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+						Description
+					</p>
 					<Skeleton className="h-10" />
 				</div>
 				<div className="my-2">
-					<p className={cn(labelVariants(), 'mb-1')}>Rate *</p>
+					<p className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+						Rate *
+					</p>
 					<Skeleton className="h-10" />
 				</div>
 			</div>
