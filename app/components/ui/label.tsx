@@ -1,23 +1,23 @@
 import * as React from 'react';
+import { cn } from '~/utils/shared';
 
 type Ref = HTMLLabelElement;
-type Props = React.ComponentPropsWithoutRef<'label'> & {
-	children: React.ReactNode;
-};
+type Props = React.ComponentPropsWithoutRef<'label'>;
 
-const Label = React.forwardRef<Ref, Props>(function Label(
-	{ children, ...props },
+export const Label = React.forwardRef<Ref, Props>(function Label(
+	{ className, children, ...props },
 	ref,
 ) {
 	return (
 		<label
 			ref={ref}
-			className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+			className={cn(
+				'text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
+				className,
+			)}
 			{...props}
 		>
 			{children}
 		</label>
 	);
 });
-
-export { Label };

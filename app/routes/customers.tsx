@@ -1,6 +1,5 @@
 import { Link, Outlet, useLoaderData } from '@remix-run/react';
 import { Eye, Pencil, Trash } from 'lucide-react';
-import { buttonVariants } from '~/components/ui/button';
 import {
 	Table,
 	TableBody,
@@ -10,7 +9,6 @@ import {
 	TableRow,
 } from '~/components/ui/table';
 import { db, getPage } from '~/lib/db';
-import { cn } from '~/utils/shared';
 
 export async function clientLoader() {
 	return {
@@ -24,10 +22,7 @@ export function HydrateFallback() {
 			<div className="flex justify-end">
 				<Link
 					to="/customers/new"
-					className={cn(
-						'rounded-lg bg-blue-300 px-4 py-2',
-						buttonVariants({ variant: 'default' }),
-					)}
+					className={'rounded-lg bg-blue-300 px-4 py-2'}
 				>
 					Create New Customer
 				</Link>
@@ -45,10 +40,7 @@ export default function CustomersRoute() {
 				<div className="flex justify-end">
 					<Link
 						to="/customers/new"
-						className={cn(
-							'rounded-lg bg-blue-300 px-4 py-2',
-							buttonVariants({ variant: 'default' }),
-						)}
+						className={'rounded-lg bg-blue-300 px-4 py-2'}
 					>
 						Create New Customer
 					</Link>

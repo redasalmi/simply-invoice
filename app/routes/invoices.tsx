@@ -1,5 +1,4 @@
 import { Link, useLoaderData } from '@remix-run/react';
-import { buttonVariants } from '~/components/ui/button';
 import {
 	Table,
 	TableBody,
@@ -9,7 +8,6 @@ import {
 	TableRow,
 } from '~/components/ui/table';
 import { db, getPage } from '~/lib/db';
-import { cn } from '~/utils/shared';
 
 export async function clientLoader() {
 	return {
@@ -21,13 +19,7 @@ export function HydrateFallback() {
 	return (
 		<section>
 			<div className="flex justify-end">
-				<Link
-					to="/invoices/new"
-					className={cn(
-						'rounded-lg bg-blue-300 px-4 py-2',
-						buttonVariants({ variant: 'default' }),
-					)}
-				>
+				<Link to="/invoices/new" className={'rounded-lg bg-blue-300 px-4 py-2'}>
 					Create New Invoice
 				</Link>
 			</div>
@@ -47,13 +39,7 @@ export default function InvoicesRoutes() {
 	return (
 		<section>
 			<div className="flex justify-end">
-				<Link
-					to="/invoices/new"
-					className={cn(
-						'rounded-lg bg-blue-300 px-4 py-2',
-						buttonVariants({ variant: 'default' }),
-					)}
-				>
+				<Link to="/invoices/new" className={'rounded-lg bg-blue-300 px-4 py-2'}>
 					Create New Invoice
 				</Link>
 			</div>
