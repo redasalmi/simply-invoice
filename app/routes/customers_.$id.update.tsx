@@ -18,7 +18,6 @@ import { AddFormField } from '~/components/AddFormField';
 import { FormField, UncontrolledFormField } from '~/components/FormField';
 import { Button } from '~/components/ui/button';
 import { Skeleton } from '~/components/ui/skeleton';
-import { useToast } from '~/components/ui/use-toast';
 import { db } from '~/lib/db';
 import type { CustomField, Field } from '~/lib/types';
 import { getCustomerActionErrors, updateCustomer } from '~/utils/customer';
@@ -145,28 +144,28 @@ const zipId = nanoid();
 export default function CustomerUpdateRoute() {
 	const { customer } = useLoaderData<typeof clientLoader>();
 	const actionData = useActionData<typeof clientAction>();
-	const { toast } = useToast();
-	const dismissRef = React.useRef<(() => void) | null>(null);
+	// const { toast } = useToast();
+	// const dismissRef = React.useRef<(() => void) | null>(null);
 
 	const navigation = useNavigation();
 	const isLoading = navigation.state !== 'idle';
 	const isSubmitting = navigation.state === 'submitting';
 
-	React.useEffect(() => {
-		if (isSubmitting) {
-			dismissRef.current = toast({
-				title: 'Updating Customer',
-			}).dismiss;
-		}
-	}, [toast, isSubmitting]);
+	// React.useEffect(() => {
+	// 	if (isSubmitting) {
+	// 		dismissRef.current = toast({
+	// 			title: 'Updating Customer',
+	// 		}).dismiss;
+	// 	}
+	// }, [toast, isSubmitting]);
 
-	React.useEffect(() => {
-		return () => {
-			if (dismissRef.current) {
-				dismissRef.current();
-			}
-		};
-	}, []);
+	// React.useEffect(() => {
+	// 	return () => {
+	// 		if (dismissRef.current) {
+	// 			dismissRef.current();
+	// 		}
+	// 	};
+	// }, []);
 
 	const [formFields, setFormFields] = React.useState<Array<CustomField>>([]);
 

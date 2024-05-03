@@ -8,7 +8,6 @@ import {
 } from '@remix-run/react';
 import { Footer } from '~/components/Footer';
 import { Navbar } from '~/components/Navbar';
-import { Toaster } from '~/components/ui/toaster';
 import styles from '~/tailwind.css?url';
 
 export const links = () => {
@@ -32,7 +31,6 @@ export function Layout({ children }: LayoutProps) {
 				<Navbar />
 				<main className="container mx-auto py-8">{children}</main>
 				<Footer />
-				<Toaster />
 				<ScrollRestoration />
 				<Scripts />
 			</body>

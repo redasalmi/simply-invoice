@@ -5,7 +5,6 @@ import { nanoid } from 'nanoid';
 import { z } from 'zod';
 import { UncontrolledFormField } from '~/components/FormField';
 import { Button } from '~/components/ui/button';
-import { useToast } from '~/components/ui/use-toast';
 import { db } from '~/lib/db';
 import type { Field } from '~/lib/types';
 import { createService, getServiceActionErrors } from '~/utils/service';
@@ -55,28 +54,28 @@ const servicesFields: Array<Field> = [
 
 export default function NewServiceRoute() {
 	const actionData = useActionData<typeof clientAction>();
-	const { toast } = useToast();
-	const dismissRef = React.useRef<(() => void) | null>(null);
+	// const { toast } = useToast();
+	// const dismissRef = React.useRef<(() => void) | null>(null);
 
 	const navigation = useNavigation();
 	const isLoading = navigation.state !== 'idle';
 	const isSubmitting = navigation.state === 'submitting';
 
-	React.useEffect(() => {
-		if (isSubmitting) {
-			dismissRef.current = toast({
-				title: 'Saving Service',
-			}).dismiss;
-		}
-	}, [toast, isSubmitting]);
+	// React.useEffect(() => {
+	// 	if (isSubmitting) {
+	// 		dismissRef.current = toast({
+	// 			title: 'Saving Service',
+	// 		}).dismiss;
+	// 	}
+	// }, [toast, isSubmitting]);
 
-	React.useEffect(() => {
-		return () => {
-			if (dismissRef.current) {
-				dismissRef.current();
-			}
-		};
-	}, []);
+	// React.useEffect(() => {
+	// 	return () => {
+	// 		if (dismissRef.current) {
+	// 			dismissRef.current();
+	// 		}
+	// 	};
+	// }, []);
 
 	return (
 		<section>
