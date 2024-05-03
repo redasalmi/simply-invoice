@@ -105,9 +105,6 @@ importers:
       '@remix-run/dev':
         specifier: ^2.9.1
         version: 2.9.1(@remix-run/react@2.9.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.4.5))(@remix-run/serve@2.9.1(typescript@5.4.5))(@types/node@20.12.8)(babel-plugin-macros@3.1.0)(typescript@5.4.5)(vite@5.2.11(@types/node@20.12.8))
-      '@trivago/prettier-plugin-sort-imports':
-        specifier: ^4.3.0
-        version: 4.3.0(prettier@3.2.5)
       '@types/react':
         specifier: ^18.3.1
         version: 18.3.1
@@ -5484,6 +5481,7 @@ snapshots:
       '@babel/types': 7.17.0
       jsesc: 2.5.2
       source-map: 0.5.7
+    optional: true
 
   '@babel/generator@7.24.5':
     dependencies:
@@ -5658,6 +5656,7 @@ snapshots:
       globals: 11.12.0
     transitivePeerDependencies:
       - supports-color
+    optional: true
 
   '@babel/traverse@7.24.5':
     dependencies:
@@ -5678,6 +5677,7 @@ snapshots:
     dependencies:
       '@babel/helper-validator-identifier': 7.24.5
       to-fast-properties: 2.0.0
+    optional: true
 
   '@babel/types@7.24.5':
     dependencies:
@@ -7283,6 +7283,7 @@ snapshots:
       prettier: 3.2.5
     transitivePeerDependencies:
       - supports-color
+    optional: true
 
   '@trysound/sax@0.2.0': {}
 
@@ -9199,7 +9200,8 @@ snapshots:
     optionalDependencies:
       '@pkgjs/parseargs': 0.11.0
 
-  javascript-natural-sort@0.7.1: {}
+  javascript-natural-sort@0.7.1:
+    optional: true
 
   javascript-stringify@2.1.0: {}
 

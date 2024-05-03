@@ -17,20 +17,7 @@
 	"trailingComma": "all",
 	"useTabs": true,
 	"plugins": [
-		"@trivago/prettier-plugin-sort-imports",
 		"prettier-plugin-tailwindcss"
 	],
-	"importOrder": [
-		"^react",
-		"<THIRD_PARTY_MODULES>",
-		"^~/components",
-		"^~/hooks",
-		"^~/lib",
-		"^~/utils",
-		"^~/tailwind"
-	],
-	"importOrderSeparation": false,
-	"importOrderSortSpecifiers": true,
-	"importOrderCaseInsensitive": true,
 	"tailwindConfig": "./tailwind.config.ts"
 }
