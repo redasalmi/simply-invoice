@@ -5,5 +5,14 @@ import { defineConfig } from 'vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
 export default defineConfig({
-	plugins: [remixDevTools(), remix(), netlifyPlugin(), tsconfigPaths()],
+	plugins: [
+		remixDevTools(),
+		remix({
+			future: {
+				unstable_singleFetch: true,
+			},
+		}),
+		netlifyPlugin(),
+		tsconfigPaths(),
+	],
 });
