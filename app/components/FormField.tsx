@@ -4,12 +4,6 @@ import { Button } from '~/components/ui/button';
 import { Input } from '~/components/ui/input';
 import { Label } from '~/components/ui/label';
 import { Switch } from '~/components/ui/switch';
-import {
-	Tooltip,
-	TooltipContent,
-	TooltipProvider,
-	TooltipTrigger,
-} from '~/components/ui/tooltip';
 import type { CustomField, Field } from '~/lib/types';
 import { cn } from '~/utils/shared';
 
@@ -36,7 +30,6 @@ export function UncontrolledFormField({
 					id={id}
 					autoComplete="off"
 					name={inputName}
-					variant={error ? 'error' : 'default'}
 					{...formField.input}
 				/>
 			</div>
@@ -111,7 +104,6 @@ export function FormField({
 					name={`custom-label-${id}`}
 					value={label}
 					onChange={handleLabelChange}
-					variant={formField.labelError ? 'error' : 'default'}
 				/>
 			</div>
 
@@ -130,65 +122,31 @@ export function FormField({
 					value={content}
 					onChange={handleContentChange}
 					className="mr-4"
-					variant={formField.contentError ? 'error' : 'default'}
 				/>
 			</div>
 
 			<div className="mt-auto flex">
-				<TooltipProvider>
-					<Tooltip>
-						<TooltipTrigger asChild>
-							<div className="flex items-center justify-center">
-								<Switch
-									name={`custom-show-label-${id}`}
-									checked={showLabel}
-									aria-label={switchTooltip}
-									onCheckedChange={handleSwitchChange}
-								/>
-							</div>
-						</TooltipTrigger>
-						<TooltipContent>
-							<p>{switchTooltip}</p>
-						</TooltipContent>
-					</Tooltip>
-				</TooltipProvider>
+				<div className="flex items-center justify-center">
+					<Switch
+						name={`custom-show-label-${id}`}
+						checked={showLabel}
+						aria-label={switchTooltip}
+						onCheckedChange={handleSwitchChange}
+					/>
+				</div>
 
-				<TooltipProvider>
-					<Tooltip>
-						<TooltipTrigger asChild>
-							<Button
-								type="button"
-								variant="ghost"
-								aria-label={dragFieldText}
-								className="px-2"
-							>
-								<Grip />
-							</Button>
-						</TooltipTrigger>
-						<TooltipContent>
-							<p>{dragFieldText}</p>
-						</TooltipContent>
-					</Tooltip>
-				</TooltipProvider>
+				<Button type="button" aria-label={dragFieldText} className="px-2">
+					<Grip />
+				</Button>
 
-				<TooltipProvider>
-					<Tooltip>
-						<TooltipTrigger asChild>
-							<Button
-								type="button"
-								variant="ghost"
-								aria-label={deleteFieldText}
-								className="p-0"
-								onClick={removeFormField}
-							>
-								<Trash2 />
-							</Button>
-						</TooltipTrigger>
-						<TooltipContent>
-							<p>{deleteFieldText}</p>
-						</TooltipContent>
-					</Tooltip>
-				</TooltipProvider>
+				<Button
+					type="button"
+					aria-label={deleteFieldText}
+					className="p-0"
+					onClick={removeFormField}
+				>
+					<Trash2 />
+				</Button>
 			</div>
 		</div>
 	);
