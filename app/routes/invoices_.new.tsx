@@ -13,7 +13,6 @@ import { ulid } from 'ulid';
 import { z } from 'zod';
 import { InvoicePdf } from '~/components/InvoicePdf';
 import { Combobox } from '~/components/ui/combobox';
-import { DatePicker } from '~/components/ui/date-picker';
 import { Input } from '~/components/ui/input';
 import { Label } from '~/components/ui/label';
 import { Textarea } from '~/components/ui/textarea';
@@ -274,13 +273,13 @@ export default function NewInvoiceRoute() {
 
 				<div className="my-4 flex gap-3">
 					<div>
-						<p>Invoice Date</p>
-						<DatePicker inputName="invoice-date" />
+						<Label htmlFor="invoice-date">Invoice Date</Label>
+						<input type="date" name="invoice-date" id="invoice-date" />
 					</div>
 
 					<div>
-						<p>Due Date</p>
-						<DatePicker inputName="due-date" />
+						<Label htmlFor="due-date"> Due Date</Label>
+						<input type="date" name="due-date" id="due-date" />
 					</div>
 				</div>
 
