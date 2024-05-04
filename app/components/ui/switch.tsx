@@ -1,26 +1,60 @@
 import * as React from 'react';
-import * as SwitchPrimitives from '@radix-ui/react-switch';
 import { cn } from '~/utils/shared';
 
-const Switch = React.forwardRef<
-	React.ElementRef<typeof SwitchPrimitives.Root>,
-	React.ComponentPropsWithoutRef<typeof SwitchPrimitives.Root>
->(({ className, ...props }, ref) => (
-	<SwitchPrimitives.Root
-		className={cn(
-			'peer inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=unchecked]:bg-input',
-			className,
-		)}
-		{...props}
-		ref={ref}
-	>
-		<SwitchPrimitives.Thumb
-			className={cn(
-				'pointer-events-none block h-5 w-5 rounded-full bg-background shadow-lg ring-0 transition-transform data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-0',
-			)}
-		/>
-	</SwitchPrimitives.Root>
-));
-Switch.displayName = SwitchPrimitives.Root.displayName;
+type Ref = HTMLButtonElement;
+type Props = React.ComponentPropsWithRef<'button'> & {
+	checked?: boolean;
+	onCheckedChange: (checked: boolean) => void;
+};
 
-export { Switch };
+export const Switch = React.forwardRef<Ref, Props>(function Switch(
+	{ className, name, checked, onCheckedChange, ...props },
+	ref,
+) {
+	const inputRef = React.useRef<HTMLInputElement>(null!);
+
+	const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+		const element = event.currentTarget;
+		const isChecked = element.getAttribute('aria-checked') === 'true';
+
+		if (isChecked) {
+			element.removeAttribute('aria-checked');
+			inputRef.current.removeAttribute('checked');
+		} else {
+			element.setAttribute('aria-checked', 'true');
+			inputRef.current.setAttribute('checked', 'true');
+		}
+
+		onCheckedChange(!isChecked);
+	};
+
+	React.useEffect(() => {
+		inputRef.current.checked = Boolean(checked);
+	}, [checked]);
+
+	return (
+		<button
+			ref={ref}
+			role="switch"
+			type="button"
+			aria-checked={checked}
+			className={cn(
+				'group relative h-6 w-11 rounded-3xl bg-input outline-offset-2 aria-checked:bg-black',
+				className,
+			)}
+			onClick={handleClick}
+			{...props}
+		>
+			<span className="absolute inset-[2px] h-5 w-5 rounded-3xl bg-white transition-all group-aria-checked:inset-x-[22px]" />
+			<input
+				ref={inputRef}
+				name={name}
+				type="checkbox"
+				tabIndex={-1}
+				aria-hidden
+				defaultChecked={checked}
+				className="hidden"
+			/>
+		</button>
+	);
+});
