@@ -12,7 +12,6 @@ import queryString from 'query-string';
 import { ulid } from 'ulid';
 import { z } from 'zod';
 import { InvoicePdf } from '~/components/InvoicePdf';
-import { Combobox } from '~/components/ui/combobox';
 import { Input } from '~/components/ui/input';
 import { Label } from '~/components/ui/label';
 import { Textarea } from '~/components/ui/textarea';
@@ -234,13 +233,13 @@ export default function NewInvoiceRoute() {
 			<fetcher.Form method="post">
 				<div className="my-4 flex gap-3">
 					<div>
-						<Combobox
+						{/* <Combobox
 							label="ID type"
 							inputName="invoice-id-type"
 							inputPlaceholder="Choose Invoice ID Type"
 							list={idTypes}
 							onSelectCallback={handleInvoiceIdTypeChange}
-						/>
+						/> */}
 					</div>
 
 					<div>
@@ -253,21 +252,21 @@ export default function NewInvoiceRoute() {
 
 				<div className="my-4 flex gap-3">
 					<div>
-						<Combobox
+						{/* <Combobox
 							label="Invoice Language"
 							inputName="locale"
 							inputPlaceholder="Choose a Language"
 							list={locales}
-						/>
+						/> */}
 					</div>
 
 					<div>
-						<Combobox
+						{/* <Combobox
 							label="Currency"
 							inputName="country-code"
 							inputPlaceholder="Choose a Currency"
 							list={currencies}
-						/>
+						/> */}
 					</div>
 				</div>
 
@@ -285,21 +284,21 @@ export default function NewInvoiceRoute() {
 
 				<div className="my-4 flex gap-3">
 					<div>
-						<Combobox
+						{/* <Combobox
 							label="Company"
 							inputName="company-id"
 							inputPlaceholder="Choose a Company"
 							list={companies}
-						/>
+						/> */}
 					</div>
 
 					<div>
-						<Combobox
+						{/* <Combobox
 							label="Customer"
 							inputName="customer-id"
 							inputPlaceholder="Choose a Customer"
 							list={customers}
-						/>
+						/> */}
 					</div>
 				</div>
 
