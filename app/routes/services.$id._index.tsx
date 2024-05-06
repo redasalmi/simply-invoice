@@ -27,8 +27,8 @@ export default function ServiceRoute() {
 	};
 
 	return (
-		<Dialog open onOpenChange={closeDialog}>
-			<DialogContent className="h-full max-h-[80%] max-w-[80%]">
+		<Dialog open closeDialogCallback={closeDialog}>
+			<DialogContent>
 				{!service ? (
 					<div>
 						<p className="m-12">

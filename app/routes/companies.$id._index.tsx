@@ -27,8 +27,8 @@ export default function CompanyRoute() {
 	};
 
 	return (
-		<Dialog open onOpenChange={closeDialog}>
-			<DialogContent className="h-full max-h-[80%] max-w-[80%]">
+		<Dialog open closeDialogCallback={closeDialog}>
+			<DialogContent>
 				{!company ? (
 					<div>
 						<p className="m-12">
