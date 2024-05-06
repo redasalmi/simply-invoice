@@ -27,7 +27,7 @@ export default function CompanyRoute() {
 	};
 
 	return (
-		<Dialog open closeDialogCallback={closeDialog}>
+		<Dialog open closeDialog={closeDialog}>
 			<DialogContent>
 				{!company ? (
 					<div>

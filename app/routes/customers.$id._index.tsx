@@ -27,7 +27,7 @@ export default function CustomerRoute() {
 	};
 
 	return (
-		<Dialog open closeDialogCallback={closeDialog}>
+		<Dialog open closeDialog={closeDialog}>
 			<DialogContent>
 				{!customer ? (
 					<div>

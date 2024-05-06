@@ -27,7 +27,7 @@ export default function ServiceRoute() {
 	};
 
 	return (
-		<Dialog open closeDialogCallback={closeDialog}>
+		<Dialog open closeDialog={closeDialog}>
 			<DialogContent>
 				{!service ? (
 					<div>
