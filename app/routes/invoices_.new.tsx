@@ -15,6 +15,7 @@ import { InvoicePdf } from '~/components/InvoicePdf';
 import { Input } from '~/components/ui/input';
 import { Label } from '~/components/ui/label';
 import { Textarea } from '~/components/ui/textarea';
+import { ComboBox, type Option } from '~/components/ui/combobox';
 import {
 	type IdType,
 	idTypes,
@@ -215,7 +216,8 @@ export default function NewInvoiceRoute() {
 		);
 	}
 
-	const handleInvoiceIdTypeChange = (idType: IdType) => {
+	const handleInvoiceIdTypeChange = (option: Option | null) => {
+		const idType = option?.value as IdType;
 		let invoiceId: string | null = null;
 		if (idType === 'incremental') {
 			invoiceId = String(lastInvoiceId + 1);
@@ -233,13 +235,16 @@ export default function NewInvoiceRoute() {
 			<fetcher.Form method="post">
 				<div className="my-4 flex gap-3">
 					<div>
-						{/* <Combobox
-							label="ID type"
-							inputName="invoice-id-type"
-							inputPlaceholder="Choose Invoice ID Type"
-							list={idTypes}
-							onSelectCallback={handleInvoiceIdTypeChange}
-						/> */}
+						<Label htmlFor="invoice-id-type">Invoice ID Type</Label>
+						<ComboBox
+							options={idTypes}
+							input={{
+								id: 'invoice-id-type',
+								name: 'invoice-id-type',
+								placeholder: 'Choose Invoice ID Type',
+							}}
+							onChangeCallback={handleInvoiceIdTypeChange}
+						/>
 					</div>
 
 					<div>
@@ -252,21 +257,27 @@ export default function NewInvoiceRoute() {
 
 				<div className="my-4 flex gap-3">
 					<div>
-						{/* <Combobox
-							label="Invoice Language"
-							inputName="locale"
-							inputPlaceholder="Choose a Language"
-							list={locales}
-						/> */}
+						<Label htmlFor="locale">Invoice Language</Label>
+						<ComboBox
+							options={locales}
+							input={{
+								id: 'locale',
+								name: 'locale',
+								placeholder: 'Choose a Language',
+							}}
+						/>
 					</div>
 
 					<div>
-						{/* <Combobox
-							label="Currency"
-							inputName="country-code"
-							inputPlaceholder="Choose a Currency"
-							list={currencies}
-						/> */}
+						<Label htmlFor="country-code">Currency</Label>
+						<ComboBox
+							options={currencies}
+							input={{
+								id: 'country-code',
+								name: 'country-code',
+								placeholder: 'Choose a Currency',
+							}}
+						/>
 					</div>
 				</div>
 
@@ -284,21 +295,27 @@ export default function NewInvoiceRoute() {
 
 				<div className="my-4 flex gap-3">
 					<div>
-						{/* <Combobox
-							label="Company"
-							inputName="company-id"
-							inputPlaceholder="Choose a Company"
-							list={companies}
-						/> */}
+						<Label htmlFor="company-id">Company</Label>
+						<ComboBox
+							options={companies}
+							input={{
+								id: 'company-id',
+								name: 'company-id',
+								placeholder: 'Choose a Company',
+							}}
+						/>
 					</div>
 
 					<div>
-						{/* <Combobox
-							label="Customer"
-							inputName="customer-id"
-							inputPlaceholder="Choose a Customer"
-							list={customers}
-						/> */}
+						<Label htmlFor="customer-id">Customer</Label>
+						<ComboBox
+							options={companies}
+							input={{
+								id: 'customer-id',
+								name: 'customer-id',
+								placeholder: 'Choose a Customer',
+							}}
+						/>
 					</div>
 				</div>
 
