@@ -284,12 +284,12 @@ export default function NewInvoiceRoute() {
 				<div className="my-4 flex gap-3">
 					<div>
 						<Label htmlFor="invoice-date">Invoice Date</Label>
-						<input type="date" name="invoice-date" id="invoice-date" />
+						<Input type="date" name="invoice-date" id="invoice-date" />
 					</div>
 
 					<div>
-						<Label htmlFor="due-date"> Due Date</Label>
-						<input type="date" name="due-date" id="due-date" />
+						<Label htmlFor="due-date">Due Date</Label>
+						<Input type="date" name="due-date" id="due-date" />
 					</div>
 				</div>
 
