@@ -30,6 +30,7 @@ import {
 	type NewInvoiceLoaderSchemaErrors,
 } from '~/lib/schemas';
 import type { Customer } from '~/lib/types';
+import { ServicesTable } from '~/components/ServicesTable';
 
 export async function clientLoader() {
 	try {
@@ -46,18 +47,9 @@ export async function clientLoader() {
 		});
 
 		return {
-			companies: companies.map(({ id, name }) => ({
-				label: name,
-				value: id,
-			})),
-			customers: customers.map(({ id, name }) => ({
-				label: name,
-				value: id,
-			})),
-			services: services.map(({ id, name }) => ({
-				label: name,
-				value: id,
-			})),
+			companies,
+			customers,
+			services,
 			lastInvoiceId: invoice?.id ? Number(invoice.id) : 0,
 			error: null,
 		};
@@ -181,8 +173,8 @@ export function HydrateFallback() {
 
 const currencies = countries.map(
 	({ countryName, currencySymbol, countryCode }) => ({
-		label: `${countryName} - ${currencySymbol}`,
-		value: countryCode,
+		id: countryCode,
+		name: `${countryName} - ${currencySymbol}`,
 	}),
 );
 
@@ -217,7 +209,7 @@ export default function NewInvoiceRoute() {
 	}
 
 	const handleInvoiceIdTypeChange = (option: Option | null) => {
-		const idType = option?.value as IdType;
+		const idType = option?.id as IdType;
 		let invoiceId: string | null = null;
 		if (idType === 'incremental') {
 			invoiceId = String(lastInvoiceId + 1);
@@ -309,7 +301,7 @@ export default function NewInvoiceRoute() {
 					<div>
 						<Label htmlFor="customer-id">Customer</Label>
 						<ComboBox
-							options={companies}
+							options={customers}
 							input={{
 								id: 'customer-id',
 								name: 'customer-id',
@@ -317,6 +309,10 @@ export default function NewInvoiceRoute() {
 							}}
 						/>
 					</div>
+				</div>
+
+				<div className="my-4">
+					<ServicesTable services={services} />
 				</div>
 
 				<div className="my-4">

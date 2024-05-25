@@ -1,26 +1,26 @@
 export const idTypes = [
 	{
-		label: 'Incremental ID',
-		value: 'incremental',
+		id: 'incremental',
+		name: 'Incremental ID',
 	},
 	{
-		label: 'Random ID',
-		value: 'random',
+		id: 'random',
+		name: 'Random ID',
 	},
 ] as const;
-export type IdType = (typeof idTypes)[number]['value'];
+export type IdType = (typeof idTypes)[number]['id'];
 
 export const locales = [
 	{
-		label: 'English',
-		value: 'en-US',
+		id: 'en-US',
+		name: 'English',
 	},
 	{
-		label: 'French',
-		value: 'fr-FR',
+		id: 'fr-FR',
+		name: 'French',
 	},
 ] as const;
-export type Locale = (typeof locales)[number]['value'];
+export type Locale = (typeof locales)[number]['id'];
 
 export const intents = {
 	preview: 'preview',

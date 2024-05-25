@@ -11,14 +11,14 @@ import { CheckIcon, ChevronDownIcon } from 'lucide-react';
 import { cn } from '~/utils/shared';
 
 export type Option = {
-	label: string;
-	value: string;
+	id: string;
+	name: string;
 };
 
 type Props = React.ComponentPropsWithoutRef<'div'> & {
 	input: React.ComponentPropsWithoutRef<'input'>;
 	options: Array<Option>;
-	onChangeCallback?: (value: Option | null) => void;
+	onChangeCallback?: (option: Option | null) => void;
 };
 
 export function ComboBox({
@@ -35,14 +35,14 @@ export function ComboBox({
 		query === ''
 			? options
 			: options.filter((option) => {
-					return option.label.toLowerCase().includes(query.toLowerCase());
+					return option.name.toLowerCase().includes(query.toLowerCase());
 				});
 
-	const handleOnChange = (value: Option | null) => {
-		setSelected(value);
+	const handleOnChange = (option: Option | null) => {
+		setSelected(option);
 
 		if (onChangeCallback) {
-			onChangeCallback(value);
+			onChangeCallback(option);
 		}
 	};
 
@@ -52,7 +52,7 @@ export function ComboBox({
 				<div className="relative">
 					<ComboboxInput
 						className="w-full rounded-lg border bg-white/5 py-1.5 pl-3 pr-8 text-sm/6 text-black focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25"
-						displayValue={(option) => option?.label}
+						displayValue={(option) => option?.name}
 						onChange={(event) => setQuery(event.target.value)}
 						{...input}
 					/>
@@ -72,11 +72,11 @@ export function ComboBox({
 					>
 						{filteredOptions.map((option) => (
 							<ComboboxOption
-								key={option.value}
+								key={option.id}
 								value={option}
 								className="group z-50 flex cursor-default select-none items-center gap-2 rounded-lg bg-white px-3 py-1.5"
 							>
-								<div className="text-sm/6 text-black">{option.label}</div>
+								<div className="text-sm/6 text-black">{option.name}</div>
 								<CheckIcon className="invisible size-4 group-data-[selected]:visible" />
 							</ComboboxOption>
 						))}
