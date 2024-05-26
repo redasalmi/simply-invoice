@@ -12,7 +12,9 @@ export default createHandler(() => (
 					{assets}
 				</head>
 				<body>
-					<div id="app">{children}</div>
+					<div id="app" class="grid min-h-lvh grid-rows-[auto_1fr_auto]">
+						{children}
+					</div>
 					{scripts}
 				</body>
 			</html>
