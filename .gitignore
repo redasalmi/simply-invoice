@@ -1,7 +1,28 @@
-node_modules
-/.cache
-/netlify/functions/server/index.js
-/public/build
-/.netlify
+
+dist
+.solid
+.output
+.vercel
+.netlify
+.vinxi
+
+# Environment
 .env
-/build
+.env*.local
+
+# dependencies
+/node_modules
+
+# IDEs and editors
+/.idea
+.project
+.classpath
+*.launch
+.settings/
+
+# Temp
+gitignore
+
+# System Files
+.DS_Store
+Thumbs.db

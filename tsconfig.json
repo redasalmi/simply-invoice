@@ -1,26 +1,19 @@
 {
-	"include": ["env.d.ts", "**/*.ts", "**/*.tsx"],
 	"compilerOptions": {
-		"lib": ["DOM", "DOM.Iterable", "ES2022"],
-		"isolatedModules": true,
-		"esModuleInterop": true,
-		"jsx": "react-jsx",
+		"target": "ESNext",
 		"module": "ESNext",
 		"moduleResolution": "Bundler",
-		"resolveJsonModule": true,
-		"target": "ES2022",
-		"strict": true,
+		"allowSyntheticDefaultImports": true,
+		"esModuleInterop": true,
+		"jsx": "preserve",
+		"jsxImportSource": "solid-js",
 		"allowJs": true,
-		"skipLibCheck": true,
-		"verbatimModuleSyntax": true,
-		"forceConsistentCasingInFileNames": true,
-		"baseUrl": ".",
+		"noEmit": true,
+		"strict": true,
+		"types": ["vinxi/types/client"],
+		"isolatedModules": true,
 		"paths": {
-			"~/*": ["./app/*"]
-		},
-		"types": ["@remix-run/react/future/single-fetch.d.ts"],
-
-		// Vite takes care of building everything, not tsc.
-		"noEmit": true
+			"~/*": ["./src/*"]
+		}
 	}
 }
