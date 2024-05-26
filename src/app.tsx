@@ -12,7 +12,9 @@ export default function App() {
 			root={(props) => (
 				<>
 					<Navbar />
-					<Suspense>{props.children}</Suspense>
+					<main class="container mx-auto">
+						<Suspense>{props.children}</Suspense>
+					</main>
 					<Footer />
 				</>
 			)}
