@@ -17,9 +17,16 @@ export default function Companies() {
 
 	return (
 		<section>
+			<div class="flex justify-end">
+				<A href="/companies/new" class="rounded-lg bg-blue-300 px-4 py-2">
+					Create New Company
+				</A>
+			</div>
+
 			<Show when={companies.loading}>
 				<p>loading companies...</p>
 			</Show>
+
 			<Switch>
 				<Match when={companies.error}>
 					<span>Error: {companies.error()}</span>
@@ -31,51 +38,44 @@ export default function Companies() {
 
 				<Match when={companies()?.items.length}>
 					<div>
-						<div class="flex justify-end">
-							<A href="/companies/new" class="rounded-lg bg-blue-300 px-4 py-2">
-								Create New Company
-							</A>
-						</div>
-						<div>
-							<Table>
-								<TableHeader>
-									<TableRow>
-										<TableHead>Name</TableHead>
-										<TableHead>Email</TableHead>
-									</TableRow>
-								</TableHeader>
-								<TableBody>
-									<For each={companies()?.items}>
-										{(company) => (
-											<TableRow>
-												<TableCell>{company.name}</TableCell>
-												<TableCell>{company.email}</TableCell>
-												<TableCell class="flex items-center gap-4">
-													<A
-														href={`/companies/${company.id}`}
-														aria-label={`view ${company.name} company details`}
-													>
-														eye icon
-													</A>
-													<A
-														href={`/companies/${company.id}/update`}
-														aria-label={`update ${company.name} company`}
-													>
-														pencil icon
-													</A>
-													<A
-														href={`/companies/${company.id}/delete`}
-														aria-label={`delete ${company.name} company`}
-													>
-														trash icon
-													</A>
-												</TableCell>
-											</TableRow>
-										)}
-									</For>
-								</TableBody>
-							</Table>
-						</div>
+						<Table>
+							<TableHeader>
+								<TableRow>
+									<TableHead>Name</TableHead>
+									<TableHead>Email</TableHead>
+								</TableRow>
+							</TableHeader>
+							<TableBody>
+								<For each={companies()?.items}>
+									{(company) => (
+										<TableRow>
+											<TableCell>{company.name}</TableCell>
+											<TableCell>{company.email}</TableCell>
+											<TableCell class="flex items-center gap-4">
+												<A
+													href={`/companies/${company.id}`}
+													aria-label={`view ${company.name} company details`}
+												>
+													eye icon
+												</A>
+												<A
+													href={`/companies/${company.id}/update`}
+													aria-label={`update ${company.name} company`}
+												>
+													pencil icon
+												</A>
+												<A
+													href={`/companies/${company.id}/delete`}
+													aria-label={`delete ${company.name} company`}
+												>
+													trash icon
+												</A>
+											</TableCell>
+										</TableRow>
+									)}
+								</For>
+							</TableBody>
+						</Table>
 					</div>
 				</Match>
 			</Switch>
