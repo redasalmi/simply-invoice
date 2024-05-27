@@ -47,22 +47,19 @@ export const TableRow: ParentComponent<
 };
 
 export const TableHead: ParentComponent<
-	JSX.HTMLAttributes<HTMLTableSectionElement>
+	JSX.ThHTMLAttributes<HTMLTableCellElement>
 > = (props) => {
 	const [local, otherProps] = splitProps(props, ['class', 'children']);
 
 	return (
-		<thead
-			class={cn('p-4 text-left text-gray-400', local.class)}
-			{...otherProps}
-		>
+		<th class={cn('p-4 text-left text-gray-400', local.class)} {...otherProps}>
 			{local.children}
-		</thead>
+		</th>
 	);
 };
 
 export const TableCell: ParentComponent<
-	JSX.HTMLAttributes<HTMLTableCellElement>
+	JSX.TdHTMLAttributes<HTMLTableCellElement>
 > = (props) => {
 	const [local, otherProps] = splitProps(props, ['class', 'children']);
 

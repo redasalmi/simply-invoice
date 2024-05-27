@@ -1,9 +1,9 @@
 import { splitProps, type JSX, type ParentComponent } from 'solid-js';
 import { cn } from '~/utils/shared';
 
-export const Label: ParentComponent<JSX.HTMLAttributes<HTMLLabelElement>> = (
-	props,
-) => {
+export const Label: ParentComponent<
+	JSX.LabelHTMLAttributes<HTMLLabelElement>
+> = (props) => {
 	const [local, otherProps] = splitProps(props, ['class', 'children']);
 
 	return (

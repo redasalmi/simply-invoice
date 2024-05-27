@@ -1,9 +1,9 @@
 import { type JSX, type ParentComponent, splitProps } from 'solid-js';
 import { cn } from '~/utils/shared';
 
-export const Input: ParentComponent<JSX.HTMLAttributes<HTMLInputElement>> = (
-	props,
-) => {
+export const Input: ParentComponent<
+	JSX.InputHTMLAttributes<HTMLInputElement>
+> = (props) => {
 	const [local, otherProps] = splitProps(props, ['class']);
 
 	return (
