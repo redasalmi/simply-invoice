@@ -1,18 +1,14 @@
-import { ParentComponent, JSX, splitProps, children } from 'solid-js';
+import { type ParentComponent, type JSX, splitProps } from 'solid-js';
 import { cn } from '~/utils/shared';
 
 export const Table: ParentComponent<JSX.HTMLAttributes<HTMLTableElement>> = (
 	props,
 ) => {
-	const [{ class: className }, { children }, otherProps] = splitProps(
-		props,
-		['class'],
-		['children'],
-	);
+	const [local, otherProps] = splitProps(props, ['class', 'children']);
 
 	return (
-		<table class={cn('w-full', className)} {...otherProps}>
-			{children}
+		<table class={cn('w-full', local.class)} {...otherProps}>
+			{local.children}
 		</table>
 	);
 };
@@ -38,15 +34,14 @@ export const TableFooter: ParentComponent<
 export const TableRow: ParentComponent<
 	JSX.HTMLAttributes<HTMLTableRowElement>
 > = (props) => {
-	const [{ class: className }, { children }, otherProps] = splitProps(
-		props,
-		['class'],
-		['children'],
-	);
+	const [local, otherProps] = splitProps(props, ['class', 'children']);
 
 	return (
-		<tr class={cn('border-b-[1px] border-gray-300', className)} {...otherProps}>
-			{children}
+		<tr
+			class={cn('border-b-[1px] border-gray-300', local.class)}
+			{...otherProps}
+		>
+			{local.children}
 		</tr>
 	);
 };
@@ -54,15 +49,14 @@ export const TableRow: ParentComponent<
 export const TableHead: ParentComponent<
 	JSX.HTMLAttributes<HTMLTableSectionElement>
 > = (props) => {
-	const [{ class: className }, { children }, otherProps] = splitProps(
-		props,
-		['class'],
-		['children'],
-	);
+	const [local, otherProps] = splitProps(props, ['class', 'children']);
 
 	return (
-		<thead class={cn('p-4 text-left text-gray-400', className)} {...otherProps}>
-			{children}
+		<thead
+			class={cn('p-4 text-left text-gray-400', local.class)}
+			{...otherProps}
+		>
+			{local.children}
 		</thead>
 	);
 };
@@ -70,15 +64,11 @@ export const TableHead: ParentComponent<
 export const TableCell: ParentComponent<
 	JSX.HTMLAttributes<HTMLTableCellElement>
 > = (props) => {
-	const [{ class: className }, { children }, otherProps] = splitProps(
-		props,
-		['class'],
-		['children'],
-	);
+	const [local, otherProps] = splitProps(props, ['class', 'children']);
 
 	return (
-		<td class={cn('p-4', className)} {...otherProps}>
-			{children}
+		<td class={cn('p-4', local.class)} {...otherProps}>
+			{local.children}
 		</td>
 	);
 };
