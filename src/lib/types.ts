@@ -1,16 +1,20 @@
 import type { IdType, Locale } from '~/lib/constants';
 import type { CountryCode } from '~/lib/currencies';
 
-export type CustomField = {
+export type CustomFormField = {
 	id: string;
 	label: string;
 	content: string;
-	showLabel?: boolean;
+	showLabelInInvoice?: boolean;
 	labelError?: string;
 	contentError?: string;
+	order: number;
 };
 
+export type CustomField = Omit<CustomFormField, 'labelError' | 'contentError'>;
+
 export type Address = {
+	id: string;
 	address1: string;
 	address2?: string;
 	city?: string;

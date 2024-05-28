@@ -1,4 +1,6 @@
+import { For, Show, createSignal } from 'solid-js';
 import { action, redirect, useSubmission } from '@solidjs/router';
+import { ulid } from 'ulid';
 import { Label } from '~/components/ui/Label';
 import { Input } from '~/components/ui/Input';
 import { Button } from '~/components/ui/Button';
@@ -17,9 +19,11 @@ const createCompany = action(async (formData: FormData) => {
 
 	const today = new Date().toISOString();
 	const company: Company = {
+		id: ulid(),
 		name,
 		email,
 		address: {
+			id: ulid(),
 			address1,
 			address2,
 			country,
@@ -38,6 +42,22 @@ const createCompany = action(async (formData: FormData) => {
 
 export default function NewCompany() {
 	const creatingCompany = useSubmission(createCompany);
+	const [customFields, setCustomFields] = createSignal<Array<{ id: string }>>(
+		[],
+	);
+
+	const AddCustomField = () => {
+		setCustomFields((prevCustomFields) => [
+			...prevCustomFields,
+			{ id: ulid() },
+		]);
+	};
+
+	const deleteCustomField = (id: string) => {
+		setCustomFields((prevCustomFields) =>
+			prevCustomFields.filter((field) => field.id !== id),
+		);
+	};
 
 	return (
 		<section>
@@ -84,6 +104,66 @@ export default function NewCompany() {
 				</div>
 
 				<div>
+					<div class="flex items-center justify-between">
+						<div>
+							<h3 class="text-2xl">Custom Fields</h3>
+							<p class="mb-2 block text-sm">
+								Add any custom fields and order them
+							</p>
+						</div>
+						<div>
+							<Button type="button" onClick={AddCustomField}>
+								Add New Field
+							</Button>
+						</div>
+					</div>
+
+					<Show when={customFields().length > 0}>
+						<For each={customFields()}>
+							{(field, index) => (
+								<div class="flex gap-4">
+									<Input
+										type="text"
+										readOnly
+										aria-hidden
+										tabIndex={-1}
+										name={`order-${field.id}`}
+										value={index()}
+										class="hidden"
+									/>
+									<div>
+										<Label for={`label-${field.id}`}>Label *</Label>
+										<Input
+											type="text"
+											id={`label-${field.id}`}
+											name={`label-${field.id}`}
+										/>
+									</div>
+									<div>
+										<Label for={`content-${field.id}`}>Content *</Label>
+										<Input
+											type="text"
+											id={`content-${field.id}`}
+											name={`content-${field.id}`}
+										/>
+									</div>
+									<div class="flex gap-2">
+										<Button type="button">Show In invoice</Button>
+										<Button type="button">Reorder</Button>
+										<Button
+											type="button"
+											onClick={() => deleteCustomField(field.id)}
+										>
+											Delete
+										</Button>
+									</div>
+								</div>
+							)}
+						</For>
+					</Show>
+				</div>
+
+				<div class="mt-8">
 					<Button type="submit" disabled={creatingCompany.pending}>
 						{creatingCompany.pending ? '...Saving Company' : 'Save Company'}
 					</Button>
