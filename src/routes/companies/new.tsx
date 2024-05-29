@@ -4,40 +4,15 @@ import { ulid } from 'ulid';
 import { Label } from '~/components/ui/Label';
 import { Input } from '~/components/ui/Input';
 import { Button } from '~/components/ui/Button';
-import { db } from '~/lib/db';
-import type { Company } from '~/lib/types';
+import { createEntity } from '~/utils/shared';
+import { Company } from '~/lib/types';
 
 const createCompany = action(async (formData: FormData) => {
-	const name = formData.get('name');
-	const email = formData.get('email');
-	const address1 = formData.get('address1');
-	const address2 = formData.get('address2');
-	const country = formData.get('country');
-	const province = formData.get('province');
-	const city = formData.get('city');
-	const zip = formData.get('zip');
+	const company = createEntity<Company>(formData);
+	// await db.companies.add(company);
+	// throw redirect('/companies');
 
-	const today = new Date().toISOString();
-	const company: Company = {
-		id: ulid(),
-		name,
-		email,
-		address: {
-			id: ulid(),
-			address1,
-			address2,
-			country,
-			province,
-			city,
-			zip,
-		},
-		createdAt: today,
-		updatedAt: today,
-	};
-
-	await db.companies.add(company);
-
-	throw redirect('/companies');
+	return {};
 }, 'create-company');
 
 export default function NewCompany() {
@@ -65,11 +40,11 @@ export default function NewCompany() {
 				<div>
 					<div>
 						<Label for="name">Name *</Label>
-						<Input id="name" type="text" name="name" required />
+						<Input type="text" id="name" name="name" />
 					</div>
 					<div>
 						<Label for="email">Email *</Label>
-						<Input id="email" type="email" name="email" required />
+						<Input type="email" id="email" name="email" />
 					</div>
 				</div>
 
@@ -77,28 +52,40 @@ export default function NewCompany() {
 					<h3 class="text-2xl">Address</h3>
 					<div>
 						<div>
-							<Label for="address1">Address 1 *</Label>
-							<Input id="address1" type="text" name="address1" required />
+							<Label for="address-address1">Address 1 *</Label>
+							<Input
+								type="text"
+								id="address-address1"
+								name="address-address1"
+							/>
 						</div>
 						<div>
-							<Label for="address2">Address 2</Label>
-							<Input id="address2" type="text" name="address2" />
+							<Label for="address-address2">Address 2</Label>
+							<Input
+								type="text"
+								id="address-address2"
+								name="address-address2"
+							/>
 						</div>
 						<div>
-							<Label for="country">Country *</Label>
-							<Input id="country" type="text" name="country" required />
+							<Label for="address-country">Country *</Label>
+							<Input type="text" id="address-country" name="address-country" />
 						</div>
 						<div>
-							<Label for="province">Province</Label>
-							<Input id="province" type="text" name="province" />
+							<Label for="address-province">Province</Label>
+							<Input
+								type="text"
+								id="address-province"
+								name="address-province"
+							/>
 						</div>
 						<div>
-							<Label for="city">City</Label>
-							<Input id="city" type="text" name="city" />
+							<Label for="address-city">City</Label>
+							<Input type="text" id="address-city" name="address-city" />
 						</div>
 						<div>
-							<Label for="zip">Zip</Label>
-							<Input id="zip" type="text" name="zip" />
+							<Label for="address-zip">Zip</Label>
+							<Input type="text" id="address-zip" name="address-zip" />
 						</div>
 					</div>
 				</div>
