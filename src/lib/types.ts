@@ -1,5 +1,16 @@
+import type { JSX } from 'solid-js';
 import type { IdType, Locale } from '~/lib/constants';
 import type { CountryCode } from '~/lib/currencies';
+
+export type FormFieldProps = {
+	id: string;
+	name: string;
+	label: string;
+	type: JSX.InputHTMLAttributes<HTMLInputElement>['type'];
+	class?: string;
+	required?: boolean;
+	error?: string;
+};
 
 export type CustomFormField = {
 	id: string;

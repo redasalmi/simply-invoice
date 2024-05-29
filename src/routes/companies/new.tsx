@@ -1,19 +1,21 @@
-import { For, Show, createSignal } from 'solid-js';
+import { For, Index, Show, createSignal } from 'solid-js';
 import { action, redirect, useSubmission } from '@solidjs/router';
 import { ulid } from 'ulid';
 import { z } from 'zod';
 import { Label } from '~/components/ui/Label';
 import { Input } from '~/components/ui/Input';
 import { Button } from '~/components/ui/Button';
+import { FormField } from '~/components/FormField';
 import { createCompany, getCompanyActionErrors } from '~/utils/company';
 import { db } from '~/lib/db';
+import type { FormFieldProps } from '~/lib/types';
 
 const createCompanyAction = action(async (formData: FormData) => {
 	try {
 		const company = createCompany(formData);
 		await db.companies.add(company);
 
-		throw redirect('/companies');
+		return redirect('/companies');
 	} catch (err) {
 		if (err instanceof z.ZodError) {
 			const errors = getCompanyActionErrors<'create'>(err);
@@ -24,6 +26,23 @@ const createCompanyAction = action(async (formData: FormData) => {
 		}
 	}
 }, 'create-company');
+
+const companyFields: Array<FormFieldProps> = [
+	{
+		id: 'name',
+		name: 'name',
+		label: 'Name *',
+		type: 'text',
+		required: true,
+	},
+	{
+		id: 'email',
+		name: 'email',
+		label: 'Email *',
+		type: 'email',
+		required: true,
+	},
+];
 
 export default function NewCompany() {
 	const creatingCompany = useSubmission(createCompanyAction);
@@ -38,7 +57,7 @@ export default function NewCompany() {
 		]);
 	};
 
-	const deleteCustomField = (id: string) => {
+	const removeCustomField = (id: string) => {
 		setCustomFields((prevCustomFields) =>
 			prevCustomFields.filter((field) => field.id !== id),
 		);
@@ -48,28 +67,14 @@ export default function NewCompany() {
 		<section>
 			<form action={createCompanyAction} method="post">
 				<div>
-					<div>
-						<Label for="name">
-							Name *{' '}
-							{creatingCompany.result?.errors?.name ? (
-								<span class="text-red-500">
-									({creatingCompany.result.errors.name})
-								</span>
-							) : null}
-						</Label>
-						<Input type="text" id="name" name="name" />
-					</div>
-					<div>
-						<Label for="email">
-							Email *{' '}
-							{creatingCompany.result?.errors?.email ? (
-								<span class="text-red-500">
-									({creatingCompany.result.errors.email})
-								</span>
-							) : null}
-						</Label>
-						<Input type="email" id="email" name="email" />
-					</div>
+					<Index each={companyFields}>
+						{(field) => (
+							<FormField
+								error={creatingCompany.result?.errors?.[field().name]}
+								{...field()}
+							/>
+						)}
+					</Index>
 				</div>
 
 				<div>
@@ -199,7 +204,7 @@ export default function NewCompany() {
 										<Button type="button">Reorder</Button>
 										<Button
 											type="button"
-											onClick={() => deleteCustomField(field.id)}
+											onClick={() => removeCustomField(field.id)}
 										>
 											Delete
 										</Button>
