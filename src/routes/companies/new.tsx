@@ -1,22 +1,32 @@
 import { For, Show, createSignal } from 'solid-js';
 import { action, redirect, useSubmission } from '@solidjs/router';
 import { ulid } from 'ulid';
+import { z } from 'zod';
 import { Label } from '~/components/ui/Label';
 import { Input } from '~/components/ui/Input';
 import { Button } from '~/components/ui/Button';
-import { createEntity } from '~/utils/shared';
-import { Company } from '~/lib/types';
+import { createCompany, getCompanyActionErrors } from '~/utils/company';
+import { db } from '~/lib/db';
 
-const createCompany = action(async (formData: FormData) => {
-	const company = createEntity<Company>(formData);
-	// await db.companies.add(company);
-	// throw redirect('/companies');
+const createCompanyAction = action(async (formData: FormData) => {
+	try {
+		const company = createCompany(formData);
+		await db.companies.add(company);
 
-	return {};
+		throw redirect('/companies');
+	} catch (err) {
+		if (err instanceof z.ZodError) {
+			const errors = getCompanyActionErrors<'create'>(err);
+
+			return {
+				errors,
+			};
+		}
+	}
 }, 'create-company');
 
 export default function NewCompany() {
-	const creatingCompany = useSubmission(createCompany);
+	const creatingCompany = useSubmission(createCompanyAction);
 	const [customFields, setCustomFields] = createSignal<Array<{ id: string }>>(
 		[],
 	);
@@ -36,14 +46,28 @@ export default function NewCompany() {
 
 	return (
 		<section>
-			<form action={createCompany} method="post">
+			<form action={createCompanyAction} method="post">
 				<div>
 					<div>
-						<Label for="name">Name *</Label>
+						<Label for="name">
+							Name *{' '}
+							{creatingCompany.result?.errors?.name ? (
+								<span class="text-red-500">
+									({creatingCompany.result.errors.name})
+								</span>
+							) : null}
+						</Label>
 						<Input type="text" id="name" name="name" />
 					</div>
 					<div>
-						<Label for="email">Email *</Label>
+						<Label for="email">
+							Email *{' '}
+							{creatingCompany.result?.errors?.email ? (
+								<span class="text-red-500">
+									({creatingCompany.result.errors.email})
+								</span>
+							) : null}
+						</Label>
 						<Input type="email" id="email" name="email" />
 					</div>
 				</div>
@@ -52,7 +76,14 @@ export default function NewCompany() {
 					<h3 class="text-2xl">Address</h3>
 					<div>
 						<div>
-							<Label for="address-address1">Address 1 *</Label>
+							<Label for="address-address1">
+								Address 1 *{' '}
+								{creatingCompany.result?.errors?.address1 ? (
+									<span class="text-red-500">
+										({creatingCompany.result.errors.address1})
+									</span>
+								) : null}
+							</Label>
 							<Input
 								type="text"
 								id="address-address1"
@@ -68,7 +99,14 @@ export default function NewCompany() {
 							/>
 						</div>
 						<div>
-							<Label for="address-country">Country *</Label>
+							<Label for="address-country">
+								Country *{' '}
+								{creatingCompany.result?.errors?.country ? (
+									<span class="text-red-500">
+										({creatingCompany.result.errors.country})
+									</span>
+								) : null}
+							</Label>
 							<Input type="text" id="address-country" name="address-country" />
 						</div>
 						<div>
@@ -119,7 +157,16 @@ export default function NewCompany() {
 										class="hidden"
 									/>
 									<div>
-										<Label for={`label-${field.id}`}>Label *</Label>
+										<Label for={`label-${field.id}`}>
+											Label *{' '}
+											{creatingCompany.result?.errors?.custom?.[index()]
+												?.label ? (
+												<span class="text-red-500">
+													({creatingCompany.result.errors.custom[index()].label}
+													)
+												</span>
+											) : null}
+										</Label>
 										<Input
 											type="text"
 											id={`label-${field.id}`}
@@ -127,7 +174,20 @@ export default function NewCompany() {
 										/>
 									</div>
 									<div>
-										<Label for={`content-${field.id}`}>Content *</Label>
+										<Label for={`content-${field.id}`}>
+											Content *{' '}
+											{creatingCompany.result?.errors?.custom?.[index()]
+												?.content ? (
+												<span class="text-red-500">
+													(
+													{
+														creatingCompany.result.errors.custom[index()]
+															.content
+													}
+													)
+												</span>
+											) : null}
+										</Label>
 										<Input
 											type="text"
 											id={`content-${field.id}`}

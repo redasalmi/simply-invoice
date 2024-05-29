@@ -14,7 +14,8 @@
 		"nanoid": "^5.0.7",
 		"solid-js": "^1.8.17",
 		"ulid": "^2.3.0",
-		"vinxi": "^0.3.11"
+		"vinxi": "^0.3.11",
+		"zod": "^3.23.8"
 	},
 	"devDependencies": {
 		"@typescript-eslint/parser": "^7.11.0",
