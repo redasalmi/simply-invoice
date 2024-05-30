@@ -7,6 +7,7 @@ export type FormFieldProps = {
 	id: string;
 	name: string;
 	label: string;
+	defaultValue?: string;
 	className?: string;
 	required?: boolean;
 	error?: string;

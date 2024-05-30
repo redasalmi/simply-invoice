@@ -10,17 +10,18 @@ import {
 	useNavigation,
 } from '@remix-run/react';
 import { Reorder } from 'framer-motion';
-import { nanoid } from 'nanoid';
 import queryString from 'query-string';
 import invariant from 'tiny-invariant';
 import { z } from 'zod';
 import { AddFormField } from '~/components/AddFormField';
-import { FormField, UncontrolledFormField } from '~/components/FormField';
+import { FormField } from '~/components/FormField';
 import { Button } from '~/components/ui/button';
 import { Skeleton } from '~/components/ui/skeleton';
 import { db } from '~/lib/db';
-import type { CustomField, Field } from '~/lib/types';
+import type { CustomField } from '~/lib/types';
 import { getCompanyActionErrors, updateCompany } from '~/utils/company';
+import { addressFields, informationFields } from '~/lib/constants';
+import { NewFormField } from '~/components/NewFormField';
 
 export async function clientLoader({ params }: ClientLoaderFunctionArgs) {
 	invariant(params.id, 'Company ID is required');
@@ -132,40 +133,13 @@ export function HydrateFallback() {
 	);
 }
 
-const nameId = nanoid();
-const emailId = nanoid();
-const address1Id = nanoid();
-const address2Id = nanoid();
-const countryId = nanoid();
-const provinceId = nanoid();
-const cityId = nanoid();
-const zipId = nanoid();
-
 export default function CompanyUpdateRoute() {
 	const { company } = useLoaderData<typeof clientLoader>();
 	const actionData = useActionData<typeof clientAction>();
-	// const { toast } = useToast();
-	// const dismissRef = React.useRef<(() => void) | null>(null);
 
 	const navigation = useNavigation();
 	const isLoading = navigation.state !== 'idle';
 	const isSubmitting = navigation.state === 'submitting';
-
-	// React.useEffect(() => {
-	// 	if (isSubmitting) {
-	// 		dismissRef.current = toast({
-	// 			title: 'Updating Company',
-	// 		}).dismiss;
-	// 	}
-	// }, [toast, isSubmitting]);
-
-	// React.useEffect(() => {
-	// 	return () => {
-	// 		if (dismissRef.current) {
-	// 			dismissRef.current();
-	// 		}
-	// 	};
-	// }, []);
 
 	const [formFields, setFormFields] = React.useState<Array<CustomField>>([]);
 
@@ -202,85 +176,6 @@ export default function CompanyUpdateRoute() {
 		);
 	}
 
-	const companyFields: Array<Field> = [
-		{
-			id: nameId,
-			name: 'name',
-			label: 'Name *',
-			input: {
-				required: true,
-				defaultValue: company.name,
-			},
-			error: actionData?.errors.name,
-		},
-		{
-			id: emailId,
-			name: 'email',
-			label: 'Email *',
-			input: {
-				type: 'email',
-				required: true,
-				defaultValue: company.email,
-			},
-			error: actionData?.errors.email,
-		},
-	];
-
-	const addressFields: Array<Field> = [
-		{
-			id: address1Id,
-			name: 'address1',
-			label: 'Address 1 *',
-			input: {
-				required: true,
-				defaultValue: company.address.address1,
-			},
-			error: actionData?.errors.address1,
-		},
-		{
-			id: address2Id,
-			name: 'address2',
-			label: 'Address 2',
-			input: {
-				defaultValue: company.address.address2,
-			},
-		},
-		{
-			id: countryId,
-			name: 'country',
-			label: 'Country *',
-			input: {
-				required: true,
-				defaultValue: company.address.country,
-			},
-			error: actionData?.errors.country,
-		},
-		{
-			id: provinceId,
-			name: 'province',
-			label: 'Province',
-			input: {
-				defaultValue: company.address.province,
-			},
-		},
-		{
-			id: cityId,
-			name: 'city',
-			label: 'City',
-			input: {
-				defaultValue: company.address.city,
-			},
-		},
-		{
-			id: zipId,
-			name: 'zip',
-			label: 'Zip',
-			input: {
-				defaultValue: company.address.zip,
-			},
-		},
-	];
-
 	const addFormField = (field: CustomField) => {
 		setFormFields(formFields.concat(field));
 	};
@@ -299,24 +194,29 @@ export default function CompanyUpdateRoute() {
 		<section>
 			<Form method="post">
 				<div>
-					{companyFields.map((field) => (
-						<UncontrolledFormField
+					{informationFields.map((field) => (
+						<NewFormField
 							key={field.id}
 							className="my-2"
-							formField={field}
+							defaultValue={company[field.name]}
+							error={actionData?.errors?.[field.name]}
+							{...field}
 						/>
 					))}
 				</div>
 
 				<div>
 					<h3 className="text-2xl">Address</h3>
-
 					<div>
 						{addressFields.map((field) => (
-							<UncontrolledFormField
+							<NewFormField
 								key={field.id}
 								className="my-2"
-								formField={field}
+								defaultValue={
+									company.address[field.name.replace('address-', '')]
+								}
+								error={actionData?.errors?.[field.name]}
+								{...field}
 							/>
 						))}
 					</div>

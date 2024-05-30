@@ -1,4 +1,3 @@
-import * as React from 'react';
 import {
 	type ClientActionFunctionArgs,
 	type ClientLoaderFunctionArgs,
@@ -9,15 +8,14 @@ import {
 	useLoaderData,
 	useNavigation,
 } from '@remix-run/react';
-import { nanoid } from 'nanoid';
 import invariant from 'tiny-invariant';
 import { z } from 'zod';
-import { UncontrolledFormField } from '~/components/FormField';
 import { Button } from '~/components/ui/button';
 import { Skeleton } from '~/components/ui/skeleton';
 import { db } from '~/lib/db';
-import type { Field } from '~/lib/types';
 import { getServiceActionErrors, updateService } from '~/utils/service';
+import { servicesFields } from '~/lib/constants';
+import { NewFormField } from '~/components/NewFormField';
 
 export async function clientLoader({ params }: ClientLoaderFunctionArgs) {
 	invariant(params.id, 'Service ID is required');
@@ -83,35 +81,13 @@ export function HydrateFallback() {
 	);
 }
 
-const nameId = nanoid();
-const descriptionId = nanoid();
-const rateId = nanoid();
-
 export default function ServiceUpdateRoute() {
 	const { service } = useLoaderData<typeof clientLoader>();
 	const actionData = useActionData<typeof clientAction>();
-	// const { toast } = useToast();
-	// const dismissRef = React.useRef<(() => void) | null>(null);
 
 	const navigation = useNavigation();
 	const isLoading = navigation.state !== 'idle';
 	const isSubmitting = navigation.state === 'submitting';
-
-	// React.useEffect(() => {
-	// 	if (isSubmitting) {
-	// 		dismissRef.current = toast({
-	// 			title: 'Updating Service',
-	// 		}).dismiss;
-	// 	}
-	// }, [toast, isSubmitting]);
-
-	// React.useEffect(() => {
-	// 	return () => {
-	// 		if (dismissRef.current) {
-	// 			dismissRef.current();
-	// 		}
-	// 	};
-	// }, []);
 
 	if (!service) {
 		return (
@@ -133,46 +109,16 @@ export default function ServiceUpdateRoute() {
 		);
 	}
 
-	const servicesFields: Array<Field> = [
-		{
-			id: nameId,
-			label: 'Name *',
-			name: 'name',
-			input: {
-				required: true,
-				defaultValue: service.name,
-			},
-			error: actionData?.errors.name,
-		},
-		{
-			id: descriptionId,
-			label: 'Description',
-			name: 'description',
-			input: {
-				defaultValue: service.description,
-			},
-		},
-		{
-			id: rateId,
-			label: 'Rate *',
-			name: 'rate',
-			input: {
-				type: 'number',
-				required: true,
-				defaultValue: service.rate,
-			},
-			error: actionData?.errors.rate,
-		},
-	];
-
 	return (
 		<section>
 			<Form method="POST">
 				{servicesFields.map((field) => (
-					<UncontrolledFormField
+					<NewFormField
 						key={field.id}
 						className="my-2"
-						formField={field}
+						defaultValue={service[field.name]}
+						error={actionData?.errors?.[field.name]}
+						{...field}
 					/>
 				))}
 

@@ -7,6 +7,7 @@ export function NewFormField({
 	id,
 	name,
 	label,
+	defaultValue,
 	className,
 	required,
 	error,
@@ -25,6 +26,7 @@ export function NewFormField({
 					type={type}
 					id={id}
 					name={name}
+					defaultValue={defaultValue}
 					required={required}
 					className={cn(error ? 'border border-red-500' : null)}
 				/>

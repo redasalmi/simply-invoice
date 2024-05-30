@@ -4,38 +4,8 @@ import { Button } from '~/components/ui/button';
 import { Input } from '~/components/ui/input';
 import { Label } from '~/components/ui/label';
 import { Switch } from '~/components/ui/switch';
-import type { CustomField, Field } from '~/lib/types';
+import type { CustomField } from '~/lib/types';
 import { cn } from '~/utils/shared';
-
-type UncontrolledFormField = {
-	formField: Field;
-	className?: string;
-};
-
-export function UncontrolledFormField({
-	formField,
-	className,
-}: UncontrolledFormField) {
-	const id = React.useId();
-	const { name, label, error } = formField;
-	const inputName = `${name.replaceAll(' ', '-')}`;
-
-	return (
-		<div className={cn(className)}>
-			<Label htmlFor={id} className="mb-1 block">
-				{label} {error ? <span className="text-red-500">({error})</span> : null}
-			</Label>
-			<div>
-				<Input
-					id={id}
-					autoComplete="off"
-					name={inputName}
-					{...formField.input}
-				/>
-			</div>
-		</div>
-	);
-}
 
 type FormFieldProps = {
 	formField: CustomField;
