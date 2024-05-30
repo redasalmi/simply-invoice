@@ -7,13 +7,12 @@ import {
 	useNavigation,
 } from '@remix-run/react';
 import { Reorder } from 'framer-motion';
+import { ulid } from 'ulid';
 import queryString from 'query-string';
 import { z } from 'zod';
-import { AddFormField } from '~/components/AddFormField';
-import { FormField } from '~/components/FormField';
 import { Button } from '~/components/ui/button';
+import { Input } from '~/components/ui/input';
 import { db } from '~/lib/db';
-import type { CustomField } from '~/lib/types';
 import { createCompany, getCompanyActionErrors } from '~/utils/company';
 import { NewFormField } from '~/components/NewFormField';
 import { addressFields, informationFields } from '~/lib/constants';
@@ -44,19 +43,17 @@ export default function NewCompanyRoute() {
 	const isLoading = navigation.state !== 'idle';
 	const isSubmitting = navigation.state === 'submitting';
 
-	const [formFields, setFormFields] = React.useState<Array<CustomField>>([]);
+	const [customFields, setCustomFields] = React.useState<Array<{ id: string }>>(
+		[],
+	);
 
-	const addFormField = (field: CustomField) => {
-		setFormFields(formFields.concat(field));
+	const addField = () => {
+		setCustomFields((prevFields) => prevFields.concat({ id: ulid() }));
 	};
 
-	const onFormFieldChange = (formField: CustomField, fieldIndex: number) => {
-		setFormFields(Object.assign([], formFields, { [fieldIndex]: formField }));
-	};
-
-	const removeFormField = (fieldIndex: number) => {
-		setFormFields(
-			formFields.slice(0, fieldIndex).concat(formFields.slice(fieldIndex + 1)),
+	const deleteField = (id: string) => {
+		setCustomFields((prevFields) =>
+			prevFields.filter((field) => field.id !== id),
 		);
 	};
 
@@ -88,34 +85,63 @@ export default function NewCompanyRoute() {
 					</div>
 				</div>
 
-				<AddFormField addFormField={addFormField}>
-					<h3 className="text-2xl">Custom Fields</h3>
-					<p className="mb-2 block text-sm">
-						Add any custom fields and order them
-					</p>
+				<div>
+					<div className="flex items-center justify-between">
+						<div>
+							<h3 className="text-2xl">Custom Fields</h3>
+							<p className="mb-2 block text-sm">
+								Add any custom fields and order them
+							</p>
+						</div>
+						<div>
+							<Button onClick={addField}>Add New Custom Field</Button>
+						</div>
+					</div>
 
-					{formFields.length ? (
-						<Reorder.Group values={formFields} onReorder={setFormFields}>
-							{formFields.map((formField, index) => (
-								<Reorder.Item key={formField.id} value={formField}>
-									<FormField
-										formField={{
-											...formField,
-											labelError: actionData?.errors?.custom?.[index]?.label,
-											contentError:
-												actionData?.errors?.custom?.[index]?.content,
-										}}
-										className="my-2"
-										onFormFieldChange={(updatedFormField) =>
-											onFormFieldChange(updatedFormField, index)
-										}
-										removeFormField={() => removeFormField(index)}
-									/>
-								</Reorder.Item>
-							))}
-						</Reorder.Group>
-					) : null}
-				</AddFormField>
+					<div>
+						{customFields.length ? (
+							<Reorder.Group values={customFields} onReorder={setCustomFields}>
+								{customFields.map((field, index) => (
+									<Reorder.Item key={field.id} value={field}>
+										<div className="my-2 flex items-center gap-2">
+											<Input
+												name="order"
+												defaultValue={index}
+												className="hidden"
+											/>
+
+											<NewFormField
+												id={field.id}
+												name={`label-${field.id}`}
+												label="Label *"
+												required
+												className="flex-1"
+												error={actionData?.errors?.custom?.[index]?.label}
+											/>
+
+											<NewFormField
+												id={field.id}
+												name={`content-${field.id}`}
+												label="Content *"
+												required
+												className="flex-1"
+												error={actionData?.errors?.custom?.[index]?.content}
+											/>
+
+											<div className="mt-auto flex gap-2">
+												<Button>Show Label In Invoice</Button>
+												<Button>Reorder</Button>
+												<Button onClick={() => deleteField(field.id)}>
+													Delete Custom Field
+												</Button>
+											</div>
+										</div>
+									</Reorder.Item>
+								))}
+							</Reorder.Group>
+						) : null}
+					</div>
+				</div>
 
 				<div>
 					<Button disabled={isSubmitting} type="submit">
