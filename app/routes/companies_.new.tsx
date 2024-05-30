@@ -6,7 +6,7 @@ import {
 } from '@remix-run/react';
 import { z } from 'zod';
 import { CreateEntity } from '~/components/Entities/create';
-import { createEntity } from '~/utils/shared';
+import { createEntity } from '~/components/Entities/utils';
 import { db } from '~/lib/db';
 import { createCompanySchema } from '~/lib/schemas';
 import { getCompanyActionErrors } from '~/utils/company';

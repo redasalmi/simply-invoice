@@ -1,27 +1,21 @@
-import * as React from 'react';
 import {
 	type ClientActionFunctionArgs,
 	type ClientLoaderFunctionArgs,
-	Form,
 	Link,
 	redirect,
 	useActionData,
 	useLoaderData,
 	useNavigation,
 } from '@remix-run/react';
-import { Reorder } from 'framer-motion';
-import queryString from 'query-string';
 import invariant from 'tiny-invariant';
 import { z } from 'zod';
-import { AddFormField } from '~/components/AddFormField';
-import { FormField } from '~/components/FormField';
 import { Button } from '~/components/ui/button';
 import { Skeleton } from '~/components/ui/skeleton';
 import { db } from '~/lib/db';
-import type { CustomField } from '~/lib/types';
-import { getCompanyActionErrors, updateCompany } from '~/utils/company';
-import { addressFields, informationFields } from '~/lib/constants';
-import { NewFormField } from '~/components/NewFormField';
+import { getCompanyActionErrors } from '~/utils/company';
+import { UpdateEntity } from '~/components/Entities/update';
+import { updateEntity } from '~/components/Entities/utils';
+import type { Company } from '~/lib/types';
 
 export async function clientLoader({ params }: ClientLoaderFunctionArgs) {
 	invariant(params.id, 'Company ID is required');
@@ -40,10 +34,9 @@ export async function clientAction({
 
 	try {
 		const companyId = params.id;
-		const formQueryString = await request.text();
-		const formData = queryString.parse(formQueryString, { sort: false });
-		const updatedCompany = updateCompany(companyId, formData);
-		await db.companies.update(updatedCompany.id, updatedCompany);
+		const formData = await request.formData();
+		const updatedCompany = updateEntity<Company>(formData);
+		await db.companies.update(companyId, updatedCompany);
 
 		return redirect('/companies');
 	} catch (err) {
@@ -141,21 +134,6 @@ export default function CompanyUpdateRoute() {
 	const isLoading = navigation.state !== 'idle';
 	const isSubmitting = navigation.state === 'submitting';
 
-	const [formFields, setFormFields] = React.useState<Array<CustomField>>([]);
-
-	React.useEffect(() => {
-		const customFields: Array<CustomField> =
-			company?.custom?.map((field, index) => ({
-				id: field.id,
-				label: field.label,
-				content: field.content,
-				showLabel: field.showLabel,
-				labelError: actionData?.errors.custom?.[index]?.label,
-				contentError: actionData?.errors.custom?.[index]?.content,
-			})) || [];
-		setFormFields(customFields);
-	}, [actionData?.errors.custom, company?.custom]);
-
 	if (!company) {
 		return (
 			<section>
@@ -176,82 +154,15 @@ export default function CompanyUpdateRoute() {
 		);
 	}
 
-	const addFormField = (field: CustomField) => {
-		setFormFields(formFields.concat(field));
-	};
-
-	const onFormFieldChange = (formField: CustomField, fieldIndex: number) => {
-		setFormFields(Object.assign([], formFields, { [fieldIndex]: formField }));
-	};
-
-	const removeFormField = (fieldIndex: number) => {
-		setFormFields(
-			formFields.slice(0, fieldIndex).concat(formFields.slice(fieldIndex + 1)),
-		);
-	};
-
 	return (
 		<section>
-			<Form method="post">
-				<div>
-					{informationFields.map((field) => (
-						<NewFormField
-							key={field.id}
-							className="my-2"
-							defaultValue={company[field.name]}
-							error={actionData?.errors?.[field.name]}
-							{...field}
-						/>
-					))}
-				</div>
-
-				<div>
-					<h3 className="text-2xl">Address</h3>
-					<div>
-						{addressFields.map((field) => (
-							<NewFormField
-								key={field.id}
-								className="my-2"
-								defaultValue={
-									company.address[field.name.replace('address-', '')]
-								}
-								error={actionData?.errors?.[field.name]}
-								{...field}
-							/>
-						))}
-					</div>
-				</div>
-
-				<AddFormField addFormField={addFormField}>
-					<h3 className="text-2xl">Custom Fields</h3>
-					<p className="mb-2 block text-sm">
-						Add any custom fields and order them
-					</p>
-
-					{formFields.length ? (
-						<Reorder.Group values={formFields} onReorder={setFormFields}>
-							{formFields.map((formField, index) => (
-								<Reorder.Item key={formField.id} value={formField}>
-									<FormField
-										formField={formField}
-										className="my-2"
-										onFormFieldChange={(updatedFormField) =>
-											onFormFieldChange(updatedFormField, index)
-										}
-										removeFormField={() => removeFormField(index)}
-									/>
-								</Reorder.Item>
-							))}
-						</Reorder.Group>
-					) : null}
-				</AddFormField>
-
-				<div>
-					<Button disabled={isSubmitting} type="submit">
-						{isLoading ? '...Updating Company' : 'Update Company'}
-					</Button>
-				</div>
-			</Form>
+			<UpdateEntity
+				type="company"
+				entity={company}
+				isLoading={isLoading}
+				isSubmitting={isSubmitting}
+				errors={actionData?.errors}
+			/>
 		</section>
 	);
 }
