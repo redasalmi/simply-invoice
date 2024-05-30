@@ -7,15 +7,16 @@ import {
 	useNavigation,
 } from '@remix-run/react';
 import { Reorder } from 'framer-motion';
-import { nanoid } from 'nanoid';
 import queryString from 'query-string';
 import { z } from 'zod';
 import { AddFormField } from '~/components/AddFormField';
-import { FormField, UncontrolledFormField } from '~/components/FormField';
+import { FormField } from '~/components/FormField';
 import { Button } from '~/components/ui/button';
 import { db } from '~/lib/db';
-import type { CustomField, Field } from '~/lib/types';
+import type { CustomField } from '~/lib/types';
 import { createCompany, getCompanyActionErrors } from '~/utils/company';
+import { NewFormField } from '~/components/NewFormField';
+import { addressFields, informationFields } from '~/lib/constants';
 
 export async function clientAction({ request }: ClientActionFunctionArgs) {
 	try {
@@ -36,89 +37,12 @@ export async function clientAction({ request }: ClientActionFunctionArgs) {
 	}
 }
 
-const companyFields: Array<Field> = [
-	{
-		id: nanoid(),
-		name: 'name',
-		label: 'Name *',
-		input: {
-			required: true,
-		},
-	},
-	{
-		id: nanoid(),
-		name: 'email',
-		label: 'Email *',
-		input: {
-			type: 'email',
-			required: true,
-		},
-	},
-];
-
-const addressFields: Array<Field> = [
-	{
-		id: nanoid(),
-		name: 'address1',
-		label: 'Address 1 *',
-		input: {
-			required: true,
-		},
-	},
-	{
-		id: nanoid(),
-		name: 'address2',
-		label: 'Address 2',
-	},
-	{
-		id: nanoid(),
-		name: 'country',
-		label: 'Country *',
-		input: {
-			required: true,
-		},
-	},
-	{
-		id: nanoid(),
-		name: 'province',
-		label: 'Province',
-	},
-	{
-		id: nanoid(),
-		name: 'city',
-		label: 'City',
-	},
-	{
-		id: nanoid(),
-		name: 'zip',
-		label: 'Zip',
-	},
-];
-
 export default function NewCompanyRoute() {
 	const actionData = useActionData<typeof clientAction>();
-	// const { toast } = useToast();
-	// const dismissRef = React.useRef<(() => void) | null>(null);
 
 	const navigation = useNavigation();
 	const isLoading = navigation.state !== 'idle';
 	const isSubmitting = navigation.state === 'submitting';
-
-	// React.useEffect(() => {
-	// 	if (isSubmitting) {
-	// 		dismissRef.current = toast({
-	// 			title: 'Saving Company',
-	// 		}).dismiss;
-	// 	}
-	// }, [toast, isSubmitting]);
-
-	// React.useEffect(() => {
-	// 	return () => {
-	// 		if (dismissRef.current) {
-	// 			dismissRef.current();
-	// 		}
-	// 	};
-	// }, []);
 
 	const [formFields, setFormFields] = React.useState<Array<CustomField>>([]);
 
@@ -140,30 +64,25 @@ export default function NewCompanyRoute() {
 		<section>
 			<Form method="post">
 				<div>
-					{companyFields.map((field) => (
-						<UncontrolledFormField
+					{informationFields.map((field) => (
+						<NewFormField
 							key={field.id}
 							className="my-2"
-							formField={{
-								...field,
-								error: actionData?.errors?.[field.name],
-							}}
+							error={actionData?.errors?.[field.name]}
+							{...field}
 						/>
 					))}
 				</div>
 
 				<div>
 					<h3 className="text-2xl">Address</h3>
-
 					<div>
 						{addressFields.map((field) => (
-							<UncontrolledFormField
+							<NewFormField
 								key={field.id}
 								className="my-2"
-								formField={{
-									...field,
-									error: actionData?.errors?.[field.name],
-								}}
+								error={actionData?.errors?.[field.name]}
+								{...field}
 							/>
 						))}
 					</div>
