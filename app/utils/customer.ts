@@ -7,6 +7,7 @@ import {
 	updateCustomerSchema,
 	type UpdateCustomerSchemaErrors,
 } from '~/lib/schemas';
+import type { CustomField, Customer } from '~/lib/types';
 import { extractCustomFields } from '~/utils/shared';
 
 type ZodErrors<T extends 'create' | 'update'> = T extends 'create'
@@ -23,29 +24,56 @@ type ActionErrors = {
 	custom?: Record<string, { label?: string; content?: string }>;
 };
 
-export const createCustomer = (formData: ParsedQuery<string>) => {
+export const createCustomer = (formData: FormData) => {
+	const entries = Array.from(formData);
 	const today = new Date().toISOString();
-	const customFields = extractCustomFields(formData);
-	const newCustomer = createCustomerSchema.parse({
+
+	const newCustomer = {
 		id: ulid(),
-		name: formData['name']?.toString(),
-		email: formData['email']?.toString(),
 		address: {
-			address1: formData['address1']?.toString(),
-			address2: formData['address2']?.toString(),
-			city: formData['city']?.toString(),
-			country: formData['country']?.toString(),
-			province: formData['province']?.toString(),
-			zip: formData['zip']?.toString(),
+			id: ulid(),
 		},
-		...(Object.keys(customFields).length
-			? { custom: Object.values(customFields) }
-			: undefined),
 		createdAt: today,
 		updatedAt: today,
+	} as Customer;
+
+	const customFields: Record<string, CustomField> = {};
+
+	entries.forEach(([key, value]) => {
+		const entryValue = value.toString();
+
+		if (key.search(/order|label|content|show-label-in-invoice/) > -1) {
+			const id = key
+				.replace('order-', '')
+				.replace('label-', '')
+				.replace('content-', '')
+				.replace('show-label-in-invoice-', '');
+
+			if (!customFields[id]) {
+				customFields[id] = { id } as CustomField;
+			}
+
+			if (key === `order-${id}`) {
+				customFields[id].order = parseInt(entryValue, 10);
+			} else if (key === `label-${id}`) {
+				customFields[id].label = entryValue;
+			} else if (key === `content-${id}`) {
+				customFields[id].content = entryValue;
+			} else if (key === `show-label-in-invoice-${id}`) {
+				customFields[id].showLabelInInvoice = entryValue === 'on';
+			}
+		} else if (key.search('address-') > -1) {
+			newCustomer.address[key.replace('address-', '')] = entryValue;
+		} else {
+			newCustomer[key] = entryValue;
+		}
 	});
 
-	return newCustomer;
+	if (Object.keys(customFields).length) {
+		newCustomer.custom = Object.values(customFields);
+	}
+
+	return createCustomerSchema.parse(newCustomer);
 };
 
 export const updateCustomer = (

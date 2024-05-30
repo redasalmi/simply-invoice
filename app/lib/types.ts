@@ -23,14 +23,14 @@ export type Field = {
 
 export type CustomField = {
 	id: string;
+	order: number;
 	label: string;
 	content: string;
-	showLabel?: boolean;
-	labelError?: string;
-	contentError?: string;
+	showLabelInInvoice?: boolean;
 };
 
 export type Address = {
+	id: string;
 	address1: string;
 	address2?: string;
 	city?: string;

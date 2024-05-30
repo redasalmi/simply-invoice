@@ -8,19 +8,17 @@ import {
 } from '@remix-run/react';
 import { Reorder } from 'framer-motion';
 import { ulid } from 'ulid';
-import queryString from 'query-string';
 import { z } from 'zod';
 import { Button } from '~/components/ui/button';
 import { Input } from '~/components/ui/input';
+import { NewFormField } from '~/components/NewFormField';
 import { db } from '~/lib/db';
 import { createCompany, getCompanyActionErrors } from '~/utils/company';
-import { NewFormField } from '~/components/NewFormField';
 import { addressFields, informationFields } from '~/lib/constants';
 
 export async function clientAction({ request }: ClientActionFunctionArgs) {
 	try {
-		const formQueryString = await request.text();
-		const formData = queryString.parse(formQueryString, { sort: false });
+		const formData = await request.formData();
 		const newCompany = createCompany(formData);
 		await db.companies.add(newCompany);
 
@@ -98,20 +96,23 @@ export default function NewCompanyRoute() {
 						</div>
 					</div>
 
-					<div>
-						{customFields.length ? (
+					{customFields.length ? (
+						<div>
 							<Reorder.Group values={customFields} onReorder={setCustomFields}>
 								{customFields.map((field, index) => (
 									<Reorder.Item key={field.id} value={field}>
 										<div className="my-2 flex items-center gap-2">
 											<Input
-												name="order"
-												defaultValue={index}
+												name={`order-${field.id}`}
+												readOnly
+												aria-hidden
+												tabIndex={-1}
+												value={index}
 												className="hidden"
 											/>
 
 											<NewFormField
-												id={field.id}
+												id={`label-${field.id}`}
 												name={`label-${field.id}`}
 												label="Label *"
 												required
@@ -120,7 +121,7 @@ export default function NewCompanyRoute() {
 											/>
 
 											<NewFormField
-												id={field.id}
+												id={`content-${field.id}`}
 												name={`content-${field.id}`}
 												label="Content *"
 												required
@@ -139,8 +140,8 @@ export default function NewCompanyRoute() {
 									</Reorder.Item>
 								))}
 							</Reorder.Group>
-						) : null}
-					</div>
+						</div>
+					) : null}
 				</div>
 
 				<div>

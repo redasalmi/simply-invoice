@@ -5,6 +5,7 @@ export const createCompanySchema = z.object({
 	name: z.string().min(1, 'Name is required'),
 	email: z.string().email(),
 	address: z.object({
+		id: z.string(),
 		address1: z.string().min(1, 'Address 1 is required'),
 		address2: z.string().optional(),
 		city: z.string().optional(),
@@ -16,9 +17,10 @@ export const createCompanySchema = z.object({
 		.array(
 			z.object({
 				id: z.string(),
+				order: z.number(),
 				label: z.string().min(1, 'Label is required'),
 				content: z.string().min(1, 'Content is required'),
-				showLabel: z.boolean().optional(),
+				showLabelInInvoice: z.boolean().optional(),
 			}),
 		)
 		.optional(),
@@ -40,6 +42,7 @@ export const createCustomerSchema = z.object({
 	name: z.string().min(1, 'Name is required'),
 	email: z.string().email(),
 	address: z.object({
+		id: z.string(),
 		address1: z.string().min(1, 'Address 1 is required'),
 		address2: z.string().optional(),
 		city: z.string().optional(),
@@ -51,9 +54,10 @@ export const createCustomerSchema = z.object({
 		.array(
 			z.object({
 				id: z.string(),
+				order: z.number(),
 				label: z.string().min(1, 'Label is required'),
 				content: z.string().min(1, 'Content is required'),
-				showLabel: z.boolean().optional(),
+				showLabelInInvoice: z.boolean().optional(),
 			}),
 		)
 		.optional(),
