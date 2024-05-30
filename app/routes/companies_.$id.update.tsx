@@ -137,9 +137,7 @@ export default function CompanyUpdateRoute() {
 	if (!company) {
 		return (
 			<section>
-				<div>
-					<EntityNotFound type="company" baseUrl="/companies" />
-				</div>
+				<EntityNotFound type="company" baseUrl="/companies" />
 			</section>
 		);
 	}
