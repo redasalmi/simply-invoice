@@ -18,7 +18,11 @@ type EntitiesListProps = {
 };
 
 export function EntitiesList({ baseUrl, type, entities }: EntitiesListProps) {
-	return entities && entities.items.length > 0 ? (
+	if (!entities.items.length) {
+		<p>No {capitalize(type)} found.</p>;
+	}
+
+	return (
 		<Table>
 			<TableHeader>
 				<TableRow>
@@ -55,7 +59,5 @@ export function EntitiesList({ baseUrl, type, entities }: EntitiesListProps) {
 				))}
 			</TableBody>
 		</Table>
-	) : (
-		<p>No {capitalize(type)} found.</p>
 	);
 }

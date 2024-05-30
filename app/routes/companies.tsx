@@ -39,8 +39,8 @@ export default function CompaniesRoute() {
 				</div>
 				<div className="mt-6">
 					<EntitiesList
-						baseUrl="/companies"
 						type="company"
+						baseUrl="/companies"
 						entities={companies}
 					/>
 				</div>

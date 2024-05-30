@@ -1,7 +1,6 @@
 import {
 	type ClientActionFunctionArgs,
 	type ClientLoaderFunctionArgs,
-	Link,
 	redirect,
 	useActionData,
 	useLoaderData,
@@ -16,6 +15,7 @@ import { getCompanyActionErrors } from '~/utils/company';
 import { UpdateEntity } from '~/components/Entities/update';
 import { updateEntity } from '~/components/Entities/utils';
 import type { Company } from '~/lib/types';
+import { EntityNotFound } from '~/components/Entities/error';
 
 export async function clientLoader({ params }: ClientLoaderFunctionArgs) {
 	invariant(params.id, 'Company ID is required');
@@ -138,17 +138,7 @@ export default function CompanyUpdateRoute() {
 		return (
 			<section>
 				<div>
-					<p className="m-12">
-						Sorry, but no company with this ID was found! Please click{' '}
-						<Link
-							to="/companies"
-							aria-label="companies list"
-							className="hover:underline"
-						>
-							Here
-						</Link>{' '}
-						to navigate back to your companies list.
-					</p>
+					<EntityNotFound type="company" baseUrl="/companies" />
 				</div>
 			</section>
 		);
