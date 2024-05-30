@@ -1,13 +1,5 @@
 import { Link, Outlet, useLoaderData } from '@remix-run/react';
-import { Eye, Pencil, Trash } from 'lucide-react';
-import {
-	Table,
-	TableBody,
-	TableCell,
-	TableHead,
-	TableHeader,
-	TableRow,
-} from '~/components/ui/table';
+import { EntitiesList } from '~/components/Entities/list';
 import { db, getPage } from '~/lib/db';
 
 export async function clientLoader() {
@@ -46,46 +38,11 @@ export default function CompaniesRoute() {
 					</Link>
 				</div>
 				<div className="mt-6">
-					{companies && companies.items.length > 0 ? (
-						<Table>
-							<TableHeader>
-								<TableRow>
-									<TableHead>Name</TableHead>
-									<TableHead>Email</TableHead>
-								</TableRow>
-							</TableHeader>
-							<TableBody>
-								{companies.items.map(({ id, email, name }) => (
-									<TableRow key={id}>
-										<TableCell>{name}</TableCell>
-										<TableCell>{email}</TableCell>
-										<TableCell className="flex items-center gap-4">
-											<Link
-												to={`/companies/${id}`}
-												aria-label={`view ${name} company details`}
-											>
-												<Eye />
-											</Link>
-											<Link
-												to={`/companies/${id}/update`}
-												aria-label={`update ${name} company`}
-											>
-												<Pencil />
-											</Link>
-											<Link
-												to={`/companies/${id}/delete`}
-												aria-label={`delete ${name} company`}
-											>
-												<Trash />
-											</Link>
-										</TableCell>
-									</TableRow>
-								))}
-							</TableBody>
-						</Table>
-					) : (
-						<p>No Company found.</p>
-					)}
+					<EntitiesList
+						baseUrl="/companies"
+						type="company"
+						entities={companies}
+					/>
 				</div>
 			</section>
 			<Outlet />

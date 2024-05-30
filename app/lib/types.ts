@@ -59,6 +59,9 @@ export type Customer = {
 	updatedAt: string;
 };
 
+export type Entity = Company | Customer;
+export type EntityType = 'company' | 'customer';
+
 export type Service = {
 	id: string;
 	name: string;
@@ -95,4 +98,19 @@ export type Invoice = {
 
 	createdAt: string;
 	updatedAt: string;
+};
+
+export type PaginatedResult<T> = {
+	items: T[];
+	page: number;
+	total: number;
+	hasNextPage: boolean;
+};
+
+export type EntityActionErrors = {
+	name?: string;
+	email?: string;
+	'address-address1'?: string;
+	'address-country'?: string;
+	custom?: Record<string, { label?: string; content?: string }>;
 };
