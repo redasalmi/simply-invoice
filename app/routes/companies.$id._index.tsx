@@ -4,8 +4,8 @@ import {
 	useNavigate,
 } from '@remix-run/react';
 import invariant from 'tiny-invariant';
-import { EntityDetail } from '~/components/Entities/detail';
-import { EntityNotFound } from '~/components/Entities/error';
+import { EntityDetail } from '~/components/Entity/detail';
+import { EntityNotFound } from '~/components/Entity/error';
 import { Dialog, DialogContent } from '~/components/ui/dialog';
 import { db } from '~/lib/db';
 

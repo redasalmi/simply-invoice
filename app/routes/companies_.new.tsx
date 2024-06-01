@@ -5,7 +5,7 @@ import {
 	useNavigation,
 } from '@remix-run/react';
 import { z } from 'zod';
-import { CreateEntityForm } from '~/components/Entities/create';
+import { CreateEntityForm } from '~/components/Entity/create';
 import { db } from '~/lib/db';
 import { createEntitySchema } from '~/schemas/entity.schemas';
 import type { Company } from '~/types/company.types';

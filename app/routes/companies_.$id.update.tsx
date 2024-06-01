@@ -11,8 +11,8 @@ import { z } from 'zod';
 import { Button } from '~/components/ui/button';
 import { Skeleton } from '~/components/ui/skeleton';
 import { db } from '~/lib/db';
-import { UpdateEntityForm } from '~/components/Entities/update';
-import { EntityNotFound } from '~/components/Entities/error';
+import { UpdateEntityForm } from '~/components/Entity/update';
+import { EntityNotFound } from '~/components/Entity/error';
 import {
 	parseUpdateEntityErrors,
 	parseUpdateEntityForm,
