@@ -49,6 +49,20 @@ export type Company = {
 	updatedAt: string;
 };
 
+export type UpdateCompany = {
+	id: string;
+	name: string;
+	email: string;
+	'address.address1': string;
+	'address.address2'?: string;
+	'address.city'?: string;
+	'address.country': string;
+	'address.province'?: string;
+	'address.zip'?: string;
+	custom?: Array<CustomField>;
+	updatedAt: string;
+};
+
 export type Customer = {
 	id: string;
 	name: string;
@@ -56,6 +70,20 @@ export type Customer = {
 	address: Address;
 	custom?: Array<CustomField>;
 	createdAt: string;
+	updatedAt: string;
+};
+
+export type UpdateCustomer = {
+	id: string;
+	name: string;
+	email: string;
+	'address.address1': string;
+	'address.address2'?: string;
+	'address.city'?: string;
+	'address.country': string;
+	'address.province'?: string;
+	'address.zip'?: string;
+	custom?: Array<CustomField>;
 	updatedAt: string;
 };
 

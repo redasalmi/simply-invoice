@@ -11,11 +11,14 @@ import { z } from 'zod';
 import { Button } from '~/components/ui/button';
 import { Skeleton } from '~/components/ui/skeleton';
 import { db } from '~/lib/db';
-import { getCompanyActionErrors } from '~/utils/company';
 import { UpdateEntity } from '~/components/Entities/update';
-import { updateEntity } from '~/components/Entities/utils';
-import type { Company } from '~/lib/types';
 import { EntityNotFound } from '~/components/Entities/error';
+import {
+	parseUpdateEntityErrors,
+	parseUpdateEntityForm,
+} from '~/components/Entities/utils';
+import type { UpdateCompany } from '~/lib/types';
+import { updateEntitySchema } from '~/components/Entities/schema';
 
 export async function clientLoader({ params }: ClientLoaderFunctionArgs) {
 	invariant(params.id, 'Company ID is required');
@@ -35,13 +38,17 @@ export async function clientAction({
 	try {
 		const companyId = params.id;
 		const formData = await request.formData();
-		const updatedCompany = updateEntity<Company>(formData);
+		const updatedCompany = parseUpdateEntityForm<UpdateCompany>(
+			companyId,
+			formData,
+		);
+		updateEntitySchema.parse(updatedCompany);
 		await db.companies.update(companyId, updatedCompany);
 
 		return redirect('/companies');
 	} catch (err) {
 		if (err instanceof z.ZodError) {
-			const errors = getCompanyActionErrors<'update'>(err);
+			const errors = parseUpdateEntityErrors(err);
 
 			return {
 				errors,

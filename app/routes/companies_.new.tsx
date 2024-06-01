@@ -6,23 +6,25 @@ import {
 } from '@remix-run/react';
 import { z } from 'zod';
 import { CreateEntity } from '~/components/Entities/create';
-import { createEntity } from '~/components/Entities/utils';
+import {
+	parseCreateEntityErrors,
+	parseCreateEntityForm,
+} from '~/components/Entities/utils';
 import { db } from '~/lib/db';
-import { createCompanySchema } from '~/lib/schemas';
-import { getCompanyActionErrors } from '~/utils/company';
+import { createEntitySchema } from '~/components/Entities/schema';
 import type { Company } from '~/lib/types';
 
 export async function clientAction({ request }: ClientActionFunctionArgs) {
 	try {
 		const formData = await request.formData();
-		const newCompany = createEntity<Company>(formData);
-		createCompanySchema.parse(newCompany);
+		const newCompany = parseCreateEntityForm<Company>(formData);
+		createEntitySchema.parse(newCompany);
 		await db.companies.add(newCompany);
 
 		return redirect('/companies');
 	} catch (err) {
 		if (err instanceof z.ZodError) {
-			const errors = getCompanyActionErrors<'create'>(err);
+			const errors = parseCreateEntityErrors(err);
 
 			return {
 				errors,
