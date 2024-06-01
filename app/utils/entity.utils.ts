@@ -24,12 +24,12 @@ export function parseCreateEntityForm(formData: FormData) {
 	entries.forEach(([key, value]) => {
 		const entryValue = value.toString();
 
-		if (key.search(/order|label|content|show-label-in-invoice/) > -1) {
+		if (key.search(/show-label-in-invoice|order|label|content/gi) > -1) {
 			const id = key
+				.replace('show-label-in-invoice-', '')
 				.replace('order-', '')
 				.replace('label-', '')
-				.replace('content-', '')
-				.replace('show-label-in-invoice-', '');
+				.replace('content-', '');
 
 			if (!customFields[id]) {
 				customFields[id] = { id } as CustomField;
@@ -72,12 +72,12 @@ export function parseUpdateEntityForm(entityId: string, formData: FormData) {
 	entries.forEach(([key, value]) => {
 		const entryValue = value.toString();
 
-		if (key.search(/order|label|content|show-label-in-invoice/) > -1) {
+		if (key.search(/show-label-in-invoice|order|label|content/gi) > -1) {
 			const id = key
+				.replace('show-label-in-invoice-', '')
 				.replace('order-', '')
 				.replace('label-', '')
-				.replace('content-', '')
-				.replace('show-label-in-invoice-', '');
+				.replace('content-', '');
 
 			if (!customFields[id]) {
 				customFields[id] = { id } as CustomField;
@@ -99,9 +99,7 @@ export function parseUpdateEntityForm(entityId: string, formData: FormData) {
 		}
 	});
 
-	if (Object.keys(customFields).length) {
-		entity.custom = Object.values(customFields);
-	}
+	entity.custom = Object.values(customFields);
 
 	return entity;
 }

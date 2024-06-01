@@ -2,9 +2,10 @@ import * as React from 'react';
 import { cn } from '~/utils/shared.utils';
 
 type Ref = HTMLButtonElement;
-type Props = React.ComponentPropsWithRef<'button'> & {
+type Props = Omit<React.ComponentPropsWithRef<'button'>, 'name'> & {
+	name: string;
 	checked?: boolean;
-	onCheckedChange: (checked: boolean) => void;
+	onCheckedChange?: (checked: boolean) => void;
 };
 
 export const Switch = React.forwardRef<Ref, Props>(function Switch(
@@ -19,13 +20,15 @@ export const Switch = React.forwardRef<Ref, Props>(function Switch(
 
 		if (isChecked) {
 			element.removeAttribute('aria-checked');
-			inputRef.current.removeAttribute('checked');
+			inputRef.current.checked = false;
 		} else {
 			element.setAttribute('aria-checked', 'true');
-			inputRef.current.setAttribute('checked', 'true');
+			inputRef.current.checked = true;
 		}
 
-		onCheckedChange(!isChecked);
+		if (onCheckedChange) {
+			onCheckedChange(!isChecked);
+		}
 	};
 
 	React.useEffect(() => {

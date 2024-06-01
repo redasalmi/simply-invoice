@@ -2,9 +2,11 @@ import * as React from 'react';
 import { Form } from '@remix-run/react';
 import { ulid } from 'ulid';
 import { Reorder } from 'framer-motion';
+import { MoveIcon, TrashIcon } from 'lucide-react';
 import { Input } from '~/components/ui/input';
 import { FormField } from '~/components/FormField';
 import { Button } from '~/components/ui/button';
+import { Switch } from '~/components/ui/switch';
 import { addressFields, informationFields } from '~/lib/constants';
 import { capitalize } from '~/utils/shared.utils';
 import type {
@@ -98,6 +100,12 @@ export function UpdateEntityForm({
 							{customFields.map((field, index) => (
 								<Reorder.Item key={field.id} value={field}>
 									<div className="my-2 flex items-center gap-2">
+										<div className="mt-auto">
+											<Button className="active:cursor-grab">
+												<MoveIcon />
+											</Button>
+										</div>
+
 										<Input
 											name={`order-${field.id}`}
 											readOnly
@@ -128,10 +136,14 @@ export function UpdateEntityForm({
 										/>
 
 										<div className="mt-auto flex gap-2">
-											<Button>Show Label In Invoice</Button>
-											<Button>Reorder</Button>
+											<div className="flex items-center justify-center rounded-md bg-primary px-4 py-2">
+												<Switch
+													name={`show-label-in-invoice-${field.id}`}
+													checked={field.showLabelInInvoice}
+												/>
+											</div>
 											<Button onClick={() => deleteField(field.id)}>
-												Delete Custom Field
+												<TrashIcon />
 											</Button>
 										</div>
 									</div>
