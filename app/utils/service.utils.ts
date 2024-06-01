@@ -1,11 +1,37 @@
 import { ulid } from 'ulid';
-import { type ZodError } from 'zod';
+import type { z } from 'zod';
 import {
-	createServiceSchema,
 	type CreateServiceSchemaErrors,
-	updateServiceSchema,
 	type UpdateServiceSchemaErrors,
-} from '~/lib/schemas';
+} from '~/schemas/service.schemas';
+import type { Service, UpdateService } from '~/types/service.types';
+
+export function parseCreateServiceForm(formData: FormData) {
+	const today = new Date().toISOString();
+	const service = {
+		id: ulid(),
+		name: formData.get('name')?.toString(),
+		description: formData.get('description')?.toString(),
+		rate: Number(formData.get('rate')),
+		createdAt: today,
+		updatedAt: today,
+	} as Service;
+
+	return service;
+}
+
+export function parseUpdateServiceForm(serviceId: string, formData: FormData) {
+	const today = new Date().toISOString();
+	const service = {
+		id: serviceId,
+		name: formData.get('name')?.toString(),
+		description: formData.get('description')?.toString(),
+		rate: Number(formData.get('rate')),
+		updatedAt: today,
+	} as UpdateService;
+
+	return service;
+}
 
 type ZodErrors<T extends 'create' | 'update'> = T extends 'create'
 	? CreateServiceSchemaErrors
@@ -16,36 +42,9 @@ type ActionErrors = {
 	rate?: string;
 };
 
-export const createService = (formData: FormData) => {
-	const today = new Date().toISOString();
-	const newService = createServiceSchema.parse({
-		id: ulid(),
-		name: formData.get('name')?.toString(),
-		description: formData.get('description')?.toString(),
-		rate: Number(formData.get('rate')),
-		createdAt: today,
-		updatedAt: today,
-	});
-
-	return newService;
-};
-
-export const updateService = (serviceId: string, formData: FormData) => {
-	const today = new Date().toISOString();
-	const updatedService = updateServiceSchema.parse({
-		id: serviceId,
-		name: formData.get('name')?.toString(),
-		description: formData.get('description')?.toString(),
-		rate: Number(formData.get('rate')),
-		updatedAt: today,
-	});
-
-	return updatedService;
-};
-
-export const getServiceActionErrors = <T extends 'create' | 'update'>(
-	err: ZodError,
-) => {
+export function parseServiceActionErrors<T extends 'create' | 'update'>(
+	err: z.ZodError,
+) {
 	const zodErrors: ZodErrors<T> = err.format();
 	const errors: ActionErrors = {};
 
@@ -57,4 +56,4 @@ export const getServiceActionErrors = <T extends 'create' | 'update'>(
 	}
 
 	return errors;
-};
+}

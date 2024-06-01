@@ -3,20 +3,25 @@ import { Form, redirect, useActionData, useNavigation } from '@remix-run/react';
 import { z } from 'zod';
 import { Button } from '~/components/ui/button';
 import { db } from '~/lib/db';
-import { createService, getServiceActionErrors } from '~/utils/service';
 import { servicesFields } from '~/lib/constants';
 import { FormField } from '~/components/FormField';
+import {
+	parseCreateServiceForm,
+	parseServiceActionErrors,
+} from '~/utils/service.utils';
+import { createServiceSchema } from '~/schemas/service.schemas';
 
 export async function clientAction({ request }: ActionFunctionArgs) {
 	try {
 		const formData = await request.formData();
-		const newService = createService(formData);
+		const newService = parseCreateServiceForm(formData);
+		createServiceSchema.parse(newService);
 		await db.services.add(newService);
 
 		return redirect('/services');
 	} catch (err) {
 		if (err instanceof z.ZodError) {
-			const errors = getServiceActionErrors<'create'>(err);
+			const errors = parseServiceActionErrors<'create'>(err);
 
 			return {
 				errors,

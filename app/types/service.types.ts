@@ -6,3 +6,5 @@ export type Service = {
 	createdAt: string;
 	updatedAt: string;
 };
+
+export type UpdateService = Omit<Service, 'createdAt'>;

@@ -13,9 +13,12 @@ import { z } from 'zod';
 import { Button } from '~/components/ui/button';
 import { Skeleton } from '~/components/ui/skeleton';
 import { db } from '~/lib/db';
-import { getServiceActionErrors, updateService } from '~/utils/service';
 import { servicesFields } from '~/lib/constants';
 import { FormField } from '~/components/FormField';
+import {
+	parseServiceActionErrors,
+	parseUpdateServiceForm,
+} from '~/utils/service.utils';
 
 export async function clientLoader({ params }: ClientLoaderFunctionArgs) {
 	invariant(params.id, 'Service ID is required');
@@ -35,13 +38,13 @@ export async function clientAction({
 	try {
 		const serviceId = params.id;
 		const formData = await request.formData();
-		const updatedService = updateService(serviceId, formData);
+		const updatedService = parseUpdateServiceForm(serviceId, formData);
 		await db.services.update(updatedService.id, updatedService);
 
 		return redirect('/services');
 	} catch (err) {
 		if (err instanceof z.ZodError) {
-			const errors = getServiceActionErrors<'update'>(err);
+			const errors = parseServiceActionErrors<'update'>(err);
 
 			return {
 				errors,

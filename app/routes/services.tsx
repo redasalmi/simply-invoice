@@ -1,5 +1,6 @@
 import { Link, Outlet, useLoaderData } from '@remix-run/react';
 import { Eye, Pencil, Trash } from 'lucide-react';
+import { CreateEntityLink } from '~/components/Entity/list';
 import {
 	Table,
 	TableBody,
@@ -20,9 +21,9 @@ export function HydrateFallback() {
 	return (
 		<section>
 			<div className="flex justify-end">
-				<Link to="/services/new" className={'rounded-lg bg-blue-300 px-4 py-2'}>
-					Create New Service
-				</Link>
+				<CreateEntityLink pathname="/services/new">
+					Create New service
+				</CreateEntityLink>
 			</div>
 		</section>
 	);
@@ -35,12 +36,9 @@ export default function ServicesRoute() {
 		<>
 			<section>
 				<div className="flex justify-end">
-					<Link
-						to="/services/new"
-						className={'rounded-lg bg-blue-300 px-4 py-2'}
-					>
-						Create New Service
-					</Link>
+					<CreateEntityLink pathname="/services/new">
+						Create New service
+					</CreateEntityLink>
 				</div>
 				<div className="mt-6">
 					{services && services.items.length > 0 ? (

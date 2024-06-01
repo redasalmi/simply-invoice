@@ -25,12 +25,12 @@ import {
 } from '~/lib/constants';
 import { countries } from '~/lib/currencies';
 import { db } from '~/lib/db';
+import { ServicesTable } from '~/components/ServicesTable';
 import {
 	newInvoiceLoaderSchema,
 	type NewInvoiceLoaderSchemaErrors,
-} from '~/lib/schemas';
-import type { Customer } from '~/lib/types';
-import { ServicesTable } from '~/components/ServicesTable';
+} from '~/schemas/invoice.schemas';
+import type { Customer } from '~/types/customer.types';
 
 export async function clientLoader() {
 	try {
