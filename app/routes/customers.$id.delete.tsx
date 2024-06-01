@@ -8,7 +8,7 @@ import {
 	useNavigation,
 } from '@remix-run/react';
 import invariant from 'tiny-invariant';
-import { DeleteEntity, DeleteEntityError } from '~/components/Entity/delete';
+import { DeleteEntity, DeleteEntityError } from '~/components/entity/delete';
 import { db } from '~/lib/db';
 
 export async function clientLoader({ params }: ClientLoaderFunctionArgs) {

@@ -1,6 +1,6 @@
 import { Link, Outlet, useLoaderData } from '@remix-run/react';
 import { Eye, Pencil, Trash } from 'lucide-react';
-import { CreateEntityLink } from '~/components/Entity/list';
+import { CreateEntityLink } from '~/components/entity/list';
 import {
 	Table,
 	TableBody,
