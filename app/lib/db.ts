@@ -1,5 +1,8 @@
 import Dexie, { type Table } from 'dexie';
-import type { Company, Customer, Invoice, Service } from '~/lib/types';
+import type { Company } from '~/types/company.types';
+import type { Customer } from '~/types/customer.types';
+import type { Invoice } from '~/types/invoice.types';
+import type { Service } from '~/types/service.types';
 
 class DexieDB extends Dexie {
 	companies!: Table<Company>;

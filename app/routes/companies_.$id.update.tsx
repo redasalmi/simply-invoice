@@ -16,9 +16,9 @@ import { EntityNotFound } from '~/components/Entities/error';
 import {
 	parseUpdateEntityErrors,
 	parseUpdateEntityForm,
-} from '~/components/Entities/utils';
-import type { UpdateCompany } from '~/lib/types';
-import { updateEntitySchema } from '~/components/Entities/schema';
+} from '~/utils/entity.utils';
+import type { UpdateCompany } from '~/types/company.types';
+import { updateEntitySchema } from '~/schemas/entity.schemas';
 
 export async function clientLoader({ params }: ClientLoaderFunctionArgs) {
 	invariant(params.id, 'Company ID is required');

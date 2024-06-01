@@ -7,7 +7,7 @@ import { NewFormField } from '~/components/NewFormField';
 import { Button } from '~/components/ui/button';
 import { addressFields, informationFields } from '~/lib/constants';
 import { capitalize } from '~/utils/shared';
-import type { EntityActionErrors, EntityType } from '~/lib/types';
+import type { EntityActionErrors, EntityType } from '~/types/entity.types';
 
 type CreateEntityProps = {
 	type: EntityType;

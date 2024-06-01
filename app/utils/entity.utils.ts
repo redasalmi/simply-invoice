@@ -1,10 +1,10 @@
 import type { z } from 'zod';
 import { ulid } from 'ulid';
-import type { CustomField } from '~/lib/types';
+import type { CustomField } from '~/types/formField.types';
 import type {
 	CreateEntitySchemaErrors,
 	UpdateEntitySchemaErrors,
-} from '~/components/Entities/schema';
+} from '~/schemas/entity.schemas';
 
 export function parseCreateEntityForm<T>(formData: FormData) {
 	const entries = Array.from(formData);

@@ -1,5 +1,5 @@
 import { Link } from '@remix-run/react';
-import type { EntityType } from '~/lib/types';
+import type { EntityType } from '~/types/entity.types';
 
 type EntityNotFoundProps = {
 	type: EntityType;

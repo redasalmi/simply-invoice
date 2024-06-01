@@ -6,13 +6,13 @@ import {
 } from '@remix-run/react';
 import { z } from 'zod';
 import { CreateEntityForm } from '~/components/Entities/create';
+import { db } from '~/lib/db';
+import { createEntitySchema } from '~/schemas/entity.schemas';
+import type { Company } from '~/types/company.types';
 import {
 	parseCreateEntityErrors,
 	parseCreateEntityForm,
-} from '~/components/Entities/utils';
-import { db } from '~/lib/db';
-import { createEntitySchema } from '~/components/Entities/schema';
-import type { Company } from '~/lib/types';
+} from '~/utils/entity.utils';
 
 export async function clientAction({ request }: ClientActionFunctionArgs) {
 	try {

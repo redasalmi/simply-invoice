@@ -1,5 +1,5 @@
 import { Table, TableBody, TableCell, TableRow } from '~/components/ui/table';
-import type { Entity } from '~/lib/types';
+import type { Entity } from '~/types/entity.types';
 
 type EntityDetailProps = {
 	entity: Entity;

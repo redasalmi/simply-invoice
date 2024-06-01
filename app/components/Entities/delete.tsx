@@ -10,7 +10,7 @@ import {
 	AlertDialogTitle,
 } from '~/components/ui/alert-dialog';
 import { capitalize } from '~/utils/shared';
-import type { EntityType } from '~/lib/types';
+import type { EntityType } from '~/types/entity.types';
 
 type DeleteEntityProps = {
 	type: EntityType;
