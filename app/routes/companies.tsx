@@ -1,5 +1,5 @@
 import { Outlet, useLoaderData } from '@remix-run/react';
-import { CreateEntityLink, EntitiesList } from '~/components/entity/list';
+import { CreateEntityLink, EntitiesList } from '~/components/entity/List';
 import { db, getPage } from '~/lib/db';
 
 export async function clientLoader() {

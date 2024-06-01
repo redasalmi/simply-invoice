@@ -1,4 +1,4 @@
-import type { Address } from './common.types';
+import type { Address } from './shared.types';
 import type { CustomField } from './formField.types';
 
 export type Customer = {
