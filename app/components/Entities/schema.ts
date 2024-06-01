@@ -28,6 +28,10 @@ export const createEntitySchema = z.object({
 	updatedAt: z.string(),
 });
 
+export type CreateEntitySchemaErrors = z.inferFormattedError<
+	typeof createEntitySchema
+>;
+
 export const updateEntitySchema = z.object({
 	id: z.string(),
 	name: z.string().min(1, 'Name is required'),
@@ -51,10 +55,6 @@ export const updateEntitySchema = z.object({
 		.optional(),
 	updatedAt: z.string(),
 });
-
-export type CreateEntitySchemaErrors = z.inferFormattedError<
-	typeof createEntitySchema
->;
 
 export type UpdateEntitySchemaErrors = z.inferFormattedError<
 	typeof updateEntitySchema

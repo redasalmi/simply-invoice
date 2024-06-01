@@ -1,4 +1,4 @@
-import type { FormFieldProps } from './types';
+import type { FormFieldProps } from '~/types/formField.types';
 
 export const idTypes = [
 	{

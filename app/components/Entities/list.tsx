@@ -17,12 +17,6 @@ type CreateEntityLinkProps = {
 	children: React.ReactNode;
 };
 
-type EntitiesListProps = {
-	baseUrl: string;
-	type: EntityType;
-	entities: PaginatedResult<Entity>;
-};
-
 export function CreateEntityLink({
 	pathname,
 	children,
@@ -34,7 +28,13 @@ export function CreateEntityLink({
 	);
 }
 
-export function EntitiesList({ baseUrl, type, entities }: EntitiesListProps) {
+type EntitiesListProps = {
+	type: EntityType;
+	baseUrl: string;
+	entities: PaginatedResult<Entity>;
+};
+
+export function EntitiesList({ type, baseUrl, entities }: EntitiesListProps) {
 	if (!entities.items.length) {
 		<p>No {capitalize(type)} found.</p>;
 	}
