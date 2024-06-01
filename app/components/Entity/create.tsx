@@ -3,7 +3,7 @@ import { Form } from '@remix-run/react';
 import { ulid } from 'ulid';
 import { Reorder } from 'framer-motion';
 import { Input } from '~/components/ui/input';
-import { NewFormField } from '~/components/NewFormField';
+import { FormField } from '~/components/FormField';
 import { Button } from '~/components/ui/button';
 import { addressFields, informationFields } from '~/lib/constants';
 import { capitalize } from '~/utils/shared';
@@ -40,7 +40,7 @@ export function CreateEntityForm({
 		<Form method="post">
 			<div>
 				{informationFields.map((field) => (
-					<NewFormField
+					<FormField
 						key={field.id}
 						className="my-2"
 						error={errors?.[field.name]}
@@ -53,7 +53,7 @@ export function CreateEntityForm({
 				<h3 className="text-2xl">Address</h3>
 				<div>
 					{addressFields.map((field) => (
-						<NewFormField
+						<FormField
 							key={field.id}
 							className="my-2"
 							error={errors?.[field.name]}
@@ -91,7 +91,7 @@ export function CreateEntityForm({
 											className="hidden"
 										/>
 
-										<NewFormField
+										<FormField
 											id={`label-${field.id}`}
 											name={`label-${field.id}`}
 											label="Label *"
@@ -100,7 +100,7 @@ export function CreateEntityForm({
 											error={errors?.custom?.[index]?.label}
 										/>
 
-										<NewFormField
+										<FormField
 											id={`content-${field.id}`}
 											name={`content-${field.id}`}
 											label="Content *"

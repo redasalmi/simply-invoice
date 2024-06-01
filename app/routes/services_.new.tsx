@@ -5,7 +5,7 @@ import { Button } from '~/components/ui/button';
 import { db } from '~/lib/db';
 import { createService, getServiceActionErrors } from '~/utils/service';
 import { servicesFields } from '~/lib/constants';
-import { NewFormField } from '~/components/NewFormField';
+import { FormField } from '~/components/FormField';
 
 export async function clientAction({ request }: ActionFunctionArgs) {
 	try {
@@ -36,7 +36,7 @@ export default function NewServiceRoute() {
 		<section>
 			<Form method="POST">
 				{servicesFields.map((field) => (
-					<NewFormField
+					<FormField
 						key={field.id}
 						className="my-2"
 						error={actionData?.errors?.[field.name]}

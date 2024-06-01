@@ -24,39 +24,3 @@ export function dateFormatter(
 
 	return formatter;
 }
-
-export function extractCustomFields(formData: ParsedQuery<string>) {
-	const customFields: Record<
-		string,
-		Omit<CustomField, 'label' | 'content'> & {
-			label?: string;
-			content?: string;
-		}
-	> = {};
-
-	for (const [key, value] of Object.entries(formData)) {
-		if (key.search('custom-') !== -1) {
-			const id = key
-				.replace('custom-', '')
-				.replace('show-label-', '')
-				.replace('label-', '')
-				.replace('content-', '');
-
-			if (!customFields[id]) {
-				customFields[id] = {
-					id,
-				} as CustomField;
-			}
-
-			if (key === `custom-label-${id}`) {
-				customFields[id].label = value?.toString();
-			} else if (key === `custom-content-${id}`) {
-				customFields[id].content = value?.toString();
-			} else if (key === `custom-show-label-${id}`) {
-				customFields[id].showLabel = value === 'on';
-			}
-		}
-	}
-
-	return customFields;
-}

@@ -11,14 +11,6 @@ export type FormFieldProps = {
 	error?: string;
 };
 
-export type Field = {
-	id: string;
-	name: string;
-	label: string;
-	input?: React.ComponentPropsWithoutRef<'input'>;
-	error?: string;
-};
-
 export type CustomField = {
 	id: string;
 	order: number;

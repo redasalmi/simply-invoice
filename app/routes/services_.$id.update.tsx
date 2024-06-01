@@ -15,7 +15,7 @@ import { Skeleton } from '~/components/ui/skeleton';
 import { db } from '~/lib/db';
 import { getServiceActionErrors, updateService } from '~/utils/service';
 import { servicesFields } from '~/lib/constants';
-import { NewFormField } from '~/components/NewFormField';
+import { FormField } from '~/components/FormField';
 
 export async function clientLoader({ params }: ClientLoaderFunctionArgs) {
 	invariant(params.id, 'Service ID is required');
@@ -113,7 +113,7 @@ export default function ServiceUpdateRoute() {
 		<section>
 			<Form method="POST">
 				{servicesFields.map((field) => (
-					<NewFormField
+					<FormField
 						key={field.id}
 						className="my-2"
 						defaultValue={service[field.name]}
