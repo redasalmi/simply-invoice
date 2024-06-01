@@ -11,7 +11,7 @@ import { z } from 'zod';
 import { Button } from '~/components/ui/button';
 import { Skeleton } from '~/components/ui/skeleton';
 import { db } from '~/lib/db';
-import { UpdateEntity } from '~/components/Entities/update';
+import { UpdateEntityForm } from '~/components/Entities/update';
 import { EntityNotFound } from '~/components/Entities/error';
 import {
 	parseUpdateEntityErrors,
@@ -151,7 +151,7 @@ export default function CompanyUpdateRoute() {
 
 	return (
 		<section>
-			<UpdateEntity
+			<UpdateEntityForm
 				type="company"
 				entity={company}
 				isLoading={isLoading}

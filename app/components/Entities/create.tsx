@@ -16,7 +16,7 @@ type CreateEntityProps = {
 	errors?: EntityActionErrors;
 };
 
-export function CreateEntity({
+export function CreateEntityForm({
 	type,
 	isSubmitting,
 	isLoading,

@@ -22,7 +22,7 @@ type UpdateEntityProps = {
 	errors?: EntityActionErrors;
 };
 
-export function UpdateEntity({
+export function UpdateEntityForm({
 	type,
 	entity,
 	isSubmitting,

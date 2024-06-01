@@ -5,7 +5,7 @@ import {
 	useNavigation,
 } from '@remix-run/react';
 import { z } from 'zod';
-import { CreateEntity } from '~/components/Entities/create';
+import { CreateEntityForm } from '~/components/Entities/create';
 import {
 	parseCreateEntityErrors,
 	parseCreateEntityForm,
@@ -42,7 +42,7 @@ export default function NewCompanyRoute() {
 
 	return (
 		<section>
-			<CreateEntity
+			<CreateEntityForm
 				type="company"
 				isSubmitting={isSubmitting}
 				isLoading={isLoading}

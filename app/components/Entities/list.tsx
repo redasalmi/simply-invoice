@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { Link } from '@remix-run/react';
 import { Eye, Pencil, Trash } from 'lucide-react';
 import {
@@ -11,11 +12,27 @@ import {
 import { capitalize } from '~/utils/shared';
 import type { Entity, EntityType, PaginatedResult } from '~/lib/types';
 
+type CreateEntityLinkProps = {
+	pathname: string;
+	children: React.ReactNode;
+};
+
 type EntitiesListProps = {
 	baseUrl: string;
 	type: EntityType;
 	entities: PaginatedResult<Entity>;
 };
+
+export function CreateEntityLink({
+	pathname,
+	children,
+}: CreateEntityLinkProps) {
+	return (
+		<Link to={pathname} className={'rounded-lg bg-blue-300 px-4 py-2'}>
+			{children}
+		</Link>
+	);
+}
 
 export function EntitiesList({ baseUrl, type, entities }: EntitiesListProps) {
 	if (!entities.items.length) {
