@@ -6,7 +6,7 @@ import type {
 	UpdateEntitySchemaErrors,
 } from '~/schemas/entity.schemas';
 
-export function parseCreateEntityForm<T>(formData: FormData) {
+export function parseCreateEntityForm(formData: FormData) {
 	const entries = Array.from(formData);
 	const today = new Date().toISOString();
 
@@ -17,7 +17,7 @@ export function parseCreateEntityForm<T>(formData: FormData) {
 		},
 		createdAt: today,
 		updatedAt: today,
-	} as T;
+	};
 
 	const customFields: Record<string, CustomField> = {};
 
@@ -58,14 +58,14 @@ export function parseCreateEntityForm<T>(formData: FormData) {
 	return entity;
 }
 
-export function parseUpdateEntityForm<T>(entityId: string, formData: FormData) {
+export function parseUpdateEntityForm(entityId: string, formData: FormData) {
 	const entries = Array.from(formData);
 	const today = new Date().toISOString();
 
 	const entity = {
 		id: entityId,
 		updatedAt: today,
-	} as T;
+	};
 
 	const customFields: Record<string, CustomField> = {};
 

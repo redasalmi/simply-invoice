@@ -14,8 +14,8 @@ import { createServiceSchema } from '~/schemas/service.schemas';
 export async function clientAction({ request }: ActionFunctionArgs) {
 	try {
 		const formData = await request.formData();
-		const newService = parseCreateServiceForm(formData);
-		createServiceSchema.parse(newService);
+		const serviceFormData = parseCreateServiceForm(formData);
+		const newService = createServiceSchema.parse(serviceFormData);
 		await db.services.add(newService);
 
 		return redirect('/services');

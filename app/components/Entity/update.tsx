@@ -6,7 +6,7 @@ import { Input } from '~/components/ui/input';
 import { FormField } from '~/components/FormField';
 import { Button } from '~/components/ui/button';
 import { addressFields, informationFields } from '~/lib/constants';
-import { capitalize } from '~/utils/shared';
+import { capitalize } from '~/utils/shared.utils';
 import type {
 	EntityType,
 	Entity,

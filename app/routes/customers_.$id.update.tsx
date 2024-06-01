@@ -17,7 +17,6 @@ import {
 	parseUpdateEntityErrors,
 	parseUpdateEntityForm,
 } from '~/utils/entity.utils';
-import type { UpdateCustomer } from '~/types/customer.types';
 import { updateEntitySchema } from '~/schemas/entity.schemas';
 
 export async function clientLoader({ params }: ClientLoaderFunctionArgs) {
@@ -38,11 +37,8 @@ export async function clientAction({
 	try {
 		const customerId = params.id;
 		const formData = await request.formData();
-		const updatedCustomer = parseUpdateEntityForm<UpdateCustomer>(
-			customerId,
-			formData,
-		);
-		updateEntitySchema.parse(updatedCustomer);
+		const customerFormData = parseUpdateEntityForm(customerId, formData);
+		const updatedCustomer = updateEntitySchema.parse(customerFormData);
 		await db.customers.update(customerId, updatedCustomer);
 
 		return redirect('/customers');

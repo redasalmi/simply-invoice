@@ -8,7 +8,7 @@ import {
 	Transition,
 } from '@headlessui/react';
 import { CheckIcon, ChevronDownIcon } from 'lucide-react';
-import { cn } from '~/utils/shared';
+import { cn } from '~/utils/shared.utils';
 
 export type Option = {
 	id: string;

@@ -8,7 +8,6 @@ import { z } from 'zod';
 import { CreateEntityForm } from '~/components/Entity/create';
 import { db } from '~/lib/db';
 import { createEntitySchema } from '~/schemas/entity.schemas';
-import type { Company } from '~/types/company.types';
 import {
 	parseCreateEntityErrors,
 	parseCreateEntityForm,
@@ -17,8 +16,8 @@ import {
 export async function clientAction({ request }: ClientActionFunctionArgs) {
 	try {
 		const formData = await request.formData();
-		const newCompany = parseCreateEntityForm<Company>(formData);
-		createEntitySchema.parse(newCompany);
+		const companyFormData = parseCreateEntityForm(formData);
+		const newCompany = createEntitySchema.parse(companyFormData);
 		await db.companies.add(newCompany);
 
 		return redirect('/companies');

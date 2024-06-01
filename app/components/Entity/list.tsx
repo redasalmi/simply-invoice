@@ -9,7 +9,7 @@ import {
 	TableHeader,
 	TableRow,
 } from '~/components/ui/table';
-import { capitalize } from '~/utils/shared';
+import { capitalize } from '~/utils/shared.utils';
 import type { Entity, EntityType } from '~/types/entity.types';
 import type { PaginatedResult } from '~/types/common.types';
 

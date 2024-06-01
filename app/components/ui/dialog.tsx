@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useClickAway } from '~/hooks/useClickAway';
 import { useKeyPress } from '~/hooks/useKeyPress';
-import { cn } from '~/utils/shared';
+import { cn } from '~/utils/shared.utils';
 
 type Ref = HTMLDivElement;
 
@@ -26,7 +26,7 @@ export const Dialog = React.forwardRef<Ref, DialogProps>(function Dialog(
 
 	return (
 		<div>
-			<div className="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0  fixed inset-0 z-50 bg-black/80" />
+			<div className="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/80" />
 			<div
 				ref={dialogRef}
 				role="dialog"

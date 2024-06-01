@@ -1,6 +1,6 @@
 import { Label } from '~/components/ui/label';
 import { Input } from '~/components/ui/input';
-import { cn } from '~/utils/shared';
+import { cn } from '~/utils/shared.utils';
 import type { FormFieldProps } from '~/types/formField.types';
 
 export function FormField({

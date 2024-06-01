@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { cn } from '~/utils/shared';
+import { cn } from '~/utils/shared.utils';
 
 type Ref = HTMLTextAreaElement;
 type Props = React.ComponentPropsWithoutRef<'textarea'>;

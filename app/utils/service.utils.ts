@@ -4,7 +4,6 @@ import {
 	type CreateServiceSchemaErrors,
 	type UpdateServiceSchemaErrors,
 } from '~/schemas/service.schemas';
-import type { Service, UpdateService } from '~/types/service.types';
 
 export function parseCreateServiceForm(formData: FormData) {
 	const today = new Date().toISOString();
@@ -15,7 +14,7 @@ export function parseCreateServiceForm(formData: FormData) {
 		rate: Number(formData.get('rate')),
 		createdAt: today,
 		updatedAt: today,
-	} as Service;
+	};
 
 	return service;
 }
@@ -28,7 +27,7 @@ export function parseUpdateServiceForm(serviceId: string, formData: FormData) {
 		description: formData.get('description')?.toString(),
 		rate: Number(formData.get('rate')),
 		updatedAt: today,
-	} as UpdateService;
+	};
 
 	return service;
 }

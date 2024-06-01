@@ -1,7 +1,7 @@
 import { Document, Page, StyleSheet, Text, View } from '@react-pdf/renderer';
 import { nanoid } from 'nanoid';
-import type { Customer } from '~/lib/types';
-import { capitalize } from '~/utils/shared';
+import type { Customer } from '~/types/customer.types';
+import { capitalize } from '~/utils/shared.utils';
 
 const styles = StyleSheet.create({
 	body: {
@@ -141,11 +141,15 @@ export function InvoicePdf({ data }: InvoicePdfProps) {
 						<Text style={styles.text}>{customer.name}</Text>
 						<Text style={styles.text}>{customer.email}</Text>
 						{customer.custom
-							? customer.custom.map(({ label, content, showLabel }) => (
-									<Text key={nanoid()} style={styles.text}>
-										{showLabel ? `${capitalize(label)}: ${content}` : content}
-									</Text>
-								))
+							? customer.custom.map(
+									({ label, content, showLabelInInvoice }) => (
+										<Text key={nanoid()} style={styles.text}>
+											{showLabelInInvoice
+												? `${capitalize(label)}: ${content}`
+												: content}
+										</Text>
+									),
+								)
 							: null}
 					</View>
 				</View>

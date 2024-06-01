@@ -19,6 +19,7 @@ import {
 	parseServiceActionErrors,
 	parseUpdateServiceForm,
 } from '~/utils/service.utils';
+import { updateServiceSchema } from '~/schemas/service.schemas';
 
 export async function clientLoader({ params }: ClientLoaderFunctionArgs) {
 	invariant(params.id, 'Service ID is required');
@@ -38,7 +39,8 @@ export async function clientAction({
 	try {
 		const serviceId = params.id;
 		const formData = await request.formData();
-		const updatedService = parseUpdateServiceForm(serviceId, formData);
+		const serviceFormData = parseUpdateServiceForm(serviceId, formData);
+		const updatedService = updateServiceSchema.parse(serviceFormData);
 		await db.services.update(updatedService.id, updatedService);
 
 		return redirect('/services');
