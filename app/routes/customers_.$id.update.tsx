@@ -1,27 +1,24 @@
-import * as React from 'react';
 import {
 	type ClientActionFunctionArgs,
 	type ClientLoaderFunctionArgs,
-	Form,
-	Link,
 	redirect,
 	useActionData,
 	useLoaderData,
 	useNavigation,
 } from '@remix-run/react';
-import { Reorder } from 'framer-motion';
-import queryString from 'query-string';
 import invariant from 'tiny-invariant';
 import { z } from 'zod';
-import { AddFormField } from '~/components/AddFormField';
-import { FormField } from '~/components/FormField';
 import { Button } from '~/components/ui/button';
 import { Skeleton } from '~/components/ui/skeleton';
 import { db } from '~/lib/db';
-import type { CustomField } from '~/lib/types';
-import { getCustomerActionErrors, updateCustomer } from '~/utils/customer';
-import { addressFields, informationFields } from '~/lib/constants';
-import { NewFormField } from '~/components/NewFormField';
+import { UpdateEntityForm } from '~/components/Entity/update';
+import { EntityNotFound } from '~/components/Entity/error';
+import {
+	parseUpdateEntityErrors,
+	parseUpdateEntityForm,
+} from '~/utils/entity.utils';
+import type { UpdateCustomer } from '~/types/customer.types';
+import { updateEntitySchema } from '~/schemas/entity.schemas';
 
 export async function clientLoader({ params }: ClientLoaderFunctionArgs) {
 	invariant(params.id, 'Customer ID is required');
@@ -40,15 +37,18 @@ export async function clientAction({
 
 	try {
 		const customerId = params.id;
-		const formQueryString = await request.text();
-		const formData = queryString.parse(formQueryString, { sort: false });
-		const updatedCustomer = updateCustomer(customerId, formData);
-		await db.customers.update(updatedCustomer.id, updatedCustomer);
+		const formData = await request.formData();
+		const updatedCustomer = parseUpdateEntityForm<UpdateCustomer>(
+			customerId,
+			formData,
+		);
+		updateEntitySchema.parse(updatedCustomer);
+		await db.customers.update(customerId, updatedCustomer);
 
 		return redirect('/customers');
 	} catch (err) {
 		if (err instanceof z.ZodError) {
-			const errors = getCustomerActionErrors<'update'>(err);
+			const errors = parseUpdateEntityErrors(err);
 
 			return {
 				errors,
@@ -141,117 +141,23 @@ export default function CustomerUpdateRoute() {
 	const isLoading = navigation.state !== 'idle';
 	const isSubmitting = navigation.state === 'submitting';
 
-	const [formFields, setFormFields] = React.useState<Array<CustomField>>([]);
-
-	React.useEffect(() => {
-		const customFields: Array<CustomField> =
-			customer?.custom?.map((field, index) => ({
-				id: field.id,
-				label: field.label,
-				content: field.content,
-				showLabel: field.showLabel,
-				labelError: actionData?.errors.custom?.[index]?.label,
-				contentError: actionData?.errors.custom?.[index]?.content,
-			})) || [];
-		setFormFields(customFields);
-	}, [actionData?.errors.custom, customer?.custom]);
-
 	if (!customer) {
 		return (
 			<section>
-				<div>
-					<p className="m-12">
-						Sorry, but no customer with this ID was found! Please click{' '}
-						<Link
-							to="/customers"
-							aria-label="customers list"
-							className="hover:underline"
-						>
-							Here
-						</Link>{' '}
-						to navigate back to your customers list.
-					</p>
-				</div>
+				<EntityNotFound type="customer" baseUrl="/customers" />
 			</section>
 		);
 	}
 
-	const addFormField = (field: CustomField) => {
-		setFormFields(formFields.concat(field));
-	};
-
-	const onFormFieldChange = (formField: CustomField, fieldIndex: number) => {
-		setFormFields(Object.assign([], formFields, { [fieldIndex]: formField }));
-	};
-
-	const removeFormField = (fieldIndex: number) => {
-		setFormFields(
-			formFields.slice(0, fieldIndex).concat(formFields.slice(fieldIndex + 1)),
-		);
-	};
-
 	return (
 		<section>
-			<Form method="post">
-				<div>
-					{informationFields.map((field) => (
-						<NewFormField
-							key={field.id}
-							className="my-2"
-							defaultValue={customer[field.name]}
-							error={actionData?.errors?.[field.name]}
-							{...field}
-						/>
-					))}
-				</div>
-
-				<div>
-					<h3 className="text-2xl">Address</h3>
-					<div>
-						{addressFields.map((field) => (
-							<NewFormField
-								key={field.id}
-								className="my-2"
-								defaultValue={
-									customer.address[field.name.replace('address-', '')]
-								}
-								error={actionData?.errors?.[field.name]}
-								{...field}
-							/>
-						))}
-					</div>
-				</div>
-
-				<AddFormField addFormField={addFormField}>
-					<h3 className="text-2xl">Custom Fields</h3>
-					<p className="mb-2 block text-sm">
-						Add any custom fields and order them
-					</p>
-
-					{formFields.length ? (
-						<Reorder.Group values={formFields} onReorder={setFormFields}>
-							{formFields.map((formField, index) => (
-								<Reorder.Item key={formField.id} value={formField}>
-									<FormField
-										formField={formField}
-										className="my-2"
-										onFormFieldChange={(updatedFormField) =>
-											onFormFieldChange(updatedFormField, index)
-										}
-										removeFormField={() => removeFormField(index)}
-									/>
-								</Reorder.Item>
-							))}
-						</Reorder.Group>
-					) : null}
-				</AddFormField>
-
-				<div>
-					<Button disabled={isSubmitting} type="submit">
-						{isLoading ? '...Updating Customer' : 'Update Customer'}
-					</Button>
-				</div>
-			</Form>
+			<UpdateEntityForm
+				type="customer"
+				entity={customer}
+				isLoading={isLoading}
+				isSubmitting={isSubmitting}
+				errors={actionData?.errors}
+			/>
 		</section>
 	);
 }

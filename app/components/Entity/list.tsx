@@ -37,7 +37,7 @@ type EntitiesListProps = {
 
 export function EntitiesList({ type, baseUrl, entities }: EntitiesListProps) {
 	if (!entities.items.length) {
-		<p>No {capitalize(type)} found.</p>;
+		return <p>No {capitalize(type)} found.</p>;
 	}
 
 	return (

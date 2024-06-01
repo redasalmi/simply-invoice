@@ -1,7 +1,6 @@
 import {
 	type ClientActionFunctionArgs,
 	type ClientLoaderFunctionArgs,
-	Form,
 	redirect,
 	useActionData,
 	useLoaderData,
@@ -9,16 +8,7 @@ import {
 	useNavigation,
 } from '@remix-run/react';
 import invariant from 'tiny-invariant';
-import {
-	AlertDialog,
-	AlertDialogAction,
-	AlertDialogCancel,
-	AlertDialogContent,
-	AlertDialogDescription,
-	AlertDialogFooter,
-	AlertDialogHeader,
-	AlertDialogTitle,
-} from '~/components/ui/alert-dialog';
+import { DeleteEntity, DeleteEntityError } from '~/components/Entity/delete';
 import { db } from '~/lib/db';
 
 export async function clientLoader({ params }: ClientLoaderFunctionArgs) {
@@ -71,46 +61,23 @@ export default function CustomerDeleteRoute() {
 		navigate('/customers');
 	};
 
+	if (!customer) {
+		return (
+			<DeleteEntityError
+				type="customer"
+				error={actionData?.error}
+				closeAlert={closeAlert}
+			/>
+		);
+	}
+
 	return (
-		<AlertDialog open>
-			<AlertDialogContent>
-				{!customer ? (
-					<>
-						<AlertDialogHeader>
-							<AlertDialogTitle>
-								{actionData?.error.message || 'Error Deleting Customer!'}
-							</AlertDialogTitle>
-							<AlertDialogDescription>
-								{actionData?.error.description ||
-									'An error happened while deleting your customer, please try again later.'}
-							</AlertDialogDescription>
-						</AlertDialogHeader>
-						<AlertDialogFooter>
-							<AlertDialogCancel onClick={closeAlert}>Close</AlertDialogCancel>
-						</AlertDialogFooter>
-					</>
-				) : (
-					<>
-						<AlertDialogHeader>
-							<AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-							<AlertDialogDescription>
-								This action cannot be undone. This will permanently delete the{' '}
-								<span className="font-bold">{customer.name}</span> customer.
-							</AlertDialogDescription>
-						</AlertDialogHeader>
-						<AlertDialogFooter>
-							<AlertDialogCancel disabled={isSubmitting} onClick={closeAlert}>
-								Cancel
-							</AlertDialogCancel>
-							<Form method="POST">
-								<AlertDialogAction disabled={isSubmitting} type="submit">
-									{isLoading ? '...Deleting' : 'Delete'}
-								</AlertDialogAction>
-							</Form>
-						</AlertDialogFooter>
-					</>
-				)}
-			</AlertDialogContent>
-		</AlertDialog>
+		<DeleteEntity
+			type="customer"
+			entityName={customer.name}
+			isLoading={isLoading}
+			isSubmitting={isSubmitting}
+			closeAlert={closeAlert}
+		/>
 	);
 }
