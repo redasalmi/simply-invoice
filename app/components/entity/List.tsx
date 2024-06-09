@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Link } from '@remix-run/react';
-import { Eye, Pencil, Trash } from 'lucide-react';
+import { EyeIcon, PencilIcon, TrashIcon } from 'lucide-react';
 import {
 	Table,
 	TableBody,
@@ -58,19 +58,19 @@ export function EntitiesList({ type, baseUrl, entities }: EntitiesListProps) {
 								to={`${baseUrl}/${id}`}
 								aria-label={`view ${name} ${type} details`}
 							>
-								<Eye />
+								<EyeIcon />
 							</Link>
 							<Link
 								to={`${baseUrl}/${id}/update`}
 								aria-label={`update ${name} ${type}`}
 							>
-								<Pencil />
+								<PencilIcon />
 							</Link>
 							<Link
 								to={`${baseUrl}/${id}/delete`}
 								aria-label={`delete ${name} ${type}`}
 							>
-								<Trash />
+								<TrashIcon />
 							</Link>
 						</TableCell>
 					</TableRow>

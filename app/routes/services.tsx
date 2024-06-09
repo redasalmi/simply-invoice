@@ -1,5 +1,5 @@
 import { Link, Outlet, useLoaderData } from '@remix-run/react';
-import { Eye, Pencil, Trash } from 'lucide-react';
+import { EyeIcon, PencilIcon, TrashIcon } from 'lucide-react';
 import { CreateEntityLink } from '~/components/entity/List';
 import {
 	Table,
@@ -59,19 +59,19 @@ export default function ServicesRoute() {
 												to={`/services/${id}`}
 												aria-label={`view ${name} service details`}
 											>
-												<Eye />
+												<EyeIcon />
 											</Link>
 											<Link
 												to={`/services/${id}/update`}
 												aria-label={`update ${name} service`}
 											>
-												<Pencil />
+												<PencilIcon />
 											</Link>
 											<Link
 												to={`/services/${id}/delete`}
 												aria-label={`delete ${name} service`}
 											>
-												<Trash />
+												<TrashIcon />
 											</Link>
 										</TableCell>
 									</TableRow>
