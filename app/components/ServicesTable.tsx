@@ -13,7 +13,7 @@ import {
 import type { Service } from '~/types/service.types';
 import { Input } from './ui/input';
 import { Button } from './ui/button';
-import { Field } from './FormField';
+import { FormField } from './ui/form-field';
 
 type ServicesTablesProps = {
 	services: Array<Service>;
@@ -174,7 +174,8 @@ export function ServicesTable({ services }: ServicesTablesProps) {
 					<p>Sub-Total</p>
 					<p>{subtotalAmount}</p>
 				</div>
-				<Field
+				<FormField
+					id="shipping"
 					className="flex items-center gap-4"
 					label={{
 						children: 'Shipping',
@@ -189,7 +190,8 @@ export function ServicesTable({ services }: ServicesTablesProps) {
 							setShipping(parseInt(event.currentTarget.value, 10)),
 					}}
 				/>
-				<Field
+				<FormField
+					id="tax"
 					className="flex items-center gap-4"
 					label={{
 						children: 'Tax (%)',

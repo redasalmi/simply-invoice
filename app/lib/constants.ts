@@ -1,4 +1,4 @@
-import type { FieldProps } from '~/types/formField.types';
+import type { FormFieldProps } from '~/types/formField.types';
 
 export const idTypes = [
 	{
@@ -31,7 +31,7 @@ export const intents = {
 } as const;
 export type Intent = (typeof intents)[keyof typeof intents];
 
-export const informationFields: Array<FieldProps> = [
+export const informationFields: Array<FormFieldProps> = [
 	{
 		id: 'name',
 		label: {
@@ -55,7 +55,7 @@ export const informationFields: Array<FieldProps> = [
 	},
 ];
 
-export const addressFields: Array<FieldProps> = [
+export const addressFields: Array<FormFieldProps> = [
 	{
 		id: 'address-address1',
 		label: {
@@ -114,7 +114,7 @@ export const addressFields: Array<FieldProps> = [
 	},
 ];
 
-export const servicesFields: Array<FieldProps> = [
+export const servicesFields: Array<FormFieldProps> = [
 	{
 		id: 'name',
 		label: {

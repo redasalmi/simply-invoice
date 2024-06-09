@@ -4,7 +4,7 @@ import { ulid } from 'ulid';
 import { Reorder } from 'framer-motion';
 import { MoveIcon, TrashIcon } from 'lucide-react';
 import { Input } from '~/components/ui/input';
-import { Field } from '~/components/FormField';
+import { FormField } from '~/components/ui/form-field';
 import { Button } from '~/components/ui/button';
 import { Switch } from '~/components/ui/switch';
 import { addressFields, informationFields } from '~/lib/constants';
@@ -56,7 +56,7 @@ export function UpdateEntityForm({
 		<Form method="post">
 			<div>
 				{informationFields.map((field) => (
-					<Field
+					<FormField
 						id={field.id}
 						key={field.id}
 						className="my-2"
@@ -74,7 +74,7 @@ export function UpdateEntityForm({
 				<h3 className="text-2xl">Address</h3>
 				<div>
 					{addressFields.map((field) => (
-						<Field
+						<FormField
 							id={field.id}
 							key={field.id}
 							className="my-2"
@@ -124,7 +124,7 @@ export function UpdateEntityForm({
 											className="hidden"
 										/>
 
-										<Field
+										<FormField
 											id={`label-${field.id}`}
 											label={{ children: 'Label *' }}
 											input={{
@@ -136,7 +136,7 @@ export function UpdateEntityForm({
 											error={errors?.custom?.[index]?.label}
 										/>
 
-										<Field
+										<FormField
 											id={`content-${field.id}`}
 											label={{ children: 'Content *' }}
 											input={{
