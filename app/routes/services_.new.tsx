@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { Button } from '~/components/ui/button';
 import { db } from '~/lib/db';
 import { servicesFields } from '~/lib/constants';
-import { FormField } from '~/components/FormField';
+import { Field } from '~/components/FormField';
 import {
 	parseCreateServiceForm,
 	parseServiceActionErrors,
@@ -41,7 +41,7 @@ export default function NewServiceRoute() {
 		<section>
 			<Form method="POST">
 				{servicesFields.map((field) => (
-					<FormField
+					<Field
 						key={field.id}
 						className="my-2"
 						error={actionData?.errors?.[field.name]}

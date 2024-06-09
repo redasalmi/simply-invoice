@@ -1,4 +1,4 @@
-import type { FormFieldProps } from '~/types/formField.types';
+import type { FieldProps } from '~/types/formField.types';
 
 export const idTypes = [
 	{
@@ -31,74 +31,118 @@ export const intents = {
 } as const;
 export type Intent = (typeof intents)[keyof typeof intents];
 
-export const informationFields: Array<FormFieldProps> = [
+export const informationFields: Array<FieldProps> = [
 	{
 		id: 'name',
-		name: 'name',
-		label: 'Name *',
-		required: true,
+		label: {
+			children: 'Name *',
+		},
+		input: {
+			name: 'name',
+			required: true,
+		},
 	},
 	{
-		type: 'email',
 		id: 'email',
-		name: 'email',
-		label: 'Email *',
-		required: true,
+		label: {
+			children: 'Email *',
+		},
+		input: {
+			type: 'email',
+			name: 'email',
+			required: true,
+		},
 	},
 ];
 
-export const addressFields: Array<FormFieldProps> = [
+export const addressFields: Array<FieldProps> = [
 	{
 		id: 'address-address1',
-		name: 'address-address1',
-		label: 'Address 1 *',
-		required: true,
+		label: {
+			children: 'Address 1 *',
+		},
+		input: {
+			name: 'address-address1',
+			required: true,
+		},
 	},
 	{
 		id: 'address-address2',
-		name: 'address-address2',
-		label: 'Address 2',
+		label: {
+			children: 'Address 2',
+		},
+		input: {
+			name: 'address-address2',
+		},
 	},
 	{
 		id: 'address-country',
-		name: 'address-country',
-		label: 'Country *',
-		required: true,
+		label: {
+			children: 'Country *',
+		},
+		input: {
+			name: 'address-country',
+			required: true,
+		},
 	},
 	{
 		id: 'address-province',
-		name: 'address-province',
-		label: 'Province',
+		label: {
+			children: 'Province',
+		},
+		input: {
+			name: 'address-province',
+		},
 	},
 	{
 		id: 'address-city',
-		name: 'address-city',
-		label: 'City',
+		label: {
+			children: 'City',
+		},
+		input: {
+			name: 'address-city',
+		},
 	},
 	{
 		id: 'address-zip',
-		name: 'address-zip',
-		label: 'Zip',
+		label: {
+			children: 'Zip',
+		},
+		input: {
+			name: 'address-zip',
+		},
 	},
 ];
 
-export const servicesFields: Array<FormFieldProps> = [
+export const servicesFields: Array<FieldProps> = [
 	{
 		id: 'name',
-		label: 'Name *',
-		name: 'name',
-		required: true,
+		label: {
+			children: 'Name *',
+		},
+		input: {
+			name: 'name',
+			required: true,
+		},
 	},
 	{
 		id: 'description',
-		label: 'Description',
-		name: 'description',
+		label: {
+			children: 'Description',
+		},
+		input: {
+			name: 'description',
+		},
 	},
 	{
-		type: 'number',
 		id: 'rate',
-		label: 'Rate *',
-		name: 'rate',
-		required: true,
+		label: {
+			children: 'Rate *',
+		},
+		input: {
+			type: 'number',
+			name: 'rate',
+			required: true,
+		},
 	},
 ];

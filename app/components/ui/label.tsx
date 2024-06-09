@@ -2,10 +2,12 @@ import * as React from 'react';
 import { cn } from '~/utils/shared.utils';
 
 type Ref = HTMLLabelElement;
-type Props = React.ComponentPropsWithoutRef<'label'>;
+export type LabelProps = React.ComponentPropsWithoutRef<'label'> & {
+	error?: string;
+};
 
-export const Label = React.forwardRef<Ref, Props>(function Label(
-	{ className, children, ...props },
+export const Label = React.forwardRef<Ref, LabelProps>(function Label(
+	{ className, error, children, ...props },
 	ref,
 ) {
 	return (
@@ -17,7 +19,8 @@ export const Label = React.forwardRef<Ref, Props>(function Label(
 			)}
 			{...props}
 		>
-			{children}
+			{children}{' '}
+			{error ? <span className="text-red-500">({error})</span> : null}
 		</label>
 	);
 });

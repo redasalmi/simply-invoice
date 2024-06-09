@@ -4,7 +4,7 @@ import { ulid } from 'ulid';
 import { Reorder } from 'framer-motion';
 import { MoveIcon, TrashIcon } from 'lucide-react';
 import { Input } from '~/components/ui/input';
-import { FormField } from '~/components/FormField';
+import { Field } from '~/components/FormField';
 import { Button } from '~/components/ui/button';
 import { Switch } from '~/components/ui/switch';
 import { addressFields, informationFields } from '~/lib/constants';
@@ -42,7 +42,7 @@ export function CreateEntityForm({
 		<Form method="post">
 			<div>
 				{informationFields.map((field) => (
-					<FormField
+					<Field
 						key={field.id}
 						className="my-2"
 						error={errors?.[field.name]}
@@ -55,7 +55,7 @@ export function CreateEntityForm({
 				<h3 className="text-2xl">Address</h3>
 				<div>
 					{addressFields.map((field) => (
-						<FormField
+						<Field
 							key={field.id}
 							className="my-2"
 							error={errors?.[field.name]}
@@ -99,20 +99,24 @@ export function CreateEntityForm({
 											className="hidden"
 										/>
 
-										<FormField
+										<Field
 											id={`label-${field.id}`}
-											name={`label-${field.id}`}
-											label="Label *"
-											required
+											label={{ children: 'Label *' }}
+											input={{
+												name: `label-${field.id}`,
+												required: true,
+											}}
 											className="flex-1"
 											error={errors?.custom?.[index]?.label}
 										/>
 
-										<FormField
+										<Field
 											id={`content-${field.id}`}
-											name={`content-${field.id}`}
-											label="Content *"
-											required
+											label={{ children: 'Content *' }}
+											input={{
+												name: `content-${field.id}`,
+												required: true,
+											}}
 											className="flex-1"
 											error={errors?.custom?.[index]?.content}
 										/>

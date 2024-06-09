@@ -14,7 +14,7 @@ import { Button } from '~/components/ui/button';
 import { Skeleton } from '~/components/ui/skeleton';
 import { db } from '~/lib/db';
 import { servicesFields } from '~/lib/constants';
-import { FormField } from '~/components/FormField';
+import { Field } from '~/components/FormField';
 import {
 	parseServiceActionErrors,
 	parseUpdateServiceForm,
@@ -118,12 +118,16 @@ export default function ServiceUpdateRoute() {
 		<section>
 			<Form method="POST">
 				{servicesFields.map((field) => (
-					<FormField
+					<Field
+						id={field.id}
 						key={field.id}
 						className="my-2"
-						defaultValue={service[field.name]}
 						error={actionData?.errors?.[field.name]}
-						{...field}
+						label={field.label}
+						input={{
+							...field.input,
+							defaultValue: service[field.input.name],
+						}}
 					/>
 				))}
 

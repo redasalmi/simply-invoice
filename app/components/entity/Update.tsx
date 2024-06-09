@@ -4,7 +4,7 @@ import { ulid } from 'ulid';
 import { Reorder } from 'framer-motion';
 import { MoveIcon, TrashIcon } from 'lucide-react';
 import { Input } from '~/components/ui/input';
-import { FormField } from '~/components/FormField';
+import { Field } from '~/components/FormField';
 import { Button } from '~/components/ui/button';
 import { Switch } from '~/components/ui/switch';
 import { addressFields, informationFields } from '~/lib/constants';
@@ -56,12 +56,16 @@ export function UpdateEntityForm({
 		<Form method="post">
 			<div>
 				{informationFields.map((field) => (
-					<FormField
+					<Field
+						id={field.id}
 						key={field.id}
 						className="my-2"
-						defaultValue={entity[field.name]}
 						error={errors?.[field.name]}
-						{...field}
+						label={field.label}
+						input={{
+							...field.input,
+							defaultValue: entity[field.input.name],
+						}}
 					/>
 				))}
 			</div>
@@ -70,12 +74,17 @@ export function UpdateEntityForm({
 				<h3 className="text-2xl">Address</h3>
 				<div>
 					{addressFields.map((field) => (
-						<FormField
+						<Field
+							id={field.id}
 							key={field.id}
 							className="my-2"
-							defaultValue={entity.address[field.name.replace('address-', '')]}
 							error={errors?.[field.name]}
-							{...field}
+							label={field.label}
+							input={{
+								...field.input,
+								defaultValue:
+									entity.address[field.input.name.replace('address-', '')],
+							}}
 						/>
 					))}
 				</div>
@@ -115,23 +124,27 @@ export function UpdateEntityForm({
 											className="hidden"
 										/>
 
-										<FormField
+										<Field
 											id={`label-${field.id}`}
-											name={`label-${field.id}`}
-											label="Label *"
-											required
+											label={{ children: 'Label *' }}
+											input={{
+												name: `label-${field.id}`,
+												required: true,
+												defaultValue: field.label,
+											}}
 											className="flex-1"
-											defaultValue={field.label}
 											error={errors?.custom?.[index]?.label}
 										/>
 
-										<FormField
+										<Field
 											id={`content-${field.id}`}
-											name={`content-${field.id}`}
-											label="Content *"
-											required
+											label={{ children: 'Content *' }}
+											input={{
+												name: `content-${field.id}`,
+												required: true,
+												defaultValue: field.content,
+											}}
 											className="flex-1"
-											defaultValue={field.content}
 											error={errors?.custom?.[index]?.content}
 										/>
 
