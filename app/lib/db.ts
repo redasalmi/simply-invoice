@@ -16,14 +16,14 @@ class DexieDB extends Dexie {
 			companies: '++id, name, email, createdAt, updatedAt',
 			customers: '++id, name, email, createdAt, updatedAt',
 			services: '++id, name, rate, createdAt, updatedAt',
-			invoices: '++id, invoiceId, invoiceIdType',
+			invoices: '++id, invoiceId, invoiceIdType', // TODO: add amount, currency and other properties for indexing and sorting invoices
 		});
 	}
 }
 
 export const db = new DexieDB();
 
-function fastForward<T>(
+function fastForward<T extends { id: string }>(
 	lastItemID: string,
 	filterCallback?: (item: T) => boolean,
 ) {
@@ -44,7 +44,7 @@ function fastForward<T>(
 
 const ITEMS_PER_PAGE = 10;
 
-export async function getPage<T>(
+export async function getPage<T extends { id: string }>(
 	table: Table<T>,
 	page: number,
 	lastItemID?: string,

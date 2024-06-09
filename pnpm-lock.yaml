@@ -121,8 +121,8 @@ importers:
         specifier: ^3.3.1
         version: 3.3.1
       prettier-plugin-tailwindcss:
-        specifier: ^0.6.1
-        version: 0.6.1(@trivago/prettier-plugin-sort-imports@4.3.0(prettier@3.3.1))(prettier@3.3.1)
+        specifier: ^0.6.2
+        version: 0.6.2(@trivago/prettier-plugin-sort-imports@4.3.0(prettier@3.3.1))(prettier@3.3.1)
       tailwindcss:
         specifier: ^3.4.4
         version: 3.4.4
@@ -1609,8 +1609,8 @@ packages:
   browserify-zlib@0.2.0:
     resolution: {integrity: sha512-Z942RysHXmJrhqk88FmKBVq/v5tqmSkDz7p54G/MGyjMnCFFnC79XWNbg+Vta8W6Wb2qtSZTSxIGkJrRpCFEiA==}
 
-  browserslist@4.23.0:
-    resolution: {integrity: sha512-QW8HiM1shhT2GuzkvklfjcKDiWFXHOeFCIA/huJPwHsslwcydgk7X+z2zXpEijP98UCY7HbubZt5J2Zgvf0CaQ==}
+  browserslist@4.23.1:
+    resolution: {integrity: sha512-TUfofFo/KsK/bWZ9TWQ5O26tsWW4Uhmt8IYklbnUa70udB6P2wA7w7o4PY4muaEPBQaAX+CEnmmIA41NVHtPVw==}
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
 
@@ -2018,8 +2018,8 @@ packages:
   ee-first@1.1.1:
     resolution: {integrity: sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==}
 
-  electron-to-chromium@1.4.795:
-    resolution: {integrity: sha512-hHo4lK/8wb4NUa+NJYSFyJ0xedNHiR6ylilDtb8NUW9d4dmBFmGiecYEKCEbti1wTNzbKXLfl4hPWEkAFbHYlw==}
+  electron-to-chromium@1.4.796:
+    resolution: {integrity: sha512-NglN/xprcM+SHD2XCli4oC6bWe6kHoytcyLKCWXmRL854F0qhPhaYgUswUsglnPxYaNQIg2uMY4BvaomIf3kLA==}
 
   emoji-regex@10.3.0:
     resolution: {integrity: sha512-QpLs9D9v9kArv4lfDEgg1X/gN5XLnf/A6l9cs8SPZLRZR3ZkY9+kwIQTxm+fsSej5UMYGE8fdoaZVIBlqG0XTw==}
@@ -3790,8 +3790,8 @@ packages:
     resolution: {integrity: sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==}
     engines: {node: '>= 0.8.0'}
 
-  prettier-plugin-tailwindcss@0.6.1:
-    resolution: {integrity: sha512-AnbeYZu0WGj+QgKciUgdMnRxrqcxltleZPgdwfA5104BHM3siBLONN/HLW1yS2HvzSNkzpQ/JAj+LN0jcJO+0w==}
+  prettier-plugin-tailwindcss@0.6.2:
+    resolution: {integrity: sha512-eFefm4cg+1c2B57+H274Qm//CTWBdtQN9ansl0YTP/8TC8x3bugCTQSS/e4FC5Ctl9djhTzsbcMrZ7x2/abIow==}
     engines: {node: '>=14.21.3'}
     peerDependencies:
       '@ianvs/prettier-plugin-sort-imports': '*'
@@ -4640,8 +4640,8 @@ packages:
     resolution: {integrity: sha512-r3vXyErRCYJ7wg28yvBY5VSoAF8ZvlcW9/BwUzEtUsjvX/DKs24dIkuwjtuprwJJHsbyUbLApepYTR1BN4uHrg==}
     engines: {node: '>= 6'}
 
-  yaml@2.4.3:
-    resolution: {integrity: sha512-sntgmxj8o7DE7g/Qi60cqpLBA3HG3STcDA0kO+WfB05jEKhZMbY7umNm2rBpQvsmZ16/lPXCJGW2672dgOUkrg==}
+  yaml@2.4.5:
+    resolution: {integrity: sha512-aBx2bnqDzVOyNKfsysjA2ms5ZlnjSAW2eG3/L5G/CSujfjLJTJsEw1bGw8kCf04KodQWk1pxlGnZ56CRxiawmg==}
     engines: {node: '>= 14'}
     hasBin: true
 
@@ -4716,7 +4716,7 @@ snapshots:
     dependencies:
       '@babel/compat-data': 7.24.7
       '@babel/helper-validator-option': 7.24.7
-      browserslist: 4.23.0
+      browserslist: 4.23.1
       lru-cache: 5.1.1
       semver: 6.3.1
 
@@ -6281,7 +6281,7 @@ snapshots:
 
   autoprefixer@10.4.19(postcss@8.4.38):
     dependencies:
-      browserslist: 4.23.0
+      browserslist: 4.23.1
       caniuse-lite: 1.0.30001629
       fraction.js: 4.3.7
       normalize-range: 0.1.2
@@ -6372,12 +6372,12 @@ snapshots:
     dependencies:
       pako: 1.0.11
 
-  browserslist@4.23.0:
+  browserslist@4.23.1:
     dependencies:
       caniuse-lite: 1.0.30001629
-      electron-to-chromium: 1.4.795
+      electron-to-chromium: 1.4.796
       node-releases: 2.0.14
-      update-browserslist-db: 1.0.16(browserslist@4.23.0)
+      update-browserslist-db: 1.0.16(browserslist@4.23.1)
 
   buffer-from@1.1.2: {}
 
@@ -6421,7 +6421,7 @@ snapshots:
 
   caniuse-api@3.0.0:
     dependencies:
-      browserslist: 4.23.0
+      browserslist: 4.23.1
       caniuse-lite: 1.0.30001629
       lodash.memoize: 4.1.2
       lodash.uniq: 4.5.0
@@ -6613,7 +6613,7 @@ snapshots:
 
   cssnano-preset-default@7.0.2(postcss@8.4.38):
     dependencies:
-      browserslist: 4.23.0
+      browserslist: 4.23.1
       css-declaration-sorter: 7.2.0(postcss@8.4.38)
       cssnano-utils: 5.0.0(postcss@8.4.38)
       postcss: 8.4.38
@@ -6786,7 +6786,7 @@ snapshots:
 
   ee-first@1.1.1: {}
 
-  electron-to-chromium@1.4.795: {}
+  electron-to-chromium@1.4.796: {}
 
   emoji-regex@10.3.0: {}
 
@@ -8565,7 +8565,7 @@ snapshots:
 
   postcss-colormin@7.0.0(postcss@8.4.38):
     dependencies:
-      browserslist: 4.23.0
+      browserslist: 4.23.1
       caniuse-api: 3.0.0
       colord: 2.9.3
       postcss: 8.4.38
@@ -8573,7 +8573,7 @@ snapshots:
 
   postcss-convert-values@7.0.0(postcss@8.4.38):
     dependencies:
-      browserslist: 4.23.0
+      browserslist: 4.23.1
       postcss: 8.4.38
       postcss-value-parser: 4.2.0
 
@@ -8682,7 +8682,7 @@ snapshots:
   postcss-load-config@4.0.2(postcss@8.4.38):
     dependencies:
       lilconfig: 3.1.1
-      yaml: 2.4.3
+      yaml: 2.4.5
     optionalDependencies:
       postcss: 8.4.38
 
@@ -8699,7 +8699,7 @@ snapshots:
 
   postcss-merge-rules@7.0.1(postcss@8.4.38):
     dependencies:
-      browserslist: 4.23.0
+      browserslist: 4.23.1
       caniuse-api: 3.0.0
       cssnano-utils: 5.0.0(postcss@8.4.38)
       postcss: 8.4.38
@@ -8719,7 +8719,7 @@ snapshots:
 
   postcss-minify-params@7.0.0(postcss@8.4.38):
     dependencies:
-      browserslist: 4.23.0
+      browserslist: 4.23.1
       cssnano-utils: 5.0.0(postcss@8.4.38)
       postcss: 8.4.38
       postcss-value-parser: 4.2.0
@@ -8805,7 +8805,7 @@ snapshots:
 
   postcss-normalize-unicode@7.0.0(postcss@8.4.38):
     dependencies:
-      browserslist: 4.23.0
+      browserslist: 4.23.1
       postcss: 8.4.38
       postcss-value-parser: 4.2.0
 
@@ -8875,7 +8875,7 @@ snapshots:
       '@csstools/postcss-trigonometric-functions': 3.0.8(postcss@8.4.38)
       '@csstools/postcss-unset-value': 3.0.1(postcss@8.4.38)
       autoprefixer: 10.4.19(postcss@8.4.38)
-      browserslist: 4.23.0
+      browserslist: 4.23.1
       css-blank-pseudo: 6.0.2(postcss@8.4.38)
       css-has-pseudo: 6.0.5(postcss@8.4.38)
       css-prefers-color-scheme: 9.0.1(postcss@8.4.38)
@@ -8914,7 +8914,7 @@ snapshots:
 
   postcss-reduce-initial@7.0.0(postcss@8.4.38):
     dependencies:
-      browserslist: 4.23.0
+      browserslist: 4.23.1
       caniuse-api: 3.0.0
       postcss: 8.4.38
 
@@ -8958,7 +8958,7 @@ snapshots:
 
   prelude-ls@1.2.1: {}
 
-  prettier-plugin-tailwindcss@0.6.1(@trivago/prettier-plugin-sort-imports@4.3.0(prettier@3.3.1))(prettier@3.3.1):
+  prettier-plugin-tailwindcss@0.6.2(@trivago/prettier-plugin-sort-imports@4.3.0(prettier@3.3.1))(prettier@3.3.1):
     dependencies:
       prettier: 3.3.1
     optionalDependencies:
@@ -9436,7 +9436,7 @@ snapshots:
 
   stylehacks@7.0.1(postcss@8.4.38):
     dependencies:
-      browserslist: 4.23.0
+      browserslist: 4.23.1
       postcss: 8.4.38
       postcss-selector-parser: 6.1.0
 
@@ -9719,9 +9719,9 @@ snapshots:
 
   unpipe@1.0.0: {}
 
-  update-browserslist-db@1.0.16(browserslist@4.23.0):
+  update-browserslist-db@1.0.16(browserslist@4.23.1):
     dependencies:
-      browserslist: 4.23.0
+      browserslist: 4.23.1
       escalade: 3.1.2
       picocolors: 1.0.1
 
@@ -9906,7 +9906,7 @@ snapshots:
   yaml@1.10.2:
     optional: true
 
-  yaml@2.4.3: {}
+  yaml@2.4.5: {}
 
   yocto-queue@0.1.0: {}
 

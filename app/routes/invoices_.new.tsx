@@ -38,7 +38,7 @@ export async function clientLoader() {
 			db.companies.toArray(),
 			db.customers.toArray(),
 			db.services.toArray(),
-			db.invoices.where({ invoiceIdType: 'incremental' as IdType }).last(),
+			db.invoices.where({ invoiceIdType: 'incremental' as IdType }).last(), // TODO: should get the biggest number instead of the last one x)
 		]);
 		newInvoiceLoaderSchema.parse({
 			companiesLength: companies.length,

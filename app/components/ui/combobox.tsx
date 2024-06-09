@@ -10,26 +10,27 @@ import {
 import { CheckIcon, ChevronDownIcon } from 'lucide-react';
 import { cn } from '~/utils/shared.utils';
 
-export type Option = {
+export type Option<T> = T & {
 	id: string;
 	name: string;
 };
 
-type Props = React.ComponentPropsWithoutRef<'div'> & {
+type Props<T> = React.ComponentPropsWithoutRef<'div'> & {
 	input: React.ComponentPropsWithoutRef<'input'>;
-	options: Array<Option>;
-	onChangeCallback?: (option: Option | null) => void;
+	options: Array<Option<T>>;
+	className?: string;
+	onChangeCallback?: (option: Option<T> | null) => void;
 };
 
-export function ComboBox({
+export function ComboBox<T>({
 	className,
 	options,
 	input,
 	onChangeCallback,
 	...props
-}: Props) {
+}: Props<T>) {
 	const [query, setQuery] = React.useState('');
-	const [selected, setSelected] = React.useState<Option | null>(null);
+	const [selected, setSelected] = React.useState<Option<T> | null>(null);
 
 	const filteredOptions =
 		query === ''
@@ -38,7 +39,7 @@ export function ComboBox({
 					return option.name.toLowerCase().includes(query.toLowerCase());
 				});
 
-	const handleOnChange = (option: Option | null) => {
+	const handleOnChange = (option: Option<T> | null) => {
 		setSelected(option);
 
 		if (onChangeCallback) {
