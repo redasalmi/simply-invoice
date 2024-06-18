@@ -20,7 +20,6 @@ export type Invoice = {
 	services: Array<
 		Omit<Service, 'createdAt' | 'updatedAt'> & { quantity: number }
 	>;
-	note?: string;
 
 	cost: {
 		subtotalAmount: number;
@@ -29,6 +28,7 @@ export type Invoice = {
 		totalAmount: number;
 	};
 
+	note?: string;
 	createdAt: string;
 	updatedAt: string;
 };
