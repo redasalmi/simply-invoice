@@ -26,20 +26,17 @@ import {
 import { countries } from '~/lib/currencies';
 import { db } from '~/lib/db';
 import { ServicesTable } from '~/components/ServicesTable';
-import {
-	newInvoiceLoaderSchema,
-	type NewInvoiceLoaderSchemaErrors,
-} from '~/schemas/invoice.schemas';
+import { newInvoiceLoaderSchema } from '~/schemas/invoice.schemas';
 import type { Customer } from '~/types/customer.types';
+import {
+	getInvoiceClientLoaderData,
+	parseCreateInvoiceLoaderErrors,
+} from '~/utils/invoice.utils';
 
 export async function clientLoader() {
 	try {
-		const [companies, customers, services, invoice] = await Promise.all([
-			db.companies.toArray(),
-			db.customers.toArray(),
-			db.services.toArray(),
-			db.invoices.where({ invoiceIdType: 'incremental' as IdType }).last(), // TODO: should get the biggest number instead of the last one x)
-		]);
+		const { companies, customers, services, lastInvoiceId } =
+			await getInvoiceClientLoaderData();
 		newInvoiceLoaderSchema.parse({
 			companiesLength: companies.length,
 			customersLength: customers.length,
@@ -50,34 +47,25 @@ export async function clientLoader() {
 			companies,
 			customers,
 			services,
-			lastInvoiceId: invoice?.id ? Number(invoice.id) : 0,
+			lastInvoiceId,
 			error: null,
 		};
 	} catch (err) {
+		const result = {
+			companies: [],
+			customers: [],
+			services: [],
+			lastInvoiceId: 0,
+			error: 'An error occurred, please try again later!',
+		};
+
 		if (err instanceof z.ZodError) {
-			const zodErrors: NewInvoiceLoaderSchemaErrors = err.format();
-			const errorsType: Array<string> = [];
+			result.error = parseCreateInvoiceLoaderErrors(err);
 
-			if (zodErrors.companiesLength?._errors?.[0]) {
-				errorsType.push('company');
-			}
-			if (zodErrors.customersLength?._errors?.[0]) {
-				errorsType.push('customer');
-			}
-			if (zodErrors.servicesLength?._errors?.[0]) {
-				errorsType.push('service');
-			}
-
-			const error = `At least one ${errorsType.join(', ')} need${errorsType.length > 1 ? 's' : ''} to be available to create an invoice! Please create the needed data to move forward and enable invoice creation.`;
-
-			return {
-				companies: [],
-				customers: [],
-				services: [],
-				lastInvoiceId: 0,
-				error,
-			};
+			return result;
 		}
+
+		return result;
 	}
 }
 
@@ -228,6 +216,7 @@ export default function NewInvoiceRoute() {
 				<div className="my-4 flex gap-3">
 					<div>
 						<Label htmlFor="invoice-id-type">Invoice ID Type</Label>
+						{/* TODO: replace with a select component */}
 						<ComboBox
 							options={idTypes}
 							input={{
@@ -250,6 +239,7 @@ export default function NewInvoiceRoute() {
 				<div className="my-4 flex gap-3">
 					<div>
 						<Label htmlFor="locale">Invoice Language</Label>
+						{/* TODO: replace with a select component */}
 						<ComboBox
 							options={locales}
 							input={{
