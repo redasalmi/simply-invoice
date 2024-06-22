@@ -1,4 +1,5 @@
-import type { z } from 'zod';
+import { ulid } from 'ulid';
+import { type z } from 'zod';
 import type { IdType } from '~/lib/constants';
 import { db } from '~/lib/db';
 import type { NewInvoiceLoaderSchemaErrors } from '~/schemas/invoice.schemas';
@@ -36,4 +37,21 @@ export function parseCreateInvoiceLoaderErrors(err: z.ZodError) {
 	const error = `At least one ${errorsType.join(', ')} need${errorsType.length > 1 ? 's' : ''} to be available to create an invoice! Please create the needed data to move forward and enable invoice creation.`;
 
 	return error;
+}
+
+export function parseCreateInvoiceForm(formData: FormData) {
+	console.log(Object.fromEntries(formData));
+
+	const invoice = {
+		id: ulid(),
+		invoiceIdType: formData.get('invoice-id-type')?.toString(),
+		invoiceId: formData.get('invoice-id')?.toString(),
+		locale: formData.get('locale')?.toString(),
+		countryCode: formData.get('country-code')?.toString(),
+		invoiceDate: formData.get('invoice-data')?.toString(),
+		dueDate: formData.get('due-date')?.toString(),
+		// dateFormat: formData.get('invoice-id')?.toString(),
+	};
+
+	return {};
 }

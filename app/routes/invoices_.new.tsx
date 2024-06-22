@@ -1,37 +1,27 @@
 import * as React from 'react';
-import { renderToStream } from '@react-pdf/renderer';
-import type { ActionFunctionArgs } from '@remix-run/node';
 import {
-	type ClientActionFunctionArgs,
-	redirect,
 	useFetcher,
 	useLoaderData,
+	type ClientLoaderFunctionArgs,
 } from '@remix-run/react';
 import { nanoid } from 'nanoid';
-import queryString from 'query-string';
-import { ulid } from 'ulid';
 import { z } from 'zod';
-import { InvoicePdf } from '~/components/InvoicePdf';
+import type { Key } from 'react-aria-components';
 import { Input } from '~/components/ui/input';
 import { Label } from '~/components/ui/label';
 import { Textarea } from '~/components/ui/textarea';
-import { ComboBox, type Option } from '~/components/ui/combobox';
-import {
-	type IdType,
-	idTypes,
-	type Intent,
-	intents,
-	locales,
-} from '~/lib/constants';
+import { ComboBox } from '~/components/ui/combobox';
+import { idTypes, type Intent, intents, locales } from '~/lib/constants';
 import { countries } from '~/lib/currencies';
-import { db } from '~/lib/db';
 import { ServicesTable } from '~/components/ServicesTable';
 import { newInvoiceLoaderSchema } from '~/schemas/invoice.schemas';
-import type { Customer } from '~/types/customer.types';
 import {
 	getInvoiceClientLoaderData,
+	parseCreateInvoiceForm,
 	parseCreateInvoiceLoaderErrors,
 } from '~/utils/invoice.utils';
+import { Button } from '~/components/ui/button';
+import { MySelect, MyListBoxItem } from '~/components/ui/select';
 
 export async function clientLoader() {
 	try {
@@ -69,90 +59,115 @@ export async function clientLoader() {
 	}
 }
 
-export async function action({ request }: ActionFunctionArgs) {
-	const formQueryString = await request.text();
-	const formData = queryString.parse(formQueryString, { sort: false });
-	const intent = formData?.intent?.toString();
+// TODO: no need for a server action here, if the intent is PDF preview or download
+// the client action should call the server action after parsing the invoice data :p
 
-	const customer: Customer = {
-		name: formData['customer[name]']?.toString(),
-		email: formData['customer[email]']?.toString(),
-		custom: [],
-	};
+// export async function action({ request }: ActionFunctionArgs) {
+// 	// const formQueryString = await request.text();
+// 	// const formData = queryString.parse(formQueryString, { sort: false });
+// 	// const intent = formData?.intent?.toString();
 
-	for (const [key, value] of Object.entries(formData)) {
-		if (key.search('customer-custom') > -1 && value) {
-			const label = key
-				.replace('customer-custom[', '')
-				.replaceAll('-', ' ')
-				.replace(']', '');
+// 	try {
+// 		const formData = await request.formData();
+// 		const invoiceFormData = parseCreateInvoiceForm(formData);
+// 		// const newInvoice = createInvoiceSchema.parse(invoiceFormData);
 
-			if (Array.isArray(value) && value[0]) {
-				customer.custom.push({
-					label,
-					value: value[0].trim(),
-					showLabel: value[1] === 'on',
-				});
-			} else if (typeof value === 'string' && value) {
-				customer.custom.push({
-					label,
-					value: value.trim(),
-				});
-			}
-		}
+// 		return {};
+// 	} catch (err) {
+// 		console.log(err);
+
+// 		return {};
+// 	}
+
+// 	// const customer: Customer = {
+// 	// 	name: formData['customer[name]']?.toString(),
+// 	// 	email: formData['customer[email]']?.toString(),
+// 	// 	custom: [],
+// 	// };
+
+// 	// for (const [key, value] of Object.entries(formData)) {
+// 	// 	if (key.search('customer-custom') > -1 && value) {
+// 	// 		const label = key
+// 	// 			.replace('customer-custom[', '')
+// 	// 			.replaceAll('-', ' ')
+// 	// 			.replace(']', '');
+
+// 	// 		if (Array.isArray(value) && value[0]) {
+// 	// 			customer.custom.push({
+// 	// 				label,
+// 	// 				value: value[0].trim(),
+// 	// 				showLabel: value[1] === 'on',
+// 	// 			});
+// 	// 		} else if (typeof value === 'string' && value) {
+// 	// 			customer.custom.push({
+// 	// 				label,
+// 	// 				value: value.trim(),
+// 	// 			});
+// 	// 		}
+// 	// 	}
+// 	// }
+
+// 	// if (intent && [intents.download, intents.preview].includes(intent)) {
+// 	// 	const stream = await renderToStream(<InvoicePdf data={{ customer }} />);
+
+// 	// 	const body: Buffer = await new Promise((resolve, reject) => {
+// 	// 		const buffers: Array<Uint8Array> = [];
+// 	// 		stream.on('data', (data) => {
+// 	// 			buffers.push(data);
+// 	// 		});
+// 	// 		stream.on('end', () => {
+// 	// 			resolve(Buffer.concat(buffers));
+// 	// 		});
+// 	// 		stream.on('error', reject);
+// 	// 	});
+
+// 	// 	return {
+// 	// 		intent,
+// 	// 		invoicePdf: `data:application/pdf;base64,${body.toString('base64')}`,
+// 	// 		invoice: {
+// 	// 			customer,
+// 	// 		},
+// 	// 	};
+// 	// }
+
+// 	// return {
+// 	// 	intent,
+// 	// 	invoicePdf: null,
+// 	// 	invoice: {
+// 	// 		customer,
+// 	// 	},
+// 	// };
+// }
+
+export async function clientAction({ request }: ClientLoaderFunctionArgs) {
+	try {
+		const formData = await request.formData();
+		const invoiceFormData = parseCreateInvoiceForm(formData);
+		// const newInvoice = createInvoiceSchema.parse(invoiceFormData);
+
+		return {};
+	} catch (err) {
+		console.log(err);
+
+		return {};
 	}
 
-	if (intent && [intents.download, intents.preview].includes(intent)) {
-		const stream = await renderToStream(<InvoicePdf data={{ customer }} />);
+	// if (data.intent !== intents.save) {
+	// 	return data;
+	// }
 
-		const body: Buffer = await new Promise((resolve, reject) => {
-			const buffers: Array<Uint8Array> = [];
-			stream.on('data', (data) => {
-				buffers.push(data);
-			});
-			stream.on('end', () => {
-				resolve(Buffer.concat(buffers));
-			});
-			stream.on('error', reject);
-		});
+	// const today = new Date().toISOString();
+	// const newInvoice = Object.assign(
+	// 	{
+	// 		id: ulid(),
+	// 		createdAt: today,
+	// 	},
+	// 	data.invoice,
+	// );
 
-		return {
-			intent,
-			invoicePdf: `data:application/pdf;base64,${body.toString('base64')}`,
-			invoice: {
-				customer,
-			},
-		};
-	}
+	// await db.invoices.add(newInvoice);
 
-	return {
-		intent,
-		invoicePdf: null,
-		invoice: {
-			customer,
-		},
-	};
-}
-
-export async function clientAction({ serverAction }: ClientActionFunctionArgs) {
-	const data = await serverAction<typeof action>();
-
-	if (data.intent !== intents.save) {
-		return data;
-	}
-
-	const today = new Date().toISOString();
-	const newInvoice = Object.assign(
-		{
-			id: ulid(),
-			createdAt: today,
-		},
-		data.invoice,
-	);
-
-	await db.invoices.add(newInvoice);
-
-	return redirect('/invoices');
+	// return redirect('/invoices');
 }
 
 export function HydrateFallback() {
@@ -167,7 +182,7 @@ const currencies = countries.map(
 );
 
 export default function NewInvoiceRoute() {
-	const fetcher = useFetcher<typeof action>();
+	const fetcher = useFetcher(); // TODO: why is there a fetcher here lol?
 	const { companies, customers, services, lastInvoiceId, error } =
 		useLoaderData<typeof clientLoader>();
 
@@ -196,8 +211,8 @@ export default function NewInvoiceRoute() {
 		);
 	}
 
-	const handleInvoiceIdTypeChange = (option: Option | null) => {
-		const idType = option?.id as IdType;
+	// TODO: fix param type to be IdType
+	const handleInvoiceIdTypeChange = (idType: Key) => {
 		let invoiceId: string | null = null;
 		if (idType === 'incremental') {
 			invoiceId = String(lastInvoiceId + 1);
@@ -215,17 +230,19 @@ export default function NewInvoiceRoute() {
 			<fetcher.Form method="post">
 				<div className="my-4 flex gap-3">
 					<div>
-						<Label htmlFor="invoice-id-type">Invoice ID Type</Label>
-						{/* TODO: replace with a select component */}
-						<ComboBox
-							options={idTypes}
-							input={{
-								id: 'invoice-id-type',
-								name: 'invoice-id-type',
-								placeholder: 'Choose Invoice ID Type',
-							}}
-							onChangeCallback={handleInvoiceIdTypeChange}
-						/>
+						<MySelect
+							id="invoice-id-type"
+							name="invoice-id-type"
+							label="Invoice ID Type"
+							placeholder="Choose invoice ID type"
+							onSelectionChange={handleInvoiceIdTypeChange}
+						>
+							{idTypes.map(({ id, name }) => (
+								<MyListBoxItem key={id} id={id}>
+									{name}
+								</MyListBoxItem>
+							))}
+						</MySelect>
 					</div>
 
 					<div>
@@ -238,16 +255,18 @@ export default function NewInvoiceRoute() {
 
 				<div className="my-4 flex gap-3">
 					<div>
-						<Label htmlFor="locale">Invoice Language</Label>
-						{/* TODO: replace with a select component */}
-						<ComboBox
-							options={locales}
-							input={{
-								id: 'locale',
-								name: 'locale',
-								placeholder: 'Choose a Language',
-							}}
-						/>
+						<MySelect
+							id="locale"
+							name="locale"
+							label="Invoice Language"
+							placeholder="Choose a language"
+						>
+							{locales.map(({ id, name }) => (
+								<MyListBoxItem key={id} id={id}>
+									{name}
+								</MyListBoxItem>
+							))}
+						</MySelect>
 					</div>
 
 					<div>
@@ -310,6 +329,18 @@ export default function NewInvoiceRoute() {
 						<span>Note</span>
 						<Textarea name="note" />
 					</Label>
+				</div>
+
+				<div className="flex items-center gap-2">
+					<Button type="submit" name="intent" value={intents.preview}>
+						Preview Invoice
+					</Button>
+					<Button type="submit" name="intent" value={intents.download}>
+						Download Invoice
+					</Button>
+					<Button type="submit" name="intent" value={intents.save}>
+						Save Invoice
+					</Button>
 				</div>
 			</fetcher.Form>
 		</section>
