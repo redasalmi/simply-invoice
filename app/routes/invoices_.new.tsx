@@ -10,7 +10,6 @@ import type { Key } from 'react-aria-components';
 import { Input } from '~/components/ui/input';
 import { Label } from '~/components/ui/label';
 import { Textarea } from '~/components/ui/textarea';
-import { ComboBox } from '~/components/ui/combobox';
 import { idTypes, type Intent, intents, locales } from '~/lib/constants';
 import { countries } from '~/lib/currencies';
 import { ServicesTable } from '~/components/ServicesTable';
@@ -21,7 +20,8 @@ import {
 	parseCreateInvoiceLoaderErrors,
 } from '~/utils/invoice.utils';
 import { Button } from '~/components/ui/button';
-import { MySelect, MyListBoxItem } from '~/components/ui/select';
+import { MySelect, MySelectListBoxItem } from '~/components/ui/select';
+import { MyComboBox, MyComboBoxListBoxItem } from '~/components/ui/combobox';
 
 export async function clientLoader() {
 	try {
@@ -238,9 +238,9 @@ export default function NewInvoiceRoute() {
 							onSelectionChange={handleInvoiceIdTypeChange}
 						>
 							{idTypes.map(({ id, name }) => (
-								<MyListBoxItem key={id} id={id}>
+								<MySelectListBoxItem key={id} id={id}>
 									{name}
-								</MyListBoxItem>
+								</MySelectListBoxItem>
 							))}
 						</MySelect>
 					</div>
@@ -262,23 +262,22 @@ export default function NewInvoiceRoute() {
 							placeholder="Choose a language"
 						>
 							{locales.map(({ id, name }) => (
-								<MyListBoxItem key={id} id={id}>
+								<MySelectListBoxItem key={id} id={id}>
 									{name}
-								</MyListBoxItem>
+								</MySelectListBoxItem>
 							))}
 						</MySelect>
 					</div>
 
 					<div>
-						<Label htmlFor="country-code">Currency</Label>
-						<ComboBox
-							options={currencies}
-							input={{
-								id: 'country-code',
-								name: 'country-code',
-								placeholder: 'Choose a Currency',
-							}}
-						/>
+						{/* TODO: fix uncontrolled/controlled input error in the console */}
+						<MyComboBox id="currency" name="currency" label="Currency">
+							{currencies.map(({ id, name }) => (
+								<MyComboBoxListBoxItem key={id} id={id}>
+									{name}
+								</MyComboBoxListBoxItem>
+							))}
+						</MyComboBox>
 					</div>
 				</div>
 
@@ -296,27 +295,25 @@ export default function NewInvoiceRoute() {
 
 				<div className="my-4 flex gap-3">
 					<div>
-						<Label htmlFor="company-id">Company</Label>
-						<ComboBox
-							options={companies}
-							input={{
-								id: 'company-id',
-								name: 'company-id',
-								placeholder: 'Choose a Company',
-							}}
-						/>
+						{/* TODO: fix uncontrolled/controlled input error in the console */}
+						<MyComboBox id="company-id" name="company-id" label="Company">
+							{companies.map(({ id, name }) => (
+								<MyComboBoxListBoxItem key={id} id={id}>
+									{name}
+								</MyComboBoxListBoxItem>
+							))}
+						</MyComboBox>
 					</div>
 
 					<div>
-						<Label htmlFor="customer-id">Customer</Label>
-						<ComboBox
-							options={customers}
-							input={{
-								id: 'customer-id',
-								name: 'customer-id',
-								placeholder: 'Choose a Customer',
-							}}
-						/>
+						{/* TODO: fix uncontrolled/controlled input error in the console */}
+						<MyComboBox id="customer-id" name="customer-id" label="Customer">
+							{customers.map(({ id, name }) => (
+								<MyComboBoxListBoxItem key={id} id={id}>
+									{name}
+								</MyComboBoxListBoxItem>
+							))}
+						</MyComboBox>
 					</div>
 				</div>
 

@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { ulid } from 'ulid';
 import { TrashIcon } from 'lucide-react';
-import { ComboBox } from './ui/combobox';
+import type { Key } from 'react-aria-components';
+import { MyComboBox, MyComboBoxListBoxItem } from './ui/combobox';
 import {
 	Table,
 	TableBody,
@@ -41,7 +42,12 @@ function ServiceRow({
 		return selectedService?.rate ? selectedService.rate * quantity : 0;
 	}, [quantity, selectedService?.rate]);
 
-	const onServiceChange = (option: Service | null) => {
+	const onServiceChange = (optionId: Key | null) => {
+		const option = services.find(({ id }) => id === optionId);
+		if (!option) {
+			return;
+		}
+
 		setSelectedService(option);
 
 		let newQuantity = quantity;
@@ -67,14 +73,18 @@ function ServiceRow({
 	return (
 		<TableRow>
 			<TableCell>
-				<ComboBox
-					options={services}
-					input={{
-						name: `service-id-${id}`,
-						placeholder: 'Choose a Service',
-					}}
-					onChangeCallback={onServiceChange}
-				/>
+				{/* TODO: fix uncontrolled/controlled input error in the console */}
+				<MyComboBox
+					id={`service-id-${id}`}
+					name={`service-id-${id}`}
+					onSelectionChange={onServiceChange}
+				>
+					{services.map(({ id, name }) => (
+						<MyComboBoxListBoxItem key={id} id={id}>
+							{name}
+						</MyComboBoxListBoxItem>
+					))}
+				</MyComboBox>
 			</TableCell>
 			<TableCell>
 				<Input

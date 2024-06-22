@@ -53,7 +53,7 @@ export function MySelect<T extends object>({
 	);
 }
 
-export function MyListBoxItem({ className, ...props }: ListBoxItemProps) {
+export function MySelectListBoxItem({ className, ...props }: ListBoxItemProps) {
 	return (
 		<ListBoxItem
 			className={twMerge(

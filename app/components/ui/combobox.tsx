@@ -1,89 +1,68 @@
-import * as React from 'react';
 import {
-	Combobox,
-	ComboboxButton,
-	ComboboxInput,
-	ComboboxOption,
-	ComboboxOptions,
-	Transition,
-} from '@headlessui/react';
-import { CheckIcon, ChevronDownIcon } from 'lucide-react';
-import { cn } from '~/utils/shared.utils';
+	type ComboBoxProps,
+	type ListBoxItemProps,
+	type ValidationResult,
+	FieldError,
+	Button,
+	ComboBox,
+	Input,
+	Label,
+	ListBox,
+	ListBoxItem,
+	Popover,
+	Text,
+	Group,
+} from 'react-aria-components';
+import { twMerge } from 'tailwind-merge';
 
-export type Option<T> = T & {
-	id: string;
-	name: string;
-};
+interface MyComboBoxProps<T extends object>
+	extends Omit<ComboBoxProps<T>, 'children'> {
+	label?: string;
+	description?: string | null;
+	errorMessage?: string | ((validation: ValidationResult) => string);
+	children: React.ReactNode | ((item: T) => React.ReactNode);
+}
 
-type Props<T> = React.ComponentPropsWithoutRef<'div'> & {
-	input: React.ComponentPropsWithoutRef<'input'>;
-	options: Array<Option<T>>;
-	className?: string;
-	onChangeCallback?: (option: Option<T> | null) => void;
-};
-
-export function ComboBox<T>({
+export function MyComboBox<T extends object>({
+	label,
+	description,
+	errorMessage,
+	children,
 	className,
-	options,
-	input,
-	onChangeCallback,
 	...props
-}: Props<T>) {
-	const [query, setQuery] = React.useState('');
-	const [selected, setSelected] = React.useState<Option<T> | null>(null);
-
-	const filteredOptions =
-		query === ''
-			? options
-			: options.filter((option) => {
-					return option.name.toLowerCase().includes(query.toLowerCase());
-				});
-
-	const handleOnChange = (option: Option<T> | null) => {
-		setSelected(option);
-
-		if (onChangeCallback) {
-			onChangeCallback(option);
-		}
-	};
-
+}: MyComboBoxProps<T>) {
 	return (
-		<div className={cn('w-52', className)} {...props}>
-			<Combobox value={selected} onChange={handleOnChange}>
-				<div className="relative">
-					<ComboboxInput
-						className="w-full rounded-lg border bg-white/5 py-1.5 pl-3 pr-8 text-sm/6 text-black focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25"
-						displayValue={(option) => option?.name}
-						onChange={(event) => setQuery(event.target.value)}
-						{...input}
-					/>
-					<ComboboxButton className="group absolute inset-y-0 right-0 px-2.5">
-						<ChevronDownIcon className="size-4" />
-					</ComboboxButton>
-				</div>
-				<Transition
-					leave="transition ease-in duration-100"
-					leaveFrom="opacity-100"
-					leaveTo="opacity-0"
-					afterLeave={() => setQuery('')}
-				>
-					<ComboboxOptions
-						anchor="bottom"
-						className="mt-1 !max-h-96 w-[var(--input-width)] rounded-xl border bg-white/5 [--anchor-gap:var(--spacing-1)] empty:hidden"
-					>
-						{filteredOptions.map((option) => (
-							<ComboboxOption
-								key={option.id}
-								value={option}
-								className="group z-50 flex cursor-default select-none items-center gap-2 rounded-lg bg-white px-3 py-1.5"
-							>
-								<div className="text-sm/6 text-black">{option.name}</div>
-								<CheckIcon className="invisible size-4 group-data-[selected]:visible" />
-							</ComboboxOption>
-						))}
-					</ComboboxOptions>
-				</Transition>
-			</Combobox>
-		</div>
+		<ComboBox
+			className={twMerge('group flex min-w-[200px] flex-col gap-1', className)}
+			{...props}
+		>
+			<Label className="cursor-default">{label}</Label>
+			<Group className="flex rounded-lg bg-white bg-opacity-90 shadow-md ring-1 ring-black/10 transition focus-within:bg-opacity-100 focus-visible:ring-2 focus-visible:ring-black">
+				<Input className="w-full flex-1 border-none bg-transparent px-3 py-2 text-base leading-5 text-gray-900 outline-none" />
+				<Button className="pressed:bg-sky-100 flex items-center rounded-r-lg border-0 border-l border-solid border-l-sky-200 bg-transparent px-3 text-gray-700 transition">
+					▼
+				</Button>
+			</Group>
+			{description ? <Text slot="description">{description}</Text> : null}
+			{errorMessage ? <FieldError>{errorMessage}</FieldError> : null}
+			<Popover className="entering:animate-in entering:fade-in exiting:animate-out exiting:fade-out max-h-60 w-[--trigger-width] overflow-auto rounded-md bg-white text-base shadow-lg ring-1 ring-black/5">
+				<ListBox className="p-1 outline-none">{children}</ListBox>
+			</Popover>
+		</ComboBox>
+	);
+}
+
+export function MyComboBoxListBoxItem({
+	className,
+	...props
+}: ListBoxItemProps) {
+	return (
+		<ListBoxItem
+			className={twMerge(
+				'group flex cursor-default select-none items-center gap-2 rounded py-2 pl-2 pr-4 text-gray-900 outline-none focus:bg-sky-600 focus:text-white',
+				className,
+			)}
+			{...props}
+		/>
 	);
 }
