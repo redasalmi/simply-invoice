@@ -39,13 +39,13 @@ export function MyComboBox<T extends object>({
 			<Label className="cursor-default">{label}</Label>
 			<Group className="flex rounded-lg bg-white bg-opacity-90 shadow-md ring-1 ring-black/10 transition focus-within:bg-opacity-100 focus-visible:ring-2 focus-visible:ring-black">
 				<Input className="w-full flex-1 border-none bg-transparent px-3 py-2 text-base leading-5 text-gray-900 outline-none" />
-				<Button className="pressed:bg-sky-100 flex items-center rounded-r-lg border-0 border-l border-solid border-l-sky-200 bg-transparent px-3 text-gray-700 transition">
+				<Button className="flex items-center rounded-r-lg border-0 border-l border-solid border-l-sky-200 bg-transparent px-3 text-gray-700 transition pressed:bg-sky-100">
 					▼
 				</Button>
 			</Group>
 			{description ? <Text slot="description">{description}</Text> : null}
 			{errorMessage ? <FieldError>{errorMessage}</FieldError> : null}
-			<Popover className="entering:animate-in entering:fade-in exiting:animate-out exiting:fade-out max-h-60 w-[--trigger-width] overflow-auto rounded-md bg-white text-base shadow-lg ring-1 ring-black/5">
+			<Popover className="max-h-60 w-[--trigger-width] overflow-auto rounded-md bg-white text-base shadow-lg ring-1 ring-black/5 entering:animate-in entering:fade-in exiting:animate-out exiting:fade-out">
 				<ListBox className="p-1 outline-none">{children}</ListBox>
 			</Popover>
 		</ComboBox>

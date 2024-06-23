@@ -38,13 +38,13 @@ export function MySelect<T extends object>({
 			{...props}
 		>
 			<Label className="cursor-default">{label}</Label>
-			<Button className="pressed:bg-opacity-100 flex cursor-default items-center rounded-lg border-0 bg-white bg-opacity-90 py-2 pl-5 pr-2 text-left text-base leading-normal text-gray-700 shadow-md ring-white ring-offset-2 ring-offset-rose-700 transition focus:outline-none focus-visible:ring-2">
+			<Button className="flex cursor-default items-center rounded-lg border-0 bg-white bg-opacity-90 py-2 pl-5 pr-2 text-left text-base leading-normal text-gray-700 shadow-md ring-white ring-offset-2 ring-offset-rose-700 transition focus:outline-none focus-visible:ring-2 pressed:bg-opacity-100">
 				<SelectValue className="flex-1 truncate placeholder-shown:italic" />
 				<span aria-hidden="true">▼</span>
 			</Button>
 			{description ? <Text slot="description">{description}</Text> : null}
 			{errorMessage ? <FieldError>{errorMessage}</FieldError> : null}
-			<Popover className="entering:animate-in entering:fade-in exiting:animate-out exiting:fade-out max-h-60 w-[--trigger-width] overflow-auto rounded-md bg-white text-base shadow-lg ring-1 ring-black/5">
+			<Popover className="max-h-60 w-[--trigger-width] overflow-auto rounded-md bg-white text-base shadow-lg ring-1 ring-black/5 entering:animate-in entering:fade-in exiting:animate-out exiting:fade-out">
 				<ListBox className="p-1 outline-none" items={items}>
 					{children}
 				</ListBox>
