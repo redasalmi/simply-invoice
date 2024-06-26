@@ -270,7 +270,7 @@ export default function NewInvoiceRoute() {
 					</div>
 
 					<div>
-						{/* TODO: fix uncontrolled/controlled input error in the console */}
+						{/* TODO: fix uncontrolled/controlled input error in the console - should be fixed by an upcoming package update */}
 						<MyComboBox id="currency" name="currency" label="Currency">
 							{currencies.map(({ id, name }) => (
 								<MyComboBoxListBoxItem key={id} id={id}>
@@ -295,7 +295,7 @@ export default function NewInvoiceRoute() {
 
 				<div className="my-4 flex gap-3">
 					<div>
-						{/* TODO: fix uncontrolled/controlled input error in the console */}
+						{/* TODO: fix uncontrolled/controlled input error in the console - should be fixed by an upcoming package update */}
 						<MyComboBox id="company-id" name="company-id" label="Company">
 							{companies.map(({ id, name }) => (
 								<MyComboBoxListBoxItem key={id} id={id}>
@@ -306,7 +306,7 @@ export default function NewInvoiceRoute() {
 					</div>
 
 					<div>
-						{/* TODO: fix uncontrolled/controlled input error in the console */}
+						{/* TODO: fix uncontrolled/controlled input error in the console - should be fixed by an upcoming package update */}
 						<MyComboBox id="customer-id" name="customer-id" label="Customer">
 							{customers.map(({ id, name }) => (
 								<MyComboBoxListBoxItem key={id} id={id}>

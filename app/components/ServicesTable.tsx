@@ -73,7 +73,7 @@ function ServiceRow({
 	return (
 		<TableRow>
 			<TableCell>
-				{/* TODO: fix uncontrolled/controlled input error in the console */}
+				{/* TODO: fix uncontrolled/controlled input error in the console - should be fixed by an upcoming package update */}
 				<MyComboBox
 					id={`service-id-${id}`}
 					name={`service-id-${id}`}
