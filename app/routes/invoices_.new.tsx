@@ -13,9 +13,13 @@ import { Textarea } from '~/components/ui/textarea';
 import { idTypes, type Intent, intents, locales } from '~/lib/constants';
 import { countries } from '~/lib/currencies';
 import { ServicesTable } from '~/components/ServicesTable';
-import { newInvoiceLoaderSchema } from '~/schemas/invoice.schemas';
+import {
+	createInvoiceSchema,
+	newInvoiceLoaderSchema,
+} from '~/schemas/invoice.schemas';
 import {
 	getInvoiceClientLoaderData,
+	parseCreateInvoiceErrors,
 	parseCreateInvoiceForm,
 	parseCreateInvoiceLoaderErrors,
 } from '~/utils/invoice.utils';
@@ -143,13 +147,17 @@ export async function clientAction({ request }: ClientLoaderFunctionArgs) {
 	try {
 		const formData = await request.formData();
 		const invoiceFormData = parseCreateInvoiceForm(formData);
-		// const newInvoice = createInvoiceSchema.parse(invoiceFormData);
+		const parsedInvoice = createInvoiceSchema.parse(invoiceFormData);
 
 		return {};
 	} catch (err) {
-		console.log(err);
+		if (err instanceof z.ZodError) {
+			const errors = parseCreateInvoiceErrors(err);
 
-		return {};
+			return {
+				errors,
+			};
+		}
 	}
 
 	// if (data.intent !== intents.save) {
@@ -271,7 +279,7 @@ export default function NewInvoiceRoute() {
 
 					<div>
 						{/* TODO: fix uncontrolled/controlled input error in the console - should be fixed by an upcoming package update */}
-						<MyComboBox id="currency" name="currency" label="Currency">
+						<MyComboBox id="country-code" name="country-code" label="Currency">
 							{currencies.map(({ id, name }) => (
 								<MyComboBoxListBoxItem key={id} id={id}>
 									{name}
@@ -318,6 +326,7 @@ export default function NewInvoiceRoute() {
 				</div>
 
 				<div className="my-4">
+					{/* TODO: maybe add a service-order field to save the services order */}
 					<ServicesTable services={services} />
 				</div>
 

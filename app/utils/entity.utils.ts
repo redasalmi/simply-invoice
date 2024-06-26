@@ -111,7 +111,7 @@ type ActionErrors = {
 	email?: string;
 	'address-address1'?: string;
 	'address-country'?: string;
-	custom?: Record<string, { label?: string; content?: string }>;
+	custom?: CustomErrors;
 };
 
 export function parseCreateEntityErrors(err: z.ZodError) {
@@ -159,6 +159,8 @@ export function parseCreateEntityErrors(err: z.ZodError) {
 
 export function parseUpdateEntityErrors(err: z.ZodError) {
 	const zodErrors: UpdateEntitySchemaErrors = err.format();
+
+	const errors: ActionErrors = {};
 	const customErrors: CustomErrors = {};
 
 	if (zodErrors.custom) {
@@ -180,7 +182,6 @@ export function parseUpdateEntityErrors(err: z.ZodError) {
 		}
 	}
 
-	const errors: ActionErrors = {};
 	if (zodErrors.name?._errors?.[0]) {
 		errors.name = zodErrors.name._errors[0];
 	}
