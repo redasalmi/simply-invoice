@@ -12,7 +12,7 @@ export function FormField({
 	return (
 		<div className={className}>
 			<Label htmlFor={id} error={error} {...label} />
-			<Input id={id} hasError={!!error} {...input} />
+			<Input id={id} {...input} />
 		</div>
 	);
 }

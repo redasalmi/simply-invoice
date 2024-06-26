@@ -1,24 +1,49 @@
 import * as React from 'react';
-import { cn } from '~/utils/shared.utils';
+import {
+	Input as RACInput,
+	type InputProps as RacInputProps,
+} from 'react-aria-components';
+import { cva, type VariantProps } from 'cva';
 
-type Ref = HTMLInputElement;
-export type InputProps = React.ComponentPropsWithoutRef<'input'> & {
-	hasError?: boolean;
-};
+const input = cva({
+	base: 'border-2 rounded-md',
+	variants: {
+		isFocused: {
+			false:
+				'border-gray-300 dark:border-zinc-500 forced-colors:border-[ButtonBorder]',
+			true: 'border-gray-600 dark:border-zinc-300 forced-colors:border-[Highlight]',
+		},
+		isFocusWithin: {
+			false:
+				'border-gray-300 dark:border-zinc-500 forced-colors:border-[ButtonBorder]',
+			true: 'border-gray-600 dark:border-zinc-300 forced-colors:border-[Highlight]',
+		},
+		isInvalid: {
+			true: 'border-red-600 dark:border-red-600 forced-colors:border-[Mark]',
+		},
+		isDisabled: {
+			true: 'border-gray-200 dark:border-zinc-700 forced-colors:border-[GrayText]',
+		},
+	},
+});
 
-export const Input = React.forwardRef<Ref, InputProps>(function Input(
-	{ className, type = 'text', hasError, ...props },
+export type InputRef = HTMLInputElement;
+export type InputProps = RacInputProps & VariantProps<typeof input>;
+
+export const Input = React.forwardRef<InputRef, InputProps>(function Input(
+	{ isFocused, isFocusWithin, isInvalid, isDisabled, className, ...props },
 	ref,
 ) {
 	return (
-		<input
-			type={type}
-			className={cn(
-				'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
-				className,
-				hasError ? 'border border-red-500' : null,
-			)}
+		<RACInput
 			ref={ref}
+			className={input({
+				isFocused,
+				isFocusWithin,
+				isInvalid,
+				isDisabled,
+				className,
+			})}
 			{...props}
 		/>
 	);
