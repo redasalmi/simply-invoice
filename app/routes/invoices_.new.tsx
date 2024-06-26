@@ -1,7 +1,9 @@
 import * as React from 'react';
 import {
-	useFetcher,
+	Form,
+	useActionData,
 	useLoaderData,
+	useNavigation,
 	type ClientLoaderFunctionArgs,
 } from '@remix-run/react';
 import { nanoid } from 'nanoid';
@@ -190,24 +192,28 @@ const currencies = countries.map(
 );
 
 export default function NewInvoiceRoute() {
-	const fetcher = useFetcher(); // TODO: why is there a fetcher here lol?
+	// const fetcher = useFetcher(); // TODO: why is there a fetcher here lol?
+	const navigation = useNavigation();
 	const { companies, customers, services, lastInvoiceId, error } =
 		useLoaderData<typeof clientLoader>();
+	const actionData = useActionData<typeof clientAction>();
 
 	const invoiceIdRef = React.useRef<HTMLInputElement>(null);
-	const [intent, setIntent] = React.useState<Intent | null>(null);
+	// const [intent, setIntent] = React.useState<Intent | null>(null);
 
-	const isLoading = fetcher.state !== 'idle';
-	const invoicePdf = isLoading ? null : fetcher.data?.invoicePdf;
+	const isLoading = navigation.state !== 'idle';
+	const isSubmitting = navigation.state === 'submitting';
+	// const isLoading = fetcher.state !== 'idle';
+	// const invoicePdf = isLoading ? null : fetcher.data?.invoicePdf;
 
-	React.useEffect(() => {
-		if (intent === intents.download && invoicePdf) {
-			const link = document.createElement('a');
-			link.href = invoicePdf;
-			link.download = 'invoice.pdf';
-			link.click();
-		}
-	}, [intent, invoicePdf]);
+	// React.useEffect(() => {
+	// 	if (intent === intents.download && invoicePdf) {
+	// 		const link = document.createElement('a');
+	// 		link.href = invoicePdf;
+	// 		link.download = 'invoice.pdf';
+	// 		link.click();
+	// 	}
+	// }, [intent, invoicePdf]);
 
 	if (error) {
 		return (
@@ -235,7 +241,7 @@ export default function NewInvoiceRoute() {
 
 	return (
 		<section>
-			<fetcher.Form method="post">
+			<Form method="post">
 				<div className="my-4 flex gap-3">
 					<div>
 						<MySelect
@@ -244,6 +250,8 @@ export default function NewInvoiceRoute() {
 							label="Invoice ID Type"
 							placeholder="Choose invoice ID type"
 							onSelectionChange={handleInvoiceIdTypeChange}
+							isRequired
+							errorMessage={actionData?.errors?.['invoice-id-type']}
 						>
 							{idTypes.map(({ id, name }) => (
 								<MySelectListBoxItem key={id} id={id}>
@@ -268,6 +276,8 @@ export default function NewInvoiceRoute() {
 							name="locale"
 							label="Invoice Language"
 							placeholder="Choose a language"
+							isRequired
+							errorMessage={actionData?.errors?.locale}
 						>
 							{locales.map(({ id, name }) => (
 								<MySelectListBoxItem key={id} id={id}>
@@ -279,7 +289,13 @@ export default function NewInvoiceRoute() {
 
 					<div>
 						{/* TODO: fix uncontrolled/controlled input error in the console - should be fixed by an upcoming package update */}
-						<MyComboBox id="country-code" name="country-code" label="Currency">
+						<MyComboBox
+							id="country-code"
+							name="country-code"
+							label="Currency"
+							isRequired
+							errorMessage={actionData?.errors?.['country-code']}
+						>
 							{currencies.map(({ id, name }) => (
 								<MyComboBoxListBoxItem key={id} id={id}>
 									{name}
@@ -304,7 +320,13 @@ export default function NewInvoiceRoute() {
 				<div className="my-4 flex gap-3">
 					<div>
 						{/* TODO: fix uncontrolled/controlled input error in the console - should be fixed by an upcoming package update */}
-						<MyComboBox id="company-id" name="company-id" label="Company">
+						<MyComboBox
+							id="company-id"
+							name="company-id"
+							label="Company"
+							isRequired
+							errorMessage={actionData?.errors?.['company-id']}
+						>
 							{companies.map(({ id, name }) => (
 								<MyComboBoxListBoxItem key={id} id={id}>
 									{name}
@@ -315,7 +337,13 @@ export default function NewInvoiceRoute() {
 
 					<div>
 						{/* TODO: fix uncontrolled/controlled input error in the console - should be fixed by an upcoming package update */}
-						<MyComboBox id="customer-id" name="customer-id" label="Customer">
+						<MyComboBox
+							id="customer-id"
+							name="customer-id"
+							label="Customer"
+							isRequired
+							errorMessage={actionData?.errors?.['customer-id']}
+						>
 							{customers.map(({ id, name }) => (
 								<MyComboBoxListBoxItem key={id} id={id}>
 									{name}
@@ -348,7 +376,7 @@ export default function NewInvoiceRoute() {
 						Save Invoice
 					</Button>
 				</div>
-			</fetcher.Form>
+			</Form>
 		</section>
 	);
 }
