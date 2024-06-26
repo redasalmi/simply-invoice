@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Button } from 'react-aria-components';
 import { useClickAway } from '~/hooks/useClickAway';
 import { useKeyPress } from '~/hooks/useKeyPress';
 import { cn } from '~/utils/shared.utils';
@@ -38,9 +39,9 @@ export const Dialog = React.forwardRef<Ref, DialogProps>(function Dialog(
 				{...props}
 			>
 				<div>
-					<button type="button" className="ml-auto block" onClick={closeDialog}>
+					<Button type="button" className="ml-auto block" onPress={closeDialog}>
 						X
-					</button>
+					</Button>
 				</div>
 				{children}
 			</div>

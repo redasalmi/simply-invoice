@@ -99,7 +99,7 @@ export function UpdateEntityForm({
 						</p>
 					</div>
 					<div>
-						<Button onClick={addField}>Add New Custom Field</Button>
+						<Button onPress={addField}>Add New Custom Field</Button>
 					</div>
 				</div>
 
@@ -155,7 +155,7 @@ export function UpdateEntityForm({
 													checked={field.showLabelInInvoice}
 												/>
 											</div>
-											<Button onClick={() => deleteField(field.id)}>
+											<Button onPress={() => deleteField(field.id)}>
 												<TrashIcon />
 											</Button>
 										</div>
@@ -168,7 +168,7 @@ export function UpdateEntityForm({
 			</div>
 
 			<div>
-				<Button disabled={isSubmitting} type="submit">
+				<Button isDisabled={isSubmitting} type="submit">
 					{isLoading ? '...Updating' : 'Update'} {capitalize(type)}
 				</Button>
 			</div>

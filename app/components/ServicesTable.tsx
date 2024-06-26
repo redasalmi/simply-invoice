@@ -97,7 +97,7 @@ function ServiceRow({
 			</TableCell>
 			<TableCell>{amount}</TableCell>
 			<TableCell>
-				<Button onClick={deleteService}>
+				<Button onPress={deleteService}>
 					<TrashIcon />
 				</Button>
 			</TableCell>
@@ -157,7 +157,7 @@ export function ServicesTable({ services }: ServicesTablesProps) {
 		<div>
 			<div className="flex items-center justify-between">
 				<h3>Services</h3>
-				<Button onClick={addService}>Add new service</Button>
+				<Button onPress={addService}>Add new service</Button>
 			</div>
 			<Table>
 				<TableHeader>

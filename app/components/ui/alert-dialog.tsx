@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { cn } from '~/utils/shared.utils';
-import { Button } from './button';
+import { Button, type ButtonProps, type ButtonRef } from './button';
 
 type DivRef = HTMLDivElement;
 type DivProps = React.ComponentPropsWithoutRef<'div'>;
@@ -14,9 +14,6 @@ type TitleProps = React.ComponentPropsWithoutRef<'h2'>;
 
 type DescriptionRef = HTMLParagraphElement;
 type DescriptionProps = React.ComponentPropsWithoutRef<'p'>;
-
-type ButtonRef = HTMLButtonElement;
-type ButtonProps = React.ComponentPropsWithoutRef<'button'>;
 
 export const AlertDialog = React.forwardRef<DivRef, AlertDialogProps>(
 	function AlertDialog({ open, className, children, ...props }, ref) {

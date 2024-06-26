@@ -49,7 +49,7 @@ export default function NewServiceRoute() {
 					/>
 				))}
 
-				<Button disabled={isSubmitting} type="submit">
+				<Button isDisabled={isSubmitting} type="submit">
 					{isLoading ? 'Saving Service...' : 'Save Service'}
 				</Button>
 			</Form>

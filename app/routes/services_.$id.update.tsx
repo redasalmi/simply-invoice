@@ -131,7 +131,7 @@ export default function ServiceUpdateRoute() {
 					/>
 				))}
 
-				<Button disabled={isSubmitting} type="submit">
+				<Button isDisabled={isSubmitting} type="submit">
 					{isLoading ? 'Updating Service...' : 'Update Service'}
 				</Button>
 			</Form>

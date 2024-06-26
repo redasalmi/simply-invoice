@@ -74,7 +74,7 @@ export function CreateEntityForm({
 						</p>
 					</div>
 					<div>
-						<Button onClick={addField}>Add New Custom Field</Button>
+						<Button onPress={addField}>Add New Custom Field</Button>
 					</div>
 				</div>
 
@@ -125,7 +125,7 @@ export function CreateEntityForm({
 											<div className="flex items-center justify-center rounded-md bg-primary px-4 py-2">
 												<Switch name={`show-label-in-invoice-${field.id}`} />
 											</div>
-											<Button onClick={() => deleteField(field.id)}>
+											<Button onPress={() => deleteField(field.id)}>
 												<TrashIcon />
 											</Button>
 										</div>
@@ -138,7 +138,7 @@ export function CreateEntityForm({
 			</div>
 
 			<div>
-				<Button disabled={isSubmitting} type="submit">
+				<Button isDisabled={isSubmitting} type="submit">
 					{isLoading ? '...Saving' : 'Save'} {capitalize(type)}
 				</Button>
 			</div>
