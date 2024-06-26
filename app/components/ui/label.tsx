@@ -1,26 +1,24 @@
 import * as React from 'react';
-import { cn } from '~/utils/shared.utils';
+import {
+	Label as RACLabel,
+	type LabelProps as RACLabelProps,
+} from 'react-aria-components';
+import { cva, type VariantProps } from 'cva';
 
-type Ref = HTMLLabelElement;
-export type LabelProps = React.ComponentPropsWithoutRef<'label'> & {
-	error?: string;
-};
+const label = cva({
+	base: 'text-sm text-gray-500 dark:text-zinc-400 font-medium cursor-default w-fit',
+});
 
-export const Label = React.forwardRef<Ref, LabelProps>(function Label(
-	{ className, error, children, ...props },
+export type LabelRef = HTMLLabelElement;
+export type LabelProps = RACLabelProps & VariantProps<typeof label>;
+
+export const Label = React.forwardRef<LabelRef, LabelProps>(function Label(
+	{ className, children, ...props },
 	ref,
 ) {
 	return (
-		<label
-			ref={ref}
-			className={cn(
-				'text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
-				className,
-			)}
-			{...props}
-		>
-			{children}{' '}
-			{error ? <span className="text-red-500">({error})</span> : null}
-		</label>
+		<RACLabel ref={ref} className={label({ className })} {...props}>
+			{children}
+		</RACLabel>
 	);
 });
