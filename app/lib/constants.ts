@@ -1,3 +1,4 @@
+import type { TextFieldProps } from '~/components/ui/text-field';
 import type { FormFieldProps } from '~/types/formField.types';
 
 export const idTypes = [
@@ -114,35 +115,22 @@ export const addressFields: Array<FormFieldProps> = [
 	},
 ];
 
-export const servicesFields: Array<FormFieldProps> = [
+export const servicesFields: Array<TextFieldProps> = [
 	{
 		id: 'name',
-		label: {
-			children: 'Name *',
-		},
-		input: {
-			name: 'name',
-			required: true,
-		},
+		label: 'Name *',
+		name: 'name',
+		isRequired: true,
 	},
 	{
 		id: 'description',
-		label: {
-			children: 'Description',
-		},
-		input: {
-			name: 'description',
-		},
+		label: 'Description *',
+		name: 'description',
 	},
 	{
 		id: 'rate',
-		label: {
-			children: 'Rate *',
-		},
-		input: {
-			type: 'number',
-			name: 'rate',
-			required: true,
-		},
+		label: 'Rate *',
+		name: 'rate',
+		isRequired: true,
 	},
 ];

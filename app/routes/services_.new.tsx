@@ -1,10 +1,10 @@
 import type { ActionFunctionArgs } from '@remix-run/node';
 import { Form, redirect, useActionData, useNavigation } from '@remix-run/react';
 import { z } from 'zod';
+import { TextField } from '~/components/ui/text-field';
 import { Button } from '~/components/ui/button';
 import { db } from '~/lib/db';
 import { servicesFields } from '~/lib/constants';
-import { FormField } from '~/components/ui/form-field';
 import {
 	parseCreateServiceForm,
 	parseServiceActionErrors,
@@ -41,10 +41,10 @@ export default function NewServiceRoute() {
 		<section>
 			<Form method="POST">
 				{servicesFields.map((field) => (
-					<FormField
+					<TextField
 						key={field.id}
 						className="my-2"
-						error={actionData?.errors?.[field.name]}
+						errorMessage={actionData?.errors?.[field.name]}
 						{...field}
 					/>
 				))}
