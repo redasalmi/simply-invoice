@@ -1,4 +1,5 @@
-import type { TextFieldProps } from '~/components/ui/text-field';
+import type { NumberFieldProps } from '~/components/react-aria/number-field';
+import type { TextFieldProps } from '~/components/react-aria/text-field';
 import type { FormFieldProps } from '~/types/formField.types';
 
 export const idTypes = [
@@ -115,7 +116,7 @@ export const addressFields: Array<FormFieldProps> = [
 	},
 ];
 
-export const servicesFields: Array<TextFieldProps> = [
+export const servicesFields: Array<TextFieldProps | NumberFieldProps> = [
 	{
 		id: 'name',
 		label: 'Name *',
@@ -131,6 +132,7 @@ export const servicesFields: Array<TextFieldProps> = [
 		id: 'rate',
 		label: 'Rate *',
 		name: 'rate',
+		minValue: 0,
 		isRequired: true,
 	},
 ];

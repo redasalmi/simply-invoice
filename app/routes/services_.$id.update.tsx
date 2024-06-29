@@ -14,12 +14,13 @@ import { Button } from '~/components/ui/button';
 import { Skeleton } from '~/components/ui/skeleton';
 import { db } from '~/lib/db';
 import { servicesFields } from '~/lib/constants';
-import { FormField } from '~/components/ui/form-field';
 import {
 	parseServiceActionErrors,
 	parseUpdateServiceForm,
 } from '~/utils/service.utils';
 import { updateServiceSchema } from '~/schemas/service.schemas';
+import { TextField } from '~/components/react-aria/text-field';
+import { NumberField } from '~/components/react-aria/number-field';
 
 export async function clientLoader({ params }: ClientLoaderFunctionArgs) {
 	invariant(params.id, 'Service ID is required');
@@ -117,19 +118,25 @@ export default function ServiceUpdateRoute() {
 	return (
 		<section>
 			<Form method="POST">
-				{servicesFields.map((field) => (
-					<FormField
-						id={field.id}
-						key={field.id}
-						className="my-2"
-						error={actionData?.errors?.[field.name]}
-						label={field.label}
-						input={{
-							...field.input,
-							defaultValue: service[field.input.name],
-						}}
-					/>
-				))}
+				{servicesFields.map((field) =>
+					field.id === 'rate' ? (
+						<NumberField
+							key={field.id}
+							className="my-2"
+							defaultValue={service[field.name]}
+							errorMessage={actionData?.errors?.[field.name]}
+							{...field}
+						/>
+					) : (
+						<TextField
+							key={field.id}
+							className="my-2"
+							defaultValue={service[field.name]}
+							errorMessage={actionData?.errors?.[field.name]}
+							{...field}
+						/>
+					),
+				)}
 
 				<Button isDisabled={isSubmitting} type="submit">
 					{isLoading ? 'Updating Service...' : 'Update Service'}

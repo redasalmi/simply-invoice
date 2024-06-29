@@ -10,6 +10,7 @@ import {
 	parseServiceActionErrors,
 } from '~/utils/service.utils';
 import { createServiceSchema } from '~/schemas/service.schemas';
+import { NumberField } from '~/components/react-aria/number-field';
 
 export async function clientAction({ request }: ActionFunctionArgs) {
 	try {
@@ -40,14 +41,23 @@ export default function NewServiceRoute() {
 	return (
 		<section>
 			<Form method="POST">
-				{servicesFields.map((field) => (
-					<TextField
-						key={field.id}
-						className="my-2"
-						errorMessage={actionData?.errors?.[field.name]}
-						{...field}
-					/>
-				))}
+				{servicesFields.map((field) =>
+					field.id === 'rate' ? (
+						<NumberField
+							key={field.id}
+							className="my-2"
+							errorMessage={actionData?.errors?.[field.name]}
+							{...field}
+						/>
+					) : (
+						<TextField
+							key={field.id}
+							className="my-2"
+							errorMessage={actionData?.errors?.[field.name]}
+							{...field}
+						/>
+					),
+				)}
 
 				<Button isDisabled={isSubmitting} type="submit">
 					{isLoading ? 'Saving Service...' : 'Save Service'}
