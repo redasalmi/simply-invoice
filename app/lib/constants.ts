@@ -124,7 +124,7 @@ export const servicesFields: Array<TextFieldProps> = [
 	},
 	{
 		id: 'description',
-		label: 'Description *',
+		label: 'Description',
 		name: 'description',
 	},
 	{
