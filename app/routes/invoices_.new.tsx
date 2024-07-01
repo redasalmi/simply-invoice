@@ -26,7 +26,7 @@ import {
 	parseCreateInvoiceLoaderErrors,
 } from '~/utils/invoice.utils';
 import { Button } from '~/components/react-aria/button';
-import { MySelect, MySelectListBoxItem } from '~/components/ui/select';
+import { Select, SelectItem } from '~/components/react-aria/select';
 import { MyComboBox, MyComboBoxListBoxItem } from '~/components/ui/combobox';
 
 export async function clientLoader() {
@@ -244,7 +244,7 @@ export default function NewInvoiceRoute() {
 			<Form method="post">
 				<div className="my-4 flex gap-3">
 					<div>
-						<MySelect
+						<Select
 							id="invoice-id-type"
 							name="invoice-id-type"
 							label="Invoice ID Type"
@@ -254,24 +254,29 @@ export default function NewInvoiceRoute() {
 							errorMessage={actionData?.errors?.['invoice-id-type']}
 						>
 							{idTypes.map(({ id, name }) => (
-								<MySelectListBoxItem key={id} id={id}>
+								<SelectItem key={id} id={id}>
 									{name}
-								</MySelectListBoxItem>
+								</SelectItem>
 							))}
-						</MySelect>
+						</Select>
 					</div>
 
 					<div>
 						<Label>
 							<span>Invoice ID</span>
-							<Input ref={invoiceIdRef} name="invoice-id" readOnly />
+							<Input
+								ref={invoiceIdRef}
+								name="invoice-id"
+								readOnly
+								className="rounded-md border-2"
+							/>
 						</Label>
 					</div>
 				</div>
 
 				<div className="my-4 flex gap-3">
 					<div>
-						<MySelect
+						<Select
 							id="locale"
 							name="locale"
 							label="Invoice Language"
@@ -280,11 +285,11 @@ export default function NewInvoiceRoute() {
 							errorMessage={actionData?.errors?.locale}
 						>
 							{locales.map(({ id, name }) => (
-								<MySelectListBoxItem key={id} id={id}>
+								<SelectItem key={id} id={id}>
 									{name}
-								</MySelectListBoxItem>
+								</SelectItem>
 							))}
-						</MySelect>
+						</Select>
 					</div>
 
 					<div>
