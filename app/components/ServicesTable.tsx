@@ -13,7 +13,7 @@ import {
 } from '~/components/ui/table';
 import type { Service } from '~/types/service.types';
 import { Input } from './ui/input';
-import { Button } from './ui/button';
+import { Button } from '~/components/react-aria/button';
 import { NumberField } from './react-aria/number-field';
 
 type ServicesTablesProps = {

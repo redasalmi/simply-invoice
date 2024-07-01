@@ -1,11 +1,14 @@
-import * as React from 'react';
+import React from 'react';
 import {
+	composeRenderProps,
 	Button as RACButton,
 	type ButtonProps as RACButtonProps,
 } from 'react-aria-components';
-import { cva, type VariantProps } from 'cva';
+import { tv, type VariantProps } from 'tailwind-variants';
+import { focusRing } from './utils';
 
-const button = cva({
+const button = tv({
+	extend: focusRing,
 	base: 'px-5 py-2 text-sm text-center transition rounded-lg border border-black/10 dark:border-white/10 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.1)] dark:shadow-none cursor-default',
 	variants: {
 		variant: {
@@ -27,18 +30,18 @@ const button = cva({
 export type ButtonRef = HTMLButtonElement;
 export type ButtonProps = RACButtonProps & VariantProps<typeof button>;
 
-export const Button = React.forwardRef<ButtonRef, ButtonProps>(function Button(
-	{ variant, className, isDisabled, children, ...props },
-	ref,
-) {
-	return (
-		<RACButton
-			ref={ref}
-			className={button({ variant, isDisabled, className })}
-			isDisabled={isDisabled}
-			{...props}
-		>
-			{children}
-		</RACButton>
-	);
-});
+export const Button = React.forwardRef<ButtonRef, ButtonProps>(
+	function Button(props, ref) {
+		return (
+			<RACButton
+				ref={ref}
+				{...props}
+				className={composeRenderProps(
+					props.className,
+					(className, renderProps) =>
+						button({ ...renderProps, variant: props.variant, className }),
+				)}
+			/>
+		);
+	},
+);

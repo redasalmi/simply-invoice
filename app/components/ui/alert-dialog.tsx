@@ -1,6 +1,10 @@
 import * as React from 'react';
 import { cn } from '~/utils/shared.utils';
-import { Button, type ButtonProps, type ButtonRef } from './button';
+import {
+	Button,
+	type ButtonProps,
+	type ButtonRef,
+} from '~/components/react-aria/button';
 
 type DivRef = HTMLDivElement;
 type DivProps = React.ComponentPropsWithoutRef<'div'>;
@@ -126,7 +130,7 @@ export const AlertDialogAction = React.forwardRef<ButtonRef, ButtonProps>(
 export const AlertDialogCancel = React.forwardRef<ButtonRef, ButtonProps>(
 	function AlertDialogCancel({ children, ...props }, ref) {
 		return (
-			<Button ref={ref} {...props}>
+			<Button ref={ref} variant="destructive" {...props}>
 				{children}
 			</Button>
 		);

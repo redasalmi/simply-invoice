@@ -10,7 +10,7 @@ import {
 } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 import { z } from 'zod';
-import { Button } from '~/components/ui/button';
+import { Button } from '~/components/react-aria/button';
 import { Skeleton } from '~/components/ui/skeleton';
 import { db } from '~/lib/db';
 import { servicesFields } from '~/lib/constants';

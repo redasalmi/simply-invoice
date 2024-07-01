@@ -25,7 +25,7 @@ import {
 	parseCreateInvoiceForm,
 	parseCreateInvoiceLoaderErrors,
 } from '~/utils/invoice.utils';
-import { Button } from '~/components/ui/button';
+import { Button } from '~/components/react-aria/button';
 import { MySelect, MySelectListBoxItem } from '~/components/ui/select';
 import { MyComboBox, MyComboBoxListBoxItem } from '~/components/ui/combobox';
 

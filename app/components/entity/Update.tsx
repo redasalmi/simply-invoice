@@ -5,7 +5,7 @@ import { Reorder } from 'framer-motion';
 import { MoveIcon, TrashIcon } from 'lucide-react';
 import { Input } from '~/components/react-aria/input';
 import { TextField } from '~/components/react-aria/text-field';
-import { Button } from '~/components/ui/button';
+import { Button } from '~/components/react-aria/button';
 import { Switch } from '~/components/ui/switch';
 import { addressFields, informationFields } from '~/lib/constants';
 import { capitalize } from '~/utils/shared.utils';
