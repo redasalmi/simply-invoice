@@ -14,7 +14,7 @@ import {
 import type { Service } from '~/types/service.types';
 import { Input } from './ui/input';
 import { Button } from './ui/button';
-import { FormField } from './ui/form-field';
+import { NumberField } from './react-aria/number-field';
 
 type ServicesTablesProps = {
 	services: Array<Service>;
@@ -184,37 +184,28 @@ export function ServicesTable({ services }: ServicesTablesProps) {
 					<p>Sub-Total</p>
 					<p>{subtotalAmount}</p>
 				</div>
-				<FormField
+				<NumberField
 					id="shipping"
 					className="flex items-center gap-4"
-					label={{
-						children: 'Shipping',
-					}}
-					input={{
-						type: 'number',
-						name: 'shipping',
-						min: 0,
-						required: true,
-						value: shipping,
-						onInput: (event) =>
-							setShipping(parseInt(event.currentTarget.value, 10)),
-					}}
+					label="Shipping"
+					name="shipping"
+					minValue={0}
+					isRequired
+					value={shipping}
+					onInput={(event) =>
+						setShipping(parseInt(event.currentTarget.value, 10))
+					}
 				/>
-				<FormField
+				<NumberField
 					id="tax"
 					className="flex items-center gap-4"
-					label={{
-						children: 'Tax (%)',
-					}}
-					input={{
-						type: 'number',
-						name: 'tax',
-						min: 0,
-						max: 100,
-						required: true,
-						value: tax,
-						onInput: (event) => setTax(parseInt(event.currentTarget.value, 10)),
-					}}
+					label="Tax (%)"
+					name="tax"
+					minValue={0}
+					maxValue={100}
+					isRequired
+					value={tax}
+					onInput={(event) => setTax(parseInt(event.currentTarget.value, 10))}
 				/>
 				<div className="flex items-center justify-between">
 					<p>Total</p>

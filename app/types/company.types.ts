@@ -1,5 +1,5 @@
+import type { CustomField } from './entity.types';
 import type { Address } from './shared.types';
-import type { CustomField } from './formField.types';
 
 export type Company = {
 	id: string;

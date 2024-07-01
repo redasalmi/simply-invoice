@@ -13,8 +13,8 @@ import type {
 	EntityType,
 	Entity,
 	EntityActionErrors,
+	CustomField,
 } from '~/types/entity.types';
-import type { CustomField } from '~/types/formField.types';
 
 type UpdateEntityProps = {
 	type: EntityType;

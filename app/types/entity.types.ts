@@ -12,3 +12,11 @@ export type EntityActionErrors = {
 	'address-country'?: string;
 	custom?: Record<string, { label?: string; content?: string }>;
 };
+
+export type CustomField = {
+	id: string;
+	order: number;
+	label: string;
+	content: string;
+	showLabelInInvoice?: boolean;
+};
