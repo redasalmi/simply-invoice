@@ -3,8 +3,8 @@ import { Form } from '@remix-run/react';
 import { ulid } from 'ulid';
 import { Reorder } from 'framer-motion';
 import { MoveIcon, TrashIcon } from 'lucide-react';
-import { Input } from '~/components/ui/input';
-import { FormField } from '~/components/ui/form-field';
+import { Input } from '~/components/react-aria/input';
+import { TextField } from '~/components/react-aria/text-field';
 import { Button } from '~/components/ui/button';
 import { Switch } from '~/components/ui/switch';
 import { addressFields, informationFields } from '~/lib/constants';
@@ -56,16 +56,13 @@ export function UpdateEntityForm({
 		<Form method="post">
 			<div>
 				{informationFields.map((field) => (
-					<FormField
+					<TextField
 						id={field.id}
 						key={field.id}
 						className="my-2"
-						error={errors?.[field.name]}
-						label={field.label}
-						input={{
-							...field.input,
-							defaultValue: entity[field.input.name],
-						}}
+						errorMessage={errors?.[field.name]}
+						defaultValue={entity[field.name]}
+						{...field}
 					/>
 				))}
 			</div>
@@ -74,17 +71,13 @@ export function UpdateEntityForm({
 				<h3 className="text-2xl">Address</h3>
 				<div>
 					{addressFields.map((field) => (
-						<FormField
+						<TextField
 							id={field.id}
 							key={field.id}
 							className="my-2"
-							error={errors?.[field.name]}
-							label={field.label}
-							input={{
-								...field.input,
-								defaultValue:
-									entity.address[field.input.name.replace('address-', '')],
-							}}
+							errorMessage={errors?.[field.name]}
+							defaultValue={entity.address[field.name.replace('address-', '')]}
+							{...field}
 						/>
 					))}
 				</div>
@@ -124,28 +117,24 @@ export function UpdateEntityForm({
 											className="hidden"
 										/>
 
-										<FormField
+										<TextField
 											id={`label-${field.id}`}
-											label={{ children: 'Label *' }}
-											input={{
-												name: `label-${field.id}`,
-												required: true,
-												defaultValue: field.label,
-											}}
+											label="Label"
+											name={`label-${field.id}`}
+											defaultValue={field.label}
+											isRequired
 											className="flex-1"
-											error={errors?.custom?.[index]?.label}
+											errorMessage={errors?.custom?.[index]?.label}
 										/>
 
-										<FormField
+										<TextField
 											id={`content-${field.id}`}
-											label={{ children: 'Content *' }}
-											input={{
-												name: `content-${field.id}`,
-												required: true,
-												defaultValue: field.content,
-											}}
+											label="Content"
+											name={`content-${field.id}`}
+											defaultValue={field.content}
+											isRequired
 											className="flex-1"
-											error={errors?.custom?.[index]?.content}
+											errorMessage={errors?.custom?.[index]?.content}
 										/>
 
 										<div className="mt-auto flex gap-2">

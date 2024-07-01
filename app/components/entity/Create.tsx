@@ -3,8 +3,8 @@ import { Form } from '@remix-run/react';
 import { ulid } from 'ulid';
 import { Reorder } from 'framer-motion';
 import { MoveIcon, TrashIcon } from 'lucide-react';
-import { Input } from '~/components/ui/input';
-import { FormField } from '~/components/ui/form-field';
+import { Input } from '~/components/react-aria/input';
+import { TextField } from '~/components/react-aria/text-field';
 import { Button } from '~/components/ui/button';
 import { Switch } from '~/components/ui/switch';
 import { addressFields, informationFields } from '~/lib/constants';
@@ -42,10 +42,10 @@ export function CreateEntityForm({
 		<Form method="post">
 			<div>
 				{informationFields.map((field) => (
-					<FormField
+					<TextField
 						key={field.id}
 						className="my-2"
-						error={errors?.[field.name]}
+						errorMessage={errors?.[field.name]}
 						{...field}
 					/>
 				))}
@@ -55,10 +55,10 @@ export function CreateEntityForm({
 				<h3 className="text-2xl">Address</h3>
 				<div>
 					{addressFields.map((field) => (
-						<FormField
+						<TextField
 							key={field.id}
 							className="my-2"
-							error={errors?.[field.name]}
+							errorMessage={errors?.[field.name]}
 							{...field}
 						/>
 					))}
@@ -99,26 +99,22 @@ export function CreateEntityForm({
 											className="hidden"
 										/>
 
-										<FormField
+										<TextField
 											id={`label-${field.id}`}
-											label={{ children: 'Label *' }}
-											input={{
-												name: `label-${field.id}`,
-												required: true,
-											}}
+											label="Label"
+											name={`label-${field.id}`}
+											isRequired
 											className="flex-1"
-											error={errors?.custom?.[index]?.label}
+											errorMessage={errors?.custom?.[index]?.label}
 										/>
 
-										<FormField
+										<TextField
 											id={`content-${field.id}`}
-											label={{ children: 'Content *' }}
-											input={{
-												name: `content-${field.id}`,
-												required: true,
-											}}
+											label="Content"
+											name={`content-${field.id}`}
+											isRequired
 											className="flex-1"
-											error={errors?.custom?.[index]?.content}
+											errorMessage={errors?.custom?.[index]?.content}
 										/>
 
 										<div className="mt-auto flex gap-2">

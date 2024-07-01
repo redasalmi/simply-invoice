@@ -1,6 +1,5 @@
 import type { NumberFieldProps } from '~/components/react-aria/number-field';
 import type { TextFieldProps } from '~/components/react-aria/text-field';
-import type { FormFieldProps } from '~/types/formField.types';
 
 export const idTypes = [
 	{
@@ -33,93 +32,62 @@ export const intents = {
 } as const;
 export type Intent = (typeof intents)[keyof typeof intents];
 
-export const informationFields: Array<FormFieldProps> = [
+export const informationFields: Array<TextFieldProps> = [
 	{
 		id: 'name',
-		label: {
-			children: 'Name *',
-		},
-		input: {
-			name: 'name',
-			required: true,
-		},
+		label: 'Name',
+		name: 'name',
+		isRequired: true,
 	},
 	{
 		id: 'email',
-		label: {
-			children: 'Email *',
-		},
-		input: {
-			type: 'email',
-			name: 'email',
-			required: true,
-		},
+		label: 'Email',
+		name: 'email',
+		type: 'email',
+		isRequired: true,
 	},
 ];
 
-export const addressFields: Array<FormFieldProps> = [
+export const addressFields: Array<TextFieldProps> = [
 	{
 		id: 'address-address1',
-		label: {
-			children: 'Address 1 *',
-		},
-		input: {
-			name: 'address-address1',
-			required: true,
-		},
+		label: 'Address 1',
+		name: 'address-address1',
+		isRequired: true,
 	},
 	{
 		id: 'address-address2',
-		label: {
-			children: 'Address 2',
-		},
-		input: {
-			name: 'address-address2',
-		},
+		label: 'Address 2',
+		name: 'address-address2',
+		isRequired: true,
 	},
 	{
 		id: 'address-country',
-		label: {
-			children: 'Country *',
-		},
-		input: {
-			name: 'address-country',
-			required: true,
-		},
+		label: 'Country',
+		name: 'address-country',
+		isRequired: true,
 	},
 	{
 		id: 'address-province',
-		label: {
-			children: 'Province',
-		},
-		input: {
-			name: 'address-province',
-		},
+		label: 'Province',
+		name: 'address-province',
 	},
 	{
 		id: 'address-city',
-		label: {
-			children: 'City',
-		},
-		input: {
-			name: 'address-city',
-		},
+		label: 'City',
+		name: 'address-city',
 	},
 	{
 		id: 'address-zip',
-		label: {
-			children: 'Zip',
-		},
-		input: {
-			name: 'address-zip',
-		},
+		label: 'Zip',
+		name: 'address-zip',
 	},
 ];
 
 export const servicesFields: Array<TextFieldProps | NumberFieldProps> = [
 	{
 		id: 'name',
-		label: 'Name *',
+		label: 'Name',
 		name: 'name',
 		isRequired: true,
 	},
@@ -130,7 +98,7 @@ export const servicesFields: Array<TextFieldProps | NumberFieldProps> = [
 	},
 	{
 		id: 'rate',
-		label: 'Rate *',
+		label: 'Rate',
 		name: 'rate',
 		minValue: 0,
 		isRequired: true,
