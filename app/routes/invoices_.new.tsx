@@ -9,8 +9,8 @@ import {
 import { nanoid } from 'nanoid';
 import { z } from 'zod';
 import type { Key } from 'react-aria-components';
-import { Input } from '~/components/ui/input';
-import { Label } from '~/components/ui/label';
+import { Input } from '~/components/react-aria/input';
+import { Label } from '~/components/react-aria/label';
 import { Textarea } from '~/components/ui/textarea';
 import { idTypes, type Intent, intents, locales } from '~/lib/constants';
 import { countries } from '~/lib/currencies';

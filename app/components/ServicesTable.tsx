@@ -12,7 +12,6 @@ import {
 	TableRow,
 } from '~/components/ui/table';
 import type { Service } from '~/types/service.types';
-import { Input } from './ui/input';
 import { Button } from '~/components/react-aria/button';
 import { NumberField } from './react-aria/number-field';
 
@@ -87,12 +86,11 @@ function ServiceRow({
 				</MyComboBox>
 			</TableCell>
 			<TableCell>
-				<Input
+				<NumberField
 					name={`service-quantity-${id}`}
-					type="number"
 					value={quantity}
-					min={selectedService ? 1 : 0}
-					onChange={onQuantityChange}
+					minValue={selectedService ? 1 : 0}
+					onInput={onQuantityChange}
 				/>
 			</TableCell>
 			<TableCell>{amount}</TableCell>
