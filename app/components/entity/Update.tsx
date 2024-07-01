@@ -6,7 +6,7 @@ import { MoveIcon, TrashIcon } from 'lucide-react';
 import { Input } from '~/components/react-aria/input';
 import { TextField } from '~/components/react-aria/text-field';
 import { Button } from '~/components/react-aria/button';
-import { Switch } from '~/components/ui/switch';
+import { Switch } from '~/components/react-aria/switch';
 import { addressFields, informationFields } from '~/lib/constants';
 import { capitalize } from '~/utils/shared.utils';
 import type {
@@ -141,8 +141,10 @@ export function UpdateEntityForm({
 											<div className="flex items-center justify-center rounded-md bg-primary px-4 py-2">
 												<Switch
 													name={`show-label-in-invoice-${field.id}`}
-													checked={field.showLabelInInvoice}
-												/>
+													defaultSelected={field.showLabelInInvoice}
+												>
+													<div className="hidden">Show label on invoice</div>
+												</Switch>
 											</div>
 											<Button onPress={() => deleteField(field.id)}>
 												<TrashIcon />
