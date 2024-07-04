@@ -3,10 +3,11 @@ import {
 	useLoaderData,
 	useNavigate,
 } from '@remix-run/react';
+import { Heading } from 'react-aria-components';
 import invariant from 'tiny-invariant';
 import { EntityDetail } from '~/components/entity/Detail';
 import { EntityNotFound } from '~/components/entity/Error';
-import { Dialog, DialogContent } from '~/components/ui/dialog';
+import { Modal } from '~/components/react-aria/modal';
 import { db } from '~/lib/db';
 
 export async function clientLoader({ params }: ClientLoaderFunctionArgs) {
@@ -27,14 +28,18 @@ export default function CompanyRoute() {
 	};
 
 	return (
-		<Dialog open closeDialog={closeDialog}>
-			<DialogContent>
-				{!company ? (
+		<Modal isOpen closeDialog={closeDialog}>
+			{!company ? (
+				<>
+					<Heading slot="title">No company found!</Heading>
 					<EntityNotFound type="company" baseUrl="/companies" />
-				) : (
+				</>
+			) : (
+				<>
+					<Heading slot="title">Company Details</Heading>
 					<EntityDetail entity={company} />
-				)}
-			</DialogContent>
-		</Dialog>
+				</>
+			)}
+		</Modal>
 	);
 }
