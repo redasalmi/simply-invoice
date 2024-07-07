@@ -13,6 +13,8 @@
 	"dependencies": {
 		"@netlify/functions": "^2.8.0",
 		"@netlify/remix-adapter": "^2.4.0",
+		"@radix-ui/colors": "^3.0.0",
+		"@radix-ui/react-alert-dialog": "^1.1.1",
 		"@react-pdf/renderer": "^3.4.4",
 		"@remix-run/node": "^2.10.2",
 		"@remix-run/react": "^2.10.2",

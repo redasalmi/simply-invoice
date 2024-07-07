@@ -9,17 +9,19 @@ import {
 	useNavigation,
 } from '@remix-run/react';
 import invariant from 'tiny-invariant';
+import { db } from '~/lib/db';
 import {
-	AlertDialog,
 	AlertDialogAction,
+	AlertDialogActionButton,
 	AlertDialogCancel,
+	AlertDialogCancelButton,
 	AlertDialogContent,
 	AlertDialogDescription,
-	AlertDialogFooter,
-	AlertDialogHeader,
+	AlertDialogOverlay,
+	AlertDialogPortal,
+	AlertDialogRoot,
 	AlertDialogTitle,
 } from '~/components/ui/alert-dialog';
-import { db } from '~/lib/db';
 
 export async function clientLoader({ params }: ClientLoaderFunctionArgs) {
 	invariant(params.id, 'Service ID is required');
@@ -72,45 +74,56 @@ export default function ServiceDeleteRoute() {
 	};
 
 	return (
-		<AlertDialog open>
-			<AlertDialogContent>
-				{!service ? (
-					<>
-						<AlertDialogHeader>
+		<AlertDialogRoot open>
+			<AlertDialogPortal>
+				<AlertDialogOverlay />
+				<AlertDialogContent onEscapeKeyDown={closeAlert}>
+					{!service ? (
+						<>
 							<AlertDialogTitle>
-								{actionData?.error.message || 'Error Deleting Service!'}
+								{actionData?.error?.message || 'Error Deleting Service!'}
 							</AlertDialogTitle>
 							<AlertDialogDescription>
-								{actionData?.error.description ||
+								{actionData?.error?.description ||
 									'An error happened while deleting your service, please try again later.'}
 							</AlertDialogDescription>
-						</AlertDialogHeader>
-						<AlertDialogFooter>
-							<AlertDialogCancel onClick={closeAlert}>Close</AlertDialogCancel>
-						</AlertDialogFooter>
-					</>
-				) : (
-					<>
-						<AlertDialogHeader>
+							<div className="flex justify-end gap-[25px]">
+								<AlertDialogCancel onClick={closeAlert} asChild>
+									<AlertDialogCancelButton>Close</AlertDialogCancelButton>
+								</AlertDialogCancel>
+							</div>
+						</>
+					) : (
+						<>
 							<AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
 							<AlertDialogDescription>
 								This action cannot be undone. This will permanently delete the{' '}
-								<span className="font-bold">{service.name}</span> service.
+								<span className="font-bold">{service.name}</span> service.{' '}
 							</AlertDialogDescription>
-						</AlertDialogHeader>
-						<AlertDialogFooter>
-							<AlertDialogCancel disabled={isSubmitting} onClick={closeAlert}>
-								Cancel
-							</AlertDialogCancel>
-							<Form method="POST">
-								<AlertDialogAction disabled={isSubmitting} type="submit">
-									{isLoading ? '...Deleting' : 'Delete'}
+							<div className="flex justify-end gap-[25px]">
+								<AlertDialogCancel
+									disabled={isSubmitting}
+									onClick={closeAlert}
+									asChild
+								>
+									<AlertDialogCancelButton>Cancel</AlertDialogCancelButton>
+								</AlertDialogCancel>
+								<AlertDialogAction
+									type="submit"
+									disabled={isSubmitting}
+									asChild
+								>
+									<Form method="POST">
+										<AlertDialogActionButton>
+											{isLoading ? '...Deleting' : 'Delete'}
+										</AlertDialogActionButton>
+									</Form>
 								</AlertDialogAction>
-							</Form>
-						</AlertDialogFooter>
-					</>
-				)}
-			</AlertDialogContent>
-		</AlertDialog>
+							</div>
+						</>
+					)}
+				</AlertDialogContent>
+			</AlertDialogPortal>
+		</AlertDialogRoot>
 	);
 }

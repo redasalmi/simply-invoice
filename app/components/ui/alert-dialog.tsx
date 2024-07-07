@@ -1,138 +1,122 @@
 import * as React from 'react';
+import * as AlertDialog from '@radix-ui/react-alert-dialog';
 import { cn } from '~/utils/shared.utils';
-import {
-	Button,
-	type ButtonProps,
-	type ButtonRef,
-} from '~/components/react-aria/button';
 
-type DivRef = HTMLDivElement;
-type DivProps = React.ComponentPropsWithoutRef<'div'>;
+type ButtonRef = HTMLButtonElement;
+type ButtonProps = Omit<React.ComponentPropsWithoutRef<'button'>, 'className'>;
 
-type AlertDialogProps = React.ComponentPropsWithoutRef<'div'> & {
-	open: boolean;
-};
+export function AlertDialogRoot(props: AlertDialog.AlertDialogProps) {
+	return <AlertDialog.Root {...props} />;
+}
 
-type TitleRef = HTMLHeadingElement;
-type TitleProps = React.ComponentPropsWithoutRef<'h2'>;
+export function AlertDialogTrigger(props: AlertDialog.AlertDialogTriggerProps) {
+	return <AlertDialog.Trigger {...props} />;
+}
 
-type DescriptionRef = HTMLParagraphElement;
-type DescriptionProps = React.ComponentPropsWithoutRef<'p'>;
+export function AlertDialogPortal(props: AlertDialog.AlertDialogPortalProps) {
+	return <AlertDialog.Portal {...props} />;
+}
 
-export const AlertDialog = React.forwardRef<DivRef, AlertDialogProps>(
-	function AlertDialog({ open, className, children, ...props }, ref) {
-		if (!open) {
-			return null;
-		}
-
-		return (
-			<div>
-				<div className="fixed inset-0 z-50 bg-black/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
-				<div
-					ref={ref}
-					role="alert"
-					className={cn(
-						'fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg',
-						className,
-					)}
-					{...props}
-				>
-					{children}
-				</div>
-			</div>
-		);
-	},
-);
-
-export const AlertDialogContent = React.forwardRef<DivRef, DivProps>(
-	function AlertDialogContent({ children, ...props }, ref) {
-		return (
-			<div ref={ref} {...props}>
-				{children}
-			</div>
-		);
-	},
-);
-
-export const AlertDialogHeader = React.forwardRef<DivRef, DivProps>(
-	function AlertDialogHeader({ className, children, ...props }, ref) {
-		return (
-			<div
-				ref={ref}
-				className={cn(
-					'flex flex-col space-y-2 text-center sm:text-left',
-					className,
-				)}
-				{...props}
-			>
-				{children}
-			</div>
-		);
-	},
-);
-
-export const AlertDialogTitle = React.forwardRef<TitleRef, TitleProps>(
-	function AlertDialogTitle({ className, children, ...props }, ref) {
-		return (
-			<h2
-				ref={ref}
-				className={cn('text-lg font-semibold', className)}
-				{...props}
-			>
-				{children}
-			</h2>
-		);
-	},
-);
-
-export const AlertDialogDescription = React.forwardRef<
-	DescriptionRef,
-	DescriptionProps
->(function AlertDialogDescription({ className, children, ...props }, ref) {
+export const AlertDialogOverlay = React.forwardRef<
+	HTMLDivElement,
+	AlertDialog.AlertDialogOverlayProps
+>(function AlertDialogOverlay({ className, ...props }, ref) {
 	return (
-		<p
+		<AlertDialog.Overlay
 			ref={ref}
-			className={cn('text-sm text-muted-foreground', className)}
+			className={cn(
+				'fixed inset-0 bg-blackA6 data-[state=open]:animate-overlayShow',
+				className,
+			)}
 			{...props}
-		>
-			{children}
-		</p>
+		/>
 	);
 });
 
-export const AlertDialogFooter = React.forwardRef<DivRef, DivProps>(
-	function AlertDialogFooter({ className, children, ...props }, ref) {
+export const AlertDialogContent = React.forwardRef<
+	HTMLDivElement,
+	AlertDialog.AlertDialogContentProps
+>(function AlertDialogContent({ className, ...props }, ref) {
+	return (
+		<AlertDialog.Content
+			ref={ref}
+			className={cn(
+				'fixed left-[50%] top-[50%] max-h-[85vh] w-[90vw] max-w-[500px] translate-x-[-50%] translate-y-[-50%] rounded-[6px] bg-white p-[25px] shadow-[hsl(206_22%_7%_/_35%)_0px_10px_38px_-10px,_hsl(206_22%_7%_/_20%)_0px_10px_20px_-15px] data-[state=open]:animate-contentShow focus:outline-none',
+				className,
+			)}
+			{...props}
+		/>
+	);
+});
+
+export function AlertDialogTitle({
+	className,
+	...props
+}: AlertDialog.AlertDialogTitleProps) {
+	return (
+		<AlertDialog.Title
+			className={cn('m-0 text-[17px] font-medium text-mauve12', className)}
+			{...props}
+		/>
+	);
+}
+
+export function AlertDialogDescription({
+	className,
+	...props
+}: AlertDialog.AlertDialogDescriptionProps) {
+	return (
+		<AlertDialog.Description
+			className={cn(
+				'mb-5 mt-4 text-[15px] leading-normal text-mauve11',
+				className,
+			)}
+			{...props}
+		/>
+	);
+}
+
+export function AlertDialogCancel(props: AlertDialog.AlertDialogCancelProps) {
+	return <AlertDialog.Cancel {...props} />;
+}
+
+export function AlertDialogAction(props: AlertDialog.AlertDialogActionProps) {
+	return <AlertDialog.Action {...props} />;
+}
+
+export const AlertDialogTriggerButton = React.forwardRef<
+	ButtonRef,
+	ButtonProps
+>(function AlertDialogTriggerButton(props, ref) {
+	return (
+		<button
+			ref={ref}
+			className="inline-flex h-[35px] items-center justify-center rounded-[4px] bg-white px-[15px] font-medium leading-none text-violet11 shadow-[0_2px_10px] shadow-blackA4 outline-none hover:bg-mauve3 focus:shadow-[0_0_0_2px] focus:shadow-black"
+			{...props}
+		/>
+	);
+});
+
+export const AlertDialogCancelButton = React.forwardRef<ButtonRef, ButtonProps>(
+	function AlertDialogCancelButton(props, ref) {
 		return (
-			<div
+			<button
 				ref={ref}
-				className={cn(
-					'flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2',
-					className,
-				)}
+				className="inline-flex h-[35px] items-center justify-center rounded-[4px] bg-mauve4 px-[15px] font-medium leading-none text-mauve11 outline-none hover:bg-mauve5 focus:shadow-[0_0_0_2px] focus:shadow-mauve7"
 				{...props}
-			>
-				{children}
-			</div>
+			/>
 		);
 	},
 );
 
-export const AlertDialogAction = React.forwardRef<ButtonRef, ButtonProps>(
-	function AlertDialogAction({ children, ...props }, ref) {
+export const AlertDialogActionButton = React.forwardRef<ButtonRef, ButtonProps>(
+	function AlertDialogActionButton(props, ref) {
 		return (
-			<Button ref={ref} {...props}>
-				{children}
-			</Button>
-		);
-	},
-);
-
-export const AlertDialogCancel = React.forwardRef<ButtonRef, ButtonProps>(
-	function AlertDialogCancel({ children, ...props }, ref) {
-		return (
-			<Button ref={ref} variant="destructive" {...props}>
-				{children}
-			</Button>
+			<button
+				ref={ref}
+				className="inline-flex h-[35px] items-center justify-center rounded-[4px] bg-red4 px-[15px] font-medium leading-none text-red11 outline-none hover:bg-red5 focus:shadow-[0_0_0_2px] focus:shadow-red7"
+				{...props}
+			/>
 		);
 	},
 );

@@ -1,12 +1,13 @@
 import { Form } from '@remix-run/react';
 import {
-	AlertDialog,
 	AlertDialogAction,
+	AlertDialogActionButton,
 	AlertDialogCancel,
+	AlertDialogCancelButton,
 	AlertDialogContent,
 	AlertDialogDescription,
-	AlertDialogFooter,
-	AlertDialogHeader,
+	AlertDialogOverlay,
+	AlertDialogRoot,
 	AlertDialogTitle,
 } from '~/components/ui/alert-dialog';
 import { capitalize } from '~/utils/shared.utils';
@@ -28,27 +29,33 @@ export function DeleteEntity({
 	closeAlert,
 }: DeleteEntityProps) {
 	return (
-		<AlertDialog open>
-			<AlertDialogContent>
-				<AlertDialogHeader>
+		<AlertDialogRoot open>
+			<AlertDialogOverlay>
+				<AlertDialogContent onEscapeKeyDown={closeAlert}>
 					<AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
 					<AlertDialogDescription>
 						This action cannot be undone. This will permanently delete the{' '}
 						<span className="font-bold">{entityName}</span> {type}.
 					</AlertDialogDescription>
-				</AlertDialogHeader>
-				<AlertDialogFooter>
-					<AlertDialogCancel disabled={isSubmitting} onClick={closeAlert}>
-						Cancel
-					</AlertDialogCancel>
-					<Form method="POST">
-						<AlertDialogAction disabled={isSubmitting} type="submit">
-							{isLoading ? '...Deleting' : 'Delete'}
+					<div className="flex justify-end gap-[25px]">
+						<AlertDialogCancel
+							disabled={isSubmitting}
+							onClick={closeAlert}
+							asChild
+						>
+							<AlertDialogCancelButton>Cancel</AlertDialogCancelButton>
+						</AlertDialogCancel>
+						<AlertDialogAction type="submit" disabled={isSubmitting} asChild>
+							<Form method="POST">
+								<AlertDialogActionButton disabled={isSubmitting} type="submit">
+									{isLoading ? '...Deleting' : 'Delete'}
+								</AlertDialogActionButton>
+							</Form>
 						</AlertDialogAction>
-					</Form>
-				</AlertDialogFooter>
-			</AlertDialogContent>
-		</AlertDialog>
+					</div>
+				</AlertDialogContent>
+			</AlertDialogOverlay>
+		</AlertDialogRoot>
 	);
 }
 
@@ -67,9 +74,9 @@ export function DeleteEntityError({
 	closeAlert,
 }: DeleteEntityErrorProps) {
 	return (
-		<AlertDialog open>
-			<AlertDialogContent>
-				<AlertDialogHeader>
+		<AlertDialogRoot open>
+			<AlertDialogOverlay>
+				<AlertDialogContent>
 					<AlertDialogTitle>
 						{error?.message || `Error Deleting ${capitalize(type)}!`}
 					</AlertDialogTitle>
@@ -77,11 +84,13 @@ export function DeleteEntityError({
 						{error?.description ||
 							`An error happened while deleting your ${type}, please try again later.`}
 					</AlertDialogDescription>
-				</AlertDialogHeader>
-				<AlertDialogFooter>
-					<AlertDialogCancel onClick={closeAlert}>Close</AlertDialogCancel>
-				</AlertDialogFooter>
-			</AlertDialogContent>
-		</AlertDialog>
+					<div className="flex justify-end gap-[25px]">
+						<AlertDialogCancel onClick={closeAlert} asChild>
+							<AlertDialogCancelButton>Cancel</AlertDialogCancelButton>
+						</AlertDialogCancel>
+					</div>
+				</AlertDialogContent>
+			</AlertDialogOverlay>
+		</AlertDialogRoot>
 	);
 }
