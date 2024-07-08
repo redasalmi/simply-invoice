@@ -3,11 +3,18 @@ import {
 	useLoaderData,
 	useNavigate,
 } from '@remix-run/react';
-import { Heading } from 'react-aria-components';
 import invariant from 'tiny-invariant';
 import { EntityDetail } from '~/components/entity/Detail';
 import { EntityNotFound } from '~/components/entity/Error';
-import { Modal } from '~/components/react-aria/modal';
+import {
+	DialogClose,
+	DialogCloseButton,
+	DialogContent,
+	DialogOverlay,
+	DialogPortal,
+	DialogRoot,
+	DialogTitle,
+} from '~/components/ui/dialog';
 import { db } from '~/lib/db';
 
 export async function clientLoader({ params }: ClientLoaderFunctionArgs) {
@@ -28,18 +35,27 @@ export default function CustomerRoute() {
 	};
 
 	return (
-		<Modal isOpen closeDialog={closeDialog}>
-			{!customer ? (
-				<>
-					<Heading slot="title">No customer found</Heading>
-					<EntityNotFound type="customer" baseUrl="/customers" />
-				</>
-			) : (
-				<>
-					<Heading slot="title">Customer Details</Heading>
-					<EntityDetail entity={customer} />
-				</>
-			)}
-		</Modal>
+		<DialogRoot open>
+			<DialogPortal>
+				<DialogOverlay />
+				<DialogContent onEscapeKeyDown={closeDialog}>
+					{!customer ? (
+						<>
+							<DialogTitle>No customer found!</DialogTitle>
+							<EntityNotFound type="customer" baseUrl="/customers" />
+						</>
+					) : (
+						<>
+							<DialogTitle>Customer Details</DialogTitle>
+							<EntityDetail entity={customer} />
+						</>
+					)}
+
+					<DialogClose asChild onClick={closeDialog}>
+						<DialogCloseButton />
+					</DialogClose>
+				</DialogContent>
+			</DialogPortal>
+		</DialogRoot>
 	);
 }
