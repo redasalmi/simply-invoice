@@ -6,7 +6,7 @@ import { MoveIcon, TrashIcon } from 'lucide-react';
 import { Input } from '~/components/react-aria/input';
 import { TextField } from '~/components/react-aria/text-field';
 import { Button } from '~/components/react-aria/button';
-import { Switch } from '~/components/react-aria/switch';
+import { Switch } from '~/components/ui/switch';
 import { addressFields, informationFields } from '~/lib/constants';
 import { capitalize } from '~/utils/shared.utils';
 import type { EntityActionErrors, EntityType } from '~/types/entity.types';
@@ -118,10 +118,17 @@ export function CreateEntityForm({
 										/>
 
 										<div className="mt-auto flex gap-2">
-											<div className="flex items-center justify-center rounded-md bg-primary px-4 py-2">
-												<Switch name={`show-label-in-invoice-${field.id}`}>
-													<div className="hidden">Show label on invoice</div>
-												</Switch>
+											<div className="flex items-center justify-center rounded-md px-4 py-2">
+												<label
+													htmlFor={`show-label-in-invoice-${field.id}`}
+													className="sr-only"
+												>
+													Show label on invoice
+												</label>
+												<Switch
+													id={`show-label-in-invoice-${field.id}`}
+													name={`show-label-in-invoice-${field.id}`}
+												/>
 											</div>
 											<Button onPress={() => deleteField(field.id)}>
 												<TrashIcon />
