@@ -1,8 +1,6 @@
 import * as React from 'react';
 import { ulid } from 'ulid';
 import { TrashIcon } from 'lucide-react';
-import type { Key } from 'react-aria-components';
-import { MyComboBox, MyComboBoxListBoxItem } from './ui/combobox';
 import {
 	Table,
 	TableBody,
@@ -13,6 +11,7 @@ import {
 } from '~/components/ui/table';
 import type { Service } from '~/types/service.types';
 import { Button } from '~/components/react-aria/button';
+import { ComboBox } from '~/components/ui/combobox';
 import { NumberField } from './react-aria/number-field';
 
 type ServicesTablesProps = {
@@ -37,12 +36,25 @@ function ServiceRow({
 	);
 	const [quantity, setQuantity] = React.useState(0);
 
+	const servicesList = React.useMemo(() => {
+		return services.map(({ id, name }) => ({ id, name, value: id }));
+	}, [services]);
+
 	const amount = React.useMemo(() => {
 		return selectedService?.rate ? selectedService.rate * quantity : 0;
 	}, [quantity, selectedService?.rate]);
 
-	const onServiceChange = (optionId: Key | null) => {
-		const option = services.find(({ id }) => id === optionId);
+	const onServiceChange = (optionName: string) => {
+		if (!optionName) {
+			setSelectedService(null);
+			setQuantity(0);
+
+			return;
+		}
+
+		const option = services.find(({ name }) =>
+			name.toLowerCase().includes(optionName),
+		);
 		if (!option) {
 			return;
 		}
@@ -72,18 +84,14 @@ function ServiceRow({
 	return (
 		<TableRow>
 			<TableCell>
-				{/* TODO: fix uncontrolled/controlled input error in the console - should be fixed by an upcoming package update */}
-				<MyComboBox
+				<ComboBox
 					id={`service-id-${id}`}
 					name={`service-id-${id}`}
-					onSelectionChange={onServiceChange}
-				>
-					{services.map(({ id, name }) => (
-						<MyComboBoxListBoxItem key={id} id={id}>
-							{name}
-						</MyComboBoxListBoxItem>
-					))}
-				</MyComboBox>
+					label="Service"
+					placeholder="Select a service"
+					listItems={servicesList}
+					inputChangeCallback={onServiceChange}
+				/>
 			</TableCell>
 			<TableCell>
 				<NumberField

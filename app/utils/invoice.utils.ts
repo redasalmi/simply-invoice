@@ -16,8 +16,8 @@ export async function getInvoiceClientLoaderData() {
 	]);
 
 	return {
-		companies,
-		customers,
+		companies: companies.map(({ id, name }) => ({ id, name, value: id })),
+		customers: customers.map(({ id, name }) => ({ id, name, value: id })),
 		services,
 		lastInvoiceId: invoice?.id ? Number(invoice.id) : 0,
 	};

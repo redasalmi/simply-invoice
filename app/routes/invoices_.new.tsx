@@ -27,7 +27,7 @@ import {
 } from '~/utils/invoice.utils';
 import { Button } from '~/components/react-aria/button';
 import { Select, SelectItem } from '~/components/react-aria/select';
-import { MyComboBox, MyComboBoxListBoxItem } from '~/components/ui/combobox';
+import { ComboBox } from '~/components/ui/combobox';
 
 export async function clientLoader() {
 	try {
@@ -188,6 +188,7 @@ const currencies = countries.map(
 	({ countryName, currencySymbol, countryCode }) => ({
 		id: countryCode,
 		name: `${countryName} - ${currencySymbol}`,
+		value: countryCode,
 	}),
 );
 
@@ -293,20 +294,14 @@ export default function NewInvoiceRoute() {
 					</div>
 
 					<div>
-						{/* TODO: fix uncontrolled/controlled input error in the console - should be fixed by an upcoming package update */}
-						<MyComboBox
+						<ComboBox
 							id="country-code"
 							name="country-code"
 							label="Currency"
-							isRequired
-							errorMessage={actionData?.errors?.['country-code']}
-						>
-							{currencies.map(({ id, name }) => (
-								<MyComboBoxListBoxItem key={id} id={id}>
-									{name}
-								</MyComboBoxListBoxItem>
-							))}
-						</MyComboBox>
+							placeholder="Select a currency"
+							errorMessage={actionData?.errors?.['customer-id']}
+							listItems={currencies}
+						/>
 					</div>
 				</div>
 
@@ -324,37 +319,25 @@ export default function NewInvoiceRoute() {
 
 				<div className="my-4 flex gap-3">
 					<div>
-						{/* TODO: fix uncontrolled/controlled input error in the console - should be fixed by an upcoming package update */}
-						<MyComboBox
+						<ComboBox
 							id="company-id"
 							name="company-id"
 							label="Company"
-							isRequired
+							placeholder="Select a company"
 							errorMessage={actionData?.errors?.['company-id']}
-						>
-							{companies.map(({ id, name }) => (
-								<MyComboBoxListBoxItem key={id} id={id}>
-									{name}
-								</MyComboBoxListBoxItem>
-							))}
-						</MyComboBox>
+							listItems={companies}
+						/>
 					</div>
 
 					<div>
-						{/* TODO: fix uncontrolled/controlled input error in the console - should be fixed by an upcoming package update */}
-						<MyComboBox
+						<ComboBox
 							id="customer-id"
 							name="customer-id"
 							label="Customer"
-							isRequired
+							placeholder="Select a customer"
 							errorMessage={actionData?.errors?.['customer-id']}
-						>
-							{customers.map(({ id, name }) => (
-								<MyComboBoxListBoxItem key={id} id={id}>
-									{name}
-								</MyComboBoxListBoxItem>
-							))}
-						</MyComboBox>
+							listItems={customers}
+						/>
 					</div>
 				</div>
 

@@ -1,68 +1,117 @@
-import {
-	type ComboBoxProps,
-	type ListBoxItemProps,
-	type ValidationResult,
-	FieldError,
-	Button,
-	ComboBox,
-	Input,
-	Label,
-	ListBox,
-	ListBoxItem,
-	Popover,
-	Text,
-	Group,
-} from 'react-aria-components';
-import { twMerge } from 'tailwind-merge';
+import * as React from 'react';
+import { useCombobox } from 'downshift';
+import { ChevronDownIcon, ChevronUpIcon } from 'lucide-react';
+import { cn } from '~/utils/shared.utils';
 
-interface MyComboBoxProps<T extends object>
-	extends Omit<ComboBoxProps<T>, 'children'> {
-	label?: string;
-	description?: string | null;
-	errorMessage?: string | ((validation: ValidationResult) => string);
-	children: React.ReactNode | ((item: T) => React.ReactNode);
-}
+type ComboBoxProps = {
+	id: string;
+	name: string;
+	label: string;
+	placeholder: string;
+	errorMessage?: string;
+	listItems: Array<{
+		id: string;
+		name: string;
+		value: string;
+	}>;
+	inputChangeCallback?: (inputValue: string) => void;
+};
 
-export function MyComboBox<T extends object>({
+export function ComboBox({
+	id,
+	name,
 	label,
-	description,
+	placeholder,
 	errorMessage,
-	children,
-	className,
-	...props
-}: MyComboBoxProps<T>) {
-	return (
-		<ComboBox
-			className={twMerge('group flex min-w-[200px] flex-col gap-1', className)}
-			{...props}
-		>
-			<Label className="cursor-default">{label}</Label>
-			<Group className="flex rounded-lg bg-white bg-opacity-90 shadow-md ring-1 ring-black/10 transition focus-within:bg-opacity-100 focus-visible:ring-2 focus-visible:ring-black">
-				<Input className="w-full flex-1 border-none bg-transparent px-3 py-2 text-base leading-5 text-gray-900 outline-none" />
-				<Button className="flex items-center rounded-r-lg border-0 border-l border-solid border-l-sky-200 bg-transparent px-3 text-gray-700 transition pressed:bg-sky-100">
-					▼
-				</Button>
-			</Group>
-			{description ? <Text slot="description">{description}</Text> : null}
-			{errorMessage ? <FieldError>{errorMessage}</FieldError> : null}
-			<Popover className="max-h-60 w-[--trigger-width] overflow-auto rounded-md bg-white text-base shadow-lg ring-1 ring-black/5 entering:animate-in entering:fade-in exiting:animate-out exiting:fade-out">
-				<ListBox className="p-1 outline-none">{children}</ListBox>
-			</Popover>
-		</ComboBox>
-	);
-}
+	listItems,
+	inputChangeCallback,
+}: ComboBoxProps) {
+	const [items, setItems] = React.useState(listItems);
+	const {
+		isOpen,
+		getToggleButtonProps,
+		getLabelProps,
+		getMenuProps,
+		getInputProps,
+		highlightedIndex,
+		getItemProps,
+		selectedItem,
+		reset,
+	} = useCombobox({
+		onInputValueChange({ inputValue }) {
+			const lowerCasedInputValue = inputValue.toLowerCase();
+			const filteredItems = listItems.filter(({ name }) => {
+				return !inputValue || name.toLowerCase().includes(lowerCasedInputValue);
+			});
 
-export function MyComboBoxListBoxItem({
-	className,
-	...props
-}: ListBoxItemProps) {
+			setItems(filteredItems);
+
+			if (!inputValue) {
+				reset();
+			}
+
+			if (inputChangeCallback) {
+				inputChangeCallback(inputValue);
+			}
+		},
+		items,
+		itemToString(item) {
+			return item ? item.name : '';
+		},
+	});
+
 	return (
-		<ListBoxItem
-			className={twMerge(
-				'group flex cursor-default select-none items-center gap-2 rounded py-2 pl-2 pr-4 text-gray-900 outline-none focus:bg-sky-600 focus:text-white',
-				className,
-			)}
-			{...props}
-		/>
+		<div>
+			<div className="flex w-72 flex-col gap-1">
+				<label className="w-fit" {...getLabelProps()}>
+					{label}
+				</label>
+				<div className="flex gap-0.5 bg-white shadow-sm">
+					<input
+						id={id}
+						type="text"
+						name={name}
+						value={selectedItem?.value || ''}
+						hidden
+						readOnly
+					/>
+					<input
+						placeholder={placeholder}
+						className="w-full p-1.5"
+						{...getInputProps()}
+					/>
+					<button
+						aria-label="toggle menu"
+						className="px-2"
+						type="button"
+						{...getToggleButtonProps()}
+					>
+						{isOpen ? <ChevronUpIcon /> : <ChevronDownIcon />}
+					</button>
+				</div>
+				{errorMessage ? <p>{errorMessage}</p> : null}
+			</div>
+			<ul
+				className={`absolute z-10 mt-1 max-h-80 w-72 overflow-scroll bg-white p-0 shadow-md ${
+					!(isOpen && items.length) && 'hidden'
+				}`}
+				{...getMenuProps()}
+			>
+				{isOpen &&
+					items.map((item, index) => (
+						<li
+							className={cn(
+								highlightedIndex === index && 'bg-blue-300',
+								selectedItem === item && 'font-bold',
+								'flex flex-col px-3 py-2 shadow-sm',
+							)}
+							key={item.id}
+							{...getItemProps({ item, index })}
+						>
+							{item.name}
+						</li>
+					))}
+			</ul>
+		</div>
 	);
 }
