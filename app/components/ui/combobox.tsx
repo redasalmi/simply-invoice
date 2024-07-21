@@ -3,7 +3,7 @@ import { useCombobox } from 'downshift';
 import { ChevronDownIcon, ChevronUpIcon } from 'lucide-react';
 import { cn } from '~/utils/shared.utils';
 
-type ComboBoxProps = {
+type ComboboxProps = {
 	id: string;
 	name: string;
 	label: string;
@@ -12,20 +12,19 @@ type ComboBoxProps = {
 	listItems: Array<{
 		id: string;
 		name: string;
-		value: string;
 	}>;
-	inputChangeCallback?: (inputValue: string) => void;
+	inputValueChangeCallback?: (itemId?: string) => void;
 };
 
-export function ComboBox({
+export function Combobox({
 	id,
 	name,
 	label,
 	placeholder,
 	errorMessage,
 	listItems,
-	inputChangeCallback,
-}: ComboBoxProps) {
+	inputValueChangeCallback,
+}: ComboboxProps) {
 	const [items, setItems] = React.useState(listItems);
 	const {
 		isOpen,
@@ -38,7 +37,7 @@ export function ComboBox({
 		selectedItem,
 		reset,
 	} = useCombobox({
-		onInputValueChange({ inputValue }) {
+		onInputValueChange({ inputValue, selectedItem: newSelectedItem }) {
 			const lowerCasedInputValue = inputValue.toLowerCase();
 			const filteredItems = listItems.filter(({ name }) => {
 				return !inputValue || name.toLowerCase().includes(lowerCasedInputValue);
@@ -50,8 +49,8 @@ export function ComboBox({
 				reset();
 			}
 
-			if (inputChangeCallback) {
-				inputChangeCallback(inputValue);
+			if (inputValueChangeCallback) {
+				inputValueChangeCallback(inputValue ? newSelectedItem?.id : undefined);
 			}
 		},
 		items,
@@ -71,7 +70,7 @@ export function ComboBox({
 						id={id}
 						type="text"
 						name={name}
-						value={selectedItem?.value || ''}
+						value={selectedItem?.id || ''}
 						hidden
 						readOnly
 					/>

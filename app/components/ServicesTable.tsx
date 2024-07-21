@@ -11,7 +11,7 @@ import {
 } from '~/components/ui/table';
 import type { Service } from '~/types/service.types';
 import { Button } from '~/components/react-aria/button';
-import { ComboBox } from '~/components/ui/combobox';
+import { Combobox } from '~/components/ui/combobox';
 import { NumberField } from './react-aria/number-field';
 
 type ServicesTablesProps = {
@@ -44,17 +44,15 @@ function ServiceRow({
 		return selectedService?.rate ? selectedService.rate * quantity : 0;
 	}, [quantity, selectedService?.rate]);
 
-	const onServiceChange = (optionName: string) => {
-		if (!optionName) {
+	const onServiceChange = (optionId?: string) => {
+		if (!optionId) {
 			setSelectedService(null);
 			setQuantity(0);
 
 			return;
 		}
 
-		const option = services.find(({ name }) =>
-			name.toLowerCase().includes(optionName),
-		);
+		const option = services.find(({ id }) => id === optionId);
 		if (!option) {
 			return;
 		}
@@ -84,13 +82,13 @@ function ServiceRow({
 	return (
 		<TableRow>
 			<TableCell>
-				<ComboBox
+				<Combobox
 					id={`service-id-${id}`}
 					name={`service-id-${id}`}
 					label="Service"
 					placeholder="Select a service"
 					listItems={servicesList}
-					inputChangeCallback={onServiceChange}
+					inputValueChangeCallback={onServiceChange}
 				/>
 			</TableCell>
 			<TableCell>

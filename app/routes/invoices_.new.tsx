@@ -26,7 +26,7 @@ import {
 	parseCreateInvoiceLoaderErrors,
 } from '~/utils/invoice.utils';
 import { Button } from '~/components/react-aria/button';
-import { ComboBox } from '~/components/ui/combobox';
+import { Combobox } from '~/components/ui/combobox';
 import { Select } from '~/components/ui/select';
 
 export async function clientLoader() {
@@ -188,7 +188,6 @@ const currencies = countries.map(
 	({ countryName, currencySymbol, countryCode }) => ({
 		id: countryCode,
 		name: `${countryName} - ${currencySymbol}`,
-		value: countryCode,
 	}),
 );
 
@@ -282,7 +281,7 @@ export default function NewInvoiceRoute() {
 					</div>
 
 					<div>
-						<ComboBox
+						<Combobox
 							id="country-code"
 							name="country-code"
 							label="Currency"
@@ -307,7 +306,7 @@ export default function NewInvoiceRoute() {
 
 				<div className="my-4 flex gap-3">
 					<div>
-						<ComboBox
+						<Combobox
 							id="company-id"
 							name="company-id"
 							label="Company"
@@ -318,7 +317,7 @@ export default function NewInvoiceRoute() {
 					</div>
 
 					<div>
-						<ComboBox
+						<Combobox
 							id="customer-id"
 							name="customer-id"
 							label="Customer"
