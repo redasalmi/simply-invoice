@@ -26,8 +26,8 @@ import {
 	parseCreateInvoiceLoaderErrors,
 } from '~/utils/invoice.utils';
 import { Button } from '~/components/react-aria/button';
-import { Select, SelectItem } from '~/components/react-aria/select';
 import { ComboBox } from '~/components/ui/combobox';
+import { Select } from '~/components/ui/select';
 
 export async function clientLoader() {
 	try {
@@ -250,16 +250,10 @@ export default function NewInvoiceRoute() {
 							name="invoice-id-type"
 							label="Invoice ID Type"
 							placeholder="Choose invoice ID type"
-							onSelectionChange={handleInvoiceIdTypeChange}
-							isRequired
 							errorMessage={actionData?.errors?.['invoice-id-type']}
-						>
-							{idTypes.map(({ id, name }) => (
-								<SelectItem key={id} id={id}>
-									{name}
-								</SelectItem>
-							))}
-						</Select>
+							listItems={idTypes}
+							onSelectedItemChange={handleInvoiceIdTypeChange}
+						/>
 					</div>
 
 					<div>
@@ -282,15 +276,9 @@ export default function NewInvoiceRoute() {
 							name="locale"
 							label="Invoice Language"
 							placeholder="Choose a language"
-							isRequired
 							errorMessage={actionData?.errors?.locale}
-						>
-							{locales.map(({ id, name }) => (
-								<SelectItem key={id} id={id}>
-									{name}
-								</SelectItem>
-							))}
-						</Select>
+							listItems={locales}
+						/>
 					</div>
 
 					<div>
