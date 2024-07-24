@@ -7,9 +7,12 @@ export function DialogRoot(props: Dialog.DialogProps) {
 	return <Dialog.Root {...props} />;
 }
 
-export function DialogTrigger(props: Dialog.DialogTriggerProps) {
-	return <Dialog.Trigger {...props} />;
-}
+export const DialogTrigger = React.forwardRef<
+	HTMLButtonElement,
+	Dialog.DialogTriggerProps
+>(function DialogTrigger(props, ref) {
+	return <Dialog.Trigger ref={ref} {...props} />;
+});
 
 export function DialogPortal(props: Dialog.DialogPortalProps) {
 	return <Dialog.Portal {...props} />;
@@ -47,21 +50,26 @@ export const DialogContent = React.forwardRef<
 	);
 });
 
-export function DialogTitle({ className, ...props }: Dialog.DialogTitleProps) {
+export const DialogTitle = React.forwardRef<
+	HTMLHeadingElement,
+	Dialog.DialogTitleProps
+>(function DialogTitle({ className, ...props }, ref) {
 	return (
 		<Dialog.Title
+			ref={ref}
 			className={cn('m-0 text-[17px] font-medium text-mauve12', className)}
 			{...props}
 		/>
 	);
-}
+});
 
-export function DialogDescription({
-	className,
-	...props
-}: Dialog.DialogDescriptionProps) {
+export const DialogDescription = React.forwardRef<
+	HTMLParagraphElement,
+	Dialog.DialogDescriptionProps
+>(function DialogDescription({ className, ...props }, ref) {
 	return (
 		<Dialog.Description
+			ref={ref}
 			className={cn(
 				'mb-5 mt-[10px] text-[15px] leading-normal text-mauve11',
 				className,
@@ -69,11 +77,14 @@ export function DialogDescription({
 			{...props}
 		/>
 	);
-}
+});
 
-export function DialogClose(props: Dialog.DialogCloseProps) {
-	return <Dialog.Close {...props} />;
-}
+export const DialogClose = React.forwardRef<
+	HTMLButtonElement,
+	Dialog.DialogCloseProps
+>(function DialogClose(props, ref) {
+	return <Dialog.Close ref={ref} {...props} />;
+});
 
 export const DialogCloseButton = React.forwardRef<
 	HTMLButtonElement,
