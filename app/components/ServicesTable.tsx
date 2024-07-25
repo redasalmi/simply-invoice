@@ -9,10 +9,10 @@ import {
 	TableHeader,
 	TableRow,
 } from '~/components/ui/table';
-import type { Service } from '~/types/service.types';
+import { FormField } from '~/components/FormField';
 import { Button } from '~/components/ui/button';
 import { Combobox } from '~/components/ui/combobox';
-import { NumberField } from './react-aria/number-field';
+import type { Service } from '~/types/service.types';
 
 type ServicesTablesProps = {
 	services: Array<Service>;
@@ -92,10 +92,13 @@ function ServiceRow({
 				/>
 			</TableCell>
 			<TableCell>
-				<NumberField
+				<FormField
+					type="number"
+					id={`service-quantity-${id}`}
+					label="Quantity"
 					name={`service-quantity-${id}`}
 					value={quantity}
-					minValue={selectedService ? 1 : 0}
+					min={selectedService ? 1 : 0}
 					onInput={onQuantityChange}
 				/>
 			</TableCell>
@@ -188,26 +191,28 @@ export function ServicesTable({ services }: ServicesTablesProps) {
 					<p>Sub-Total</p>
 					<p>{subtotalAmount}</p>
 				</div>
-				<NumberField
+				<FormField
 					id="shipping"
+					type="number"
 					className="flex items-center gap-4"
 					label="Shipping"
 					name="shipping"
-					minValue={0}
-					isRequired
+					min={0}
+					required
 					value={shipping}
 					onInput={(event) =>
 						setShipping(parseInt(event.currentTarget.value, 10))
 					}
 				/>
-				<NumberField
+				<FormField
 					id="tax"
+					type="number"
 					className="flex items-center gap-4"
 					label="Tax (%)"
 					name="tax"
-					minValue={0}
-					maxValue={100}
-					isRequired
+					min={0}
+					max={100}
+					required
 					value={tax}
 					onInput={(event) => setTax(parseInt(event.currentTarget.value, 10))}
 				/>

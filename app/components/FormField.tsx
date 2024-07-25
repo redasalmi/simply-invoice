@@ -10,13 +10,13 @@ import {
 import { Label } from '~/components/ui/label';
 import { Input } from '~/components/ui/input';
 
-export type FormFieldProps = {
+export type FormFieldProps = Pick<
+	React.ComponentPropsWithoutRef<'input'>,
+	'type' | 'value' | 'defaultValue' | 'onInput' | 'min' | 'max' | 'required'
+> & {
 	id: string;
 	name: string;
 	label: string;
-	type?: React.HTMLInputTypeAttribute;
-	defaultValue?: React.HTMLAttributes<HTMLInputElement>['defaultValue'];
-	required?: boolean;
 	serverError?: string;
 	className?: string;
 };
@@ -25,11 +25,9 @@ export function FormField({
 	id,
 	name,
 	label,
-	type,
-	defaultValue,
-	required,
 	serverError,
 	className,
+	...inputProps
 }: FormFieldProps) {
 	return (
 		<UIFormField
@@ -44,13 +42,7 @@ export function FormField({
 							<Label hasError={validity && !validity.valid}>{label}</Label>
 						</FormLabel>
 
-						<FormControl
-							id={id}
-							type={type}
-							defaultValue={defaultValue}
-							required={required}
-							asChild
-						>
+						<FormControl id={id} asChild {...inputProps}>
 							<Input hasError={validity && !validity.valid} />
 						</FormControl>
 					</>
@@ -62,7 +54,7 @@ export function FormField({
 			</FormMessage>
 
 			<FormMessage className="text-red-900" match="typeMismatch">
-				{type === 'email'
+				{inputProps.type === 'email'
 					? formFieldErrors.typeMismatchEmail
 					: formFieldErrors.typeMismatch}
 			</FormMessage>

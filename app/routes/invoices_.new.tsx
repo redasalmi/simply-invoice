@@ -9,8 +9,8 @@ import {
 import { nanoid } from 'nanoid';
 import { z } from 'zod';
 import type { Key } from 'react-aria-components';
-import { Input } from '~/components/react-aria/input';
-import { Label } from '~/components/react-aria/label';
+import { Input } from '~/components/ui/input';
+import { Label } from '~/components/ui/label';
 import { idTypes, type Intent, intents, locales } from '~/lib/constants';
 import { countries } from '~/lib/currencies';
 import { ServicesTable } from '~/components/ServicesTable';
@@ -27,6 +27,7 @@ import {
 import { Button } from '~/components/ui/button';
 import { Combobox } from '~/components/ui/combobox';
 import { Select } from '~/components/ui/select';
+import { FormRoot } from '~/components/ui/form';
 
 export async function clientLoader() {
 	try {
@@ -240,115 +241,112 @@ export default function NewInvoiceRoute() {
 
 	return (
 		<section>
-			<Form method="post">
-				<div className="my-4 flex gap-3">
-					<div>
-						<Select
-							id="invoice-id-type"
-							name="invoice-id-type"
-							label="Invoice ID Type"
-							placeholder="Choose invoice ID type"
-							errorMessage={actionData?.errors?.['invoice-id-type']}
-							listItems={idTypes}
-							onSelectedItemChange={handleInvoiceIdTypeChange}
-						/>
-					</div>
-
-					<div>
-						<Label>
-							<span>Invoice ID</span>
-							<Input
-								ref={invoiceIdRef}
-								name="invoice-id"
-								readOnly
-								className="rounded-md border-2"
+			<FormRoot asChild>
+				<Form method="post">
+					<div className="my-4 flex gap-3">
+						<div>
+							<Select
+								id="invoice-id-type"
+								name="invoice-id-type"
+								label="Invoice ID Type"
+								placeholder="Choose invoice ID type"
+								errorMessage={actionData?.errors?.['invoice-id-type']}
+								listItems={idTypes}
+								onSelectedItemChange={handleInvoiceIdTypeChange}
 							/>
-						</Label>
-					</div>
-				</div>
+						</div>
 
-				<div className="my-4 flex gap-3">
-					<div>
-						<Select
-							id="locale"
-							name="locale"
-							label="Invoice Language"
-							placeholder="Choose a language"
-							errorMessage={actionData?.errors?.locale}
-							listItems={locales}
-						/>
+						<div>
+							<Label>
+								<span>Invoice ID</span>
+								<Input ref={invoiceIdRef} name="invoice-id" readOnly />
+							</Label>
+						</div>
 					</div>
 
-					<div>
-						<Combobox
-							id="country-code"
-							name="country-code"
-							label="Currency"
-							placeholder="Select a currency"
-							errorMessage={actionData?.errors?.['customer-id']}
-							listItems={currencies}
-						/>
-					</div>
-				</div>
+					<div className="my-4 flex gap-3">
+						<div>
+							<Select
+								id="locale"
+								name="locale"
+								label="Invoice Language"
+								placeholder="Choose a language"
+								errorMessage={actionData?.errors?.locale}
+								listItems={locales}
+							/>
+						</div>
 
-				<div className="my-4 flex gap-3">
-					<div>
-						<Label htmlFor="invoice-date">Invoice Date</Label>
-						<Input type="date" name="invoice-date" id="invoice-date" />
-					</div>
-
-					<div>
-						<Label htmlFor="due-date">Due Date</Label>
-						<Input type="date" name="due-date" id="due-date" />
-					</div>
-				</div>
-
-				<div className="my-4 flex gap-3">
-					<div>
-						<Combobox
-							id="company-id"
-							name="company-id"
-							label="Company"
-							placeholder="Select a company"
-							errorMessage={actionData?.errors?.['company-id']}
-							listItems={companies}
-						/>
+						<div>
+							<Combobox
+								id="country-code"
+								name="country-code"
+								label="Currency"
+								placeholder="Select a currency"
+								errorMessage={actionData?.errors?.['customer-id']}
+								listItems={currencies}
+							/>
+						</div>
 					</div>
 
-					<div>
-						<Combobox
-							id="customer-id"
-							name="customer-id"
-							label="Customer"
-							placeholder="Select a customer"
-							errorMessage={actionData?.errors?.['customer-id']}
-							listItems={customers}
-						/>
+					<div className="my-4 flex gap-3">
+						<div>
+							<Label htmlFor="invoice-date">Invoice Date</Label>
+							<Input type="date" name="invoice-date" id="invoice-date" />
+						</div>
+
+						<div>
+							<Label htmlFor="due-date">Due Date</Label>
+							<Input type="date" name="due-date" id="due-date" />
+						</div>
 					</div>
-				</div>
 
-				<div className="my-4">
-					{/* TODO: maybe add a service-order field to save the services order */}
-					<ServicesTable services={services} />
-				</div>
+					<div className="my-4 flex gap-3">
+						<div>
+							<Combobox
+								id="company-id"
+								name="company-id"
+								label="Company"
+								placeholder="Select a company"
+								errorMessage={actionData?.errors?.['company-id']}
+								listItems={companies}
+							/>
+						</div>
 
-				<div className="my-4">
-					<label htmlFor="note">Note</label>
-					<textarea name="note" id="note"></textarea>
-				</div>
+						<div>
+							<Combobox
+								id="customer-id"
+								name="customer-id"
+								label="Customer"
+								placeholder="Select a customer"
+								errorMessage={actionData?.errors?.['customer-id']}
+								listItems={customers}
+							/>
+						</div>
+					</div>
 
-				<div className="flex items-center gap-2">
-					<Button type="submit" name="intent" value={intents.preview}>
-						Preview Invoice
-					</Button>
-					<Button type="submit" name="intent" value={intents.download}>
-						Download Invoice
-					</Button>
-					<Button type="submit" name="intent" value={intents.save}>
-						Save Invoice
-					</Button>
-				</div>
-			</Form>
+					<div className="my-4">
+						{/* TODO: maybe add a service-order field to save the services order */}
+						<ServicesTable services={services} />
+					</div>
+
+					<div className="my-4">
+						<label htmlFor="note">Note</label>
+						<textarea name="note" id="note"></textarea>
+					</div>
+
+					<div className="flex items-center gap-2">
+						<Button type="submit" name="intent" value={intents.preview}>
+							Preview Invoice
+						</Button>
+						<Button type="submit" name="intent" value={intents.download}>
+							Download Invoice
+						</Button>
+						<Button type="submit" name="intent" value={intents.save}>
+							Save Invoice
+						</Button>
+					</div>
+				</Form>
+			</FormRoot>
 		</section>
 	);
 }
