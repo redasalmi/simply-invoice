@@ -8,10 +8,15 @@ import {
 } from '@remix-run/react';
 import { nanoid } from 'nanoid';
 import { z } from 'zod';
-import type { Key } from 'react-aria-components';
 import { Input } from '~/components/ui/input';
 import { Label } from '~/components/ui/label';
-import { idTypes, type Intent, intents, locales } from '~/lib/constants';
+import {
+	type IdType,
+	idTypes,
+	type Intent,
+	intents,
+	locales,
+} from '~/lib/constants';
 import { countries } from '~/lib/currencies';
 import { ServicesTable } from '~/components/ServicesTable';
 import {
@@ -226,7 +231,7 @@ export default function NewInvoiceRoute() {
 	}
 
 	// TODO: fix param type to be IdType
-	const handleInvoiceIdTypeChange = (idType: Key) => {
+	const handleInvoiceIdTypeChange = (idType: IdType) => {
 		let invoiceId: string | null = null;
 		if (idType === 'incremental') {
 			invoiceId = String(lastInvoiceId + 1);

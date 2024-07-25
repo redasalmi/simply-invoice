@@ -11,7 +11,7 @@ function NavItem({ to, children }: SideBarLinkProps) {
 		<NavLink
 			to={to}
 			className={({ isActive }) =>
-				cn('hover:underline', isActive && 'text-destructive underline')
+				cn('hover:underline', isActive && 'underline')
 			}
 		>
 			{children}
@@ -21,7 +21,7 @@ function NavItem({ to, children }: SideBarLinkProps) {
 
 export function Navbar() {
 	return (
-		<nav className="bg-primary py-6 font-bold text-primary-foreground">
+		<nav className="py-6 font-bold">
 			<div className="container mx-auto flex justify-between">
 				<Link className="hover:underline" to="/">
 					Simply Invoice
