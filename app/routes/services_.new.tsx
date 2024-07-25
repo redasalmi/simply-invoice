@@ -3,7 +3,7 @@ import { Form, redirect, useActionData, useNavigation } from '@remix-run/react';
 import { z } from 'zod';
 import { FormField } from '~/components/FormField';
 import { FormRoot } from '~/components/ui/form';
-import { Button } from '~/components/react-aria/button';
+import { Button } from '~/components/ui/button';
 import { db } from '~/lib/db';
 import { servicesFields } from '~/lib/constants';
 import {
@@ -51,7 +51,7 @@ export default function NewServiceRoute() {
 						/>
 					))}
 
-					<Button isDisabled={isSubmitting} type="submit">
+					<Button disabled={isSubmitting} type="submit">
 						{isLoading ? 'Saving Service...' : 'Save Service'}
 					</Button>
 				</Form>

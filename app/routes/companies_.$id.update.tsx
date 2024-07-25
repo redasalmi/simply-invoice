@@ -8,7 +8,7 @@ import {
 } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 import { z } from 'zod';
-import { Button } from '~/components/react-aria/button';
+import { Button } from '~/components/ui/button';
 import { Skeleton } from '~/components/ui/skeleton';
 import { db } from '~/lib/db';
 import { UpdateEntityForm } from '~/components/entity/Update';
@@ -118,12 +118,12 @@ export function HydrateFallback() {
 					Add any custom fields and order them
 				</p>
 				<div>
-					<Button type="button">Add New Field</Button>
+					<Button>Add New Field</Button>
 				</div>
 			</div>
 
 			<div>
-				<Button type="button">Update Company</Button>
+				<Button>Update Company</Button>
 			</div>
 		</section>
 	);

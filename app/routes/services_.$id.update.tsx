@@ -10,7 +10,7 @@ import {
 } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 import { z } from 'zod';
-import { Button } from '~/components/react-aria/button';
+import { Button } from '~/components/ui/button';
 import { Skeleton } from '~/components/ui/skeleton';
 import { db } from '~/lib/db';
 import { servicesFields } from '~/lib/constants';
@@ -81,7 +81,7 @@ export function HydrateFallback() {
 			</div>
 
 			<div>
-				<Button type="button">Update Service</Button>
+				<Button>Update Service</Button>
 			</div>
 		</section>
 	);
@@ -129,7 +129,7 @@ export default function ServiceUpdateRoute() {
 						/>
 					))}
 
-					<Button isDisabled={isSubmitting} type="submit">
+					<Button disabled={isSubmitting} type="submit">
 						{isLoading ? 'Updating Service...' : 'Update Service'}
 					</Button>
 				</Form>

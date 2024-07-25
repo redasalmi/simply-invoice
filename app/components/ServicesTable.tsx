@@ -10,7 +10,7 @@ import {
 	TableRow,
 } from '~/components/ui/table';
 import type { Service } from '~/types/service.types';
-import { Button } from '~/components/react-aria/button';
+import { Button } from '~/components/ui/button';
 import { Combobox } from '~/components/ui/combobox';
 import { NumberField } from './react-aria/number-field';
 
@@ -101,7 +101,7 @@ function ServiceRow({
 			</TableCell>
 			<TableCell>{amount}</TableCell>
 			<TableCell>
-				<Button onPress={deleteService}>
+				<Button onClick={deleteService}>
 					<TrashIcon />
 				</Button>
 			</TableCell>
@@ -161,7 +161,7 @@ export function ServicesTable({ services }: ServicesTablesProps) {
 		<div>
 			<div className="flex items-center justify-between">
 				<h3>Services</h3>
-				<Button onPress={addService}>Add new service</Button>
+				<Button onClick={addService}>Add new service</Button>
 			</div>
 			<Table>
 				<TableHeader>

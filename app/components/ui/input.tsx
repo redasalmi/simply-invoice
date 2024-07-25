@@ -6,10 +6,11 @@ type InputProps = React.ComponentPropsWithoutRef<'input'> & {
 };
 
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
-	function Input({ className, hasError, ...props }, ref) {
+	function Input({ className, type = 'text', hasError, ...props }, ref) {
 		return (
 			<input
 				ref={ref}
+				type={type}
 				className={cn(
 					'block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500',
 					hasError &&

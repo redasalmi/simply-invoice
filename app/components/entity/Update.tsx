@@ -5,7 +5,7 @@ import { Reorder } from 'framer-motion';
 import { MoveIcon, TrashIcon } from 'lucide-react';
 import { FormField } from '~/components/FormField';
 import { FormRoot } from '~/components/ui/form';
-import { Button } from '~/components/react-aria/button';
+import { Button } from '~/components/ui/button';
 import { Switch } from '~/components/ui/switch';
 import { addressFields, informationFields } from '~/lib/constants';
 import { capitalize } from '~/utils/shared.utils';
@@ -93,7 +93,7 @@ export function UpdateEntityForm({
 							</p>
 						</div>
 						<div>
-							<Button onPress={addField}>Add New Custom Field</Button>
+							<Button onClick={addField}>Add New Custom Field</Button>
 						</div>
 					</div>
 
@@ -151,7 +151,7 @@ export function UpdateEntityForm({
 														defaultChecked={field.showLabelInInvoice}
 													/>
 												</div>
-												<Button onPress={() => deleteField(field.id)}>
+												<Button onClick={() => deleteField(field.id)}>
 													<TrashIcon />
 												</Button>
 											</div>
@@ -164,7 +164,7 @@ export function UpdateEntityForm({
 				</div>
 
 				<div>
-					<Button isDisabled={isSubmitting} type="submit">
+					<Button disabled={isSubmitting} type="submit">
 						{isLoading ? '...Updating' : 'Update'} {capitalize(type)}
 					</Button>
 				</div>

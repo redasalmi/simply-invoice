@@ -24,7 +24,7 @@ import {
 	parseCreateInvoiceForm,
 	parseCreateInvoiceLoaderErrors,
 } from '~/utils/invoice.utils';
-import { Button } from '~/components/react-aria/button';
+import { Button } from '~/components/ui/button';
 import { Combobox } from '~/components/ui/combobox';
 import { Select } from '~/components/ui/select';
 
