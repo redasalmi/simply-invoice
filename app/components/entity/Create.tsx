@@ -5,7 +5,6 @@ import { Reorder } from 'framer-motion';
 import { MoveIcon, TrashIcon } from 'lucide-react';
 import { FormField } from '~/components/FormField';
 import { FormRoot } from '~/components/ui/form';
-import { Input } from '~/components/ui/input';
 import { Button } from '~/components/react-aria/button';
 import { Switch } from '~/components/ui/switch';
 import { addressFields, informationFields } from '~/lib/constants';
@@ -92,7 +91,8 @@ export function CreateEntityForm({
 												</Button>
 											</div>
 
-											<Input
+											<input
+												hidden
 												readOnly
 												name={`order-${field.id}`}
 												value={index}
