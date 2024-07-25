@@ -90,10 +90,7 @@ const config = {
 			},
 		},
 	},
-	plugins: [
-		require('tailwindcss-react-aria-components'),
-		require('tailwindcss-animate'),
-	],
+	plugins: [require('tailwindcss-animate')],
 } satisfies Config;
 
 export default config;
