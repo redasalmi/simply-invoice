@@ -19,8 +19,8 @@ import {
 	parseUpdateServiceForm,
 } from '~/utils/service.utils';
 import { updateServiceSchema } from '~/schemas/service.schemas';
-import { TextField } from '~/components/react-aria/text-field';
-import { NumberField } from '~/components/react-aria/number-field';
+import { FormField } from '~/components/FormField';
+import { FormRoot } from '~/components/ui/form';
 
 export async function clientLoader({ params }: ClientLoaderFunctionArgs) {
 	invariant(params.id, 'Service ID is required');
@@ -117,31 +117,23 @@ export default function ServiceUpdateRoute() {
 
 	return (
 		<section>
-			<Form method="POST">
-				{servicesFields.map((field) =>
-					field.id === 'rate' ? (
-						<NumberField
+			<FormRoot asChild>
+				<Form method="POST">
+					{servicesFields.map((field) => (
+						<FormField
 							key={field.id}
 							className="my-2"
 							defaultValue={service[field.name]}
-							errorMessage={actionData?.errors?.[field.name]}
+							serverError={actionData?.errors?.[field.name]}
 							{...field}
 						/>
-					) : (
-						<TextField
-							key={field.id}
-							className="my-2"
-							defaultValue={service[field.name]}
-							errorMessage={actionData?.errors?.[field.name]}
-							{...field}
-						/>
-					),
-				)}
+					))}
 
-				<Button isDisabled={isSubmitting} type="submit">
-					{isLoading ? 'Updating Service...' : 'Update Service'}
-				</Button>
-			</Form>
+					<Button isDisabled={isSubmitting} type="submit">
+						{isLoading ? 'Updating Service...' : 'Update Service'}
+					</Button>
+				</Form>
+			</FormRoot>
 		</section>
 	);
 }

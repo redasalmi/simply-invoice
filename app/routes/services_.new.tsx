@@ -1,7 +1,8 @@
 import type { ActionFunctionArgs } from '@remix-run/node';
 import { Form, redirect, useActionData, useNavigation } from '@remix-run/react';
 import { z } from 'zod';
-import { TextField } from '~/components/react-aria/text-field';
+import { FormField } from '~/components/FormField';
+import { FormRoot } from '~/components/ui/form';
 import { Button } from '~/components/react-aria/button';
 import { db } from '~/lib/db';
 import { servicesFields } from '~/lib/constants';
@@ -10,7 +11,6 @@ import {
 	parseServiceActionErrors,
 } from '~/utils/service.utils';
 import { createServiceSchema } from '~/schemas/service.schemas';
-import { NumberField } from '~/components/react-aria/number-field';
 
 export async function clientAction({ request }: ActionFunctionArgs) {
 	try {
@@ -40,29 +40,22 @@ export default function NewServiceRoute() {
 
 	return (
 		<section>
-			<Form method="POST">
-				{servicesFields.map((field) =>
-					field.id === 'rate' ? (
-						<NumberField
+			<FormRoot asChild>
+				<Form method="POST">
+					{servicesFields.map((field) => (
+						<FormField
 							key={field.id}
 							className="my-2"
-							errorMessage={actionData?.errors?.[field.name]}
+							serverError={actionData?.errors?.[field.name]}
 							{...field}
 						/>
-					) : (
-						<TextField
-							key={field.id}
-							className="my-2"
-							errorMessage={actionData?.errors?.[field.name]}
-							{...field}
-						/>
-					),
-				)}
+					))}
 
-				<Button isDisabled={isSubmitting} type="submit">
-					{isLoading ? 'Saving Service...' : 'Save Service'}
-				</Button>
-			</Form>
+					<Button isDisabled={isSubmitting} type="submit">
+						{isLoading ? 'Saving Service...' : 'Save Service'}
+					</Button>
+				</Form>
+			</FormRoot>
 		</section>
 	);
 }

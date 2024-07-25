@@ -11,7 +11,6 @@ import { z } from 'zod';
 import type { Key } from 'react-aria-components';
 import { Input } from '~/components/react-aria/input';
 import { Label } from '~/components/react-aria/label';
-import { TextAreaField } from '~/components/react-aria/text-area-field';
 import { idTypes, type Intent, intents, locales } from '~/lib/constants';
 import { countries } from '~/lib/currencies';
 import { ServicesTable } from '~/components/ServicesTable';
@@ -334,7 +333,8 @@ export default function NewInvoiceRoute() {
 				</div>
 
 				<div className="my-4">
-					<TextAreaField label="Note" name="note" />
+					<label htmlFor="note">Note</label>
+					<textarea name="note" id="note"></textarea>
 				</div>
 
 				<div className="flex items-center gap-2">

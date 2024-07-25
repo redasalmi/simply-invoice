@@ -16,6 +16,7 @@
 		"@radix-ui/colors": "^3.0.0",
 		"@radix-ui/react-alert-dialog": "^1.1.1",
 		"@radix-ui/react-dialog": "^1.1.1",
+		"@radix-ui/react-form": "^0.1.0",
 		"@radix-ui/react-switch": "^1.1.0",
 		"@react-pdf/renderer": "^3.4.4",
 		"@remix-run/node": "^2.10.3",

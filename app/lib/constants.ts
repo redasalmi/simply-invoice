@@ -1,5 +1,4 @@
-import type { NumberFieldProps } from '~/components/react-aria/number-field';
-import type { TextFieldProps } from '~/components/react-aria/text-field';
+import type { FormFieldProps } from '~/components/FormField';
 
 export const idTypes = [
 	{
@@ -32,40 +31,40 @@ export const intents = {
 } as const;
 export type Intent = (typeof intents)[keyof typeof intents];
 
-export const informationFields: Array<TextFieldProps> = [
+export const informationFields: Array<FormFieldProps> = [
 	{
 		id: 'name',
 		label: 'Name',
 		name: 'name',
-		isRequired: true,
+		required: true,
 	},
 	{
 		id: 'email',
 		label: 'Email',
 		name: 'email',
 		type: 'email',
-		isRequired: true,
+		required: true,
 	},
 ];
 
-export const addressFields: Array<TextFieldProps> = [
+export const addressFields: Array<FormFieldProps> = [
 	{
 		id: 'address-address1',
 		label: 'Address 1',
 		name: 'address-address1',
-		isRequired: true,
+		required: true,
 	},
 	{
 		id: 'address-address2',
 		label: 'Address 2',
 		name: 'address-address2',
-		isRequired: true,
+		required: true,
 	},
 	{
 		id: 'address-country',
 		label: 'Country',
 		name: 'address-country',
-		isRequired: true,
+		required: true,
 	},
 	{
 		id: 'address-province',
@@ -84,12 +83,12 @@ export const addressFields: Array<TextFieldProps> = [
 	},
 ];
 
-export const servicesFields: Array<TextFieldProps | NumberFieldProps> = [
+export const servicesFields: Array<FormFieldProps> = [
 	{
 		id: 'name',
 		label: 'Name',
 		name: 'name',
-		isRequired: true,
+		required: true,
 	},
 	{
 		id: 'description',
@@ -100,7 +99,6 @@ export const servicesFields: Array<TextFieldProps | NumberFieldProps> = [
 		id: 'rate',
 		label: 'Rate',
 		name: 'rate',
-		minValue: 0,
-		isRequired: true,
+		required: true,
 	},
 ];
