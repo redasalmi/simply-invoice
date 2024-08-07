@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { Link } from '@remix-run/react';
 import { EyeIcon, PencilIcon, TrashIcon } from 'lucide-react';
 import {
@@ -12,22 +11,6 @@ import {
 import { capitalize } from '~/utils/shared.utils';
 import type { Entity, EntityType } from '~/types/entity.types';
 import type { PaginatedResult } from '~/types/shared.types';
-
-type CreateEntityLinkProps = {
-	pathname: string;
-	children: React.ReactNode;
-};
-
-export function CreateEntityLink({
-	pathname,
-	children,
-}: CreateEntityLinkProps) {
-	return (
-		<Link to={pathname} className={'rounded-lg bg-blue-300 px-4 py-2'}>
-			{children}
-		</Link>
-	);
-}
 
 type EntitiesListProps = {
 	type: EntityType;

@@ -1,4 +1,5 @@
 import { Link, useLoaderData } from '@remix-run/react';
+import { CreateLink } from '~/components/entity/CreateLink';
 import {
 	Table,
 	TableBody,
@@ -19,9 +20,7 @@ export function HydrateFallback() {
 	return (
 		<section>
 			<div className="flex justify-end">
-				<Link to="/invoices/new" className={'rounded-lg bg-blue-300 px-4 py-2'}>
-					Create New Invoice
-				</Link>
+				<CreateLink to="/invoices/new">Create New Invoice</CreateLink>
 			</div>
 		</section>
 	);
@@ -39,9 +38,7 @@ export default function InvoicesRoutes() {
 	return (
 		<section>
 			<div className="flex justify-end">
-				<Link to="/invoices/new" className={'rounded-lg bg-blue-300 px-4 py-2'}>
-					Create New Invoice
-				</Link>
+				<CreateLink to="/invoices/new">Create New Invoice</CreateLink>
 			</div>
 			<div className="mt-6">
 				{invoices && invoices.items.length > 0 ? (

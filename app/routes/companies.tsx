@@ -1,5 +1,6 @@
 import { Outlet, useLoaderData } from '@remix-run/react';
-import { CreateEntityLink, EntitiesList } from '~/components/entity/List';
+import { CreateLink } from '~/components/entity/CreateLink';
+import { EntitiesList } from '~/components/entity/List';
 import { db, getPage } from '~/lib/db';
 
 export async function clientLoader() {
@@ -12,9 +13,7 @@ export function HydrateFallback() {
 	return (
 		<section>
 			<div className="flex justify-end">
-				<CreateEntityLink pathname="/companies/new">
-					Create New Company
-				</CreateEntityLink>
+				<CreateLink to="/companies/new">Create New Company</CreateLink>
 			</div>
 		</section>
 	);
@@ -27,9 +26,7 @@ export default function CompaniesRoute() {
 		<>
 			<section>
 				<div className="flex justify-end">
-					<CreateEntityLink pathname="/companies/new">
-						Create New Company
-					</CreateEntityLink>
+					<CreateLink to="/companies/new">Create New Company</CreateLink>
 				</div>
 				<div className="mt-6">
 					<EntitiesList
