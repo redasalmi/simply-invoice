@@ -8,13 +8,115 @@ import { FormRoot } from '~/components/ui/form';
 import { Button } from '~/components/ui/button';
 import { Switch } from '~/components/ui/switch';
 import { addressFields, informationFields } from '~/lib/constants';
-import { capitalize } from '~/utils/shared.utils';
+import { capitalize, cn } from '~/utils/shared.utils';
 import type {
 	EntityType,
 	Entity,
 	EntityActionErrors,
 	CustomField,
 } from '~/types/entity.types';
+
+type CustomFieldProps = {
+	field: CustomField;
+	index: number;
+	error?: {
+		label?: string;
+		content?: string;
+	};
+	deleteField: () => void;
+};
+
+function CustomField({ field, index, error, deleteField }: CustomFieldProps) {
+	const containerRef = React.useRef<HTMLDivElement | null>(null);
+	const [hasError, setHasError] = React.useState(false);
+
+	React.useEffect(() => {
+		if (!containerRef.current) {
+			return;
+		}
+
+		const observer = new MutationObserver(() => {
+			const hasDataInvalid = Boolean(
+				containerRef.current?.querySelectorAll('[data-invalid=true]').length,
+			);
+			setHasError(hasDataInvalid);
+		});
+
+		observer.observe(containerRef.current, {
+			attributes: true,
+			subtree: true,
+		});
+
+		return () => {
+			observer.disconnect();
+		};
+	}, []);
+
+	return (
+		<Reorder.Item value={field}>
+			<div
+				ref={containerRef}
+				className={cn(
+					'my-2 grid grid-cols-[auto_1fr_1fr_auto] items-end gap-2',
+					hasError && 'items-center',
+				)}
+			>
+				<div>
+					<Button className="active:cursor-grab">
+						<MoveIcon />
+					</Button>
+				</div>
+
+				<input
+					hidden
+					readOnly
+					name={`order-${field.id}`}
+					value={index}
+					className="hidden"
+				/>
+
+				<FormField
+					id={`label-${field.id}`}
+					label="Label"
+					name={`label-${field.id}`}
+					defaultValue={field.label}
+					required
+					className="h-full flex-1"
+					serverError={error?.label}
+				/>
+
+				<FormField
+					id={`content-${field.id}`}
+					label="Content"
+					name={`content-${field.id}`}
+					defaultValue={field.content}
+					required
+					className="h-full flex-1"
+					serverError={error?.content}
+				/>
+
+				<div className="flex gap-2">
+					<div className="flex items-center justify-center rounded-md px-4 py-2">
+						<label
+							htmlFor={`show-label-in-invoice-${field.id}`}
+							className="sr-only"
+						>
+							Show label on invoice
+						</label>
+						<Switch
+							id={`show-label-in-invoice-${field.id}`}
+							name={`show-label-in-invoice-${field.id}`}
+							defaultChecked={field.showLabelInInvoice}
+						/>
+					</div>
+					<Button onClick={deleteField}>
+						<TrashIcon />
+					</Button>
+				</div>
+			</div>
+		</Reorder.Item>
+	);
+}
 
 type UpdateEntityProps = {
 	type: EntityType;
@@ -101,62 +203,13 @@ export function UpdateEntityForm({
 						<div>
 							<Reorder.Group values={customFields} onReorder={setCustomFields}>
 								{customFields.map((field, index) => (
-									<Reorder.Item key={field.id} value={field}>
-										<div className="my-2 flex items-center gap-2">
-											<div className="mt-auto">
-												<Button className="active:cursor-grab">
-													<MoveIcon />
-												</Button>
-											</div>
-
-											<input
-												hidden
-												readOnly
-												name={`order-${field.id}`}
-												value={index}
-												className="hidden"
-											/>
-
-											<FormField
-												id={`label-${field.id}`}
-												label="Label"
-												name={`label-${field.id}`}
-												defaultValue={field.label}
-												required
-												className="flex-1"
-												serverError={errors?.custom?.[index]?.label}
-											/>
-
-											<FormField
-												id={`content-${field.id}`}
-												label="Content"
-												name={`content-${field.id}`}
-												defaultValue={field.content}
-												required
-												className="flex-1"
-												serverError={errors?.custom?.[index]?.content}
-											/>
-
-											<div className="mt-auto flex gap-2">
-												<div className="flex items-center justify-center rounded-md px-4 py-2">
-													<label
-														htmlFor={`show-label-in-invoice-${field.id}`}
-														className="sr-only"
-													>
-														Show label on invoice
-													</label>
-													<Switch
-														id={`show-label-in-invoice-${field.id}`}
-														name={`show-label-in-invoice-${field.id}`}
-														defaultChecked={field.showLabelInInvoice}
-													/>
-												</div>
-												<Button onClick={() => deleteField(field.id)}>
-													<TrashIcon />
-												</Button>
-											</div>
-										</div>
-									</Reorder.Item>
+									<CustomField
+										key={field.id}
+										field={field}
+										index={index}
+										error={errors?.custom?.[index]}
+										deleteField={() => deleteField(field.id)}
+									/>
 								))}
 							</Reorder.Group>
 						</div>
