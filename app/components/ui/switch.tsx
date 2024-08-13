@@ -10,7 +10,7 @@ export const Switch = React.forwardRef<
 		<RadixSwitch.Root
 			ref={ref}
 			className={cn(
-				'relative h-[25px] w-[42px] cursor-default cursor-pointer rounded-full bg-blackA6 shadow-[0_2px_10px] shadow-blackA4 outline-none focus:shadow-[0_0_0_2px] focus:shadow-black data-[state=checked]:bg-black',
+				'relative h-[25px] w-[42px] cursor-pointer rounded-full bg-blackA6 shadow-[0_2px_10px] shadow-blackA4 outline-none focus:outline-none focus:ring-4 focus:ring-blue-300 data-[state=checked]:bg-blue-700',
 				className,
 			)}
 			{...props}

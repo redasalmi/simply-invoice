@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useCombobox } from 'downshift';
 import { ChevronDownIcon, ChevronUpIcon } from 'lucide-react';
 import { cn } from '~/utils/shared.utils';
+import { Button } from '~/components/ui/button';
 
 type ComboboxProps = {
 	id: string;
@@ -79,14 +80,14 @@ export function Combobox({
 						className="w-full p-1.5"
 						{...getInputProps()}
 					/>
-					<button
+					<Button
 						aria-label="toggle menu"
-						className="px-2"
-						type="button"
+						variant="icon"
+						className="border-none px-2 hover:bg-transparent hover:text-blue-700 focus:ring-0"
 						{...getToggleButtonProps()}
 					>
 						{isOpen ? <ChevronUpIcon /> : <ChevronDownIcon />}
-					</button>
+					</Button>
 				</div>
 				{errorMessage ? <p>{errorMessage}</p> : null}
 			</div>

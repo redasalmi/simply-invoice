@@ -2,6 +2,7 @@ import * as React from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import { XIcon } from 'lucide-react';
 import { cn } from '~/utils/shared.utils';
+import { Button } from '~/components/ui/button';
 
 export function DialogRoot(props: Dialog.DialogProps) {
 	return <Dialog.Root {...props} />;
@@ -42,7 +43,7 @@ export const DialogContent = React.forwardRef<
 		<Dialog.Content
 			ref={ref}
 			className={cn(
-				'fixed left-[50%] top-[50%] max-h-[85vh] w-[90vw] max-w-[450px] translate-x-[-50%] translate-y-[-50%] rounded-[6px] bg-white p-[25px] shadow-[hsl(206_22%_7%_/_35%)_0px_10px_38px_-10px,_hsl(206_22%_7%_/_20%)_0px_10px_20px_-15px] data-[state=open]:animate-contentShow focus:outline-none',
+				'fixed left-[50%] top-[50%] max-h-[85vh] w-[90vw] max-w-[450px] translate-x-[-50%] translate-y-[-50%] rounded-[6px] bg-white p-[25px] shadow-[hsl(206_22%_7%_/_35%)_0px_10px_38px_-10px,_hsl(206_22%_7%_/_20%)_0px_10px_20px_-15px] focus:outline-none data-[state=open]:animate-contentShow',
 				className,
 			)}
 			{...props}
@@ -91,13 +92,14 @@ export const DialogCloseButton = React.forwardRef<
 	Omit<React.ComponentPropsWithoutRef<'button'>, 'className'>
 >(function DialogCloseButton(props, ref) {
 	return (
-		<button
+		<Button
 			ref={ref}
-			className="absolute right-[10px] top-[10px] inline-flex h-[25px] w-[25px] appearance-none items-center justify-center rounded-full text-violet11 hover:bg-violet4 focus:shadow-[0_0_0_2px] focus:shadow-violet7 focus:outline-none"
 			aria-label="Close"
+			variant="icon"
+			className="absolute right-[10px] top-[10px]"
 			{...props}
 		>
 			<XIcon />
-		</button>
+		</Button>
 	);
 });

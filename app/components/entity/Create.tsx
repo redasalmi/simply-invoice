@@ -59,7 +59,7 @@ function CustomField({ field, index, error, deleteField }: CustomFieldProps) {
 				)}
 			>
 				<div>
-					<Button className="active:cursor-grab">
+					<Button variant="icon" className="active:cursor-grab">
 						<MoveIcon />
 					</Button>
 				</div>
@@ -103,7 +103,11 @@ function CustomField({ field, index, error, deleteField }: CustomFieldProps) {
 							name={`show-label-in-invoice-${field.id}`}
 						/>
 					</div>
-					<Button onClick={deleteField}>
+					<Button
+						aria-label="delete field"
+						variant="icon"
+						onClick={deleteField}
+					>
 						<TrashIcon />
 					</Button>
 				</div>

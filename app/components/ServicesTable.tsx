@@ -104,7 +104,7 @@ function ServiceRow({
 			</TableCell>
 			<TableCell>{amount}</TableCell>
 			<TableCell>
-				<Button onClick={deleteService}>
+				<Button variant="icon" onClick={deleteService}>
 					<TrashIcon />
 				</Button>
 			</TableCell>
