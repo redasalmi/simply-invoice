@@ -99,6 +99,7 @@ export const servicesFields: Array<FormFieldProps> = [
 		id: 'rate',
 		label: 'Rate',
 		name: 'rate',
+		type: 'number',
 		required: true,
 	},
 ];

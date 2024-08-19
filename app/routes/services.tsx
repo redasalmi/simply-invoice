@@ -21,7 +21,7 @@ export function HydrateFallback() {
 	return (
 		<section>
 			<div className="flex justify-end">
-				<CreateLink to="/services/new">Create New service</CreateLink>
+				<CreateLink to="/services/new">Create Service</CreateLink>
 			</div>
 		</section>
 	);
@@ -34,7 +34,7 @@ export default function ServicesRoute() {
 		<>
 			<section>
 				<div className="flex justify-end">
-					<CreateLink to="/services/new">Create New service</CreateLink>
+					<CreateLink to="/services/new">Create Service</CreateLink>
 				</div>
 				<div className="mt-6">
 					{services && services.items.length > 0 ? (

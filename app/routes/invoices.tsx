@@ -20,7 +20,7 @@ export function HydrateFallback() {
 	return (
 		<section>
 			<div className="flex justify-end">
-				<CreateLink to="/invoices/new">Create New Invoice</CreateLink>
+				<CreateLink to="/invoices/new">Create Invoice</CreateLink>
 			</div>
 		</section>
 	);
@@ -38,7 +38,7 @@ export default function InvoicesRoutes() {
 	return (
 		<section>
 			<div className="flex justify-end">
-				<CreateLink to="/invoices/new">Create New Invoice</CreateLink>
+				<CreateLink to="/invoices/new">Create Invoice</CreateLink>
 			</div>
 			<div className="mt-6">
 				{invoices && invoices.items.length > 0 ? (

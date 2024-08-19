@@ -13,7 +13,7 @@ export function HydrateFallback() {
 	return (
 		<section>
 			<div className="flex justify-end">
-				<CreateLink to="/companies/new">Create New Company</CreateLink>
+				<CreateLink to="/companies/new">Create Company</CreateLink>
 			</div>
 		</section>
 	);
@@ -26,7 +26,7 @@ export default function CompaniesRoute() {
 		<>
 			<section>
 				<div className="flex justify-end">
-					<CreateLink to="/companies/new">Create New Company</CreateLink>
+					<CreateLink to="/companies/new">Create Company</CreateLink>
 				</div>
 				<div className="mt-6">
 					<EntitiesList
