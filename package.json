@@ -26,9 +26,9 @@
 		"cross-env": "^7.0.3",
 		"dexie": "^4.0.8",
 		"downshift": "^9.0.8",
-		"framer-motion": "^11.3.28",
+		"framer-motion": "^11.3.30",
 		"isbot": "^4.4.0",
-		"lucide-react": "^0.428.0",
+		"lucide-react": "^0.436.0",
 		"nanoid": "^5.0.7",
 		"query-string": "^9.1.0",
 		"react": "^18.3.1",
@@ -41,7 +41,7 @@
 	},
 	"devDependencies": {
 		"@remix-run/dev": "^2.11.2",
-		"@types/react": "^18.3.3",
+		"@types/react": "^18.3.4",
 		"@types/react-dom": "^18.3.0",
 		"@typescript-eslint/eslint-plugin": "^7.18.0",
 		"@typescript-eslint/parser": "^7.18.0",
@@ -49,7 +49,7 @@
 		"cssnano": "^7.0.5",
 		"eslint": "^8.57.0",
 		"eslint-config-prettier": "^9.1.0",
-		"eslint-import-resolver-typescript": "^3.6.1",
+		"eslint-import-resolver-typescript": "^3.6.3",
 		"eslint-plugin-import": "^2.29.1",
 		"eslint-plugin-jsx-a11y": "^6.9.0",
 		"eslint-plugin-react": "^7.35.0",
@@ -59,7 +59,7 @@
 		"prettier-plugin-tailwindcss": "^0.6.6",
 		"tailwindcss": "^3.4.10",
 		"typescript": "^5.5.4",
-		"vite": "^5.4.1",
+		"vite": "^5.4.2",
 		"vite-tsconfig-paths": "^5.0.1"
 	},
 	"engines": {
