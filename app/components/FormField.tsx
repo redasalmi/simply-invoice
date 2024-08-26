@@ -12,7 +12,7 @@ import { Input } from '~/components/ui/input';
 
 export type FormFieldProps = Pick<
 	React.ComponentPropsWithoutRef<'input'>,
-	'type' | 'value' | 'defaultValue' | 'onInput' | 'min' | 'max' | 'required'
+	'type' | 'value' | 'defaultValue' | 'onInput' | 'min' | 'max' | 'required' | 'readOnly'
 > & {
 	id: string;
 	name: string;

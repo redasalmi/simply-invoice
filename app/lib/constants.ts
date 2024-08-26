@@ -1,35 +1,45 @@
 import type { FormFieldProps } from '~/components/FormField';
 
-export const idTypes = [
+export const idTypes = {
+	incremental: 'incremental',
+	random: 'random',
+} as const;
+export type IdType = keyof typeof idTypes;
+
+export const idTypesList = [
 	{
-		id: 'incremental',
+		id: idTypes.incremental,
 		name: 'Incremental ID',
 	},
 	{
-		id: 'random',
+		id: idTypes.random,
 		name: 'Random ID',
 	},
-] as const;
-export type IdType = (typeof idTypes)[number]['id'];
+];
 
-export const locales = [
+const locales = {
+	enUS: 'en-US',
+	frFR: 'fr-FR',
+} as const;
+export type Locale = keyof typeof locales;
+
+export const localesList = [
 	{
-		id: 'en-US',
+		id: locales.enUS,
 		name: 'English',
 	},
 	{
-		id: 'fr-FR',
+		id: locales.frFR,
 		name: 'French',
 	},
-] as const;
-export type Locale = (typeof locales)[number]['id'];
+];
 
 export const intents = {
 	preview: 'preview',
 	download: 'download',
 	save: 'save',
 } as const;
-export type Intent = (typeof intents)[keyof typeof intents];
+export type Intent = keyof typeof intents;
 
 export const informationFields: Array<FormFieldProps> = [
 	{

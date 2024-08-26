@@ -2,20 +2,20 @@ import { useSelect } from 'downshift';
 import { ChevronDownIcon, ChevronUpIcon } from 'lucide-react';
 import { cn } from '~/utils/shared.utils';
 
-type SelectProps = {
+type SelectProps<T extends string> = {
 	id: string;
 	name: string;
 	label: string;
 	placeholder: string;
 	errorMessage?: string;
 	listItems: Array<{
-		id: string;
+		id: T;
 		name: string;
 	}>;
-	onSelectedItemChange?: (itemId: string) => void;
+	onSelectedItemChange?: (itemId: T) => void;
 };
 
-export function Select({
+export function Select<T extends string>({
 	id,
 	name,
 	label,
@@ -23,7 +23,7 @@ export function Select({
 	errorMessage,
 	listItems,
 	onSelectedItemChange,
-}: SelectProps) {
+}: SelectProps<T>) {
 	const {
 		isOpen,
 		selectedItem,

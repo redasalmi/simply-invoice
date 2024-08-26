@@ -8,14 +8,14 @@ import {
 } from '@remix-run/react';
 import { nanoid } from 'nanoid';
 import { z } from 'zod';
-import { Input } from '~/components/ui/input';
 import { Label } from '~/components/ui/label';
 import {
 	type IdType,
 	idTypes,
+	idTypesList,
 	type Intent,
 	intents,
-	locales,
+	localesList,
 } from '~/lib/constants';
 import { countries } from '~/lib/currencies';
 import { ServicesTable } from '~/components/ServicesTable';
@@ -33,6 +33,7 @@ import { Button } from '~/components/ui/button';
 import { Combobox } from '~/components/ui/combobox';
 import { Select } from '~/components/ui/select';
 import { FormRoot } from '~/components/ui/form';
+import { FormField } from '~/components/FormField';
 
 export async function clientLoader() {
 	try {
@@ -203,7 +204,10 @@ export default function NewInvoiceRoute() {
 		useLoaderData<typeof clientLoader>();
 	const actionData = useActionData<typeof clientAction>();
 
-	const invoiceIdRef = React.useRef<HTMLInputElement>(null);
+	const [invoiceId, setInvoiceId] = React.useState<string | undefined>(
+		undefined,
+	);
+
 	// const [intent, setIntent] = React.useState<Intent | null>(null);
 
 	const isLoading = navigation.state !== 'idle';
@@ -230,18 +234,15 @@ export default function NewInvoiceRoute() {
 		);
 	}
 
-	// TODO: fix param type to be IdType
 	const handleInvoiceIdTypeChange = (idType: IdType) => {
-		let invoiceId: string | null = null;
-		if (idType === 'incremental') {
-			invoiceId = String(lastInvoiceId + 1);
-		} else if (idType === 'random') {
-			invoiceId = nanoid();
+		let invoiceIdValue: string | undefined = undefined;
+		if (idType === idTypes.incremental) {
+			invoiceIdValue = String(lastInvoiceId + 1);
+		} else if (idType === idTypes.random) {
+			invoiceIdValue = nanoid();
 		}
 
-		if (invoiceIdRef.current && invoiceId) {
-			invoiceIdRef.current.value = invoiceId;
-		}
+		setInvoiceId(invoiceIdValue);
 	};
 
 	return (
@@ -249,84 +250,81 @@ export default function NewInvoiceRoute() {
 			<FormRoot asChild>
 				<Form method="post">
 					<div className="my-4 flex gap-3">
-						<div>
-							<Select
-								id="invoice-id-type"
-								name="invoice-id-type"
-								label="Invoice ID Type"
-								placeholder="Choose invoice ID type"
-								errorMessage={actionData?.errors?.['invoice-id-type']}
-								listItems={idTypes}
-								onSelectedItemChange={handleInvoiceIdTypeChange}
-							/>
-						</div>
+						<Select
+							id="invoice-id-type"
+							name="invoice-id-type"
+							label="Invoice ID Type"
+							placeholder="Choose invoice ID type"
+							errorMessage={actionData?.errors?.['invoice-id-type']}
+							listItems={idTypesList}
+							onSelectedItemChange={handleInvoiceIdTypeChange}
+						/>
 
-						<div>
-							<Label>
-								<span>Invoice ID</span>
-								<Input ref={invoiceIdRef} name="invoice-id" readOnly />
-							</Label>
-						</div>
+						<FormField
+							id="invoice-id"
+							label="Invoice ID"
+							name="invoice-id"
+							serverError={actionData?.errors?.['invoice-id']}
+							defaultValue={invoiceId}
+							readOnly
+						/>
 					</div>
 
 					<div className="my-4 flex gap-3">
-						<div>
-							<Select
-								id="locale"
-								name="locale"
-								label="Invoice Language"
-								placeholder="Choose a language"
-								errorMessage={actionData?.errors?.locale}
-								listItems={locales}
-							/>
-						</div>
+						<Select
+							id="locale"
+							name="locale"
+							label="Invoice Language"
+							placeholder="Choose a language"
+							errorMessage={actionData?.errors?.locale}
+							listItems={localesList}
+						/>
 
-						<div>
-							<Combobox
-								id="country-code"
-								name="country-code"
-								label="Currency"
-								placeholder="Select a currency"
-								errorMessage={actionData?.errors?.['customer-id']}
-								listItems={currencies}
-							/>
-						</div>
+						<Combobox
+							id="country-code"
+							name="country-code"
+							label="Currency"
+							placeholder="Select a currency"
+							errorMessage={actionData?.errors?.['customer-id']}
+							listItems={currencies}
+						/>
 					</div>
 
 					<div className="my-4 flex gap-3">
-						<div>
-							<Label htmlFor="invoice-date">Invoice Date</Label>
-							<Input type="date" name="invoice-date" id="invoice-date" />
-						</div>
+						<FormField
+							id="invoice-date"
+							label="Invoice Date"
+							name="invoice-date"
+							type="date"
+							serverError={actionData?.errors?.['invoice-date']}
+						/>
 
-						<div>
-							<Label htmlFor="due-date">Due Date</Label>
-							<Input type="date" name="due-date" id="due-date" />
-						</div>
+						<FormField
+							id="due-date"
+							label="Due Date"
+							name="due-date"
+							type="date"
+						/>
 					</div>
 
 					<div className="my-4 flex gap-3">
-						<div>
-							<Combobox
-								id="company-id"
-								name="company-id"
-								label="Company"
-								placeholder="Select a company"
-								errorMessage={actionData?.errors?.['company-id']}
-								listItems={companies}
-							/>
-						</div>
+						<Combobox
+							id="company-id"
+							name="company-id"
+							label="Company"
+							placeholder="Select a company"
+							errorMessage={actionData?.errors?.['company-id']}
+							listItems={companies}
+						/>
 
-						<div>
-							<Combobox
-								id="customer-id"
-								name="customer-id"
-								label="Customer"
-								placeholder="Select a customer"
-								errorMessage={actionData?.errors?.['customer-id']}
-								listItems={customers}
-							/>
-						</div>
+						<Combobox
+							id="customer-id"
+							name="customer-id"
+							label="Customer"
+							placeholder="Select a customer"
+							errorMessage={actionData?.errors?.['customer-id']}
+							listItems={customers}
+						/>
 					</div>
 
 					<div className="my-4">
@@ -335,7 +333,7 @@ export default function NewInvoiceRoute() {
 					</div>
 
 					<div className="my-4">
-						<label htmlFor="note">Note</label>
+						<Label htmlFor="note">Note</Label>
 						<textarea name="note" id="note"></textarea>
 					</div>
 
