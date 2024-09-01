@@ -3,8 +3,8 @@ import {
 	Form,
 	useActionData,
 	useLoaderData,
-	useNavigation,
-	type ClientLoaderFunctionArgs,
+	// useNavigation,
+	// type ClientLoaderFunctionArgs,
 } from '@remix-run/react';
 import { nanoid } from 'nanoid';
 import { z } from 'zod';
@@ -13,20 +13,20 @@ import {
 	type IdType,
 	idTypes,
 	idTypesList,
-	type Intent,
+	// type Intent,
 	intents,
 	localesList,
 } from '~/lib/constants';
 import { countries } from '~/lib/currencies';
 import { ServicesTable } from '~/components/ServicesTable';
 import {
-	createInvoiceSchema,
+	// createInvoiceSchema,
 	newInvoiceLoaderSchema,
 } from '~/schemas/invoice.schemas';
 import {
 	getInvoiceClientLoaderData,
 	parseCreateInvoiceErrors,
-	parseCreateInvoiceForm,
+	// parseCreateInvoiceForm,
 	parseCreateInvoiceLoaderErrors,
 } from '~/utils/invoice.utils';
 import { Button } from '~/components/ui/button';
@@ -151,11 +151,11 @@ export async function clientLoader() {
 // 	// };
 // }
 
-export async function clientAction({ request }: ClientLoaderFunctionArgs) {
+export async function clientAction() {
 	try {
-		const formData = await request.formData();
-		const invoiceFormData = parseCreateInvoiceForm(formData);
-		const parsedInvoice = createInvoiceSchema.parse(invoiceFormData);
+		// const formData = await request.formData();
+		// const invoiceFormData = parseCreateInvoiceForm(formData);
+		// const parsedInvoice = createInvoiceSchema.parse(invoiceFormData);
 
 		return {};
 	} catch (err) {
@@ -199,7 +199,7 @@ const currencies = countries.map(
 
 export default function NewInvoiceRoute() {
 	// const fetcher = useFetcher(); // TODO: why is there a fetcher here lol?
-	const navigation = useNavigation();
+	// const navigation = useNavigation();
 	const { companies, customers, services, lastInvoiceId, error } =
 		useLoaderData<typeof clientLoader>();
 	const actionData = useActionData<typeof clientAction>();
@@ -210,8 +210,8 @@ export default function NewInvoiceRoute() {
 
 	// const [intent, setIntent] = React.useState<Intent | null>(null);
 
-	const isLoading = navigation.state !== 'idle';
-	const isSubmitting = navigation.state === 'submitting';
+	// const isLoading = navigation.state !== 'idle';
+	// const isSubmitting = navigation.state === 'submitting';
 	// const isLoading = fetcher.state !== 'idle';
 	// const invoicePdf = isLoading ? null : fetcher.data?.invoicePdf;
 

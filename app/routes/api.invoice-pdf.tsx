@@ -1,9 +1,9 @@
 // import { renderToStream } from '@react-pdf/renderer';
-import { type ActionFunctionArgs } from '@remix-run/node';
+// import { type ActionFunctionArgs } from '@remix-run/node';
 // import { InvoicePdf } from '~/components/InvoicePdf';
 // import type { CustomField } from '~/lib/types';
 
-export async function action({ request }: ActionFunctionArgs) {
+export async function action() {
 	// const formQueryString = await request.text();
 	// const formData = queryString.parse(formQueryString, { sort: false });
 

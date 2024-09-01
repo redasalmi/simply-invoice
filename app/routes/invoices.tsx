@@ -1,4 +1,4 @@
-import { Link, useLoaderData } from '@remix-run/react';
+import { useLoaderData } from '@remix-run/react';
 import { CreateLink } from '~/components/entity/CreateLink';
 import {
 	Table,

@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { cn } from '~/utils/shared.utils';
 
-type InputProps = React.ComponentPropsWithoutRef<'input'> & {
+interface InputProps extends React.ComponentPropsWithoutRef<'input'> {
 	hasError?: boolean;
-};
+}
 
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
 	function Input({ className, type = 'text', hasError, ...props }, ref) {

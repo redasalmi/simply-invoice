@@ -11,9 +11,9 @@ const variants = {
 	icon: 'text-blue-700 border border-blue-700 hover:bg-blue-700 hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2 text-center inline-flex items-center',
 };
 
-type ButtonProps = React.ComponentPropsWithoutRef<'button'> & {
+interface ButtonProps extends React.ComponentPropsWithoutRef<'button'> {
 	variant?: keyof typeof variants;
-};
+}
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 	function Button(
