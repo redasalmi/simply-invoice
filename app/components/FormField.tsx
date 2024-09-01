@@ -18,6 +18,7 @@ export type FormFieldProps = Pick<
 	| 'max'
 	| 'required'
 	| 'readOnly'
+	| 'autoComplete'
 > & {
 	id: string;
 	name: string;

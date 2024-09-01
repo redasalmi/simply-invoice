@@ -7,6 +7,15 @@ type InputProps = React.ComponentPropsWithoutRef<'input'> & {
 
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
 	function Input({ className, type = 'text', hasError, ...props }, ref) {
+		const autoCompleteProps = !props.autoComplete?.includes('password')
+			? {
+					'data-1p-ignore': true,
+					'data-lpignore': true,
+					'data-form-type': 'other',
+					'data-bwignore': true,
+				}
+			: undefined;
+
 		return (
 			<input
 				ref={ref}
@@ -18,6 +27,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
 					className,
 				)}
 				{...props}
+				{...autoCompleteProps}
 			/>
 		);
 	},
