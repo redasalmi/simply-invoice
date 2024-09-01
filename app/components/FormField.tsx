@@ -1,10 +1,8 @@
 import * as React from 'react';
 import {
 	FormControl,
-	formFieldErrors,
 	FormLabel,
 	FormMessage,
-	FormValidityState,
 	FormField as UIFormField,
 } from '~/components/ui/form';
 import { Label } from '~/components/ui/label';
@@ -36,41 +34,19 @@ export function FormField({
 	className,
 	...inputProps
 }: FormFieldProps) {
+	const hasError = Boolean(serverError);
+
 	return (
-		<UIFormField
-			name={name}
-			serverInvalid={Boolean(serverError)}
-			className={className}
-		>
-			<FormValidityState>
-				{(validity) => (
-					<>
-						<FormLabel asChild>
-							<Label htmlFor={id} hasError={validity && !validity.valid}>
-								{label}
-							</Label>
-						</FormLabel>
+		<UIFormField name={name} serverInvalid={hasError} className={className}>
+			<FormLabel asChild>
+				<Label htmlFor={id} hasError={hasError}>
+					{label}
+				</Label>
+			</FormLabel>
 
-						<FormControl asChild>
-							<Input
-								id={id}
-								hasError={validity && !validity.valid}
-								{...inputProps}
-							/>
-						</FormControl>
-					</>
-				)}
-			</FormValidityState>
-
-			<FormMessage className="text-red-900" match="valueMissing">
-				{formFieldErrors.valueMissing}
-			</FormMessage>
-
-			<FormMessage className="text-red-900" match="typeMismatch">
-				{inputProps.type === 'email'
-					? formFieldErrors.typeMismatchEmail
-					: formFieldErrors.typeMismatch}
-			</FormMessage>
+			<FormControl asChild>
+				<Input id={id} hasError={hasError} {...inputProps} />
+			</FormControl>
 
 			{serverError ? (
 				<FormMessage className="text-red-900">{serverError}</FormMessage>

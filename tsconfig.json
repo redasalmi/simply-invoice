@@ -1,6 +1,5 @@
 {
 	"include": [
-		"env.d.ts",
 		"**/*.ts",
 		"**/*.tsx",
 		"**/.server/**/*.ts",
@@ -10,11 +9,7 @@
 	],
 	"compilerOptions": {
 		"lib": ["DOM", "DOM.Iterable", "ES2022"],
-		"types": [
-			"@remix-run/node",
-			"vite/client",
-			"@remix-run/react/future/single-fetch.d.ts"
-		],
+		"types": ["@remix-run/node", "vite/client"],
 		"isolatedModules": true,
 		"esModuleInterop": true,
 		"jsx": "react-jsx",

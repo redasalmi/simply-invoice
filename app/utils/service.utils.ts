@@ -20,7 +20,7 @@ type ActionErrors = {
 	rate?: string;
 };
 
-export function parseServiceActionErrors(err: z.ZodError) {
+export function parseServiceFormErrors(err: z.ZodError) {
 	const zodErrors: ServiceFormSchemaErrors = err.format();
 	const errors: ActionErrors = {};
 

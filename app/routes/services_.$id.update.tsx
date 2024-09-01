@@ -14,12 +14,14 @@ import { Skeleton } from '~/components/ui/skeleton';
 import { db } from '~/lib/db';
 import { servicesFields } from '~/lib/constants';
 import {
-	parseServiceActionErrors,
 	parseServiceForm,
+	parseServiceFormErrors,
 } from '~/utils/service.utils';
 import { FormField } from '~/components/FormField';
 import { FormRoot } from '~/components/ui/form';
 import { UpdatedService } from '~/types/service.types';
+import { serviceFormSchema } from '~/schemas/service.schemas';
+import { useForm } from '~/hooks/useForm';
 
 export async function clientLoader({ params }: ClientLoaderFunctionArgs) {
 	const serviceId = params.id;
@@ -42,7 +44,7 @@ export async function clientAction({
 
 	if (serviceFormData.error) {
 		return {
-			errors: parseServiceActionErrors(serviceFormData.error),
+			errors: parseServiceFormErrors(serviceFormData.error),
 		};
 	}
 
@@ -97,6 +99,12 @@ export default function ServiceUpdateRoute() {
 	const isLoading = navigation.state !== 'idle';
 	const isSubmitting = navigation.state === 'submitting';
 
+	const { handleSubmit, errors } = useForm({
+		schema: serviceFormSchema,
+		actionErrors: actionData?.errors,
+		parseErrors: parseServiceFormErrors,
+	});
+
 	if (!service) {
 		return (
 			<section>
@@ -120,13 +128,13 @@ export default function ServiceUpdateRoute() {
 	return (
 		<section>
 			<FormRoot asChild>
-				<Form method="POST">
+				<Form method="POST" onSubmit={handleSubmit}>
 					{servicesFields.map((field) => (
 						<FormField
 							key={field.id}
 							className="my-2"
 							defaultValue={service[field.name]}
-							serverError={actionData?.errors?.[field.name]}
+							serverError={errors?.[field.name]}
 							{...field}
 						/>
 					))}
