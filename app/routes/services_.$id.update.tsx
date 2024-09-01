@@ -9,22 +9,21 @@ import {
 	useNavigation,
 } from '@remix-run/react';
 import invariant from 'tiny-invariant';
-import { z } from 'zod';
 import { Button } from '~/components/ui/button';
 import { Skeleton } from '~/components/ui/skeleton';
 import { db } from '~/lib/db';
 import { servicesFields } from '~/lib/constants';
 import {
 	parseServiceActionErrors,
-	parseUpdateServiceForm,
+	parseServiceForm,
 } from '~/utils/service.utils';
-import { updateServiceSchema } from '~/schemas/service.schemas';
 import { FormField } from '~/components/FormField';
 import { FormRoot } from '~/components/ui/form';
+import { UpdatedService } from '~/types/service.types';
 
 export async function clientLoader({ params }: ClientLoaderFunctionArgs) {
-	invariant(params.id, 'Service ID is required');
 	const serviceId = params.id;
+	invariant(serviceId, 'Service ID is required');
 
 	return {
 		service: await db.services.get(serviceId),
@@ -35,25 +34,28 @@ export async function clientAction({
 	params,
 	request,
 }: ClientActionFunctionArgs) {
-	invariant(params.id, 'Service ID is required');
+	const serviceId = params.id;
+	invariant(serviceId, 'Service ID is required');
 
-	try {
-		const serviceId = params.id;
-		const formData = await request.formData();
-		const serviceFormData = parseUpdateServiceForm(serviceId, formData);
-		const updatedService = updateServiceSchema.parse(serviceFormData);
-		await db.services.update(updatedService.id, updatedService);
+	const formData = await request.formData();
+	const serviceFormData = parseServiceForm(formData);
 
-		return redirect('/services');
-	} catch (err) {
-		if (err instanceof z.ZodError) {
-			const errors = parseServiceActionErrors<'update'>(err);
-
-			return {
-				errors,
-			};
-		}
+	if (serviceFormData.error) {
+		return {
+			errors: parseServiceActionErrors(serviceFormData.error),
+		};
 	}
+
+	const today = new Date().toISOString();
+	const updatedService: UpdatedService = Object.assign(
+		{
+			updatedAt: today,
+		},
+		serviceFormData.data,
+	);
+	await db.services.update(serviceId, updatedService);
+
+	return redirect('/services');
 }
 
 export function HydrateFallback() {

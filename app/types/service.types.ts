@@ -7,4 +7,4 @@ export type Service = {
 	updatedAt: string;
 };
 
-export type UpdateService = Omit<Service, 'createdAt'>;
+export type UpdatedService = Omit<Service, 'id' | 'createdAt'>;

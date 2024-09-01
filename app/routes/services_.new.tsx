@@ -1,34 +1,39 @@
 import type { ActionFunctionArgs } from '@remix-run/node';
 import { Form, redirect, useActionData, useNavigation } from '@remix-run/react';
-import { z } from 'zod';
 import { FormField } from '~/components/FormField';
 import { FormRoot } from '~/components/ui/form';
 import { Button } from '~/components/ui/button';
 import { db } from '~/lib/db';
 import { servicesFields } from '~/lib/constants';
 import {
-	parseCreateServiceForm,
 	parseServiceActionErrors,
+	parseServiceForm,
 } from '~/utils/service.utils';
-import { createServiceSchema } from '~/schemas/service.schemas';
+import { ulid } from 'ulid';
+import { Service } from '~/types/service.types';
 
 export async function clientAction({ request }: ActionFunctionArgs) {
-	try {
-		const formData = await request.formData();
-		const serviceFormData = parseCreateServiceForm(formData);
-		const newService = createServiceSchema.parse(serviceFormData);
-		await db.services.add(newService);
+	const formData = await request.formData();
+	const serviceFormData = parseServiceForm(formData);
 
-		return redirect('/services');
-	} catch (err) {
-		if (err instanceof z.ZodError) {
-			const errors = parseServiceActionErrors<'create'>(err);
-
-			return {
-				errors,
-			};
-		}
+	if (serviceFormData.error) {
+		return {
+			errors: parseServiceActionErrors(serviceFormData.error),
+		};
 	}
+
+	const today = new Date().toISOString();
+	const newService: Service = Object.assign(
+		{
+			id: ulid(),
+			createdAt: today,
+			updatedAt: today,
+		},
+		serviceFormData.data,
+	);
+	await db.services.add(newService);
+
+	return redirect('/services');
 }
 
 export default function NewServiceRoute() {
