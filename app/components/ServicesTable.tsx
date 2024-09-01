@@ -36,13 +36,13 @@ function ServiceRow({
 	);
 	const [quantity, setQuantity] = React.useState(0);
 
-	const servicesList = React.useMemo(() => {
-		return services.map(({ id, name }) => ({ id, name, value: id }));
-	}, [services]);
+	const servicesList = services.map(({ id, name }) => ({
+		id,
+		name,
+		value: id,
+	}));
 
-	const amount = React.useMemo(() => {
-		return selectedService?.rate ? selectedService.rate * quantity : 0;
-	}, [quantity, selectedService?.rate]);
+	const amount = selectedService?.rate ? selectedService.rate * quantity : 0;
 
 	const onServiceChange = (optionId?: string) => {
 		if (!optionId) {
@@ -125,13 +125,12 @@ export function ServicesTable({ services }: ServicesTablesProps) {
 	const [shipping, setShipping] = React.useState(0);
 	const [tax, setTax] = React.useState(0);
 
-	const subtotalAmount = React.useMemo(() => {
-		return servicesList.reduce((acc, service) => acc + service.amount, 0);
-	}, [servicesList]);
+	const subtotalAmount = servicesList.reduce(
+		(acc, service) => acc + service.amount,
+		0,
+	);
 
-	const totalAmount = React.useMemo(() => {
-		return subtotalAmount + shipping + subtotalAmount * (tax / 100);
-	}, [subtotalAmount, shipping, tax]);
+	const totalAmount = subtotalAmount + shipping + subtotalAmount * (tax / 100);
 
 	const addService = () => {
 		setServicesList((prevServices) => {
