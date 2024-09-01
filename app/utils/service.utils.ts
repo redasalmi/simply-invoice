@@ -6,9 +6,9 @@ import {
 
 export function parseServiceForm(formData: FormData) {
 	const serviceFormData = {
-		name: formData.get('name')?.toString(),
-		description: formData.get('description')?.toString(),
-		rate: Number(formData.get('rate')),
+		name: formData.get('name'),
+		description: formData.get('description'),
+		rate: formData.get('rate'),
 	};
 	const service = serviceFormSchema.safeParse(serviceFormData);
 

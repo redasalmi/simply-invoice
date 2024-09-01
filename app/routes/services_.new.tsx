@@ -31,6 +31,8 @@ export async function clientAction({ request }: ActionFunctionArgs) {
 		},
 		serviceFormData.data,
 	);
+	return { newService };
+
 	await db.services.add(newService);
 
 	return redirect('/services');
@@ -38,6 +40,7 @@ export async function clientAction({ request }: ActionFunctionArgs) {
 
 export default function NewServiceRoute() {
 	const actionData = useActionData<typeof clientAction>();
+	console.log({ actionData });
 
 	const navigation = useNavigation();
 	const isLoading = navigation.state !== 'idle';
@@ -46,7 +49,12 @@ export default function NewServiceRoute() {
 	return (
 		<section>
 			<FormRoot asChild>
-				<Form method="POST">
+				<Form
+					method="POST"
+					onSubmit={(e) => {
+						console.log(e);
+					}}
+				>
 					{servicesFields.map((field) => (
 						<FormField
 							key={field.id}

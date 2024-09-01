@@ -12,7 +12,14 @@ import { Input } from '~/components/ui/input';
 
 export type FormFieldProps = Pick<
 	React.ComponentPropsWithoutRef<'input'>,
-	'type' | 'value' | 'defaultValue' | 'onInput' | 'min' | 'max' | 'required' | 'readOnly'
+	| 'type'
+	| 'value'
+	| 'defaultValue'
+	| 'onInput'
+	| 'min'
+	| 'max'
+	| 'required'
+	| 'readOnly'
 > & {
 	id: string;
 	name: string;
@@ -38,12 +45,18 @@ export function FormField({
 			<FormValidityState>
 				{(validity) => (
 					<>
-						<FormLabel htmlFor={id} asChild>
-							<Label hasError={validity && !validity.valid}>{label}</Label>
+						<FormLabel asChild>
+							<Label htmlFor={id} hasError={validity && !validity.valid}>
+								{label}
+							</Label>
 						</FormLabel>
 
-						<FormControl id={id} asChild {...inputProps}>
-							<Input hasError={validity && !validity.valid} />
+						<FormControl asChild>
+							<Input
+								id={id}
+								hasError={validity && !validity.valid}
+								{...inputProps}
+							/>
 						</FormControl>
 					</>
 				)}
