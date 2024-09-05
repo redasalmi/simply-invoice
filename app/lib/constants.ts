@@ -46,14 +46,12 @@ export const informationFields: Array<FormFieldProps> = [
 		id: 'name',
 		label: 'Name',
 		name: 'name',
-		required: true,
 	},
 	{
 		id: 'email',
 		label: 'Email',
 		name: 'email',
 		type: 'email',
-		required: true,
 	},
 ];
 
@@ -62,19 +60,16 @@ export const addressFields: Array<FormFieldProps> = [
 		id: 'address-address1',
 		label: 'Address 1',
 		name: 'address-address1',
-		required: true,
 	},
 	{
 		id: 'address-address2',
 		label: 'Address 2',
 		name: 'address-address2',
-		required: true,
 	},
 	{
 		id: 'address-country',
 		label: 'Country',
 		name: 'address-country',
-		required: true,
 	},
 	{
 		id: 'address-province',

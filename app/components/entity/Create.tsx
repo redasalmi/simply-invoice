@@ -67,25 +67,23 @@ function CustomField({ field, index, error, deleteField }: CustomFieldProps) {
 				<input
 					hidden
 					readOnly
-					name={`order-${field.id}`}
+					name={`custom-order-${field.id}`}
 					value={index}
 					className="hidden"
 				/>
 
 				<FormField
-					id={`label-${field.id}`}
+					id={`custom-label-${field.id}`}
 					label="Label"
-					name={`label-${field.id}`}
-					required
+					name={`custom-label-${field.id}`}
 					className="h-full flex-1"
 					serverError={error?.label}
 				/>
 
 				<FormField
-					id={`content-${field.id}`}
+					id={`custom-content-${field.id}`}
 					label="Content"
-					name={`content-${field.id}`}
-					required
+					name={`custom-content-${field.id}`}
 					className="h-full flex-1"
 					serverError={error?.content}
 				/>
@@ -93,14 +91,14 @@ function CustomField({ field, index, error, deleteField }: CustomFieldProps) {
 				<div className="flex gap-2">
 					<div className="flex items-center justify-center rounded-md px-4 py-2">
 						<label
-							htmlFor={`show-label-in-invoice-${field.id}`}
+							htmlFor={`custom-show-label-in-invoice-${field.id}`}
 							className="sr-only"
 						>
 							Show label on invoice
 						</label>
 						<Switch
-							id={`show-label-in-invoice-${field.id}`}
-							name={`show-label-in-invoice-${field.id}`}
+							id={`custom-show-label-in-invoice-${field.id}`}
+							name={`custom-show-label-in-invoice-${field.id}`}
 						/>
 					</div>
 					<Button
@@ -121,6 +119,7 @@ type CreateEntityProps = {
 	isSubmitting?: boolean;
 	isLoading?: boolean;
 	errors?: EntityActionErrors;
+	handleSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
 };
 
 export function CreateEntityForm({
@@ -128,6 +127,7 @@ export function CreateEntityForm({
 	isSubmitting,
 	isLoading,
 	errors,
+	handleSubmit,
 }: CreateEntityProps) {
 	const [customFields, setCustomFields] = React.useState<Array<{ id: string }>>(
 		[],
@@ -145,7 +145,7 @@ export function CreateEntityForm({
 
 	return (
 		<FormRoot asChild>
-			<Form method="post">
+			<Form method="post" onSubmit={handleSubmit}>
 				<div>
 					{informationFields.map((field) => (
 						<FormField
@@ -192,7 +192,10 @@ export function CreateEntityForm({
 										key={field.id}
 										field={field}
 										index={index}
-										error={errors?.custom?.[index]}
+										error={{
+											label: errors?.[`custom-label-${field.id}`],
+											content: errors?.[`custom-content-${field.id}`],
+										}}
 										deleteField={() => deleteField(field.id)}
 									/>
 								))}

@@ -1,4 +1,35 @@
 import { z } from 'zod';
+import {
+	customContentKey,
+	customLabelKey,
+	safeParseCustomField,
+} from './customField.schema';
+
+export const entityFormSchema = z
+	.object({
+		name: z.string().min(1, 'Name is required'),
+		email: z.string().email(),
+		'address-address1': z.string().min(1, 'Address 1 is required'),
+		'address-address2': z.string().optional(),
+		'address-city': z.string().optional(),
+		'address-country': z.string().min(1, 'Country is required'),
+		'address-province': z.string().optional(),
+		'address-zip': z.string().optional(),
+	})
+	.passthrough()
+	.superRefine((data, ctx) => {
+		for (const key in data) {
+			if (key.includes(customLabelKey) || key.includes(customContentKey)) {
+				const parsedValue = safeParseCustomField(key, data[key]);
+
+				if (parsedValue?.error) {
+					parsedValue.error.issues.forEach((issue) => {
+						ctx.addIssue(issue);
+					});
+				}
+			}
+		}
+	});
 
 export const createEntitySchema = z.object({
 	id: z.string(),

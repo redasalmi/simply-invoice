@@ -70,27 +70,25 @@ function CustomField({ field, index, error, deleteField }: CustomFieldProps) {
 				<input
 					hidden
 					readOnly
-					name={`order-${field.id}`}
+					name={`custom-order-${field.id}`}
 					value={index}
 					className="hidden"
 				/>
 
 				<FormField
-					id={`label-${field.id}`}
+					id={`custom-label-${field.id}`}
 					label="Label"
-					name={`label-${field.id}`}
+					name={`custom-label-${field.id}`}
 					defaultValue={field.label}
-					required
 					className="h-full flex-1"
 					serverError={error?.label}
 				/>
 
 				<FormField
-					id={`content-${field.id}`}
+					id={`custom-content-${field.id}`}
 					label="Content"
-					name={`content-${field.id}`}
+					name={`custom-content-${field.id}`}
 					defaultValue={field.content}
-					required
 					className="h-full flex-1"
 					serverError={error?.content}
 				/>
@@ -104,8 +102,8 @@ function CustomField({ field, index, error, deleteField }: CustomFieldProps) {
 							Show label on invoice
 						</label>
 						<Switch
-							id={`show-label-in-invoice-${field.id}`}
-							name={`show-label-in-invoice-${field.id}`}
+							id={`custom-show-label-in-invoice-${field.id}`}
+							name={`custom-show-label-in-invoice-${field.id}`}
 							defaultChecked={field.showLabelInInvoice}
 						/>
 					</div>
@@ -128,6 +126,7 @@ type UpdateEntityProps = {
 	isSubmitting?: boolean;
 	isLoading?: boolean;
 	errors?: EntityActionErrors;
+	handleSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
 };
 
 export function UpdateEntityForm({
@@ -136,6 +135,7 @@ export function UpdateEntityForm({
 	isSubmitting,
 	isLoading,
 	errors,
+	handleSubmit,
 }: UpdateEntityProps) {
 	const [customFields, setCustomFields] = React.useState<Array<CustomField>>(
 		entity.custom ?? [],
@@ -160,7 +160,7 @@ export function UpdateEntityForm({
 
 	return (
 		<FormRoot asChild>
-			<Form method="post">
+			<Form method="post" onSubmit={handleSubmit}>
 				<div>
 					{informationFields.map((field) => (
 						<FormField
@@ -211,7 +211,10 @@ export function UpdateEntityForm({
 										key={field.id}
 										field={field}
 										index={index}
-										error={errors?.custom?.[index]}
+										error={{
+											label: errors?.[`custom-label-${field.id}`],
+											content: errors?.[`custom-content-${field.id}`],
+										}}
 										deleteField={() => deleteField(field.id)}
 									/>
 								))}

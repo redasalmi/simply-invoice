@@ -13,15 +13,12 @@ import { Button } from '~/components/ui/button';
 import { Skeleton } from '~/components/ui/skeleton';
 import { db } from '~/lib/db';
 import { servicesFields } from '~/lib/constants';
-import {
-	parseServiceForm,
-	parseServiceFormErrors,
-} from '~/utils/service.utils';
 import { FormField } from '~/components/FormField';
 import { FormRoot } from '~/components/ui/form';
 import { UpdatedService } from '~/types/service.types';
 import { serviceFormSchema } from '~/schemas/service.schemas';
 import { useForm } from '~/hooks/useForm';
+import { parseFormData } from '~/utils/parseForm.utils';
 
 export async function clientLoader({ params }: ClientLoaderFunctionArgs) {
 	const serviceId = params.id;
@@ -40,11 +37,11 @@ export async function clientAction({
 	invariant(serviceId, 'Service ID is required');
 
 	const formData = await request.formData();
-	const serviceFormData = parseServiceForm(formData);
+	const { data, errors } = parseFormData(formData, serviceFormSchema);
 
-	if (serviceFormData.error) {
+	if (errors) {
 		return {
-			errors: parseServiceFormErrors(serviceFormData.error),
+			errors,
 		};
 	}
 
@@ -53,7 +50,7 @@ export async function clientAction({
 		{
 			updatedAt: today,
 		},
-		serviceFormData.data,
+		data,
 	);
 	await db.services.update(serviceId, updatedService);
 
@@ -99,10 +96,9 @@ export default function ServiceUpdateRoute() {
 	const isLoading = navigation.state !== 'idle';
 	const isSubmitting = navigation.state === 'submitting';
 
-	const { handleSubmit, errors } = useForm({
+	const { errors, handleSubmit } = useForm({
 		schema: serviceFormSchema,
 		actionErrors: actionData?.errors,
-		parseErrors: parseServiceFormErrors,
 	});
 
 	if (!service) {

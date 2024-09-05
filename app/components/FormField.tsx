@@ -8,6 +8,7 @@ import {
 import { Label } from '~/components/ui/label';
 import { Input } from '~/components/ui/input';
 
+// TODO: look into changing this FormFieldProps input prop
 export type FormFieldProps = Pick<
 	React.ComponentPropsWithoutRef<'input'>,
 	| 'type'
@@ -16,7 +17,6 @@ export type FormFieldProps = Pick<
 	| 'onInput'
 	| 'min'
 	| 'max'
-	| 'required'
 	| 'readOnly'
 	| 'autoComplete'
 > & {

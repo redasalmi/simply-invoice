@@ -7,17 +7,16 @@ import {
 	useNavigation,
 } from '@remix-run/react';
 import invariant from 'tiny-invariant';
-import { z } from 'zod';
 import { Button } from '~/components/ui/button';
 import { Skeleton } from '~/components/ui/skeleton';
 import { db } from '~/lib/db';
 import { UpdateEntityForm } from '~/components/entity/Update';
 import { EntityNotFound } from '~/components/entity/Error';
-import {
-	parseUpdateEntityErrors,
-	parseUpdateEntityForm,
-} from '~/utils/entity.utils';
-import { updateEntitySchema } from '~/schemas/entity.schemas';
+import { parseCustomFields } from '~/utils/parseCustomFields.utils';
+import { entityFormSchema } from '~/schemas/entity.schemas';
+import { parseFormData } from '~/utils/parseForm.utils';
+import { UpdateCompany } from '~/types/company.types';
+import { useForm } from '~/hooks/useForm';
 
 export async function clientLoader({ params }: ClientLoaderFunctionArgs) {
 	invariant(params.id, 'Company ID is required');
@@ -32,25 +31,35 @@ export async function clientAction({
 	params,
 	request,
 }: ClientActionFunctionArgs) {
+	const companyId = params.id;
 	invariant(params.id, 'Company ID is required');
 
-	try {
-		const companyId = params.id;
-		const formData = await request.formData();
-		const companyFormData = parseUpdateEntityForm(companyId, formData);
-		const updatedCompany = updateEntitySchema.parse(companyFormData);
-		await db.companies.update(companyId, updatedCompany);
+	const formData = await request.formData();
+	const { data, errors } = parseFormData(formData, entityFormSchema);
 
-		return redirect('/companies');
-	} catch (err) {
-		if (err instanceof z.ZodError) {
-			const errors = parseUpdateEntityErrors(err);
-
-			return {
-				errors,
-			};
-		}
+	if (errors) {
+		return {
+			errors,
+		};
 	}
+
+	const today = new Date().toISOString();
+	const updatedCompany = {
+		custom: parseCustomFields(formData),
+		updatedAt: today,
+	} as UpdateCompany;
+
+	for (const key in data) {
+		if (key.includes('custom')) {
+			continue;
+		}
+
+		updatedCompany[key.replace('-', '.') as keyof UpdateCompany] =
+			data[key as keyof typeof data];
+	}
+	await db.companies.update(companyId, updatedCompany);
+
+	return redirect('/companies');
 }
 
 export function HydrateFallback() {
@@ -137,6 +146,11 @@ export default function CompanyUpdateRoute() {
 	const isLoading = navigation.state !== 'idle';
 	const isSubmitting = navigation.state === 'submitting';
 
+	const { errors, handleSubmit } = useForm({
+		schema: entityFormSchema,
+		actionErrors: actionData?.errors,
+	});
+
 	if (!company) {
 		return (
 			<section>
@@ -152,7 +166,8 @@ export default function CompanyUpdateRoute() {
 				entity={company}
 				isLoading={isLoading}
 				isSubmitting={isSubmitting}
-				errors={actionData?.errors}
+				errors={errors}
+				handleSubmit={handleSubmit}
 			/>
 		</section>
 	);
