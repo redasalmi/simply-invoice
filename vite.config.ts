@@ -11,6 +11,8 @@ export default defineConfig({
 				v3_relativeSplatPath: true,
 				v3_throwAbortReason: true,
 				unstable_lazyRouteDiscovery: true,
+				unstable_optimizeDeps: true,
+				unstable_singleFetch: true,
 			},
 		}),
 		netlifyPlugin(),
