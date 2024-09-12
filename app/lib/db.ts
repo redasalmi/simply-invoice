@@ -1,4 +1,4 @@
-import Dexie, { type Table } from 'dexie';
+import { Dexie, type Table } from 'dexie';
 import type { Company } from '~/types/company.types';
 import type { Customer } from '~/types/customer.types';
 import type { Invoice } from '~/types/invoice.types';
