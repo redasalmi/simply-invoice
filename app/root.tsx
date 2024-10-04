@@ -1,3 +1,4 @@
+import * as React from 'react';
 import {
 	Links,
 	Meta,
@@ -7,7 +8,9 @@ import {
 	type LinksFunction,
 } from 'react-router';
 
-import './tailwind.css';
+import { Navbar } from '~/components/Navbar';
+import { Footer } from '~/components/Footer';
+import '~/tailwind.css';
 
 export const links: LinksFunction = () => [
 	{ rel: 'preconnect', href: 'https://fonts.googleapis.com' },
@@ -24,15 +27,17 @@ export const links: LinksFunction = () => [
 
 export function Layout({ children }: { children: React.ReactNode }) {
 	return (
-		<html lang="en">
+		<html lang="en" className="h-[100%]">
 			<head>
 				<meta charSet="utf-8" />
-				<meta name="viewport" content="width=device-width, initial-scale=1" />
+				<meta name="viewport" content="width=device-width,initial-scale=1" />
 				<Meta />
 				<Links />
 			</head>
-			<body>
-				{children}
+			<body className="grid h-[100%] grid-rows-[auto_1fr_auto]">
+				<Navbar />
+				<main className="container mx-auto py-8">{children}</main>
+				<Footer />
 				<ScrollRestoration />
 				<Scripts />
 			</body>
