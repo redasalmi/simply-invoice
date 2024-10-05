@@ -10,4 +10,12 @@ export const routes: RouteConfig = [
 
 	route('/companies/new', './routes/companies/company-create.tsx'),
 	route('/companies/update/:id', './routes/companies/company-update.tsx'),
+
+	route('customers', './routes/customers/customers-list.tsx', [
+		route('detail/:id', './routes/customers/customer-detail.tsx'),
+		route('delete/:id', './routes/customers/customer-delete.tsx'),
+	]),
+
+	route('/customers/new', './routes/customers/customer-create.tsx'),
+	route('/customers/update/:id', './routes/customers/customer-update.tsx'),
 ];
