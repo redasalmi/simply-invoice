@@ -23,4 +23,7 @@ export const routes: RouteConfig = [
 	]),
 	route('/services/new', './routes/services/service-create.tsx'),
 	route('/services/update/:id', './routes/services/service-update.tsx'),
+
+	route('/invoices', './routes/invoices/invoices-list.tsx'),
+	route('/invoices/new', './routes/invoices/invoice-create.tsx'),
 ];
