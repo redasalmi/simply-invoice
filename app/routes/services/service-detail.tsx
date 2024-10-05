@@ -20,7 +20,9 @@ export async function clientLoader({ params }: Route.ClientLoaderArgs) {
 	};
 }
 
-export default function ServiceRoute({ loaderData }: Route.ComponentProps) {
+export default function ServiceDetailRoute({
+	loaderData,
+}: Route.ComponentProps) {
 	const navigate = useNavigate();
 
 	const service = loaderData?.service;

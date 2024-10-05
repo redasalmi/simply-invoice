@@ -28,7 +28,9 @@ export function HydrateFallback() {
 	);
 }
 
-export default function ServicesRoute({ loaderData }: Route.ComponentProps) {
+export default function ServicesListRoute({
+	loaderData,
+}: Route.ComponentProps) {
 	const services = loaderData?.services;
 
 	return (

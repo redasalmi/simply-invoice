@@ -35,7 +35,9 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
 	return redirect('/services');
 }
 
-export default function NewServiceRoute({ actionData }: Route.ComponentProps) {
+export default function ServiceCreateRoute({
+	actionData,
+}: Route.ComponentProps) {
 	const navigation = useNavigation();
 	const isLoading = navigation.state !== 'idle';
 	const isSubmitting = navigation.state === 'submitting';
