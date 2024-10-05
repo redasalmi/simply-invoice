@@ -26,4 +26,6 @@ export const routes: RouteConfig = [
 
 	route('/invoices', './routes/invoices/invoices-list.tsx'),
 	route('/invoices/new', './routes/invoices/invoice-create.tsx'),
+
+	route('/api/invoice-pdf', './routes/api/invoice-pdf.tsx'),
 ];
