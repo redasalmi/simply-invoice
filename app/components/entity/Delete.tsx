@@ -1,4 +1,4 @@
-import { Form } from '@remix-run/react';
+import { Form } from 'react-router';
 import {
 	AlertDialogAction,
 	AlertDialogActionButton,
@@ -45,7 +45,7 @@ export function DeleteEntity({
 						>
 							<AlertDialogCancelButton>Cancel</AlertDialogCancelButton>
 						</AlertDialogCancel>
-						<AlertDialogAction type="submit" disabled={isSubmitting} asChild>
+						<AlertDialogAction asChild>
 							<Form method="POST">
 								<AlertDialogActionButton disabled={isSubmitting} type="submit">
 									{isLoading ? '...Deleting' : 'Delete'}

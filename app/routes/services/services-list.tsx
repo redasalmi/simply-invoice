@@ -1,4 +1,4 @@
-import { Link, Outlet, useLoaderData } from '@remix-run/react';
+import { Link, Outlet } from 'react-router';
 import { EyeIcon, PencilIcon, TrashIcon } from 'lucide-react';
 import { CreateLink } from '~/components/entity/CreateLink';
 import {
@@ -10,6 +10,7 @@ import {
 	TableRow,
 } from '~/components/ui/table';
 import { db, getPage } from '~/lib/db';
+import type * as Route from './+types.services-list';
 
 export async function clientLoader() {
 	return {
@@ -27,8 +28,10 @@ export function HydrateFallback() {
 	);
 }
 
-export default function ServicesRoute() {
-	const { services } = useLoaderData<typeof clientLoader>();
+export default function ServicesListRoute({
+	loaderData,
+}: Route.ComponentProps) {
+	const services = loaderData?.services;
 
 	return (
 		<>
@@ -52,19 +55,19 @@ export default function ServicesRoute() {
 										<TableCell>{rate}</TableCell>
 										<TableCell className="flex items-center gap-4">
 											<Link
-												to={`/services/${id}`}
+												to={`/services/detail/${id}`}
 												aria-label={`view ${name} service details`}
 											>
 												<EyeIcon />
 											</Link>
 											<Link
-												to={`/services/${id}/update`}
+												to={`/services/update/${id}`}
 												aria-label={`update ${name} service`}
 											>
 												<PencilIcon />
 											</Link>
 											<Link
-												to={`/services/${id}/delete`}
+												to={`/services/delete/${id}`}
 												aria-label={`delete ${name} service`}
 											>
 												<TrashIcon />

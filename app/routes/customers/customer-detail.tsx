@@ -1,9 +1,4 @@
-import {
-	type ClientLoaderFunctionArgs,
-	useLoaderData,
-	useNavigate,
-} from '@remix-run/react';
-import invariant from 'tiny-invariant';
+import { useNavigate } from 'react-router';
 import { EntityDetail } from '~/components/entity/Detail';
 import { EntityNotFound } from '~/components/entity/Error';
 import {
@@ -16,9 +11,9 @@ import {
 	DialogTitle,
 } from '~/components/ui/dialog';
 import { db } from '~/lib/db';
+import type * as Route from './+types.customer-detail';
 
-export async function clientLoader({ params }: ClientLoaderFunctionArgs) {
-	invariant(params.id, 'Customer ID is required');
+export async function clientLoader({ params }: Route.ClientLoaderArgs) {
 	const customerId = params.id;
 
 	return {
@@ -26,9 +21,12 @@ export async function clientLoader({ params }: ClientLoaderFunctionArgs) {
 	};
 }
 
-export default function CustomerRoute() {
-	const { customer } = useLoaderData<typeof clientLoader>();
+export default function CustomerDetailRoute({
+	loaderData,
+}: Route.ComponentProps) {
 	const navigate = useNavigate();
+
+	const customer = loaderData?.customer;
 
 	const closeDialog = () => {
 		navigate('/customers');

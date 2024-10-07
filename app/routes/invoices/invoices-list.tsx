@@ -1,4 +1,3 @@
-import { useLoaderData } from '@remix-run/react';
 import { CreateLink } from '~/components/entity/CreateLink';
 import {
 	Table,
@@ -9,6 +8,7 @@ import {
 	TableRow,
 } from '~/components/ui/table';
 import { db, getPage } from '~/lib/db';
+import type * as Route from './+types.invoices-list';
 
 export async function clientLoader() {
 	return {
@@ -32,8 +32,10 @@ const formatter = new Intl.DateTimeFormat('en-GB', {
 	year: 'numeric',
 });
 
-export default function InvoicesRoutes() {
-	const { invoices } = useLoaderData<typeof clientLoader>();
+export default function InvoicesListRoutes({
+	loaderData,
+}: Route.ComponentProps) {
+	const invoices = loaderData?.invoices;
 
 	return (
 		<section>

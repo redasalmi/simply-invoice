@@ -1,4 +1,4 @@
-import { Link } from '@remix-run/react';
+import { Link } from 'react-router';
 import { EyeIcon, PencilIcon, TrashIcon } from 'lucide-react';
 import {
 	Table,
@@ -15,11 +15,11 @@ import type { PaginatedResult } from '~/types/shared.types';
 type EntitiesListProps = {
 	type: EntityType;
 	baseUrl: string;
-	entities: PaginatedResult<Entity>;
+	entities?: PaginatedResult<Entity>;
 };
 
 export function EntitiesList({ type, baseUrl, entities }: EntitiesListProps) {
-	if (!entities.items.length) {
+	if (!entities || !entities.items.length) {
 		return <p>No {capitalize(type)} found.</p>;
 	}
 
@@ -38,19 +38,19 @@ export function EntitiesList({ type, baseUrl, entities }: EntitiesListProps) {
 						<TableCell>{email}</TableCell>
 						<TableCell className="flex items-center gap-4">
 							<Link
-								to={`${baseUrl}/${id}`}
+								to={`${baseUrl}/detail/${id}`}
 								aria-label={`view ${name} ${type} details`}
 							>
 								<EyeIcon />
 							</Link>
 							<Link
-								to={`${baseUrl}/${id}/update`}
+								to={`${baseUrl}/update/${id}`}
 								aria-label={`update ${name} ${type}`}
 							>
 								<PencilIcon />
 							</Link>
 							<Link
-								to={`${baseUrl}/${id}/delete`}
+								to={`${baseUrl}/delete/${id}/`}
 								aria-label={`delete ${name} ${type}`}
 							>
 								<TrashIcon />

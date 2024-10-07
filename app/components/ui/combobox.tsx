@@ -103,7 +103,7 @@ export function Combobox({
 							className={cn(
 								highlightedIndex === index && 'bg-blue-300',
 								selectedItem === item && 'font-bold',
-								'flex flex-col px-3 py-2 shadow-sm',
+								'flex flex-col py-2 px-3 shadow-sm',
 							)}
 							key={item.id}
 							{...getItemProps({ item, index })}

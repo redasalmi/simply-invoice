@@ -1,11 +1,5 @@
 import * as React from 'react';
-import {
-	Form,
-	useActionData,
-	useLoaderData,
-	// useNavigation,
-	// type ClientLoaderFunctionArgs,
-} from '@remix-run/react';
+import { Form } from 'react-router';
 import { nanoid } from 'nanoid';
 import { z } from 'zod';
 import { Label } from '~/components/ui/label';
@@ -34,6 +28,7 @@ import { Combobox } from '~/components/ui/combobox';
 import { Select } from '~/components/ui/select';
 import { FormRoot } from '~/components/ui/form';
 import { FormField } from '~/components/FormField';
+import type * as Route from './+types.invoice-create';
 
 export async function clientLoader() {
 	try {
@@ -197,12 +192,13 @@ const currencies = countries.map(
 	}),
 );
 
-export default function NewInvoiceRoute() {
+export default function InvoiceCreateRoute({
+	loaderData,
+	actionData,
+}: Route.ComponentProps) {
 	// const fetcher = useFetcher(); // TODO: why is there a fetcher here lol?
 	// const navigation = useNavigation();
-	const { companies, customers, services, lastInvoiceId, error } =
-		useLoaderData<typeof clientLoader>();
-	const actionData = useActionData<typeof clientAction>();
+	const { companies, customers, services, lastInvoiceId, error } = loaderData;
 
 	const [invoiceId, setInvoiceId] = React.useState<string | undefined>(
 		undefined,

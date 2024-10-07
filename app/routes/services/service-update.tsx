@@ -1,28 +1,18 @@
-import {
-	type ClientActionFunctionArgs,
-	type ClientLoaderFunctionArgs,
-	Form,
-	Link,
-	redirect,
-	useActionData,
-	useLoaderData,
-	useNavigation,
-} from '@remix-run/react';
-import invariant from 'tiny-invariant';
+import { Form, Link, redirect, useNavigation } from 'react-router';
 import { Button } from '~/components/ui/button';
 import { Skeleton } from '~/components/ui/skeleton';
 import { db } from '~/lib/db';
 import { servicesFields } from '~/lib/constants';
 import { FormField } from '~/components/FormField';
 import { FormRoot } from '~/components/ui/form';
-import { UpdatedService } from '~/types/service.types';
+import type { UpdatedService } from '~/types/service.types';
 import { serviceFormSchema } from '~/schemas/service.schemas';
 import { useForm } from '~/hooks/useForm';
 import { parseFormData } from '~/utils/parseForm.utils';
+import type * as Route from './+types.service-update';
 
-export async function clientLoader({ params }: ClientLoaderFunctionArgs) {
+export async function clientLoader({ params }: Route.ClientLoaderArgs) {
 	const serviceId = params.id;
-	invariant(serviceId, 'Service ID is required');
 
 	return {
 		service: await db.services.get(serviceId),
@@ -32,9 +22,8 @@ export async function clientLoader({ params }: ClientLoaderFunctionArgs) {
 export async function clientAction({
 	params,
 	request,
-}: ClientActionFunctionArgs) {
+}: Route.ClientActionArgs) {
 	const serviceId = params.id;
-	invariant(serviceId, 'Service ID is required');
 
 	const formData = await request.formData();
 	const { data, errors } = parseFormData(formData, serviceFormSchema);
@@ -88,11 +77,13 @@ export function HydrateFallback() {
 	);
 }
 
-export default function ServiceUpdateRoute() {
-	const { service } = useLoaderData<typeof clientLoader>();
-	const actionData = useActionData<typeof clientAction>();
-
+export default function ServiceUpdateRoute({
+	loaderData,
+	actionData,
+}: Route.ComponentProps) {
 	const navigation = useNavigation();
+
+	const service = loaderData?.service;
 	const isLoading = navigation.state !== 'idle';
 	const isSubmitting = navigation.state === 'submitting';
 

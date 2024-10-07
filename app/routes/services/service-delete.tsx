@@ -1,14 +1,4 @@
-import {
-	type ClientActionFunctionArgs,
-	type ClientLoaderFunctionArgs,
-	Form,
-	redirect,
-	useActionData,
-	useLoaderData,
-	useNavigate,
-	useNavigation,
-} from '@remix-run/react';
-import invariant from 'tiny-invariant';
+import { Form, redirect, useNavigate, useNavigation } from 'react-router';
 import { db } from '~/lib/db';
 import {
 	AlertDialogAction,
@@ -22,9 +12,9 @@ import {
 	AlertDialogRoot,
 	AlertDialogTitle,
 } from '~/components/ui/alert-dialog';
+import type * as Route from './+types.service-delete';
 
-export async function clientLoader({ params }: ClientLoaderFunctionArgs) {
-	invariant(params.id, 'Service ID is required');
+export async function clientLoader({ params }: Route.ClientLoaderArgs) {
 	const serviceId = params.id;
 
 	return {
@@ -32,9 +22,7 @@ export async function clientLoader({ params }: ClientLoaderFunctionArgs) {
 	};
 }
 
-export async function clientAction({ params }: ClientActionFunctionArgs) {
-	invariant(params.id, 'Service ID is required');
-
+export async function clientAction({ params }: Route.ClientActionArgs) {
 	try {
 		const serviceId = params.id;
 		const service = await db.services.get(serviceId);
@@ -50,7 +38,7 @@ export async function clientAction({ params }: ClientActionFunctionArgs) {
 		await db.services.delete(serviceId);
 
 		return redirect('/services');
-	} catch (err) {
+	} catch {
 		return {
 			error: {
 				message: 'Error Deleting the Service!',
@@ -61,11 +49,14 @@ export async function clientAction({ params }: ClientActionFunctionArgs) {
 	}
 }
 
-export default function ServiceDeleteRoute() {
-	const { service } = useLoaderData<typeof clientLoader>();
-	const actionData = useActionData<typeof clientAction>();
+export default function ServiceDeleteRoute({
+	loaderData,
+	actionData,
+}: Route.ComponentProps) {
 	const navigate = useNavigate();
 	const navigation = useNavigation();
+
+	const service = loaderData?.service;
 	const isLoading = navigation.state !== 'idle';
 	const isSubmitting = navigation.state === 'submitting';
 
@@ -108,13 +99,12 @@ export default function ServiceDeleteRoute() {
 								>
 									<AlertDialogCancelButton>Cancel</AlertDialogCancelButton>
 								</AlertDialogCancel>
-								<AlertDialogAction
-									type="submit"
-									disabled={isSubmitting}
-									asChild
-								>
+								<AlertDialogAction asChild>
 									<Form method="POST">
-										<AlertDialogActionButton>
+										<AlertDialogActionButton
+											type="submit"
+											disabled={isSubmitting}
+										>
 											{isLoading ? '...Deleting' : 'Delete'}
 										</AlertDialogActionButton>
 									</Form>

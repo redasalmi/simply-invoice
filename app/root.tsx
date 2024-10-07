@@ -5,20 +5,27 @@ import {
 	Outlet,
 	Scripts,
 	ScrollRestoration,
-} from '@remix-run/react';
-import { Footer } from '~/components/Footer';
+	type LinksFunction,
+} from 'react-router';
+
 import { Navbar } from '~/components/Navbar';
-import styles from '~/tailwind.css?url';
+import { Footer } from '~/components/Footer';
+import '~/tailwind.css';
 
-export const links = () => {
-	return [{ rel: 'stylesheet', href: styles }];
-};
+export const links: LinksFunction = () => [
+	{ rel: 'preconnect', href: 'https://fonts.googleapis.com' },
+	{
+		rel: 'preconnect',
+		href: 'https://fonts.gstatic.com',
+		crossOrigin: 'anonymous',
+	},
+	{
+		rel: 'stylesheet',
+		href: 'https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap',
+	},
+];
 
-type LayoutProps = {
-	children: React.ReactNode;
-};
-
-export function Layout({ children }: LayoutProps) {
+export function Layout({ children }: { children: React.ReactNode }) {
 	return (
 		<html lang="en" className="h-[100%]">
 			<head>
@@ -29,7 +36,7 @@ export function Layout({ children }: LayoutProps) {
 			</head>
 			<body className="grid h-[100%] grid-rows-[auto_1fr_auto]">
 				<Navbar />
-				<main className="container mx-auto py-8">{children}</main>
+				<main className="container py-8">{children}</main>
 				<Footer />
 				<ScrollRestoration />
 				<Scripts />

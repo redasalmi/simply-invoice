@@ -1,19 +1,15 @@
-import {
-	type ClientActionFunctionArgs,
-	redirect,
-	useActionData,
-	useNavigation,
-} from '@remix-run/react';
+import { redirect, useNavigation } from 'react-router';
 import { ulid } from 'ulid';
 import { CreateEntityForm } from '~/components/entity/Create';
 import { useForm } from '~/hooks/useForm';
 import { db } from '~/lib/db';
 import { entityFormSchema } from '~/schemas/entity.schemas';
-import { Customer } from '~/types/customer.types';
+import type { Customer } from '~/types/customer.types';
 import { parseCustomFields } from '~/utils/parseCustomFields.utils';
 import { parseFormData } from '~/utils/parseForm.utils';
+import type * as Route from './+types.customer-create';
 
-export async function clientAction({ request }: ClientActionFunctionArgs) {
+export async function clientAction({ request }: Route.ClientActionArgs) {
 	const formData = await request.formData();
 	const { data, errors } = parseFormData(formData, entityFormSchema);
 
@@ -46,9 +42,9 @@ export async function clientAction({ request }: ClientActionFunctionArgs) {
 	return redirect('/customers');
 }
 
-export default function NewCustomerRoute() {
-	const actionData = useActionData<typeof clientAction>();
-
+export default function CustomerCreateRoute({
+	actionData,
+}: Route.ComponentProps) {
 	const navigation = useNavigation();
 	const isLoading = navigation.state !== 'idle';
 	const isSubmitting = navigation.state === 'submitting';

@@ -1,12 +1,4 @@
-import {
-	type ClientActionFunctionArgs,
-	type ClientLoaderFunctionArgs,
-	redirect,
-	useActionData,
-	useLoaderData,
-	useNavigation,
-} from '@remix-run/react';
-import invariant from 'tiny-invariant';
+import { redirect, useNavigation } from 'react-router';
 import { Button } from '~/components/ui/button';
 import { Skeleton } from '~/components/ui/skeleton';
 import { db } from '~/lib/db';
@@ -15,24 +7,23 @@ import { EntityNotFound } from '~/components/entity/Error';
 import { parseCustomFields } from '~/utils/parseCustomFields.utils';
 import { entityFormSchema } from '~/schemas/entity.schemas';
 import { parseFormData } from '~/utils/parseForm.utils';
-import { UpdateCustomer } from '~/types/customer.types';
+import type { UpdateCompany } from '~/types/company.types';
 import { useForm } from '~/hooks/useForm';
+import type * as Route from './+types.company-update';
 
-export async function clientLoader({ params }: ClientLoaderFunctionArgs) {
-	invariant(params.id, 'Customer ID is required');
-	const customerId = params.id;
+export async function clientLoader({ params }: Route.ClientLoaderArgs) {
+	const companyId = params.id;
 
 	return {
-		customer: await db.customers.get(customerId),
+		company: await db.companies.get(companyId),
 	};
 }
 
 export async function clientAction({
 	params,
 	request,
-}: ClientActionFunctionArgs) {
-	const customerId = params.id;
-	invariant(params.id, 'Customer ID is required');
+}: Route.ClientActionArgs) {
+	const companyId = params.id;
 
 	const formData = await request.formData();
 	const { data, errors } = parseFormData(formData, entityFormSchema);
@@ -44,22 +35,22 @@ export async function clientAction({
 	}
 
 	const today = new Date().toISOString();
-	const updatedCustomer = {
+	const updatedCompany = {
 		custom: parseCustomFields(formData),
 		updatedAt: today,
-	} as UpdateCustomer;
+	} as UpdateCompany;
 
 	for (const key in data) {
 		if (key.includes('custom')) {
 			continue;
 		}
 
-		updatedCustomer[key.replace('-', '.') as keyof UpdateCustomer] =
+		updatedCompany[key.replace('-', '.') as keyof UpdateCompany] =
 			data[key as keyof typeof data];
 	}
-	await db.customers.update(customerId, updatedCustomer);
+	await db.companies.update(companyId, updatedCompany);
 
-	return redirect('/customers');
+	return redirect('/companies');
 }
 
 export function HydrateFallback() {
@@ -132,15 +123,17 @@ export function HydrateFallback() {
 			</div>
 
 			<div>
-				<Button>Update Customer</Button>
+				<Button>Update Company</Button>
 			</div>
 		</section>
 	);
 }
 
-export default function CustomerUpdateRoute() {
-	const { customer } = useLoaderData<typeof clientLoader>();
-	const actionData = useActionData<typeof clientAction>();
+export default function CompanyUpdateRoute({
+	loaderData,
+	actionData,
+}: Route.ComponentProps) {
+	const company = loaderData?.company;
 
 	const navigation = useNavigation();
 	const isLoading = navigation.state !== 'idle';
@@ -151,10 +144,10 @@ export default function CustomerUpdateRoute() {
 		actionErrors: actionData?.errors,
 	});
 
-	if (!customer) {
+	if (!company) {
 		return (
 			<section>
-				<EntityNotFound type="customer" baseUrl="/customers" />
+				<EntityNotFound type="company" baseUrl="/companies" />
 			</section>
 		);
 	}
@@ -162,8 +155,8 @@ export default function CustomerUpdateRoute() {
 	return (
 		<section>
 			<UpdateEntityForm
-				type="customer"
-				entity={customer}
+				type="company"
+				entity={company}
 				isLoading={isLoading}
 				isSubmitting={isSubmitting}
 				errors={errors}

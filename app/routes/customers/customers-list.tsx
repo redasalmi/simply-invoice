@@ -1,7 +1,8 @@
-import { Outlet, useLoaderData } from '@remix-run/react';
+import { Outlet } from 'react-router';
 import { CreateLink } from '~/components/entity/CreateLink';
 import { EntitiesList } from '~/components/entity/List';
 import { db, getPage } from '~/lib/db';
+import type * as Route from './+types.customers-list';
 
 export async function clientLoader() {
 	return {
@@ -19,8 +20,10 @@ export function HydrateFallback() {
 	);
 }
 
-export default function CustomersRoute() {
-	const { customers } = useLoaderData<typeof clientLoader>();
+export default function CustomersListRoute({
+	loaderData,
+}: Route.ComponentProps) {
+	const customers = loaderData?.customers;
 
 	return (
 		<>

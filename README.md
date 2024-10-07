@@ -1,19 +1,43 @@
-# Simply Invoice
+# Welcome to React Router!
 
-Under construction... 🚧
+- 📖 [React Router docs](https://reactrouter.com/dev)
 
-## Roadmap
+## Development
 
-- save data in browser storage using a client loader, add a warning about
-  cleaning browser history
-- save data in an online storage provider (drive, mega, dropbox...) using a
-  server loader if possible
-- add a default company (first one available, can be modified later) that will
-  be used in all new invoices
-- add a choose company, customer and services select input using saved data when
-  creating a new invoice
-- add multiple templates, an invoice will be saved with a given template but can
-  still be downloaded and previewed with any available template
-- look into making this a PWA
-- add a client cache (using client loader/action) to store user data, this will
-  enable getting data in PWA mode
+Run the dev server:
+
+```shellscript
+npm run dev
+```
+
+## Deployment
+
+First, build your app for production:
+
+```sh
+npm run build
+```
+
+Then run the app in production mode:
+
+```sh
+npm start
+```
+
+Now you'll need to pick a host to deploy it to.
+
+### DIY
+
+If you're familiar with deploying Node applications, the built-in app server is
+production-ready.
+
+Make sure to deploy the output of `npm run build`
+
+- `build/server`
+- `build/client`
+
+## Styling
+
+This template comes with [Tailwind CSS](https://tailwindcss.com/) already
+configured for a simple default starting experience. You can use whatever CSS
+framework you prefer.

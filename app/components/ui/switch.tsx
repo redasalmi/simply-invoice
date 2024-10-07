@@ -10,12 +10,12 @@ export const Switch = React.forwardRef<
 		<RadixSwitch.Root
 			ref={ref}
 			className={cn(
-				'relative h-[25px] w-[42px] cursor-pointer rounded-full bg-blackA6 shadow-[0_2px_10px] shadow-blackA4 outline-none focus:outline-none focus:ring-4 focus:ring-blue-300 data-[state=checked]:bg-blue-700',
+				'bg-blackA6 shadow-blackA4 relative h-[25px] w-[42px] cursor-pointer rounded-full shadow-[0_2px_10px] outline-none focus:ring-4 focus:ring-blue-300 focus:outline-none data-[state=checked]:bg-blue-700',
 				className,
 			)}
 			{...props}
 		>
-			<RadixSwitch.Thumb className="block h-[21px] w-[21px] translate-x-0.5 rounded-full bg-white shadow-[0_2px_2px] shadow-blackA4 transition-transform duration-100 will-change-transform data-[state=checked]:translate-x-[19px]" />
+			<RadixSwitch.Thumb className="shadow-blackA4 block h-[21px] w-[21px] translate-x-0.5 rounded-full bg-white shadow-[0_2px_2px] transition-transform duration-100 will-change-transform data-[state=checked]:translate-x-[19px]" />
 		</RadixSwitch.Root>
 	);
 });

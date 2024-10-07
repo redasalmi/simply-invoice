@@ -1,22 +1,17 @@
-import {
-	Form,
-	useActionData,
-	useNavigation,
-	redirect,
-	ClientActionFunctionArgs,
-} from '@remix-run/react';
+import { Form, useNavigation, redirect } from 'react-router';
 import { FormField } from '~/components/FormField';
 import { FormRoot } from '~/components/ui/form';
 import { Button } from '~/components/ui/button';
 import { db } from '~/lib/db';
 import { servicesFields } from '~/lib/constants';
 import { ulid } from 'ulid';
-import { Service } from '~/types/service.types';
+import type { Service } from '~/types/service.types';
 import { useForm } from '~/hooks/useForm';
 import { serviceFormSchema } from '~/schemas/service.schemas';
 import { parseFormData } from '~/utils/parseForm.utils';
+import type * as Route from './+types.service-create';
 
-export async function clientAction({ request }: ClientActionFunctionArgs) {
+export async function clientAction({ request }: Route.ClientActionArgs) {
 	const formData = await request.formData();
 	const { data, errors } = parseFormData(formData, serviceFormSchema);
 
@@ -40,9 +35,9 @@ export async function clientAction({ request }: ClientActionFunctionArgs) {
 	return redirect('/services');
 }
 
-export default function NewServiceRoute() {
-	const actionData = useActionData<typeof clientAction>();
-
+export default function ServiceCreateRoute({
+	actionData,
+}: Route.ComponentProps) {
 	const navigation = useNavigation();
 	const isLoading = navigation.state !== 'idle';
 	const isSubmitting = navigation.state === 'submitting';

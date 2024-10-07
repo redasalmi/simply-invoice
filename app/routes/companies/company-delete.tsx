@@ -1,18 +1,9 @@
-import {
-	type ClientActionFunctionArgs,
-	type ClientLoaderFunctionArgs,
-	redirect,
-	useActionData,
-	useLoaderData,
-	useNavigate,
-	useNavigation,
-} from '@remix-run/react';
-import invariant from 'tiny-invariant';
+import { redirect, useNavigate, useNavigation } from 'react-router';
 import { DeleteEntity, DeleteEntityError } from '~/components/entity/Delete';
 import { db } from '~/lib/db';
+import type * as Route from './+types.company-delete';
 
-export async function clientLoader({ params }: ClientLoaderFunctionArgs) {
-	invariant(params.id, 'Company ID is required');
+export async function clientLoader({ params }: Route.ClientLoaderArgs) {
 	const companyId = params.id;
 
 	return {
@@ -20,9 +11,7 @@ export async function clientLoader({ params }: ClientLoaderFunctionArgs) {
 	};
 }
 
-export async function clientAction({ params }: ClientActionFunctionArgs) {
-	invariant(params.id, 'Company ID is required');
-
+export async function clientAction({ params }: Route.ClientActionArgs) {
 	try {
 		const companyId = params.id;
 		const company = await db.companies.get(companyId);
@@ -38,7 +27,7 @@ export async function clientAction({ params }: ClientActionFunctionArgs) {
 		await db.companies.delete(companyId);
 
 		return redirect('/companies');
-	} catch (err) {
+	} catch {
 		return {
 			error: {
 				message: 'Error Deleting the Company!',
@@ -49,11 +38,14 @@ export async function clientAction({ params }: ClientActionFunctionArgs) {
 	}
 }
 
-export default function CompanyDeleteRoute() {
-	const { company } = useLoaderData<typeof clientLoader>();
-	const actionData = useActionData<typeof clientAction>();
+export default function CompanyDeleteRoute({
+	loaderData,
+	actionData,
+}: Route.ComponentProps) {
 	const navigate = useNavigate();
 	const navigation = useNavigation();
+
+	const company = loaderData?.company;
 	const isLoading = navigation.state !== 'idle';
 	const isSubmitting = navigation.state === 'submitting';
 

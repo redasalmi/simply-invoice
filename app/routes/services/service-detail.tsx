@@ -1,10 +1,4 @@
-import {
-	type ClientLoaderFunctionArgs,
-	Link,
-	useLoaderData,
-	useNavigate,
-} from '@remix-run/react';
-import invariant from 'tiny-invariant';
+import { Link, useNavigate } from 'react-router';
 import {
 	DialogClose,
 	DialogCloseButton,
@@ -16,9 +10,9 @@ import {
 } from '~/components/ui/dialog';
 import { Table, TableBody, TableCell, TableRow } from '~/components/ui/table';
 import { db } from '~/lib/db';
+import type * as Route from './+types.service-detail';
 
-export async function clientLoader({ params }: ClientLoaderFunctionArgs) {
-	invariant(params.id, 'Service ID is required');
+export async function clientLoader({ params }: Route.ClientLoaderArgs) {
 	const serviceId = params.id;
 
 	return {
@@ -26,9 +20,12 @@ export async function clientLoader({ params }: ClientLoaderFunctionArgs) {
 	};
 }
 
-export default function ServiceRoute() {
-	const { service } = useLoaderData<typeof clientLoader>();
+export default function ServiceDetailRoute({
+	loaderData,
+}: Route.ComponentProps) {
 	const navigate = useNavigate();
+
+	const service = loaderData?.service;
 
 	const closeDialog = () => {
 		navigate('/services');

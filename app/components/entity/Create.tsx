@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Form } from '@remix-run/react';
+import { Form } from 'react-router';
 import { ulid } from 'ulid';
 import { Reorder } from 'framer-motion';
 import { MoveIcon, TrashIcon } from 'lucide-react';
@@ -89,7 +89,7 @@ function CustomField({ field, index, error, deleteField }: CustomFieldProps) {
 				/>
 
 				<div className="flex gap-2">
-					<div className="flex items-center justify-center rounded-md px-4 py-2">
+					<div className="flex items-center justify-center rounded-md py-2 px-4">
 						<label
 							htmlFor={`custom-show-label-in-invoice-${field.id}`}
 							className="sr-only"

@@ -1,18 +1,9 @@
-import {
-	type ClientActionFunctionArgs,
-	type ClientLoaderFunctionArgs,
-	redirect,
-	useActionData,
-	useLoaderData,
-	useNavigate,
-	useNavigation,
-} from '@remix-run/react';
-import invariant from 'tiny-invariant';
+import { redirect, useNavigate, useNavigation } from 'react-router';
 import { DeleteEntity, DeleteEntityError } from '~/components/entity/Delete';
 import { db } from '~/lib/db';
+import type * as Route from './+types.customer-delete';
 
-export async function clientLoader({ params }: ClientLoaderFunctionArgs) {
-	invariant(params.id, 'Customer ID is required');
+export async function clientLoader({ params }: Route.ClientLoaderArgs) {
 	const customerId = params.id;
 
 	return {
@@ -20,9 +11,7 @@ export async function clientLoader({ params }: ClientLoaderFunctionArgs) {
 	};
 }
 
-export async function clientAction({ params }: ClientActionFunctionArgs) {
-	invariant(params.id, 'Customer ID is required');
-
+export async function clientAction({ params }: Route.ClientActionArgs) {
 	try {
 		const customerId = params.id;
 		const customer = await db.customers.get(customerId);
@@ -38,7 +27,7 @@ export async function clientAction({ params }: ClientActionFunctionArgs) {
 		await db.customers.delete(customerId);
 
 		return redirect('/customers');
-	} catch (err) {
+	} catch {
 		return {
 			error: {
 				message: 'Error Deleting the Customer!',
@@ -49,11 +38,13 @@ export async function clientAction({ params }: ClientActionFunctionArgs) {
 	}
 }
 
-export default function CustomerDeleteRoute() {
-	const { customer } = useLoaderData<typeof clientLoader>();
-	const actionData = useActionData<typeof clientAction>();
+export default function CustomerDeleteRoute({
+	loaderData,
+}: Route.ComponentProps) {
 	const navigate = useNavigate();
 	const navigation = useNavigation();
+
+	const customer = loaderData?.customer;
 	const isLoading = navigation.state !== 'idle';
 	const isSubmitting = navigation.state === 'submitting';
 

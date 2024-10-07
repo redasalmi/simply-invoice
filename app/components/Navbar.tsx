@@ -1,4 +1,4 @@
-import { Link, NavLink } from '@remix-run/react';
+import { Link, NavLink } from 'react-router';
 import { cn } from '~/utils/shared.utils';
 
 type SideBarLinkProps = {
@@ -22,7 +22,7 @@ function NavItem({ to, children }: SideBarLinkProps) {
 export function Navbar() {
 	return (
 		<nav className="py-6 font-bold">
-			<div className="container mx-auto flex justify-between">
+			<div className="container flex justify-between">
 				<Link className="hover:underline" to="/">
 					Simply Invoice
 				</Link>
