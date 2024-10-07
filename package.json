@@ -7,7 +7,7 @@
 		"build": "react-router build",
 		"start": "react-router-serve ./build/server/index.js",
 		"typecheck": "react-router typegen && tsc",
-		"lint": "eslint .",
+		"lint": "eslint ./app",
 		"pretty": "prettier --write --ignore-unknown \"app/**/*.+(js|jsx|ts|tsx|json|css)\""
 	},
 	"dependencies": {
@@ -15,9 +15,10 @@
 		"@radix-ui/react-dialog": "^1.1.2",
 		"@radix-ui/react-form": "^0.1.0",
 		"@radix-ui/react-switch": "^1.1.1",
+		"@react-pdf/renderer": "^4.0.0",
 		"@react-router/node": "7.0.0-pre.0",
 		"@react-router/serve": "7.0.0-pre.0",
-		"@tailwindcss/vite": "^4.0.0-alpha.25",
+		"@tailwindcss/vite": "4.0.0-alpha.26",
 		"clsx": "^2.1.1",
 		"dexie": "^4.0.8",
 		"downshift": "^9.0.8",
@@ -33,12 +34,12 @@
 		"zod": "^3.23.8"
 	},
 	"devDependencies": {
-		"@eslint/js": "^9.11.1",
+		"@eslint/js": "^9.12.0",
 		"@react-router/dev": "7.0.0-pre.0",
 		"@types/eslint__js": "^8.42.3",
-		"@types/react": "^18.3.9",
+		"@types/react": "^18.3.11",
 		"@types/react-dom": "^18.3.0",
-		"eslint": "^9.11.1",
+		"eslint": "^9.12.0",
 		"eslint-config-prettier": "^9.1.0",
 		"eslint-plugin-jsx-a11y": "^6.10.0",
 		"eslint-plugin-react": "^7.37.1",
@@ -46,9 +47,9 @@
 		"globals": "^15.10.0",
 		"prettier": "^3.3.3",
 		"prettier-plugin-tailwindcss": "^0.6.8",
-		"tailwindcss": "^4.0.0-alpha.25",
+		"tailwindcss": "4.0.0-alpha.26",
 		"typescript": "^5.6.2",
-		"typescript-eslint": "^8.8.0",
+		"typescript-eslint": "^8.8.1",
 		"vite": "^5.4.8",
 		"vite-tsconfig-paths": "^5.0.1"
 	},

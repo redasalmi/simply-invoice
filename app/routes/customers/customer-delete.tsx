@@ -27,7 +27,7 @@ export async function clientAction({ params }: Route.ClientActionArgs) {
 		await db.customers.delete(customerId);
 
 		return redirect('/customers');
-	} catch (err) {
+	} catch {
 		return {
 			error: {
 				message: 'Error Deleting the Customer!',

@@ -36,7 +36,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 			</head>
 			<body className="grid h-[100%] grid-rows-[auto_1fr_auto]">
 				<Navbar />
-				<main className="container mx-auto py-8">{children}</main>
+				<main className="container py-8">{children}</main>
 				<Footer />
 				<ScrollRestoration />
 				<Scripts />

@@ -38,7 +38,7 @@ export async function clientAction({ params }: Route.ClientActionArgs) {
 		await db.services.delete(serviceId);
 
 		return redirect('/services');
-	} catch (err) {
+	} catch {
 		return {
 			error: {
 				message: 'Error Deleting the Service!',
