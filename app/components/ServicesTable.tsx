@@ -197,7 +197,6 @@ export function ServicesTable({ services }: ServicesTablesProps) {
 					label="Shipping"
 					name="shipping"
 					min={0}
-					required
 					value={shipping}
 					onInput={(event) =>
 						setShipping(parseInt(event.currentTarget.value, 10))
@@ -211,7 +210,6 @@ export function ServicesTable({ services }: ServicesTablesProps) {
 					name="tax"
 					min={0}
 					max={100}
-					required
 					value={tax}
 					onInput={(event) => setTax(parseInt(event.currentTarget.value, 10))}
 				/>
