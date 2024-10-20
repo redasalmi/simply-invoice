@@ -10,16 +10,6 @@ export async function clientLoader() {
 	};
 }
 
-export function HydrateFallback() {
-	return (
-		<section>
-			<div className="flex justify-end">
-				<CreateLink to="/customers/new">Create Customer</CreateLink>
-			</div>
-		</section>
-	);
-}
-
 export default function CustomersListRoute({
 	loaderData,
 }: Route.ComponentProps) {

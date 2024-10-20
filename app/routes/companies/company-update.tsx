@@ -1,6 +1,4 @@
 import { redirect, useNavigation } from 'react-router';
-import { Button } from '~/components/ui/button';
-import { Skeleton } from '~/components/ui/skeleton';
 import { db } from '~/lib/db';
 import { UpdateEntityForm } from '~/components/entity/Update';
 import { EntityNotFound } from '~/components/entity/Error';
@@ -51,82 +49,6 @@ export async function clientAction({
 	await db.companies.update(companyId, updatedCompany);
 
 	return redirect('/companies');
-}
-
-export function HydrateFallback() {
-	return (
-		<section>
-			<div>
-				<div className="my-2">
-					<p className="mb-1 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-						Name *
-					</p>
-					<Skeleton className="h-10" />
-				</div>
-				<div className="my-2">
-					<p className="mb-1 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-						Email *
-					</p>
-					<Skeleton className="h-10" />
-				</div>
-			</div>
-
-			<div>
-				<h3 className="text-2xl">Address</h3>
-
-				<div className="my-2">
-					<p className="mb-1 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-						Address 1 *
-					</p>
-					<Skeleton className="h-10" />
-				</div>
-				<div className="my-2">
-					<p className="mb-1 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-						Address 2
-					</p>
-					<Skeleton className="h-10" />
-				</div>
-				<div className="my-2">
-					<p className="mb-1 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-						Country *
-					</p>
-					<Skeleton className="h-10" />
-				</div>
-				<div className="my-2">
-					<p className="mb-1 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-						Province
-					</p>
-					<Skeleton className="h-10" />
-				</div>
-				<div className="my-2">
-					<p className="mb-1 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-						City
-					</p>
-					<Skeleton className="h-10" />
-				</div>
-				<div className="my-2">
-					<p className="mb-1 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-						Zip
-					</p>
-					<Skeleton className="h-10" />
-				</div>
-			</div>
-
-			<div className="my-2">
-				<h3 className="text-2xl">Custom Fields</h3>
-				<p className="mb-2 block text-sm">
-					Add any custom fields and order them
-				</p>
-				<div>
-					<Button>Add New Field</Button>
-				</div>
-			</div>
-
-			<div>
-				<Button>Update Company</Button>
-			</div>
-		</section>
-	);
 }
 
 export default function CompanyUpdateRoute({

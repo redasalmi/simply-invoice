@@ -181,10 +181,6 @@ export async function clientAction() {
 	// return redirect('/invoices');
 }
 
-export function HydrateFallback() {
-	return null;
-}
-
 const currencies = countries.map(
 	({ countryName, currencySymbol, countryCode }) => ({
 		id: countryCode,

@@ -1,6 +1,5 @@
 import { Form, Link, redirect, useNavigation } from 'react-router';
 import { Button } from '~/components/ui/button';
-import { Skeleton } from '~/components/ui/skeleton';
 import { db } from '~/lib/db';
 import { servicesFields } from '~/lib/constants';
 import { FormField } from '~/components/FormField';
@@ -44,37 +43,6 @@ export async function clientAction({
 	await db.services.update(serviceId, updatedService);
 
 	return redirect('/services');
-}
-
-export function HydrateFallback() {
-	return (
-		<section>
-			<div>
-				<div className="my-2">
-					<p className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-						Name *
-					</p>
-					<Skeleton className="h-10" />
-				</div>
-				<div className="my-2">
-					<p className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-						Description
-					</p>
-					<Skeleton className="h-10" />
-				</div>
-				<div className="my-2">
-					<p className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-						Rate *
-					</p>
-					<Skeleton className="h-10" />
-				</div>
-			</div>
-
-			<div>
-				<Button>Update Service</Button>
-			</div>
-		</section>
-	);
 }
 
 export default function ServiceUpdateRoute({

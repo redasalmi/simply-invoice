@@ -16,16 +16,6 @@ export async function clientLoader() {
 	};
 }
 
-export function HydrateFallback() {
-	return (
-		<section>
-			<div className="flex justify-end">
-				<CreateLink to="/invoices/new">Create Invoice</CreateLink>
-			</div>
-		</section>
-	);
-}
-
 const formatter = new Intl.DateTimeFormat('en-GB', {
 	month: 'short',
 	day: '2-digit',

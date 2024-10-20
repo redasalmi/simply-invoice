@@ -18,16 +18,6 @@ export async function clientLoader() {
 	};
 }
 
-export function HydrateFallback() {
-	return (
-		<section>
-			<div className="flex justify-end">
-				<CreateLink to="/services/new">Create Service</CreateLink>
-			</div>
-		</section>
-	);
-}
-
 export default function ServicesListRoute({
 	loaderData,
 }: Route.ComponentProps) {

@@ -9,6 +9,8 @@
 		".react-router/types/**/*"
 	],
 	"compilerOptions": {
+		"useDefineForClassFields": true,
+		"allowImportingTsExtensions": true,
 		"lib": ["DOM", "DOM.Iterable", "ES2022"],
 		"types": ["@react-router/node", "vite/client"],
 		"isolatedModules": true,
@@ -19,6 +21,9 @@
 		"resolveJsonModule": true,
 		"target": "ES2022",
 		"strict": true,
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"noFallthroughCasesInSwitch": true,
 		"allowJs": true,
 		"skipLibCheck": true,
 		"forceConsistentCasingInFileNames": true,
@@ -29,5 +34,6 @@
 		"noEmit": true,
 		"rootDirs": [".", "./.react-router/types"],
 		"plugins": [{ "name": "@react-router/dev" }]
-	}
+	},
+	"references": [{ "path": "./tsconfig.node.json" }]
 }
