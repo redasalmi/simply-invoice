@@ -5,12 +5,14 @@ import {
 	Outlet,
 	Scripts,
 	ScrollRestoration,
+	useLoaderData,
 	type LinksFunction,
 } from 'react-router';
-
+import { SaveDBPath } from '~/components/SaveDBPath';
 import { Navbar } from '~/components/Navbar';
 import { Footer } from '~/components/Footer';
 import '~/tailwind.css';
+import type * as Route from './+types.root';
 
 export const links: LinksFunction = () => [
 	{ rel: 'preconnect', href: 'https://fonts.googleapis.com' },
@@ -25,6 +27,46 @@ export const links: LinksFunction = () => [
 	},
 ];
 
+export { clientLoader } from '~/lib/store';
+
+function Page({ children }: { children: React.ReactNode }) {
+	const loaderData = useLoaderData() as Route.ComponentProps['loaderData'];
+	const { dbPath, store, ready } = loaderData || {};
+
+	if (!ready) {
+		// TODO: add app logo animation or some kind of intro, add timeout because loading is too fast
+		return (
+			<main>
+				<h1>Loading...</h1>
+			</main>
+		);
+	}
+
+	if (!store) {
+		return (
+			<main>
+				<p>something went wrong, please restart the application</p>
+			</main>
+		);
+	}
+
+	if (!dbPath) {
+		return (
+			<main>
+				<SaveDBPath store={store} />
+			</main>
+		);
+	}
+
+	return (
+		<>
+			<Navbar />
+			<main className="container py-8">{children}</main>
+			<Footer />
+		</>
+	);
+}
+
 export function Layout({ children }: { children: React.ReactNode }) {
 	return (
 		<html lang="en" className="h-[100%]">
@@ -35,9 +77,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 				<Links />
 			</head>
 			<body className="grid h-[100%] grid-rows-[auto_1fr_auto]">
-				<Navbar />
-				<main className="container py-8">{children}</main>
-				<Footer />
+				<Page>{children}</Page>
 				<ScrollRestoration />
 				<Scripts />
 			</body>

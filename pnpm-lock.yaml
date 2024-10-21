@@ -32,6 +32,21 @@ importers:
       '@tailwindcss/vite':
         specifier: 4.0.0-alpha.26
         version: 4.0.0-alpha.26(vite@5.4.9(lightningcss@1.27.0))
+      '@tauri-apps/api':
+        specifier: ^2.0.3
+        version: 2.0.3
+      '@tauri-apps/plugin-dialog':
+        specifier: ~2
+        version: 2.0.1
+      '@tauri-apps/plugin-fs':
+        specifier: ~2.0.1
+        version: 2.0.1
+      '@tauri-apps/plugin-sql':
+        specifier: ~2
+        version: 2.0.0
+      '@tauri-apps/plugin-store':
+        specifier: ~2
+        version: 2.1.0
       babel-plugin-react-compiler:
         specifier: 19.0.0-beta-9ee70a1-20241017
         version: 19.0.0-beta-9ee70a1-20241017
@@ -1013,6 +1028,9 @@ packages:
     peerDependencies:
       vite: ^5.2.0
 
+  '@tauri-apps/api@2.0.3':
+    resolution: {integrity: sha512-840qk6n8rbXBXMA5/aAgTYsg5JAubKO0nXw5wf7IzGnUuYKGbB4oFBIZtXOIWy+E0kNTDI3qhq5iqsoMJfwp8g==}
+
   '@tauri-apps/cli-darwin-arm64@2.0.3':
     resolution: {integrity: sha512-jIsbxGWS+As1ZN7umo90nkql/ZAbrDK0GBT6UsgHSz5zSwwArICsZFFwE1pLZip5yoiV5mn3TGG2c1+v+0puzQ==}
     engines: {node: '>= 10'}
@@ -1077,6 +1095,18 @@ packages:
     resolution: {integrity: sha512-JwEyhc5BAVpn4E8kxzY/h7+bVOiXQdudR1r3ODMfyyumZBfgIWqpD/WuTcPq6Yjchju1BSS+80jAE/oYwI/RKg==}
     engines: {node: '>= 10'}
     hasBin: true
+
+  '@tauri-apps/plugin-dialog@2.0.1':
+    resolution: {integrity: sha512-fnUrNr6EfvTqdls/ufusU7h6UbNFzLKvHk/zTuOiBq01R3dTODqwctZlzakdbfSp/7pNwTKvgKTAgl/NAP/Z0Q==}
+
+  '@tauri-apps/plugin-fs@2.0.1':
+    resolution: {integrity: sha512-PkeZG2WAob9Xpmr66aPvj+McDVgFjV2a7YBzYVZjiCvbGeMs6Yk09tlXhCe3EyZdT/pwWMSi8lXUace+hlsjsw==}
+
+  '@tauri-apps/plugin-sql@2.0.0':
+    resolution: {integrity: sha512-H4dodCbRvmaHGx7/E1hPh/v7Qf8/pI0XjmRWgMkCeC8NSPXnjYcpm5+HUhBeHUM5zkB85/Mucg4gpQZ0Dj33gQ==}
+
+  '@tauri-apps/plugin-store@2.1.0':
+    resolution: {integrity: sha512-GADqrc17opUKYIAKnGHIUgEeTZ2wJGu1ZITKQ1WMuOFdv8fvXRFBAqsqPjE3opgWohbczX6e1NpwmZK1AnuWVw==}
 
   '@types/cookie@0.6.0':
     resolution: {integrity: sha512-4Kh9a6B2bQciAhf7FSuMRRkUWecJgJu9nPnx3yzpsfXX/c50REIqpHY4C82bXP90qrLtXtkDxTZosYO3UpOwlA==}
@@ -4106,6 +4136,8 @@ snapshots:
       tailwindcss: 4.0.0-alpha.26
       vite: 5.4.9(lightningcss@1.27.0)
 
+  '@tauri-apps/api@2.0.3': {}
+
   '@tauri-apps/cli-darwin-arm64@2.0.3':
     optional: true
 
@@ -4148,6 +4180,22 @@ snapshots:
       '@tauri-apps/cli-win32-arm64-msvc': 2.0.3
       '@tauri-apps/cli-win32-ia32-msvc': 2.0.3
       '@tauri-apps/cli-win32-x64-msvc': 2.0.3
+
+  '@tauri-apps/plugin-dialog@2.0.1':
+    dependencies:
+      '@tauri-apps/api': 2.0.3
+
+  '@tauri-apps/plugin-fs@2.0.1':
+    dependencies:
+      '@tauri-apps/api': 2.0.3
+
+  '@tauri-apps/plugin-sql@2.0.0':
+    dependencies:
+      '@tauri-apps/api': 2.0.3
+
+  '@tauri-apps/plugin-store@2.1.0':
+    dependencies:
+      '@tauri-apps/api': 2.0.3
 
   '@types/cookie@0.6.0': {}
 
