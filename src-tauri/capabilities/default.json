@@ -7,8 +7,17 @@
 		"core:default",
 		"shell:allow-open",
 		"sql:default",
+		"sql:allow-execute",
 		"dialog:default",
 		"fs:default",
+		{
+			"identifier": "fs:allow-exists",
+			"allow": [
+				{
+					"path": "**"
+				}
+			]
+		},
 		"fs:allow-app-write-recursive",
 		"store:default"
 	]

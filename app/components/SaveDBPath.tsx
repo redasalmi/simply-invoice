@@ -2,15 +2,10 @@ import { useRevalidator } from 'react-router';
 import { save } from '@tauri-apps/plugin-dialog';
 import { create } from '@tauri-apps/plugin-fs';
 import { homeDir } from '@tauri-apps/api/path';
-import type { Store } from '@tauri-apps/plugin-store';
 import { Button } from '~/components/ui/button';
 import { dbPathKey } from '~/lib/store';
 
-type SaveDBPathProps = {
-	store: Store;
-};
-
-export function SaveDBPath({ store }: SaveDBPathProps) {
+export function SaveDBPath() {
 	const { revalidate } = useRevalidator();
 
 	const openFileDialog = async () => {
@@ -31,7 +26,7 @@ export function SaveDBPath({ store }: SaveDBPathProps) {
 
 			const file = await create(path);
 			await file.close();
-			await store.set(dbPathKey, path);
+			await window.store.set(dbPathKey, path);
 			revalidate();
 		} catch (err) {
 			console.log({ err });

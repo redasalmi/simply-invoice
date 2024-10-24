@@ -8,9 +8,13 @@ import {
 	useLoaderData,
 	type LinksFunction,
 } from 'react-router';
+import { Store } from '@tauri-apps/plugin-store';
+import Database from '@tauri-apps/plugin-sql';
+import { exists } from '@tauri-apps/plugin-fs';
 import { SaveDBPath } from '~/components/SaveDBPath';
 import { Navbar } from '~/components/Navbar';
 import { Footer } from '~/components/Footer';
+import { dbPathKey, storeFilename } from '~/lib/store';
 import '~/tailwind.css';
 import type * as Route from './+types.root';
 
@@ -27,11 +31,28 @@ export const links: LinksFunction = () => [
 	},
 ];
 
-export { clientLoader } from '~/lib/store';
+export async function clientLoader() {
+	const store = await Store.load(storeFilename, { autoSave: true });
+	window.store = store;
+
+	const dbPath = await store.get<string>(dbPathKey);
+	const fileExists = dbPath ? await exists(dbPath) : false;
+
+	if (fileExists) {
+		const db = await Database.load(`sqlite:${dbPath}`);
+		window.db = db;
+	}
+
+	return {
+		store,
+		dbAvailable: Boolean(window.db),
+		ready: true,
+	};
+}
 
 function Page({ children }: { children: React.ReactNode }) {
 	const loaderData = useLoaderData() as Route.ComponentProps['loaderData'];
-	const { dbPath, store, ready } = loaderData || {};
+	const { dbAvailable, store, ready } = loaderData || {};
 
 	if (!ready) {
 		// TODO: add app logo animation or some kind of intro, add timeout because loading is too fast
@@ -45,15 +66,15 @@ function Page({ children }: { children: React.ReactNode }) {
 	if (!store) {
 		return (
 			<main>
-				<p>something went wrong, please restart the application</p>
+				<p>Something went wrong, please restart the application</p>
 			</main>
 		);
 	}
 
-	if (!dbPath) {
+	if (!dbAvailable) {
 		return (
 			<main>
-				<SaveDBPath store={store} />
+				<SaveDBPath />
 			</main>
 		);
 	}
