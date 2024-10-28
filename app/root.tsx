@@ -11,6 +11,7 @@ import {
 import { Store } from '@tauri-apps/plugin-store';
 import Database from '@tauri-apps/plugin-sql';
 import { exists } from '@tauri-apps/plugin-fs';
+import { invoke } from '@tauri-apps/api/core';
 import { SaveDBPath } from '~/components/SaveDBPath';
 import { Navbar } from '~/components/Navbar';
 import { Footer } from '~/components/Footer';
@@ -38,8 +39,9 @@ export async function clientLoader() {
 	const dbPath = await store.get<string>(dbPathKey);
 	const fileExists = dbPath ? await exists(dbPath) : false;
 
-	if (fileExists) {
-		const db = await Database.load(`sqlite:${dbPath}`);
+	if (dbPath && fileExists) {
+		await invoke('init_db', { dbPath });
+		const db = await Database.load(dbPath);
 		window.db = db;
 	}
 

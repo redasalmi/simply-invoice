@@ -26,7 +26,7 @@ export function SaveDBPath() {
 
 			const file = await create(path);
 			await file.close();
-			await window.store.set(dbPathKey, path);
+			await window.store.set(dbPathKey, `sqlite:${path}`);
 			revalidate();
 		} catch (err) {
 			console.log({ err });
