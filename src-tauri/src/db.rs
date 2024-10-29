@@ -12,8 +12,8 @@ pub mod database {
     name TEXT NOT NULL,
     email TEXT NOT NULL,
     address_id VARCHAR(26) NOT NULL,
-    created_at DATE DEFAULT CURRENT_DATE NOT NULL,
-    updated_at DATE DEFAULT CURRENT_DATE NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_DATETIME NOT NULL,
+    updated_at DATETIME,
     FOREIGN KEY (address_id) REFERENCES addresses (address_id)
   );
   
@@ -24,8 +24,8 @@ pub mod database {
       name TEXT NOT NULL,
       email TEXT NOT NULL,
       address_id VARCHAR(26) NOT NULL,
-      created_at DATE DEFAULT CURRENT_DATE NOT NULL,
-      updated_at DATE DEFAULT CURRENT_DATE NOT NULL,
+      created_at DATETIME DEFAULT CURRENT_DATETIME NOT NULL,
+      updated_at DATETIME,
       FOREIGN KEY (address_id) REFERENCES addresses (address_id)
     );
     
@@ -36,8 +36,8 @@ pub mod database {
     name TEXT NOT NULL,
     description TEXT,
     rate NUMERIC NOT NULL,
-    created_at DATE DEFAULT CURRENT_DATE NOT NULL,
-    updated_at DATE DEFAULT CURRENT_DATE NOT NULL
+    created_at DATETIME DEFAULT CURRENT_DATETIME NOT NULL,
+    updated_at DATETIME
   );
   
   CREATE INDEX services_index ON services (name, rate);
@@ -50,8 +50,8 @@ pub mod database {
     country TEXT NOT NULL,
     province TEXT,
     zip TEXT,
-    created_at DATE DEFAULT CURRENT_DATE NOT NULL,
-    updated_at DATE DEFAULT CURRENT_DATE NOT NULL
+    created_at DATETIME DEFAULT CURRENT_DATETIME NOT NULL,
+    updated_at DATETIME
   );
   
   CREATE INDEX addresses_index ON addresses (country, city);
@@ -62,8 +62,8 @@ pub mod database {
     label TEXT NOT NULL,
     content TEXT NOT NULL,
     company_id VARCHAR(26) NOT NULL,
-    created_at DATE DEFAULT CURRENT_DATE NOT NULL,
-    updated_at DATE DEFAULT CURRENT_DATE NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_DATETIME NOT NULL,
+    updated_at DATETIME,
     FOREIGN KEY (company_id) REFERENCES companies (company_id)
   );
   
@@ -73,8 +73,8 @@ pub mod database {
     label TEXT NOT NULL,
     content TEXT NOT NULL,
     customer_id VARCHAR(26) NOT NULL,
-    created_at DATE DEFAULT CURRENT_DATE NOT NULL,
-    updated_at DATE DEFAULT CURRENT_DATE NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_DATETIME NOT NULL,
+    updated_at DATETIME,
     FOREIGN KEY (customer_id) REFERENCES customers (customer_id)
   );
   "
