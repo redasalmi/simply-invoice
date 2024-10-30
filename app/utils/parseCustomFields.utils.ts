@@ -1,7 +1,7 @@
 import type { CustomField } from '~/types/entity.types';
 
-export function parseCustomFields(formData: FormData) {
-	const entries = Object.entries(formData);
+export function parseCustomFields(data: object) {
+	const entries = Object.entries(data);
 	const customFields: Record<string, CustomField> = {};
 
 	entries.forEach(([key, value]) => {

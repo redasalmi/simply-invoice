@@ -12,7 +12,7 @@ pub mod database {
     name TEXT NOT NULL,
     email TEXT NOT NULL,
     address_id VARCHAR(26) NOT NULL,
-    created_at DATETIME DEFAULT CURRENT_DATETIME NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at DATETIME,
     FOREIGN KEY (address_id) REFERENCES addresses (address_id)
   );
@@ -24,7 +24,7 @@ pub mod database {
       name TEXT NOT NULL,
       email TEXT NOT NULL,
       address_id VARCHAR(26) NOT NULL,
-      created_at DATETIME DEFAULT CURRENT_DATETIME NOT NULL,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
       updated_at DATETIME,
       FOREIGN KEY (address_id) REFERENCES addresses (address_id)
     );
@@ -36,7 +36,7 @@ pub mod database {
     name TEXT NOT NULL,
     description TEXT,
     rate NUMERIC NOT NULL,
-    created_at DATETIME DEFAULT CURRENT_DATETIME NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at DATETIME
   );
   
@@ -50,7 +50,7 @@ pub mod database {
     country TEXT NOT NULL,
     province TEXT,
     zip TEXT,
-    created_at DATETIME DEFAULT CURRENT_DATETIME NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at DATETIME
   );
   
@@ -62,7 +62,7 @@ pub mod database {
     label TEXT NOT NULL,
     content TEXT NOT NULL,
     company_id VARCHAR(26) NOT NULL,
-    created_at DATETIME DEFAULT CURRENT_DATETIME NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at DATETIME,
     FOREIGN KEY (company_id) REFERENCES companies (company_id)
   );
@@ -73,7 +73,7 @@ pub mod database {
     label TEXT NOT NULL,
     content TEXT NOT NULL,
     customer_id VARCHAR(26) NOT NULL,
-    created_at DATETIME DEFAULT CURRENT_DATETIME NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at DATETIME,
     FOREIGN KEY (customer_id) REFERENCES customers (customer_id)
   );
