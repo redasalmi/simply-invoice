@@ -1,3 +1,4 @@
+import getCompaniesSql from '~/sql/get-companies.sql?raw';
 import createCompanySql from '~/sql/create-company.sql?raw';
 
 export type Company = {
@@ -8,6 +9,10 @@ export type Company = {
 	created_at: string;
 	updated_at?: string;
 };
+
+export async function getCompanies() {
+	return window.db.select<Array<Company>>(getCompaniesSql);
+}
 
 export async function createCompany(
 	company: Omit<Company, 'created_at' | 'updated_at'>,

@@ -8,14 +8,10 @@ import {
 	useLoaderData,
 	type LinksFunction,
 } from 'react-router';
-import { Store } from '@tauri-apps/plugin-store';
-import Database from '@tauri-apps/plugin-sql';
-import { exists } from '@tauri-apps/plugin-fs';
-import { invoke } from '@tauri-apps/api/core';
 import { SaveDBPath } from '~/components/SaveDBPath';
 import { Navbar } from '~/components/Navbar';
 import { Footer } from '~/components/Footer';
-import { dbPathKey, storeFilename } from '~/lib/store';
+import loadDb from '~/lib/load-db?raw';
 import '~/tailwind.css';
 import type * as Route from './+types.root';
 
@@ -33,30 +29,17 @@ export const links: LinksFunction = () => [
 ];
 
 export async function clientLoader() {
-	const store = await Store.load(storeFilename, { autoSave: true });
-	window.store = store;
-
-	const dbPath = await store.get<string>(dbPathKey);
-	const fileExists = dbPath ? await exists(dbPath) : false;
-
-	if (dbPath && fileExists) {
-		await invoke('init_db', { dbPath });
-		const db = await Database.load(dbPath);
-		window.db = db;
-	}
-
 	return {
-		store,
+		storeAvailable: Boolean(window.store),
 		dbAvailable: Boolean(window.db),
-		ready: true,
 	};
 }
 
 function Page({ children }: { children: React.ReactNode }) {
 	const loaderData = useLoaderData() as Route.ComponentProps['loaderData'];
-	const { dbAvailable, store, ready } = loaderData || {};
+	const { dbAvailable, storeAvailable } = loaderData || {};
 
-	if (!ready) {
+	if (!loaderData) {
 		// TODO: add app logo animation or some kind of intro, add timeout because loading is too fast
 		return (
 			<main>
@@ -65,7 +48,7 @@ function Page({ children }: { children: React.ReactNode }) {
 		);
 	}
 
-	if (!store) {
+	if (!storeAvailable) {
 		return (
 			<main>
 				<p>Something went wrong, please restart the application</p>
@@ -98,6 +81,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 				<meta name="viewport" content="width=device-width,initial-scale=1" />
 				<Meta />
 				<Links />
+				<script dangerouslySetInnerHTML={{ __html: loadDb }} />
 			</head>
 			<body className="grid h-[100%] grid-rows-[auto_1fr_auto]">
 				<Page>{children}</Page>
