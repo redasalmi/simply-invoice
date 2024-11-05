@@ -11,7 +11,7 @@ import {
 import { SaveDBPath } from '~/components/SaveDBPath';
 import { Navbar } from '~/components/Navbar';
 import { Footer } from '~/components/Footer';
-import loadDb from '~/lib/load-db?raw';
+import loadDb from '~/lib/loadDb?raw';
 import '~/tailwind.css';
 import type * as Route from './+types.root';
 

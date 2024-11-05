@@ -7,7 +7,7 @@ import { parseCustomFields } from '~/utils/parseCustomFields.utils';
 import { parseFormData } from '~/utils/parseForm.utils';
 import { createCompany } from '~/queries/company.queries';
 import { createAddress } from '~/queries/address.queries';
-import { createCompanyCustomField } from '~/queries/company-custom-fields.queries';
+import { createCompanyCustomField } from '~/queries/companyCustomFields.queries';
 import type * as Route from './+types.company-create';
 
 export async function clientAction({ request }: Route.ClientActionArgs) {

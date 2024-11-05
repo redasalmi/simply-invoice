@@ -1,4 +1,4 @@
-import createCompanyCustomFieldsSql from '~/sql/create-company-custom-fields.sql?raw';
+import { createCompanyCustomFieldQuery } from '~/sql/companyCustomFields.sql';
 
 export type CompanyCustomField = {
 	companyCustomFieldId: string;
@@ -13,7 +13,7 @@ export type CompanyCustomField = {
 export async function createCompanyCustomField(
 	companyCustomField: Omit<CompanyCustomField, 'createdAt' | 'updatedAt'>,
 ) {
-	return window.db.execute(createCompanyCustomFieldsSql, [
+	return window.db.execute(createCompanyCustomFieldQuery, [
 		companyCustomField.companyCustomFieldId,
 		companyCustomField.customFieldIndex,
 		companyCustomField.label,

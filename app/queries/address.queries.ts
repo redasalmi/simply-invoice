@@ -1,4 +1,4 @@
-import createAddressSql from '~/sql/create-address.sql?raw';
+import { createAddressQuery } from '~/sql/addresses.sql';
 
 export type Address = {
 	addressId: string;
@@ -15,7 +15,7 @@ export type Address = {
 export async function createAddress(
 	address: Omit<Address, 'createdAt' | 'updatedAt'>,
 ) {
-	return window.db.execute(createAddressSql, [
+	return window.db.execute(createAddressQuery, [
 		address.addressId,
 		address.address1,
 		address.address2,

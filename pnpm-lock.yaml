@@ -22,7 +22,7 @@ importers:
         version: 1.1.1(@types/react-dom@18.3.1)(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@react-pdf/renderer':
         specifier: ^4.0.0
-        version: 4.0.0(react@18.3.1)
+        version: 4.0.0(encoding@0.1.13)(react@18.3.1)
       '@react-router/node':
         specifier: 7.0.0-pre.4
         version: 7.0.0-pre.4(react-router@7.0.0-pre.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(typescript@5.6.3)
@@ -1585,6 +1585,9 @@ packages:
     resolution: {integrity: sha512-Q0n9HRi4m6JuGIV1eFlmvJB7ZEVxu93IrMyiMsGC0lrMJMWzRgx6WGquyfQgZVb31vhGgXnfmPNNXmxnOkRBrg==}
     engines: {node: '>= 0.8'}
 
+  encoding@0.1.13:
+    resolution: {integrity: sha512-ETBauow1T35Y/WZMkio9jiM0Z5xjHHmJ4XmjZOq1l/dXz3lr2sRn87nJy20RupqSh1F2m3HHPSp8ShIPQJrJ3A==}
+
   end-of-stream@1.4.4:
     resolution: {integrity: sha512-+uw1inIHVPQoaVuHzRyXd21icM+cnt4CzD5rW+NC1wjOUSTOs+Te7FOv7AhN7vS9x/oIyhLP5PR1H+phQAHu5Q==}
 
@@ -1926,6 +1929,10 @@ packages:
 
   iconv-lite@0.4.24:
     resolution: {integrity: sha512-v3MXnZAcvnywkTUEZomIActle7RXXeedOR31wwl7VlyoXO4Qi9arvSenNQWne1TcRwhCL1HwLI21bEqdpj8/rA==}
+    engines: {node: '>=0.10.0'}
+
+  iconv-lite@0.6.3:
+    resolution: {integrity: sha512-4fCk79wshMdzMp2rH06qWrJE4iolqLhCUH+OiuIgU++RB0+94NlDL81atO7GX55uUKueo0txHNtvEyI6D7WdMw==}
     engines: {node: '>=0.10.0'}
 
   ignore@5.3.2:
@@ -3810,36 +3817,36 @@ snapshots:
     dependencies:
       '@babel/runtime': 7.26.0
 
-  '@react-pdf/font@3.0.0':
+  '@react-pdf/font@3.0.0(encoding@0.1.13)':
     dependencies:
       '@babel/runtime': 7.26.0
       '@react-pdf/types': 2.7.0
-      cross-fetch: 3.1.8
+      cross-fetch: 3.1.8(encoding@0.1.13)
       fontkit: 2.0.4
       is-url: 1.2.4
     transitivePeerDependencies:
       - encoding
 
-  '@react-pdf/image@3.0.0':
+  '@react-pdf/image@3.0.0(encoding@0.1.13)':
     dependencies:
       '@babel/runtime': 7.26.0
       '@react-pdf/png-js': 3.0.0
-      cross-fetch: 3.1.8
+      cross-fetch: 3.1.8(encoding@0.1.13)
       jay-peg: 1.1.0
     transitivePeerDependencies:
       - encoding
 
-  '@react-pdf/layout@4.0.0':
+  '@react-pdf/layout@4.0.0(encoding@0.1.13)':
     dependencies:
       '@babel/runtime': 7.26.0
       '@react-pdf/fns': 3.0.0
-      '@react-pdf/image': 3.0.0
+      '@react-pdf/image': 3.0.0(encoding@0.1.13)
       '@react-pdf/pdfkit': 4.0.0
       '@react-pdf/primitives': 4.0.0
       '@react-pdf/stylesheet': 5.0.0
       '@react-pdf/textkit': 5.0.0
       '@react-pdf/types': 2.7.0
-      cross-fetch: 3.1.8
+      cross-fetch: 3.1.8(encoding@0.1.13)
       emoji-regex: 10.4.0
       queue: 6.0.2
       yoga-layout: 3.1.0
@@ -3875,11 +3882,11 @@ snapshots:
       parse-svg-path: 0.1.2
       svg-arc-to-cubic-bezier: 3.2.0
 
-  '@react-pdf/renderer@4.0.0(react@18.3.1)':
+  '@react-pdf/renderer@4.0.0(encoding@0.1.13)(react@18.3.1)':
     dependencies:
       '@babel/runtime': 7.26.0
-      '@react-pdf/font': 3.0.0
-      '@react-pdf/layout': 4.0.0
+      '@react-pdf/font': 3.0.0(encoding@0.1.13)
+      '@react-pdf/layout': 4.0.0(encoding@0.1.13)
       '@react-pdf/pdfkit': 4.0.0
       '@react-pdf/primitives': 4.0.0
       '@react-pdf/render': 4.0.0
@@ -4574,9 +4581,9 @@ snapshots:
 
   core-util-is@1.0.3: {}
 
-  cross-fetch@3.1.8:
+  cross-fetch@3.1.8(encoding@0.1.13):
     dependencies:
-      node-fetch: 2.7.0
+      node-fetch: 2.7.0(encoding@0.1.13)
     transitivePeerDependencies:
       - encoding
 
@@ -4681,6 +4688,11 @@ snapshots:
   encodeurl@1.0.2: {}
 
   encodeurl@2.0.0: {}
+
+  encoding@0.1.13:
+    dependencies:
+      iconv-lite: 0.6.3
+    optional: true
 
   end-of-stream@1.4.4:
     dependencies:
@@ -5193,6 +5205,11 @@ snapshots:
     dependencies:
       safer-buffer: 2.1.2
 
+  iconv-lite@0.6.3:
+    dependencies:
+      safer-buffer: 2.1.2
+    optional: true
+
   ignore@5.3.2: {}
 
   import-fresh@3.3.0:
@@ -5520,9 +5537,11 @@ snapshots:
 
   negotiator@0.6.4: {}
 
-  node-fetch@2.7.0:
+  node-fetch@2.7.0(encoding@0.1.13):
     dependencies:
       whatwg-url: 5.0.0
+    optionalDependencies:
+      encoding: 0.1.13
 
   node-releases@2.0.18: {}
 
