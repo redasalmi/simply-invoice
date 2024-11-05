@@ -24,7 +24,7 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
 	const companyId = ulid();
 
 	await createAddress({
-		address_id: addressId,
+		addressId,
 		address1: data['address-address1'],
 		address2: data['address-address2'],
 		city: data['address-city'],
@@ -33,10 +33,10 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
 		zip: data['address-zip'],
 	});
 	await createCompany({
-		company_id: companyId,
+		companyId,
 		name: data.name,
 		email: data.email,
-		address_id: addressId,
+		addressId,
 	});
 
 	const customFields = parseCustomFields(data);
@@ -44,11 +44,11 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
 		await Promise.all(
 			customFields.map(({ id, order, label, content }) =>
 				createCompanyCustomField({
-					company_custom_field_id: id,
-					custom_field_index: order,
+					companyCustomFieldId: id,
+					customFieldIndex: order,
 					label,
 					content,
-					company_id: companyId,
+					companyId,
 				}),
 			),
 		);

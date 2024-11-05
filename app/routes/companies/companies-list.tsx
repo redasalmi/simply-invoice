@@ -7,6 +7,7 @@ import type * as Route from './+types.companies-list';
 
 export async function clientLoader() {
 	const companies = await getCompanies();
+	console.log({ companies });
 
 	return {
 		companies: await getPage(db.companies, 1),
