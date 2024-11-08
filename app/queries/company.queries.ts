@@ -1,11 +1,12 @@
 import {
-	companiesCountQuery,
-	companiesHasNextPageQuery,
-	createCompanyQuery,
 	getCompaniesQuery,
+	getCompaniesCountQuery,
+	getCompaniesHasPreviousPageQuery,
+	getCompaniesHasNextPageQuery,
+	createCompanyQuery,
 } from '~/sql/companies.sql';
-import { Address } from './address.queries';
-import { CompanyCustomField } from './companyCustomFields.queries';
+import { Address } from '~/queries/address.queries';
+import { CompanyCustomField } from '~/queries/companyCustomFields.queries';
 import { itemsPerPage, type PaginatedResult } from '~/lib/pagination';
 
 type Company = {
@@ -20,13 +21,17 @@ type Company = {
 	updatedAt?: string;
 };
 
-type CompaniesSelectResult = Omit<Company, 'address' | 'customFields'> &
-	Omit<Address, 'createdAt' | 'updatedAt'> &
-	Omit<CompanyCustomField, 'companyId' | 'createdAt' | 'updatedAt'>;
+type CompaniesSelectResult = Array<
+	Omit<Company, 'address' | 'customFields'> &
+		Omit<Address, 'createdAt' | 'updatedAt'> &
+		Omit<CompanyCustomField, 'companyId' | 'createdAt' | 'updatedAt'>
+>;
 
-type CompaniesCountResult = Array<{
-	'COUNT(companies.company_id)': number;
-}>;
+type CompaniesCountResult = [
+	{
+		'COUNT(company_id)': number;
+	},
+];
 
 type CompanyInsertInput = Pick<Company, 'companyId' | 'name' | 'email'> & {
 	addressId: string;
@@ -36,16 +41,25 @@ export async function getCompanies(
 	startCursor: string = '',
 ): Promise<PaginatedResult<Company>> {
 	const [companiesData, companiesCount] = await Promise.all([
-		window.db.select<Array<CompaniesSelectResult>>(getCompaniesQuery, [
+		window.db.select<CompaniesSelectResult>(getCompaniesQuery, [
 			startCursor,
 			itemsPerPage,
 		]),
-		window.db.select<CompaniesCountResult>(companiesCountQuery),
+		window.db.select<CompaniesCountResult>(getCompaniesCountQuery),
 	]);
 
-	console.log(
-		await window.db.select(companiesHasNextPageQuery, [itemsPerPage]),
-	);
+	const endCursor = companiesData[companiesData.length - 1].companyId;
+
+	const [hasPreviousCompaniesCount, hasNextCompaniesCount] = await Promise.all([
+		window.db.select<CompaniesCountResult>(getCompaniesHasPreviousPageQuery, [
+			startCursor,
+			itemsPerPage,
+		]),
+		window.db.select<CompaniesCountResult>(getCompaniesHasNextPageQuery, [
+			endCursor,
+			itemsPerPage,
+		]),
+	]);
 
 	const companies = new Map<string, Company>();
 
@@ -118,16 +132,20 @@ export async function getCompanies(
 	}
 
 	const items = Array.from(companies.values());
-	const total = companiesCount[0]['COUNT(companies.company_id)'];
+	const total = companiesCount[0]['COUNT(company_id)'];
+	const hasNextPage = Boolean(hasNextCompaniesCount[0]['COUNT(company_id)']);
+	const hasPreviousPage = Boolean(
+		hasPreviousCompaniesCount[0]['COUNT(company_id)'],
+	);
 
 	return {
 		items,
 		total,
 		pageInfo: {
-			endCursor: '',
-			hasNextPage: false,
-			hasPreviousPage: false,
-			startCursor: '',
+			endCursor,
+			hasNextPage,
+			hasPreviousPage,
+			startCursor,
 		},
 	};
 }

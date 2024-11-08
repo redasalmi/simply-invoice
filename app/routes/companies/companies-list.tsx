@@ -1,16 +1,12 @@
 import { Outlet } from 'react-router';
 import { CreateLink } from '~/components/entity/CreateLink';
 import { EntitiesList } from '~/components/entity/List';
-import { db, getPage } from '~/lib/db';
 import { getCompanies } from '~/queries/company.queries';
 import type * as Route from './+types.companies-list';
 
 export async function clientLoader() {
-	const companies = await getCompanies();
-	console.log({ companies });
-
 	return {
-		companies: await getPage(db.companies, 1),
+		companies: await getCompanies(),
 	};
 }
 

@@ -1,16 +1,5 @@
-export const companiesCountQuery = /* sql */ `
-SELECT COUNT(companies.company_id) from companies;
-`;
-
-export const companiesHasNextPageQuery = /* sql */ `
-SELECT count(*) > $1,
-  c.company_id
-FROM (
-    SELECT c.company_id
-    FROM companies as c
-    order by c.company_id ASC
-    LIMIT $1 + 1
-  ) c;
+export const getCompaniesCountQuery = /* sql */ `
+SELECT COUNT(company_id) FROM companies;
 `;
 
 export const getCompaniesQuery = /* sql */ `
@@ -37,13 +26,37 @@ FROM (
       c.created_at,
       c.updated_at,
       c.address_id
-    from companies as c
+    FROM companies as c
     WHERE c.company_id > $1
-    ORDER BY c.company_id ASC
+    ORDER BY c.company_id DESC
     LIMIT $2
   ) c
   LEFT JOIN addresses as a ON a.address_id = c.address_id
   LEFT JOIN companies_custom_fields as ccf ON ccf.company_id = c.company_id;
+`;
+
+export const getCompaniesHasPreviousPageQuery = /* sql */ `
+SELECT COUNT(company_id)
+FROM companies
+WHERE company_id < (
+    SELECT company_id
+    FROM companies
+    WHERE company_id = $1
+  )
+ORDER BY company_id DESC
+LIMIT $2 + 1
+`;
+
+export const getCompaniesHasNextPageQuery = /* sql */ `
+SELECT COUNT(company_id)
+FROM companies
+WHERE company_id > (
+    SELECT company_id
+    FROM companies
+    WHERE company_id = $1
+  )
+ORDER BY company_id DESC
+LIMIT $2 + 1
 `;
 
 export const createCompanyQuery = /* sql */ `
