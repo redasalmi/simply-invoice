@@ -4,6 +4,7 @@ import {
 	getCompaniesHasPreviousPageQuery,
 	getCompaniesHasNextPageQuery,
 	createCompanyQuery,
+	getCompanyQuery,
 } from '~/sql/companies.sql';
 import { Address } from '~/queries/address.queries';
 import { CompanyCustomField } from '~/queries/companyCustomFields.queries';
@@ -37,30 +38,7 @@ type CompanyInsertInput = Pick<Company, 'companyId' | 'name' | 'email'> & {
 	addressId: string;
 };
 
-export async function getCompanies(
-	startCursor: string = '',
-): Promise<PaginatedResult<Company>> {
-	const [companiesData, companiesCount] = await Promise.all([
-		window.db.select<CompaniesSelectResult>(getCompaniesQuery, [
-			startCursor,
-			itemsPerPage,
-		]),
-		window.db.select<CompaniesCountResult>(getCompaniesCountQuery),
-	]);
-
-	const endCursor = companiesData[companiesData.length - 1].companyId;
-
-	const [hasPreviousCompaniesCount, hasNextCompaniesCount] = await Promise.all([
-		window.db.select<CompaniesCountResult>(getCompaniesHasPreviousPageQuery, [
-			startCursor,
-			itemsPerPage,
-		]),
-		window.db.select<CompaniesCountResult>(getCompaniesHasNextPageQuery, [
-			endCursor,
-			itemsPerPage,
-		]),
-	]);
-
+function parseCompaniesSelectResult(companiesData: CompaniesSelectResult) {
 	const companies = new Map<string, Company>();
 
 	for (let index = 0; index < companiesData.length; index++) {
@@ -131,6 +109,35 @@ export async function getCompanies(
 		}
 	}
 
+	return companies;
+}
+
+export async function getCompanies(
+	startCursor: string = '',
+): Promise<PaginatedResult<Company>> {
+	const [companiesData, companiesCount] = await Promise.all([
+		window.db.select<CompaniesSelectResult>(getCompaniesQuery, [
+			startCursor,
+			itemsPerPage,
+		]),
+		window.db.select<CompaniesCountResult>(getCompaniesCountQuery),
+	]);
+
+	const endCursor = companiesData[companiesData.length - 1].companyId;
+
+	const [hasPreviousCompaniesCount, hasNextCompaniesCount] = await Promise.all([
+		window.db.select<CompaniesCountResult>(getCompaniesHasPreviousPageQuery, [
+			startCursor,
+			itemsPerPage,
+		]),
+		window.db.select<CompaniesCountResult>(getCompaniesHasNextPageQuery, [
+			endCursor,
+			itemsPerPage,
+		]),
+	]);
+
+	const companies = parseCompaniesSelectResult(companiesData);
+
 	const items = Array.from(companies.values());
 	const total = companiesCount[0]['COUNT(company_id)'];
 	const hasNextPage = Boolean(hasNextCompaniesCount[0]['COUNT(company_id)']);
@@ -148,6 +155,16 @@ export async function getCompanies(
 			startCursor,
 		},
 	};
+}
+
+export async function getCompany(companyId: string) {
+	const companiesData = await window.db.select<CompaniesSelectResult>(
+		getCompanyQuery,
+		[companyId],
+	);
+	const company = parseCompaniesSelectResult(companiesData);
+
+	return company.get(companyId);
 }
 
 export async function createCompany(company: CompanyInsertInput) {

@@ -10,14 +10,13 @@ import {
 	DialogRoot,
 	DialogTitle,
 } from '~/components/ui/dialog';
-import { db } from '~/lib/db';
+import { getCompany } from '~/queries/company.queries';
 import type * as Route from './+types.company-detail';
 
 export async function clientLoader({ params }: Route.ClientLoaderArgs) {
 	const companyId = params.id;
-
 	return {
-		company: await db.companies.get(companyId),
+		company: await getCompany(companyId),
 	};
 }
 

@@ -26,6 +26,7 @@ export default function CompaniesListRoute({
 						type="company"
 						baseUrl="/companies"
 						entities={companies}
+						entityIdKey="companyId"
 					/>
 				</div>
 			</section>

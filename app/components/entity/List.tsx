@@ -16,9 +16,15 @@ type EntitiesListProps = {
 	type: EntityType;
 	baseUrl: string;
 	entities?: PaginatedResult<Entity>;
+	entityIdKey: string;
 };
 
-export function EntitiesList({ type, baseUrl, entities }: EntitiesListProps) {
+export function EntitiesList({
+	type,
+	baseUrl,
+	entities,
+	entityIdKey,
+}: EntitiesListProps) {
 	if (!entities || !entities.items.length) {
 		return <p>No {capitalize(type)} found.</p>;
 	}
@@ -32,25 +38,25 @@ export function EntitiesList({ type, baseUrl, entities }: EntitiesListProps) {
 				</TableRow>
 			</TableHeader>
 			<TableBody>
-				{entities.items.map(({ id, email, name }) => (
-					<TableRow key={id}>
+				{entities.items.map(({ email, name, ...item }) => (
+					<TableRow key={item[entityIdKey]}>
 						<TableCell>{name}</TableCell>
 						<TableCell>{email}</TableCell>
 						<TableCell className="flex items-center gap-4">
 							<Link
-								to={`${baseUrl}/detail/${id}`}
+								to={`${baseUrl}/detail/${item[entityIdKey]}`}
 								aria-label={`view ${name} ${type} details`}
 							>
 								<EyeIcon />
 							</Link>
 							<Link
-								to={`${baseUrl}/update/${id}`}
+								to={`${baseUrl}/update/${item[entityIdKey]}`}
 								aria-label={`update ${name} ${type}`}
 							>
 								<PencilIcon />
 							</Link>
 							<Link
-								to={`${baseUrl}/delete/${id}/`}
+								to={`${baseUrl}/delete/${item[entityIdKey]}/`}
 								aria-label={`delete ${name} ${type}`}
 							>
 								<TrashIcon />
