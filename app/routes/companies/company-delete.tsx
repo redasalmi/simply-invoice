@@ -1,20 +1,20 @@
 import { redirect, useNavigate, useNavigation } from 'react-router';
 import { DeleteEntity, DeleteEntityError } from '~/components/entity/Delete';
-import { db } from '~/lib/db';
 import type * as Route from './+types.company-delete';
+import { deleteCompany, getCompany } from '~/queries/company.queries';
 
 export async function clientLoader({ params }: Route.ClientLoaderArgs) {
 	const companyId = params.id;
 
 	return {
-		company: await db.companies.get(companyId),
+		company: await getCompany(companyId),
 	};
 }
 
 export async function clientAction({ params }: Route.ClientActionArgs) {
 	try {
 		const companyId = params.id;
-		const company = await db.companies.get(companyId);
+		const company = await getCompany(companyId);
 		if (!company) {
 			return {
 				error: {
@@ -24,7 +24,7 @@ export async function clientAction({ params }: Route.ClientActionArgs) {
 			};
 		}
 
-		await db.companies.delete(companyId);
+		await deleteCompany(companyId);
 
 		return redirect('/companies');
 	} catch {

@@ -5,6 +5,7 @@ import {
 	getCompaniesHasNextPageQuery,
 	createCompanyQuery,
 	getCompanyQuery,
+	deleteCompanyQuery,
 } from '~/sql/companies.sql';
 import { Address } from '~/queries/address.queries';
 import { CompanyCustomField } from '~/queries/companyCustomFields.queries';
@@ -123,6 +124,19 @@ export async function getCompanies(
 		window.db.select<CompaniesCountResult>(getCompaniesCountQuery),
 	]);
 
+	if (!companiesData.length) {
+		return {
+			items: [],
+			total: 0,
+			pageInfo: {
+				endCursor: '',
+				hasNextPage: false,
+				hasPreviousPage: false,
+				startCursor: '',
+			},
+		};
+	}
+
 	const endCursor = companiesData[companiesData.length - 1].companyId;
 
 	const [hasPreviousCompaniesCount, hasNextCompaniesCount] = await Promise.all([
@@ -162,9 +176,14 @@ export async function getCompany(companyId: string) {
 		getCompanyQuery,
 		[companyId],
 	);
+
+	if (!companiesData.length) {
+		return null;
+	}
+
 	const company = parseCompaniesSelectResult(companiesData);
 
-	return company.get(companyId);
+	return company.get(companyId) || null;
 }
 
 export async function createCompany(company: CompanyInsertInput) {
@@ -174,4 +193,8 @@ export async function createCompany(company: CompanyInsertInput) {
 		company.email,
 		company.addressId,
 	]);
+}
+
+export async function deleteCompany(companyId: string) {
+	return window.db.execute(deleteCompanyQuery, [companyId]);
 }

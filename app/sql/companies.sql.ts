@@ -93,3 +93,8 @@ FROM (
 export const createCompanyQuery = /* sql */ `
 INSERT INTO companies (company_id, name, email, address_id) VALUES ($1, $2, $3, $4);
 `;
+
+export const deleteCompanyQuery = /* sql */ `
+DELETE FROM companies
+WHERE company_id = $1;
+`;

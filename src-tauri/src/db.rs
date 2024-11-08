@@ -14,7 +14,7 @@ pub mod database {
     address_id VARCHAR(26) NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at DATETIME,
-    FOREIGN KEY (address_id) REFERENCES addresses (address_id)
+    FOREIGN KEY (address_id) REFERENCES addresses (address_id) ON DELETE CASCADE
   );
   
   CREATE INDEX companies_index ON companies (name, email);
@@ -26,7 +26,7 @@ pub mod database {
       address_id VARCHAR(26) NOT NULL,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
       updated_at DATETIME,
-      FOREIGN KEY (address_id) REFERENCES addresses (address_id)
+      FOREIGN KEY (address_id) REFERENCES addresses (address_id) ON DELETE CASCADE
     );
     
   CREATE INDEX customers_index ON customers (name, email);
@@ -64,7 +64,7 @@ pub mod database {
     company_id VARCHAR(26) NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at DATETIME,
-    FOREIGN KEY (company_id) REFERENCES companies (company_id)
+    FOREIGN KEY (company_id) REFERENCES companies (company_id) ON DELETE CASCADE
   );
   
   CREATE TABLE IF NOT EXISTS customers_custom_fields (
@@ -75,7 +75,7 @@ pub mod database {
     customer_id VARCHAR(26) NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at DATETIME,
-    FOREIGN KEY (customer_id) REFERENCES customers (customer_id)
+    FOREIGN KEY (customer_id) REFERENCES customers (customer_id) ON DELETE CASCADE
   );
   "
             .trim(),
