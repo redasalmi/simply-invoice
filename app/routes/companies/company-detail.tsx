@@ -15,6 +15,7 @@ import type * as Route from './+types.company-detail';
 
 export async function clientLoader({ params }: Route.ClientLoaderArgs) {
 	const companyId = params.id;
+
 	return {
 		company: await getCompany(companyId),
 	};
