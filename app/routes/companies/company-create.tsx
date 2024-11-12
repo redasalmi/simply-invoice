@@ -1,9 +1,10 @@
 import { redirect, useNavigation } from 'react-router';
-import { ulid } from 'ulid';
 import { CreateEntityForm } from '~/components/entity/Create';
 import { useForm } from '~/hooks/useForm';
-import { entityFormSchema } from '~/schemas/entity.schemas';
-import { parseCustomFields } from '~/utils/parseCustomFields.utils';
+import {
+	EntityFormSchema,
+	transformEntityFormSchemaData,
+} from '~/schemas/entity.schemas';
 import { parseFormData } from '~/utils/parseForm.utils';
 import { createCompany } from '~/queries/company.queries';
 import { createAddress } from '~/queries/address.queries';
@@ -12,45 +13,26 @@ import type * as Route from './+types.company-create';
 
 export async function clientAction({ request }: Route.ClientActionArgs) {
 	const formData = await request.formData();
-	const { data, errors } = parseFormData(formData, entityFormSchema);
+	const { data, issues } = parseFormData(formData, EntityFormSchema);
 
-	if (errors) {
+	if (issues) {
 		return {
-			errors,
+			issues,
 		};
 	}
 
-	const addressId = ulid();
-	const companyId = ulid();
+	const {
+		address,
+		entity: company,
+		customFields,
+	} = transformEntityFormSchemaData(data, 'companyId', 'companyCustomFieldId');
 
-	await createAddress({
-		addressId,
-		address1: data['address-address1'],
-		address2: data['address-address2'],
-		city: data['address-city'],
-		country: data['address-country'],
-		province: data['address-province'],
-		zip: data['address-zip'],
-	});
-	await createCompany({
-		companyId,
-		name: data.name,
-		email: data.email,
-		addressId,
-	});
+	await createAddress(address);
+	await createCompany(company);
 
-	const customFields = parseCustomFields(data);
 	if (customFields.length) {
 		await Promise.all(
-			customFields.map(({ id, order, label, content }) =>
-				createCompanyCustomField({
-					companyCustomFieldId: id,
-					customFieldIndex: order,
-					label,
-					content,
-					companyId,
-				}),
-			),
+			customFields.map((customField) => createCompanyCustomField(customField)),
 		);
 	}
 
@@ -64,9 +46,9 @@ export default function CompanyCreateRoute({
 	const isLoading = navigation.state !== 'idle';
 	const isSubmitting = navigation.state === 'submitting';
 
-	const { errors, handleSubmit } = useForm({
-		schema: entityFormSchema,
-		actionErrors: actionData?.errors,
+	const { issues, handleSubmit } = useForm({
+		schema: EntityFormSchema,
+		actionIssues: actionData?.issues,
 	});
 
 	return (
@@ -75,7 +57,7 @@ export default function CompanyCreateRoute({
 				type="company"
 				isSubmitting={isSubmitting}
 				isLoading={isLoading}
-				errors={errors}
+				errors={issues}
 				handleSubmit={handleSubmit}
 			/>
 		</section>

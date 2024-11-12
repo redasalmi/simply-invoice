@@ -1,6 +1,10 @@
 import type { CustomField } from '~/types/entity.types';
 
-export function parseCustomFields(data: object) {
+export function parseCustomFields(
+	data: object,
+	customFieldIdKey: string,
+	parentTableForeignKey: { key: string; id: string },
+) {
 	const entries = Object.entries(data);
 	const customFields: Record<string, CustomField> = {};
 
@@ -9,21 +13,24 @@ export function parseCustomFields(data: object) {
 
 		if (
 			key.search(
-				/custom-show-label-in-invoice|custom-order|custom-label|custom-content/gi,
+				/custom-show-label-in-invoice|custom-field-index|custom-label|custom-content/gi,
 			) > -1
 		) {
 			const id = key
 				.replace('custom-show-label-in-invoice-', '')
-				.replace('custom-order-', '')
+				.replace('custom-field-index-', '')
 				.replace('custom-label-', '')
 				.replace('custom-content-', '');
 
 			if (!customFields[id]) {
-				customFields[id] = { id } as CustomField;
+				customFields[id] = {
+					[customFieldIdKey]: id,
+					[parentTableForeignKey.key]: parentTableForeignKey.id,
+				} as CustomField;
 			}
 
-			if (key === `custom-order-${id}`) {
-				customFields[id].order = parseInt(entryValue, 10);
+			if (key === `custom-field-index-${id}`) {
+				customFields[id].customFieldIndex = parseInt(entryValue, 10);
 			} else if (key === `custom-label-${id}`) {
 				customFields[id].label = entryValue;
 			} else if (key === `custom-content-${id}`) {

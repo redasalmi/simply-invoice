@@ -1,4 +1,5 @@
-import type { z } from 'zod';
+import { z } from 'zod';
+import * as v from 'valibot';
 
 export type FormSchema<T extends z.ZodRawShape> =
 	| z.ZodObject<T>
@@ -21,20 +22,25 @@ export function parseFormDataErrors<T>(err: z.ZodError<T>) {
 	return errors;
 }
 
-export function parseFormData<T extends z.ZodRawShape>(
+export function parseFormData<T extends v.BaseSchema>(
 	formData: FormData,
-	schema: FormSchema<T>,
-) {
+	schema: T,
+): {
+	data: v.InferOutput<typeof schema>;
+	issues: Array<v.InferIssue<typeof schema>> | null;
+} {
 	const object = Object.fromEntries(formData);
-	const parsedObject = schema.safeParse(object);
+	const data = v.safeParse(schema, object);
 
-	if (parsedObject.error) {
+	if (data.issues) {
 		return {
-			errors: parseFormDataErrors(parsedObject.error),
+			data: null,
+			issues: data.issues,
 		};
 	}
 
 	return {
-		data: parsedObject.data,
+		data: data.output,
+		issues: null,
 	};
 }

@@ -67,7 +67,7 @@ function CustomField({ field, index, error, deleteField }: CustomFieldProps) {
 				<input
 					hidden
 					readOnly
-					name={`custom-order-${field.id}`}
+					name={`custom-field-index-${field.id}`}
 					value={index}
 					className="hidden"
 				/>

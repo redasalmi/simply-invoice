@@ -13,9 +13,8 @@ export type EntityActionErrors = {
 	custom?: Record<string, { label?: string; content?: string }>;
 };
 
-export type CustomField = {
-	id: string;
-	order: number;
+export type CustomField = Record<string, string> & {
+	customFieldIndex: number;
 	label: string;
 	content: string;
 	showLabelInInvoice?: boolean;

@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import * as v from 'valibot';
 
 export const customLabelKey = 'custom-label' as const;
 export const customContentKey = 'custom-content' as const;
@@ -22,23 +22,24 @@ export function safeParseCustomField(key: string, value: unknown) {
 		return null;
 	}
 
-	const keySchema = z.custom<`${CustomFieldKeyType}-${string}`>((value) => {
+	const keySchema = v.custom<`${CustomFieldKeyType}-${string}`>((value) => {
 		if (typeof value !== 'string' || !value.includes(keyType)) {
 			return false;
 		}
 
-		return z
-			.string()
-			.ulid()
-			.safeParse(value.replace(`${keyType}-`, '')).success;
+		return v.safeParse(
+			v.pipe(v.string(), v.ulid()),
+			value.replace(`${keyType}-`, ''),
+		).success;
 	});
 
-	const valueSchema = z
-		.string()
-		.min(1, { message: customFieldErrors[keyType] });
-	const recordSchema = z.record(keySchema, valueSchema);
+	const valueSchema = v.pipe(
+		v.string(),
+		v.nonEmpty(customFieldErrors[keyType]),
+	);
+	const recordSchema = v.record(keySchema, valueSchema);
 
-	return recordSchema.safeParse({
+	return v.safeParse(recordSchema, {
 		[key]: value,
 	});
 }

@@ -1,46 +1,40 @@
 import * as React from 'react';
-import type { z } from 'zod';
-import {
-	type FormErrors,
-	type FormSchema,
-	parseFormData,
-} from '~/utils/parseForm.utils';
+import * as v from 'valibot';
+import { parseFormData } from '~/utils/parseForm.utils';
 
-type useFormParams<T extends z.ZodRawShape> = {
-	schema: FormSchema<T>;
-	actionErrors?: FormErrors<T>;
-};
-
-export function useForm<T extends z.ZodRawShape>({
+export function useForm<T extends v.BaseSchema>({
 	schema,
-	actionErrors,
-}: useFormParams<T>) {
-	const [errors, setErrors] = React.useState<FormErrors<T> | undefined>(
-		undefined,
-	);
+	actionIssues,
+}: {
+	schema: T;
+	actionIssues?: Array<v.InferIssue<typeof schema>>;
+}) {
+	const [issues, setIssues] = React.useState<
+		Array<v.InferIssue<typeof schema>> | undefined
+	>(undefined);
 
 	React.useEffect(() => {
-		if (actionErrors) {
-			setErrors(actionErrors);
+		if (actionIssues) {
+			setIssues(actionIssues);
 		}
-	}, [actionErrors]);
+	}, [actionIssues]);
 
 	const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
 		const formData = new FormData(event.currentTarget);
 
-		const { errors: newErrors } = parseFormData(formData, schema);
-		if (newErrors) {
-			setErrors(newErrors);
+		const { issues: newIssues } = parseFormData(formData, schema);
+		if (newIssues) {
+			setIssues(newIssues);
 			event.preventDefault();
 
 			return;
 		}
 
-		setErrors(undefined);
+		setIssues(undefined);
 	};
 
 	return {
-		errors,
+		issues,
 		handleSubmit,
 	};
 }
