@@ -6,15 +6,12 @@ import { MoveIcon, TrashIcon } from 'lucide-react';
 import { FormField } from '~/components/FormField';
 import { FormRoot } from '~/components/ui/form';
 import { Button } from '~/components/ui/button';
-import { Switch } from '~/components/ui/switch';
-import { addressFields, informationFields } from '~/lib/constants';
-import { capitalize, cn } from '~/utils/shared.utils';
-import type { EntityActionErrors, EntityType } from '~/types/entity.types';
+import { addressFields, companyFields } from '~/lib/constants';
+import { cn } from '~/utils/shared.utils';
+import { Company, CompanyCustomField } from '~/types';
 
 type CustomFieldProps = {
-	field: {
-		id: string;
-	};
+	field: CompanyCustomField;
 	index: number;
 	error?: {
 		label?: string;
@@ -26,6 +23,8 @@ type CustomFieldProps = {
 function CustomField({ field, index, error, deleteField }: CustomFieldProps) {
 	const containerRef = React.useRef<HTMLDivElement | null>(null);
 	const [hasError, setHasError] = React.useState(false);
+
+	const customFieldId = field.companyCustomFieldId;
 
 	React.useEffect(() => {
 		if (!containerRef.current) {
@@ -67,40 +66,30 @@ function CustomField({ field, index, error, deleteField }: CustomFieldProps) {
 				<input
 					hidden
 					readOnly
-					name={`custom-field-index-${field.id}`}
+					name={`custom-field-index-${customFieldId}`}
 					value={index}
 					className="hidden"
 				/>
 
 				<FormField
-					id={`custom-label-${field.id}`}
+					id={`custom-label-${customFieldId}`}
 					label="Label"
-					name={`custom-label-${field.id}`}
+					name={`custom-label-${customFieldId}`}
+					defaultValue={field.label}
 					className="h-full flex-1"
 					serverError={error?.label}
 				/>
 
 				<FormField
-					id={`custom-content-${field.id}`}
+					id={`custom-content-${customFieldId}`}
 					label="Content"
-					name={`custom-content-${field.id}`}
+					name={`custom-content-${customFieldId}`}
+					defaultValue={field.content}
 					className="h-full flex-1"
 					serverError={error?.content}
 				/>
 
 				<div className="flex gap-2">
-					<div className="flex items-center justify-center rounded-md py-2 px-4">
-						<label
-							htmlFor={`custom-show-label-in-invoice-${field.id}`}
-							className="sr-only"
-						>
-							Show label on invoice
-						</label>
-						<Switch
-							id={`custom-show-label-in-invoice-${field.id}`}
-							name={`custom-show-label-in-invoice-${field.id}`}
-						/>
-					</div>
 					<Button
 						aria-label="delete field"
 						variant="icon"
@@ -114,27 +103,34 @@ function CustomField({ field, index, error, deleteField }: CustomFieldProps) {
 	);
 }
 
-type CreateEntityProps = {
-	type: EntityType;
+type CompanyUpdateProps = {
+	company: Company;
 	isSubmitting?: boolean;
 	isLoading?: boolean;
-	errors?: EntityActionErrors;
+	errors?: any;
 	handleSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
 };
 
-export function CreateEntityForm({
-	type,
+export function CompanyUpdate({
+	company,
 	isSubmitting,
 	isLoading,
 	errors,
 	handleSubmit,
-}: CreateEntityProps) {
-	const [customFields, setCustomFields] = React.useState<Array<{ id: string }>>(
-		[],
+}: CompanyUpdateProps) {
+	const [customFields, setCustomFields] = React.useState(
+		company.customFields ?? [],
 	);
 
 	const addField = () => {
-		setCustomFields((prevFields) => prevFields.concat({ id: ulid() }));
+		setCustomFields((prevFields) =>
+			prevFields.concat({
+				id: ulid(),
+				order: prevFields.length,
+				label: '',
+				content: '',
+			}),
+		);
 	};
 
 	const deleteField = (id: string) => {
@@ -146,12 +142,21 @@ export function CreateEntityForm({
 	return (
 		<FormRoot asChild>
 			<Form method="post" onSubmit={handleSubmit}>
+				<input
+					hidden
+					readOnly
+					name="company-id"
+					className="hidden"
+					value={company.companyId}
+				/>
+
 				<div>
-					{informationFields.map((field) => (
+					{companyFields.map((field) => (
 						<FormField
 							key={field.id}
 							className="my-2"
 							serverError={errors?.[field.name]}
+							defaultValue={company[field.name.replace('company-', '')]}
 							{...field}
 						/>
 					))}
@@ -160,11 +165,22 @@ export function CreateEntityForm({
 				<div>
 					<h3 className="text-2xl">Address</h3>
 					<div>
+						<input
+							hidden
+							readOnly
+							name={`address-address-id`}
+							className="hidden"
+							value={company.address.addressId}
+						/>
+
 						{addressFields.map((field) => (
 							<FormField
 								key={field.id}
 								className="my-2"
 								serverError={errors?.[field.name]}
+								defaultValue={
+									company.address[field.name.replace('address-', '')]
+								}
 								{...field}
 							/>
 						))}
@@ -189,7 +205,7 @@ export function CreateEntityForm({
 							<Reorder.Group values={customFields} onReorder={setCustomFields}>
 								{customFields.map((field, index) => (
 									<CustomField
-										key={field.id}
+										key={field.companyCustomFieldId}
 										field={field}
 										index={index}
 										error={{
@@ -206,7 +222,7 @@ export function CreateEntityForm({
 
 				<div>
 					<Button disabled={isSubmitting} type="submit">
-						{isLoading ? '...Saving' : 'Save'} {capitalize(type)}
+						{isLoading ? '...Updating' : 'Update'} Company
 					</Button>
 				</div>
 			</Form>

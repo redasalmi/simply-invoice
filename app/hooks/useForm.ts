@@ -4,37 +4,37 @@ import { parseFormData } from '~/utils/parseForm.utils';
 
 export function useForm<T extends v.BaseSchema>({
 	schema,
-	actionIssues,
+	actionErrors,
 }: {
 	schema: T;
-	actionIssues?: Array<v.InferIssue<typeof schema>>;
+	actionErrors?: Array<v.InferIssue<typeof schema>>;
 }) {
-	const [issues, setIssues] = React.useState<
+	const [errors, setErrors] = React.useState<
 		Array<v.InferIssue<typeof schema>> | undefined
 	>(undefined);
 
 	React.useEffect(() => {
-		if (actionIssues) {
-			setIssues(actionIssues);
+		if (actionErrors) {
+			setErrors(actionErrors);
 		}
-	}, [actionIssues]);
+	}, [actionErrors]);
 
 	const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
 		const formData = new FormData(event.currentTarget);
 
-		const { issues: newIssues } = parseFormData(formData, schema);
-		if (newIssues) {
-			setIssues(newIssues);
+		const { errors: newErrors } = parseFormData(formData, schema);
+		if (newErrors) {
+			setErrors(newErrors);
 			event.preventDefault();
 
 			return;
 		}
 
-		setIssues(undefined);
+		setErrors(undefined);
 	};
 
 	return {
-		issues,
+		errors,
 		handleSubmit,
 	};
 }

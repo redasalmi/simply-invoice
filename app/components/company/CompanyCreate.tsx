@@ -7,17 +7,13 @@ import { FormField } from '~/components/FormField';
 import { FormRoot } from '~/components/ui/form';
 import { Button } from '~/components/ui/button';
 import { Switch } from '~/components/ui/switch';
-import { addressFields, informationFields } from '~/lib/constants';
-import { capitalize, cn } from '~/utils/shared.utils';
-import type {
-	EntityType,
-	Entity,
-	EntityActionErrors,
-	CustomField,
-} from '~/types/entity.types';
+import { addressFields, companyFields } from '~/lib/constants';
+import { cn } from '~/utils/shared.utils';
 
 type CustomFieldProps = {
-	field: CustomField;
+	field: {
+		id: string;
+	};
 	index: number;
 	error?: {
 		label?: string;
@@ -70,7 +66,7 @@ function CustomField({ field, index, error, deleteField }: CustomFieldProps) {
 				<input
 					hidden
 					readOnly
-					name={`custom-order-${field.id}`}
+					name={`custom-field-index-${field.id}`}
 					value={index}
 					className="hidden"
 				/>
@@ -79,7 +75,6 @@ function CustomField({ field, index, error, deleteField }: CustomFieldProps) {
 					id={`custom-label-${field.id}`}
 					label="Label"
 					name={`custom-label-${field.id}`}
-					defaultValue={field.label}
 					className="h-full flex-1"
 					serverError={error?.label}
 				/>
@@ -88,7 +83,6 @@ function CustomField({ field, index, error, deleteField }: CustomFieldProps) {
 					id={`custom-content-${field.id}`}
 					label="Content"
 					name={`custom-content-${field.id}`}
-					defaultValue={field.content}
 					className="h-full flex-1"
 					serverError={error?.content}
 				/>
@@ -96,7 +90,7 @@ function CustomField({ field, index, error, deleteField }: CustomFieldProps) {
 				<div className="flex gap-2">
 					<div className="flex items-center justify-center rounded-md py-2 px-4">
 						<label
-							htmlFor={`show-label-in-invoice-${field.id}`}
+							htmlFor={`custom-show-label-in-invoice-${field.id}`}
 							className="sr-only"
 						>
 							Show label on invoice
@@ -104,7 +98,6 @@ function CustomField({ field, index, error, deleteField }: CustomFieldProps) {
 						<Switch
 							id={`custom-show-label-in-invoice-${field.id}`}
 							name={`custom-show-label-in-invoice-${field.id}`}
-							defaultChecked={field.showLabelInInvoice}
 						/>
 					</div>
 					<Button
@@ -120,36 +113,25 @@ function CustomField({ field, index, error, deleteField }: CustomFieldProps) {
 	);
 }
 
-type UpdateEntityProps = {
-	type: EntityType;
-	entity: Entity;
+type CompanyCreateProps = {
 	isSubmitting?: boolean;
 	isLoading?: boolean;
-	errors?: EntityActionErrors;
+	errors?: any;
 	handleSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
 };
 
-export function UpdateEntityForm({
-	type,
-	entity,
+export function CompanyCreate({
 	isSubmitting,
 	isLoading,
 	errors,
 	handleSubmit,
-}: UpdateEntityProps) {
-	const [customFields, setCustomFields] = React.useState<Array<CustomField>>(
-		entity.custom ?? [],
+}: CompanyCreateProps) {
+	const [customFields, setCustomFields] = React.useState<Array<{ id: string }>>(
+		[],
 	);
 
 	const addField = () => {
-		setCustomFields((prevFields) =>
-			prevFields.concat({
-				id: ulid(),
-				order: prevFields.length,
-				label: '',
-				content: '',
-			}),
-		);
+		setCustomFields((prevFields) => prevFields.concat({ id: ulid() }));
 	};
 
 	const deleteField = (id: string) => {
@@ -162,12 +144,11 @@ export function UpdateEntityForm({
 		<FormRoot asChild>
 			<Form method="post" onSubmit={handleSubmit}>
 				<div>
-					{informationFields.map((field) => (
+					{companyFields.map((field) => (
 						<FormField
 							key={field.id}
 							className="my-2"
 							serverError={errors?.[field.name]}
-							defaultValue={entity[field.name]}
 							{...field}
 						/>
 					))}
@@ -181,9 +162,6 @@ export function UpdateEntityForm({
 								key={field.id}
 								className="my-2"
 								serverError={errors?.[field.name]}
-								defaultValue={
-									entity.address[field.name.replace('address-', '')]
-								}
 								{...field}
 							/>
 						))}
@@ -225,7 +203,7 @@ export function UpdateEntityForm({
 
 				<div>
 					<Button disabled={isSubmitting} type="submit">
-						{isLoading ? '...Updating' : 'Update'} {capitalize(type)}
+						{isLoading ? '...Saving' : 'Save'} Company
 					</Button>
 				</div>
 			</Form>

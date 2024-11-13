@@ -1,5 +1,5 @@
 import { Outlet } from 'react-router';
-import { CreateLink } from '~/components/entity/CreateLink';
+import { CreateLink } from '~/components/CreateLink';
 import { EntitiesList } from '~/components/entity/List';
 import { db, getPage } from '~/lib/db';
 import type * as Route from './+types.customers-list';

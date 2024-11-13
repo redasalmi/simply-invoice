@@ -106,3 +106,17 @@ export const servicesFields: Array<FormFieldProps> = [
 		type: 'number',
 	},
 ];
+
+export const companyFields: Array<FormFieldProps> = [
+	{
+		id: 'company-name',
+		label: 'Name',
+		name: 'company-name',
+	},
+	{
+		id: 'company-email',
+		label: 'Email',
+		name: 'company-email',
+		type: 'email',
+	},
+];

@@ -7,21 +7,13 @@ import {
 	getCompanyQuery,
 	deleteCompanyQuery,
 } from '~/sql/companies.sql';
-import { Address } from '~/queries/address.queries';
-import { CompanyCustomField } from '~/queries/companyCustomFields.queries';
-import { itemsPerPage, type PaginatedResult } from '~/lib/pagination';
-
-type Company = {
-	companyId: string;
-	name: string;
-	email: string;
-	address: Omit<Address, 'createdAt' | 'updatedAt'>;
-	customFields: Array<
-		Omit<CompanyCustomField, 'companyId' | 'createdAt' | 'updatedAt'>
-	>;
-	createdAt: string;
-	updatedAt?: string;
-};
+import { itemsPerPage } from '~/lib/pagination';
+import type {
+	Address,
+	Company,
+	CompanyCustomField,
+	PaginatedResult,
+} from '~/types';
 
 type CompaniesSelectResult = Array<
 	Omit<Company, 'address' | 'customFields'> &
@@ -178,12 +170,12 @@ export async function getCompany(companyId: string) {
 	);
 
 	if (!companiesData.length) {
-		return null;
+		return undefined;
 	}
 
 	const company = parseCompaniesSelectResult(companiesData);
 
-	return company.get(companyId) || null;
+	return company.get(companyId);
 }
 
 export async function createCompany(company: CompanyInsertInput) {

@@ -1,7 +1,7 @@
 import { redirect, useNavigate, useNavigation } from 'react-router';
-import { DeleteEntity, DeleteEntityError } from '~/components/entity/Delete';
-import type * as Route from './+types.company-delete';
 import { deleteCompany, getCompany } from '~/queries/company.queries';
+import { CompanyDelete } from '~/components/company/CompanyDelete';
+import type * as Route from './+types.company-delete';
 
 export async function clientLoader({ params }: Route.ClientLoaderArgs) {
 	const companyId = params.id;
@@ -17,7 +17,7 @@ export async function clientAction({ params }: Route.ClientActionArgs) {
 		const company = await getCompany(companyId);
 		if (!company) {
 			return {
-				error: {
+				errors: {
 					message: 'No Company Found!',
 					description: `Sorry but no company with this ID: ${companyId} was found. Click the continue button to navigate back to your companies list.`,
 				},
@@ -29,7 +29,7 @@ export async function clientAction({ params }: Route.ClientActionArgs) {
 		return redirect('/companies');
 	} catch {
 		return {
-			error: {
+			errors: {
 				message: 'Error Deleting the Company!',
 				description:
 					'An error happened while deleting your company, please try again later.',
@@ -53,20 +53,10 @@ export default function CompanyDeleteRoute({
 		navigate('/companies');
 	};
 
-	if (!company) {
-		return (
-			<DeleteEntityError
-				type="company"
-				error={actionData?.error}
-				closeAlert={closeAlert}
-			/>
-		);
-	}
-
 	return (
-		<DeleteEntity
-			type="company"
-			entityName={company.name}
+		<CompanyDelete
+			company={company}
+			errors={actionData?.errors}
 			isLoading={isLoading}
 			isSubmitting={isSubmitting}
 			closeAlert={closeAlert}

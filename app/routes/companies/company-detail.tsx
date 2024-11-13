@@ -1,6 +1,4 @@
 import { useNavigate } from 'react-router';
-import { EntityDetail } from '~/components/entity/Detail';
-import { EntityNotFound } from '~/components/entity/Error';
 import {
 	DialogClose,
 	DialogCloseButton,
@@ -12,6 +10,7 @@ import {
 } from '~/components/ui/dialog';
 import { getCompany } from '~/queries/company.queries';
 import type * as Route from './+types.company-detail';
+import CompanyDetail from '~/components/company/CompanyDetail';
 
 export async function clientLoader({ params }: Route.ClientLoaderArgs) {
 	const companyId = params.id;
@@ -37,17 +36,11 @@ export default function CompanyDetailRoute({
 			<DialogPortal>
 				<DialogOverlay />
 				<DialogContent onEscapeKeyDown={closeDialog}>
-					{!company ? (
-						<>
-							<DialogTitle>No company found!</DialogTitle>
-							<EntityNotFound type="company" baseUrl="/companies" />
-						</>
-					) : (
-						<>
-							<DialogTitle>Company Details</DialogTitle>
-							<EntityDetail entity={company} />
-						</>
-					)}
+					<DialogTitle>
+						{!company ? 'No company found!' : 'Company Details'}
+					</DialogTitle>
+
+					<CompanyDetail company={company} />
 
 					<DialogClose asChild onClick={closeDialog}>
 						<DialogCloseButton />

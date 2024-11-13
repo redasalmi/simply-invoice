@@ -13,7 +13,11 @@ export type EntityActionErrors = {
 	custom?: Record<string, { label?: string; content?: string }>;
 };
 
-export type CustomField = Record<string, string> & {
+export type CustomField<T extends string, K extends string> = {
+	[key in T]: string;
+} & {
+	[key in K]: string;
+} & {
 	customFieldIndex: number;
 	label: string;
 	content: string;

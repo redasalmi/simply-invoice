@@ -10,24 +10,46 @@ import {
 	AlertDialogRoot,
 	AlertDialogTitle,
 } from '~/components/ui/alert-dialog';
-import { capitalize } from '~/utils/shared.utils';
-import type { EntityType } from '~/types/entity.types';
+import { Company } from '~/types';
 
-type DeleteEntityProps = {
-	type: EntityType;
-	entityName: string;
-	isSubmitting?: boolean;
+type CompanyDeleteProps = {
+	company?: Company;
+	errors?: any;
 	isLoading?: boolean;
+	isSubmitting?: boolean;
 	closeAlert: () => void;
 };
 
-export function DeleteEntity({
-	type,
-	entityName,
-	isSubmitting,
+export function CompanyDelete({
+	company,
+	errors,
 	isLoading,
+	isSubmitting,
 	closeAlert,
-}: DeleteEntityProps) {
+}: CompanyDeleteProps) {
+	if (!company) {
+		return (
+			<AlertDialogRoot open>
+				<AlertDialogOverlay>
+					<AlertDialogContent>
+						<AlertDialogTitle>
+							{errors?.message || `Error Deleting Company!`}
+						</AlertDialogTitle>
+						<AlertDialogDescription>
+							{errors?.description ||
+								`An error happened while deleting your company, please try again later.`}
+						</AlertDialogDescription>
+						<div className="flex justify-end gap-[25px]">
+							<AlertDialogCancel onClick={closeAlert} asChild>
+								<AlertDialogCancelButton>Cancel</AlertDialogCancelButton>
+							</AlertDialogCancel>
+						</div>
+					</AlertDialogContent>
+				</AlertDialogOverlay>
+			</AlertDialogRoot>
+		);
+	}
+
 	return (
 		<AlertDialogRoot open>
 			<AlertDialogOverlay>
@@ -35,7 +57,7 @@ export function DeleteEntity({
 					<AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
 					<AlertDialogDescription>
 						This action cannot be undone. This will permanently delete the{' '}
-						<span className="font-bold">{entityName}</span> {type}.
+						<span className="font-bold">{company.name}</span> company.
 					</AlertDialogDescription>
 					<div className="flex justify-end gap-[25px]">
 						<AlertDialogCancel
@@ -52,42 +74,6 @@ export function DeleteEntity({
 								</AlertDialogActionButton>
 							</Form>
 						</AlertDialogAction>
-					</div>
-				</AlertDialogContent>
-			</AlertDialogOverlay>
-		</AlertDialogRoot>
-	);
-}
-
-type DeleteEntityErrorProps = {
-	type: EntityType;
-	error?: {
-		message?: string;
-		description?: string;
-	};
-	closeAlert: () => void;
-};
-
-export function DeleteEntityError({
-	type,
-	error,
-	closeAlert,
-}: DeleteEntityErrorProps) {
-	return (
-		<AlertDialogRoot open>
-			<AlertDialogOverlay>
-				<AlertDialogContent>
-					<AlertDialogTitle>
-						{error?.message || `Error Deleting ${capitalize(type)}!`}
-					</AlertDialogTitle>
-					<AlertDialogDescription>
-						{error?.description ||
-							`An error happened while deleting your ${type}, please try again later.`}
-					</AlertDialogDescription>
-					<div className="flex justify-end gap-[25px]">
-						<AlertDialogCancel onClick={closeAlert} asChild>
-							<AlertDialogCancelButton>Cancel</AlertDialogCancelButton>
-						</AlertDialogCancel>
 					</div>
 				</AlertDialogContent>
 			</AlertDialogOverlay>

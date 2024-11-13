@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router';
-import { CreateLink } from '~/components/entity/CreateLink';
-import { EntitiesList } from '~/components/entity/List';
+import { CreateLink } from '~/components/CreateLink';
+import { CompaniesList } from '~/components/company/CompaniesList';
 import { getCompanies } from '~/queries/company.queries';
 import type * as Route from './+types.companies-list';
 
@@ -22,12 +22,7 @@ export default function CompaniesListRoute({
 					<CreateLink to="/companies/new">Create Company</CreateLink>
 				</div>
 				<div className="mt-6">
-					<EntitiesList
-						type="company"
-						baseUrl="/companies"
-						entities={companies}
-						entityIdKey="companyId"
-					/>
+					<CompaniesList companies={companies} />
 				</div>
 			</section>
 			<Outlet />

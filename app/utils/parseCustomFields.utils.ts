@@ -1,12 +1,12 @@
 import type { CustomField } from '~/types/entity.types';
 
-export function parseCustomFields(
+export function parseCustomFields<T extends string, K extends string>(
 	data: object,
-	customFieldIdKey: string,
-	parentTableForeignKey: { key: string; id: string },
+	customFieldIdKey: T,
+	parentTableForeignKey: { key: K; id: string },
 ) {
 	const entries = Object.entries(data);
-	const customFields: Record<string, CustomField> = {};
+	const customFields: Record<string, CustomField<T, K>> = {};
 
 	entries.forEach(([key, value]) => {
 		const entryValue = value.toString();
@@ -26,7 +26,7 @@ export function parseCustomFields(
 				customFields[id] = {
 					[customFieldIdKey]: id,
 					[parentTableForeignKey.key]: parentTableForeignKey.id,
-				} as CustomField;
+				} as CustomField<T, K>;
 			}
 
 			if (key === `custom-field-index-${id}`) {

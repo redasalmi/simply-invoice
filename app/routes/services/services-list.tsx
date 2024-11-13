@@ -1,6 +1,6 @@
 import { Link, Outlet } from 'react-router';
 import { EyeIcon, PencilIcon, TrashIcon } from 'lucide-react';
-import { CreateLink } from '~/components/entity/CreateLink';
+import { CreateLink } from '~/components/CreateLink';
 import {
 	Table,
 	TableBody,

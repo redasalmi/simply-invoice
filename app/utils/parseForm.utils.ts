@@ -27,7 +27,7 @@ export function parseFormData<T extends v.BaseSchema>(
 	schema: T,
 ): {
 	data: v.InferOutput<typeof schema>;
-	issues: Array<v.InferIssue<typeof schema>> | null;
+	errors: Array<v.InferIssue<typeof schema>> | null;
 } {
 	const object = Object.fromEntries(formData);
 	const data = v.safeParse(schema, object);
@@ -35,12 +35,12 @@ export function parseFormData<T extends v.BaseSchema>(
 	if (data.issues) {
 		return {
 			data: null,
-			issues: data.issues,
+			errors: data.issues,
 		};
 	}
 
 	return {
 		data: data.output,
-		issues: null,
+		errors: null,
 	};
 }

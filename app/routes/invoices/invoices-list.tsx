@@ -1,4 +1,4 @@
-import { CreateLink } from '~/components/entity/CreateLink';
+import { CreateLink } from '~/components/CreateLink';
 import {
 	Table,
 	TableBody,
