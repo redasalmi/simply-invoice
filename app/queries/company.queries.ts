@@ -1,11 +1,12 @@
 import {
-	getCompaniesQuery,
-	getCompaniesCountQuery,
-	getCompaniesHasPreviousPageQuery,
-	getCompaniesHasNextPageQuery,
-	createCompanyQuery,
-	getCompanyQuery,
-	deleteCompanyQuery,
+	getCompaniesSql,
+	getCompaniesCountSql,
+	getCompaniesHasPreviousPageSql,
+	getCompaniesHasNextPageSql,
+	createCompanySql,
+	getCompanySql,
+	deleteCompanySql,
+	updateCompanySql,
 } from '~/sql/companies.sql';
 import { itemsPerPage } from '~/lib/pagination';
 import type {
@@ -26,10 +27,6 @@ type CompaniesCountResult = [
 		'COUNT(company_id)': number;
 	},
 ];
-
-type CompanyInsertInput = Pick<Company, 'companyId' | 'name' | 'email'> & {
-	addressId: string;
-};
 
 function parseCompaniesSelectResult(companiesData: CompaniesSelectResult) {
 	const companies = new Map<string, Company>();
@@ -109,11 +106,11 @@ export async function getCompanies(
 	startCursor: string = '',
 ): Promise<PaginatedResult<Company>> {
 	const [companiesData, companiesCount] = await Promise.all([
-		window.db.select<CompaniesSelectResult>(getCompaniesQuery, [
+		window.db.select<CompaniesSelectResult>(getCompaniesSql, [
 			startCursor,
 			itemsPerPage,
 		]),
-		window.db.select<CompaniesCountResult>(getCompaniesCountQuery),
+		window.db.select<CompaniesCountResult>(getCompaniesCountSql),
 	]);
 
 	if (!companiesData.length) {
@@ -132,11 +129,11 @@ export async function getCompanies(
 	const endCursor = companiesData[companiesData.length - 1].companyId;
 
 	const [hasPreviousCompaniesCount, hasNextCompaniesCount] = await Promise.all([
-		window.db.select<CompaniesCountResult>(getCompaniesHasPreviousPageQuery, [
+		window.db.select<CompaniesCountResult>(getCompaniesHasPreviousPageSql, [
 			startCursor,
 			itemsPerPage,
 		]),
-		window.db.select<CompaniesCountResult>(getCompaniesHasNextPageQuery, [
+		window.db.select<CompaniesCountResult>(getCompaniesHasNextPageSql, [
 			endCursor,
 			itemsPerPage,
 		]),
@@ -165,7 +162,7 @@ export async function getCompanies(
 
 export async function getCompany(companyId: string) {
 	const companiesData = await window.db.select<CompaniesSelectResult>(
-		getCompanyQuery,
+		getCompanySql,
 		[companyId],
 	);
 
@@ -178,8 +175,12 @@ export async function getCompany(companyId: string) {
 	return company.get(companyId);
 }
 
-export async function createCompany(company: CompanyInsertInput) {
-	return window.db.execute(createCompanyQuery, [
+type CreateCompanyInput = Pick<Company, 'companyId' | 'name' | 'email'> & {
+	addressId: string;
+};
+
+export async function createCompany(company: CreateCompanyInput) {
+	return window.db.execute(createCompanySql, [
 		company.companyId,
 		company.name,
 		company.email,
@@ -187,6 +188,16 @@ export async function createCompany(company: CompanyInsertInput) {
 	]);
 }
 
+type UpdateCompanyInput = Pick<Company, 'companyId' | 'name' | 'email'>;
+
+export async function updateCompany(company: UpdateCompanyInput) {
+	return window.db.execute(updateCompanySql, [
+		company.name,
+		company.email,
+		company.companyId,
+	]);
+}
+
 export async function deleteCompany(companyId: string) {
-	return window.db.execute(deleteCompanyQuery, [companyId]);
+	return window.db.execute(deleteCompanySql, [companyId]);
 }

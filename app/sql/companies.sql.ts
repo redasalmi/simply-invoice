@@ -1,8 +1,8 @@
-export const getCompaniesCountQuery = /* sql */ `
+export const getCompaniesCountSql = /* sql */ `
 SELECT COUNT(company_id) FROM companies;
 `;
 
-export const getCompaniesQuery = /* sql */ `
+export const getCompaniesSql = /* sql */ `
 SELECT c.company_id as companyId,
   c.name,
   c.email,
@@ -35,7 +35,7 @@ FROM (
   LEFT JOIN companies_custom_fields as ccf ON ccf.company_id = c.company_id;
 `;
 
-export const getCompaniesHasPreviousPageQuery = /* sql */ `
+export const getCompaniesHasPreviousPageSql = /* sql */ `
 SELECT COUNT(company_id)
 FROM companies
 WHERE company_id < (
@@ -47,7 +47,7 @@ ORDER BY company_id DESC
 LIMIT $2 + 1
 `;
 
-export const getCompaniesHasNextPageQuery = /* sql */ `
+export const getCompaniesHasNextPageSql = /* sql */ `
 SELECT COUNT(company_id)
 FROM companies
 WHERE company_id > (
@@ -59,7 +59,7 @@ ORDER BY company_id DESC
 LIMIT $2 + 1
 `;
 
-export const getCompanyQuery = /* sql */ `
+export const getCompanySql = /* sql */ `
 SELECT c.company_id as companyId,
   c.name,
   c.email,
@@ -90,11 +90,17 @@ FROM (
   LEFT JOIN companies_custom_fields as ccf ON ccf.company_id = c.company_id;
 `;
 
-export const createCompanyQuery = /* sql */ `
+export const createCompanySql = /* sql */ `
 INSERT INTO companies (company_id, name, email, address_id) VALUES ($1, $2, $3, $4);
 `;
 
-export const deleteCompanyQuery = /* sql */ `
+export const updateCompanySql = /* sql */ `
+UPDATE companies 
+SET name = $1, email = $2, updated_at = CURRENT_TIMESTAMP
+WHERE company_id = $3;
+`;
+
+export const deleteCompanySql = /* sql */ `
 DELETE FROM companies
 WHERE company_id = $1;
 `;

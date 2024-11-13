@@ -1,9 +1,11 @@
 import { redirect, useNavigation } from 'react-router';
-import { getCompany } from '~/queries/company.queries';
+import { getCompany, updateCompany } from '~/queries/company.queries';
 import {
 	CompanyFormSchema,
 	transformCompanyFormData,
 } from '~/schemas/company.schemas';
+import { updateAddress } from '~/queries/address.queries';
+import { updateCompanyCustomField } from '~/queries/companyCustomFields.queries';
 import { parseFormData } from '~/utils/parseForm.utils';
 import { CompanyNotFound } from '~/components/company/CompanyNotFound';
 import { CompanyUpdate } from '~/components/company/CompanyUpdate';
@@ -18,11 +20,7 @@ export async function clientLoader({ params }: Route.ClientLoaderArgs) {
 	};
 }
 
-export async function clientAction({
-	params,
-	request,
-}: Route.ClientActionArgs) {
-	const companyId = params.id;
+export async function clientAction({ request }: Route.ClientActionArgs) {
 	const formData = await request.formData();
 	const { data, errors } = parseFormData(formData, CompanyFormSchema);
 
@@ -33,25 +31,14 @@ export async function clientAction({
 	}
 
 	const { address, company, customFields } = transformCompanyFormData(data);
-	console.log({ address, company, customFields });
+	await updateAddress(address);
+	await updateCompany(company);
 
-	return {};
-
-	// const today = new Date().toISOString();
-	// const updatedCompany = {
-	// 	custom: parseCustomFields(formData),
-	// 	updatedAt: today,
-	// } as UpdateCompany;
-
-	// for (const key in data) {
-	// 	if (key.includes('custom')) {
-	// 		continue;
-	// 	}
-
-	// 	updatedCompany[key.replace('-', '.') as keyof UpdateCompany] =
-	// 		data[key as keyof typeof data];
-	// }
-	// await db.companies.update(companyId, updatedCompany);
+	if (customFields.length) {
+		await Promise.all(
+			customFields.map((customField) => updateCompanyCustomField(customField)),
+		);
+	}
 
 	return redirect('/companies');
 }

@@ -1,23 +1,38 @@
-import { createCompanyCustomFieldQuery } from '~/sql/companyCustomFields.sql';
+import {
+	createCompanyCustomFieldSql,
+	updateCompanyCustomFieldSql,
+} from '~/sql/companyCustomFields.sql';
+import { CompanyCustomField } from '~/types';
 
-export type CompanyCustomField = {
-	companyCustomFieldId: string;
-	customFieldIndex: number;
-	label: string;
-	content: string;
-	companyId: string;
-	createdAt: string;
-	updatedAt?: string;
-};
+type CreateCompanyCustomFieldInput = Omit<
+	CompanyCustomField,
+	'createdAt' | 'updatedAt'
+>;
 
 export async function createCompanyCustomField(
-	companyCustomField: Omit<CompanyCustomField, 'createdAt' | 'updatedAt'>,
+	companyCustomField: CreateCompanyCustomFieldInput,
 ) {
-	return window.db.execute(createCompanyCustomFieldQuery, [
+	return window.db.execute(createCompanyCustomFieldSql, [
 		companyCustomField.companyCustomFieldId,
 		companyCustomField.customFieldIndex,
 		companyCustomField.label,
 		companyCustomField.content,
 		companyCustomField.companyId,
+	]);
+}
+
+type UpdateCompanyCustomFieldInput = Omit<
+	CompanyCustomField,
+	'companyId' | 'createdAt' | 'updatedAt'
+>;
+
+export async function updateCompanyCustomField(
+	companyCustomField: UpdateCompanyCustomFieldInput,
+) {
+	return window.db.execute(updateCompanyCustomFieldSql, [
+		companyCustomField.customFieldIndex,
+		companyCustomField.label,
+		companyCustomField.content,
+		companyCustomField.companyCustomFieldId,
 	]);
 }

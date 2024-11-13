@@ -37,7 +37,7 @@ export function transformCompanyFormData(
 	data: v.InferOutput<typeof CompanyFormSchema>,
 ) {
 	const companyId = data['company-id'] || ulid();
-	const addressId = data['address-addressId'] || ulid();
+	const addressId = data['address-address-id'] || ulid();
 
 	return {
 		address: {
