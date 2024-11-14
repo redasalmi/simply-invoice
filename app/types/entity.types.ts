@@ -22,4 +22,5 @@ export type CustomField<T extends string, K extends string> = {
 	label: string;
 	content: string;
 	showLabelInInvoice?: boolean;
+	action?: 'create' | 'update' | 'delete';
 };

@@ -1,5 +1,6 @@
 import {
 	createCompanyCustomFieldSql,
+	deleteCompanyCustomFieldSql,
 	updateCompanyCustomFieldSql,
 } from '~/sql/companyCustomFields.sql';
 import { CompanyCustomField } from '~/types';
@@ -35,4 +36,8 @@ export async function updateCompanyCustomField(
 		companyCustomField.content,
 		companyCustomField.companyCustomFieldId,
 	]);
+}
+
+export async function deleteCompanyCustomField(companyCustomFieldId: string) {
+	return window.db.execute(deleteCompanyCustomFieldSql, [companyCustomFieldId]);
 }

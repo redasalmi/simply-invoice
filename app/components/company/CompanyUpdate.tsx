@@ -10,8 +10,12 @@ import { addressFields, companyFields } from '~/lib/constants';
 import { cn } from '~/utils/shared.utils';
 import { Company, CompanyCustomField } from '~/types';
 
+type CustomField = CompanyCustomField & {
+	action: 'create' | 'update' | 'delete';
+};
+
 type CustomFieldProps = {
-	field: CompanyCustomField;
+	field: CustomField;
 	index: number;
 	error?: {
 		label?: string;
@@ -49,7 +53,10 @@ function CustomField({ field, index, error, deleteField }: CustomFieldProps) {
 	}, []);
 
 	return (
-		<Reorder.Item value={field}>
+		<Reorder.Item
+			value={field}
+			className={cn(field.action === 'delete' && 'hidden')}
+		>
 			<div
 				ref={containerRef}
 				className={cn(
@@ -62,6 +69,14 @@ function CustomField({ field, index, error, deleteField }: CustomFieldProps) {
 						<MoveIcon />
 					</Button>
 				</div>
+
+				<input
+					hidden
+					readOnly
+					name={`custom-field-action-${customFieldId}`}
+					value={field.action}
+					className="hidden"
+				/>
 
 				<input
 					hidden
@@ -118,25 +133,44 @@ export function CompanyUpdate({
 	errors,
 	handleSubmit,
 }: CompanyUpdateProps) {
-	const [customFields, setCustomFields] = React.useState(
-		company.customFields ?? [],
+	const [customFields, setCustomFields] = React.useState<Array<CustomField>>(
+		company.customFields
+			? company.customFields.map((customField) => ({
+					...customField,
+					action: 'update',
+				}))
+			: [],
 	);
 
 	const addField = () => {
 		setCustomFields((prevFields) =>
 			prevFields.concat({
-				id: ulid(),
-				order: prevFields.length,
+				companyCustomFieldId: ulid(),
+				customFieldIndex: prevFields.length,
 				label: '',
 				content: '',
+				action: 'create',
 			}),
 		);
 	};
 
-	const deleteField = (id: string) => {
-		setCustomFields((prevFields) =>
-			prevFields.filter((field) => field.id !== id),
-		);
+	const deleteField = (companyCustomFieldId: string) => {
+		const updatedCustomFields = customFields
+			.map((customField) => {
+				if (customField.companyCustomFieldId === companyCustomFieldId) {
+					return customField.action === 'update'
+						? {
+								...customField,
+								action: 'delete',
+							}
+						: null;
+				}
+
+				return customField;
+			})
+			.filter(Boolean);
+
+		setCustomFields(updatedCustomFields);
 	};
 
 	return (
@@ -209,10 +243,14 @@ export function CompanyUpdate({
 										field={field}
 										index={index}
 										error={{
-											label: errors?.[`custom-label-${field.id}`],
-											content: errors?.[`custom-content-${field.id}`],
+											label:
+												errors?.[`custom-label-${field.companyCustomFieldId}`],
+											content:
+												errors?.[
+													`custom-content-${field.companyCustomFieldId}`
+												],
 										}}
-										deleteField={() => deleteField(field.id)}
+										deleteField={() => deleteField(field.companyCustomFieldId)}
 									/>
 								))}
 							</Reorder.Group>

@@ -8,3 +8,8 @@ UPDATE companies_custom_fields
 SET custom_field_index = $1, label = $2, content = $3
 WHERE company_custom_field_id = $4;
 `;
+
+export const deleteCompanyCustomFieldSql = /* sql */ `
+DELETE FROM companies_custom_fields
+WHERE company_custom_field_id = $1;
+`;

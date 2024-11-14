@@ -32,7 +32,7 @@ FROM (
     LIMIT $2
   ) c
   LEFT JOIN addresses as a ON a.address_id = c.address_id
-  LEFT JOIN companies_custom_fields as ccf ON ccf.company_id = c.company_id;
+  LEFT JOIN companies_custom_fields as ccf ON ccf.company_id = c.company_id ORDER BY ccf.custom_field_index;
 `;
 
 export const getCompaniesHasPreviousPageSql = /* sql */ `
@@ -87,7 +87,7 @@ FROM (
     WHERE c.company_id = $1
   ) c
   LEFT JOIN addresses as a ON a.address_id = c.address_id
-  LEFT JOIN companies_custom_fields as ccf ON ccf.company_id = c.company_id;
+  LEFT JOIN companies_custom_fields as ccf ON ccf.company_id = c.company_id ORDER BY ccf.custom_field_index;
 `;
 
 export const createCompanySql = /* sql */ `

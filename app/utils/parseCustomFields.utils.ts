@@ -11,16 +11,18 @@ export function parseCustomFields<T extends string, K extends string>(
 	entries.forEach(([key, value]) => {
 		const entryValue = value.toString();
 
+		// TODO: remove this regex and replace it with some string search method
 		if (
 			key.search(
-				/custom-show-label-in-invoice|custom-field-index|custom-label|custom-content/gi,
+				/custom-show-label-in-invoice|custom-field-index|custom-label|custom-content|custom-field-action/gi,
 			) > -1
 		) {
 			const id = key
 				.replace('custom-show-label-in-invoice-', '')
 				.replace('custom-field-index-', '')
 				.replace('custom-label-', '')
-				.replace('custom-content-', '');
+				.replace('custom-content-', '')
+				.replace('custom-field-action-', '');
 
 			if (!customFields[id]) {
 				customFields[id] = {
@@ -37,6 +39,8 @@ export function parseCustomFields<T extends string, K extends string>(
 				customFields[id].content = entryValue;
 			} else if (key === `custom-show-label-in-invoice-${id}`) {
 				customFields[id].showLabelInInvoice = entryValue === 'on';
+			} else if (key === `custom-field-action-${id}`) {
+				customFields[id].action = entryValue;
 			}
 		}
 	});

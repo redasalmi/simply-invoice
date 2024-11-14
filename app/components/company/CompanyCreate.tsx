@@ -12,7 +12,7 @@ import { cn } from '~/utils/shared.utils';
 
 type CustomFieldProps = {
 	field: {
-		id: string;
+		companyCustomFieldId: string;
 	};
 	index: number;
 	error?: {
@@ -25,6 +25,8 @@ type CustomFieldProps = {
 function CustomField({ field, index, error, deleteField }: CustomFieldProps) {
 	const containerRef = React.useRef<HTMLDivElement | null>(null);
 	const [hasError, setHasError] = React.useState(false);
+
+	const customFieldId = field.companyCustomFieldId;
 
 	React.useEffect(() => {
 		if (!containerRef.current) {
@@ -66,23 +68,23 @@ function CustomField({ field, index, error, deleteField }: CustomFieldProps) {
 				<input
 					hidden
 					readOnly
-					name={`custom-field-index-${field.id}`}
+					name={`custom-field-index-${customFieldId}`}
 					value={index}
 					className="hidden"
 				/>
 
 				<FormField
-					id={`custom-label-${field.id}`}
+					id={`custom-label-${customFieldId}`}
 					label="Label"
-					name={`custom-label-${field.id}`}
+					name={`custom-label-${customFieldId}`}
 					className="h-full flex-1"
 					serverError={error?.label}
 				/>
 
 				<FormField
-					id={`custom-content-${field.id}`}
+					id={`custom-content-${customFieldId}`}
 					label="Content"
-					name={`custom-content-${field.id}`}
+					name={`custom-content-${customFieldId}`}
 					className="h-full flex-1"
 					serverError={error?.content}
 				/>
@@ -90,14 +92,14 @@ function CustomField({ field, index, error, deleteField }: CustomFieldProps) {
 				<div className="flex gap-2">
 					<div className="flex items-center justify-center rounded-md py-2 px-4">
 						<label
-							htmlFor={`custom-show-label-in-invoice-${field.id}`}
+							htmlFor={`custom-show-label-in-invoice-${customFieldId}`}
 							className="sr-only"
 						>
 							Show label on invoice
 						</label>
 						<Switch
-							id={`custom-show-label-in-invoice-${field.id}`}
-							name={`custom-show-label-in-invoice-${field.id}`}
+							id={`custom-show-label-in-invoice-${customFieldId}`}
+							name={`custom-show-label-in-invoice-${customFieldId}`}
 						/>
 					</div>
 					<Button
@@ -126,17 +128,21 @@ export function CompanyCreate({
 	errors,
 	handleSubmit,
 }: CompanyCreateProps) {
-	const [customFields, setCustomFields] = React.useState<Array<{ id: string }>>(
-		[],
-	);
+	const [customFields, setCustomFields] = React.useState<
+		Array<{ companyCustomFieldId: string }>
+	>([]);
 
 	const addField = () => {
-		setCustomFields((prevFields) => prevFields.concat({ id: ulid() }));
+		setCustomFields((prevFields) =>
+			prevFields.concat({ companyCustomFieldId: ulid() }),
+		);
 	};
 
-	const deleteField = (id: string) => {
+	const deleteField = (companyCustomFieldId: string) => {
 		setCustomFields((prevFields) =>
-			prevFields.filter((field) => field.id !== id),
+			prevFields.filter(
+				(field) => field.companyCustomFieldId !== companyCustomFieldId,
+			),
 		);
 	};
 
@@ -186,14 +192,18 @@ export function CompanyCreate({
 							<Reorder.Group values={customFields} onReorder={setCustomFields}>
 								{customFields.map((field, index) => (
 									<CustomField
-										key={field.id}
+										key={field.companyCustomFieldId}
 										field={field}
 										index={index}
 										error={{
-											label: errors?.[`custom-label-${field.id}`],
-											content: errors?.[`custom-content-${field.id}`],
+											label:
+												errors?.[`custom-label-${field.companyCustomFieldId}`],
+											content:
+												errors?.[
+													`custom-content-${field.companyCustomFieldId}`
+												],
 										}}
-										deleteField={() => deleteField(field.id)}
+										deleteField={() => deleteField(field.companyCustomFieldId)}
 									/>
 								))}
 							</Reorder.Group>
