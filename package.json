@@ -8,14 +8,16 @@
 		"start": "react-router-serve ./build/server/index.js",
 		"typecheck": "react-router typegen && tsc",
 		"lint": "eslint ./app",
-		"pretty": "prettier --write --ignore-unknown \"app/**/*.+(js|jsx|ts|tsx|json|css)\""
+		"pretty": "prettier --write --ignore-unknown \"app/**/*.+(js|jsx|ts|tsx|json|css)\"",
+		"tauri:dev": "tauri dev",
+		"tauri:build": "tauri build"
 	},
 	"dependencies": {
 		"@radix-ui/react-alert-dialog": "^1.1.2",
 		"@radix-ui/react-dialog": "^1.1.2",
 		"@radix-ui/react-form": "^0.1.0",
 		"@radix-ui/react-switch": "^1.1.1",
-		"@react-pdf/renderer": "^4.0.0",
+		"@react-pdf/renderer": "^4.0.1",
 		"@react-router/node": "7.0.0-pre.4",
 		"@react-router/serve": "7.0.0-pre.4",
 		"@tailwindcss/vite": "4.0.0-alpha.26",
@@ -28,7 +30,7 @@
 		"clsx": "^2.1.1",
 		"dexie": "^4.0.9",
 		"downshift": "^9.0.8",
-		"framer-motion": "^11.11.13",
+		"framer-motion": "^11.11.17",
 		"isbot": "^5.1.17",
 		"lucide-react": "^0.456.0",
 		"nanoid": "^5.0.8",
