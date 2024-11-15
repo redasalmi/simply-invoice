@@ -25,17 +25,14 @@ export function parseFormDataErrors<T>(err: z.ZodError<T>) {
 export function parseFormData<T extends v.BaseSchema>(
 	formData: FormData,
 	schema: T,
-): {
-	data: v.InferOutput<typeof schema>;
-	errors: Array<v.InferIssue<typeof schema>> | null;
-} {
+) {
 	const object = Object.fromEntries(formData);
 	const data = v.safeParse(schema, object);
 
 	if (data.issues) {
 		return {
 			data: null,
-			errors: data.issues,
+			errors: v.flatten<typeof schema>(data.issues),
 		};
 	}
 

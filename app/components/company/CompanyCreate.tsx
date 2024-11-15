@@ -8,6 +8,12 @@ import { FormRoot } from '~/components/ui/form';
 import { Button } from '~/components/ui/button';
 import { addressFields, companyFields } from '~/lib/constants';
 import { cn } from '~/utils/shared.utils';
+import { CompanyFormFlatErrors } from '~/schemas/company.schemas';
+import {
+	customFieldContentKey,
+	customFieldIndexKey,
+	customFieldLabelKey,
+} from '~/schemas/customField.schema';
 
 type CustomFieldProps = {
 	field: {
@@ -67,23 +73,23 @@ function CustomField({ field, index, error, deleteField }: CustomFieldProps) {
 				<input
 					hidden
 					readOnly
-					name={`custom-field-index-${customFieldId}`}
+					name={`${customFieldIndexKey}-${customFieldId}`}
 					value={index}
 					className="hidden"
 				/>
 
 				<FormField
-					id={`custom-field-label-${customFieldId}`}
+					id={`${customFieldLabelKey}-${customFieldId}`}
 					label="Label"
-					name={`custom-field-label-${customFieldId}`}
+					name={`${customFieldLabelKey}-${customFieldId}`}
 					className="h-full flex-1"
 					serverError={error?.label}
 				/>
 
 				<FormField
-					id={`custom-field-content-${customFieldId}`}
+					id={`${customFieldContentKey}-${customFieldId}`}
 					label="Content"
-					name={`custom-field-content-${customFieldId}`}
+					name={`${customFieldContentKey}-${customFieldId}`}
 					className="h-full flex-1"
 					serverError={error?.content}
 				/>
@@ -105,7 +111,7 @@ function CustomField({ field, index, error, deleteField }: CustomFieldProps) {
 type CompanyCreateProps = {
 	isSubmitting?: boolean;
 	isLoading?: boolean;
-	errors?: any;
+	errors?: CompanyFormFlatErrors;
 	handleSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
 };
 
@@ -141,7 +147,7 @@ export function CompanyCreate({
 						<FormField
 							key={field.id}
 							className="my-2"
-							serverError={errors?.[field.name]}
+							serverError={errors?.nested?.[field.name]?.[0]}
 							{...field}
 						/>
 					))}
@@ -154,7 +160,7 @@ export function CompanyCreate({
 							<FormField
 								key={field.id}
 								className="my-2"
-								serverError={errors?.[field.name]}
+								serverError={errors?.nested?.[field.name]?.[0]}
 								{...field}
 							/>
 						))}
@@ -184,11 +190,13 @@ export function CompanyCreate({
 										index={index}
 										error={{
 											label:
-												errors?.[`custom-label-${field.companyCustomFieldId}`],
+												errors?.nested?.[
+													`${customFieldLabelKey}-${field.companyCustomFieldId}`
+												]?.[0],
 											content:
-												errors?.[
-													`custom-content-${field.companyCustomFieldId}`
-												],
+												errors?.nested?.[
+													`${customFieldContentKey}-${field.companyCustomFieldId}`
+												]?.[0],
 										}}
 										deleteField={() => deleteField(field.companyCustomFieldId)}
 									/>

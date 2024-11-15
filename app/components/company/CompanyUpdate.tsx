@@ -9,6 +9,13 @@ import { Button } from '~/components/ui/button';
 import { addressFields, companyFields } from '~/lib/constants';
 import { cn } from '~/utils/shared.utils';
 import { Company, CompanyCustomField } from '~/types';
+import { CompanyFormFlatErrors } from '~/schemas/company.schemas';
+import {
+	customFieldActionKey,
+	customFieldContentKey,
+	customFieldIndexKey,
+	customFieldLabelKey,
+} from '~/schemas/customField.schema';
 
 type CustomField = CompanyCustomField & {
 	action: 'create' | 'update' | 'delete';
@@ -73,7 +80,7 @@ function CustomField({ field, index, error, deleteField }: CustomFieldProps) {
 				<input
 					hidden
 					readOnly
-					name={`custom-field-action-${customFieldId}`}
+					name={`${customFieldActionKey}-${customFieldId}`}
 					value={field.action}
 					className="hidden"
 				/>
@@ -81,24 +88,24 @@ function CustomField({ field, index, error, deleteField }: CustomFieldProps) {
 				<input
 					hidden
 					readOnly
-					name={`custom-field-index-${customFieldId}`}
+					name={`${customFieldIndexKey}-${customFieldId}`}
 					value={index}
 					className="hidden"
 				/>
 
 				<FormField
-					id={`custom-field-label-${customFieldId}`}
+					id={`${customFieldLabelKey}-${customFieldId}`}
 					label="Label"
-					name={`custom-field-label-${customFieldId}`}
+					name={`${customFieldLabelKey}-${customFieldId}`}
 					defaultValue={field.label}
 					className="h-full flex-1"
 					serverError={error?.label}
 				/>
 
 				<FormField
-					id={`custom-field-content-${customFieldId}`}
+					id={`${customFieldContentKey}-${customFieldId}`}
 					label="Content"
-					name={`custom-field-content-${customFieldId}`}
+					name={`${customFieldContentKey}-${customFieldId}`}
 					defaultValue={field.content}
 					className="h-full flex-1"
 					serverError={error?.content}
@@ -122,7 +129,7 @@ type CompanyUpdateProps = {
 	company: Company;
 	isSubmitting?: boolean;
 	isLoading?: boolean;
-	errors?: any;
+	errors?: CompanyFormFlatErrors;
 	handleSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
 };
 
@@ -189,7 +196,7 @@ export function CompanyUpdate({
 						<FormField
 							key={field.id}
 							className="my-2"
-							serverError={errors?.[field.name]}
+							serverError={errors?.nested?.[field.name]?.[0]}
 							defaultValue={company[field.name.replace('company-', '')]}
 							{...field}
 						/>
@@ -211,7 +218,7 @@ export function CompanyUpdate({
 							<FormField
 								key={field.id}
 								className="my-2"
-								serverError={errors?.[field.name]}
+								serverError={errors?.nested?.[field.name]?.[0]}
 								defaultValue={
 									company.address[field.name.replace('address-', '')]
 								}
@@ -244,11 +251,13 @@ export function CompanyUpdate({
 										index={index}
 										error={{
 											label:
-												errors?.[`custom-label-${field.companyCustomFieldId}`],
+												errors?.nested?.[
+													`${customFieldLabelKey}-${field.companyCustomFieldId}`
+												]?.[0],
 											content:
-												errors?.[
-													`custom-content-${field.companyCustomFieldId}`
-												],
+												errors?.nested?.[
+													`${customFieldContentKey}-${field.companyCustomFieldId}`
+												]?.[0],
 										}}
 										deleteField={() => deleteField(field.companyCustomFieldId)}
 									/>

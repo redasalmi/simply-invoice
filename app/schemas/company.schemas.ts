@@ -7,14 +7,18 @@ import {
 	safeParseCustomField,
 } from '~/schemas/customField.schema';
 import { AddressFormSchema } from '~/schemas/address.schemas';
-import { CompanyCustomField } from '~/types';
+import { CompanyCustomField, CustomFieldAction } from '~/types';
 
 export const CompanyFormSchema = v.pipe(
 	v.objectWithRest(
 		{
 			'company-id': v.optional(v.pipe(v.string(), v.ulid())),
-			'company-name': v.pipe(v.string(), v.nonEmpty()),
-			'company-email': v.pipe(v.string(), v.nonEmpty(), v.email()),
+			'company-name': v.pipe(v.string(), v.nonEmpty('Name is required')),
+			'company-email': v.pipe(
+				v.string(),
+				v.nonEmpty('Email is required'),
+				v.email('A valid email is required'),
+			),
 			...AddressFormSchema.entries,
 		},
 		v.string(),
@@ -36,6 +40,8 @@ export const CompanyFormSchema = v.pipe(
 		}
 	}),
 );
+
+export type CompanyFormFlatErrors = v.FlatErrors<typeof CompanyFormSchema>;
 
 export function transformCompanyFormData(
 	data: v.InferOutput<typeof CompanyFormSchema>,
@@ -62,6 +68,6 @@ export function transformCompanyFormData(
 		customFields: parseCustomFields(data, 'companyCustomFieldId', {
 			id: companyId,
 			key: 'companyId',
-		}) as Array<CompanyCustomField>,
+		}) as Array<CompanyCustomField & { action: CustomFieldAction }>,
 	};
 }

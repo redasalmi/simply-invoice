@@ -7,10 +7,10 @@ export function useForm<T extends v.BaseSchema>({
 	actionErrors,
 }: {
 	schema: T;
-	actionErrors?: Array<v.InferIssue<typeof schema>>;
+	actionErrors?: v.FlatErrors<typeof schema>;
 }) {
 	const [errors, setErrors] = React.useState<
-		Array<v.InferIssue<typeof schema>> | undefined
+		v.FlatErrors<typeof schema> | undefined
 	>(undefined);
 
 	React.useEffect(() => {
@@ -21,8 +21,8 @@ export function useForm<T extends v.BaseSchema>({
 
 	const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
 		const formData = new FormData(event.currentTarget);
-
 		const { errors: newErrors } = parseFormData(formData, schema);
+
 		if (newErrors) {
 			setErrors(newErrors);
 			event.preventDefault();
