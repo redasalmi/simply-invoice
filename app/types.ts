@@ -69,3 +69,16 @@ export type PaginatedResult<T> = {
 	total: number;
 	pageInfo: PageInfo;
 };
+
+export type CustomFieldAction = 'create' | 'update' | 'delete';
+
+export type CustomField<T extends string, K extends string> = {
+	[key in T]: string;
+} & {
+	[key in K]: string;
+} & {
+	customFieldIndex: number;
+	label: string;
+	content: string;
+	action?: CustomFieldAction;
+};

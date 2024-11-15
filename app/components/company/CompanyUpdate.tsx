@@ -87,18 +87,18 @@ function CustomField({ field, index, error, deleteField }: CustomFieldProps) {
 				/>
 
 				<FormField
-					id={`custom-label-${customFieldId}`}
+					id={`custom-field-label-${customFieldId}`}
 					label="Label"
-					name={`custom-label-${customFieldId}`}
+					name={`custom-field-label-${customFieldId}`}
 					defaultValue={field.label}
 					className="h-full flex-1"
 					serverError={error?.label}
 				/>
 
 				<FormField
-					id={`custom-content-${customFieldId}`}
+					id={`custom-field-content-${customFieldId}`}
 					label="Content"
-					name={`custom-content-${customFieldId}`}
+					name={`custom-field-content-${customFieldId}`}
 					defaultValue={field.content}
 					className="h-full flex-1"
 					serverError={error?.content}

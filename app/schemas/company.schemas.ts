@@ -1,12 +1,13 @@
 import * as v from 'valibot';
 import { ulid } from 'ulid';
-import { parseCustomFields } from '~/utils/parseCustomFields.utils';
 import {
-	customContentKey,
-	customLabelKey,
+	customFieldContentKey,
+	customFieldLabelKey,
+	parseCustomFields,
 	safeParseCustomField,
 } from '~/schemas/customField.schema';
 import { AddressFormSchema } from '~/schemas/address.schemas';
+import { CompanyCustomField } from '~/types';
 
 export const CompanyFormSchema = v.pipe(
 	v.objectWithRest(
@@ -20,7 +21,10 @@ export const CompanyFormSchema = v.pipe(
 	),
 	v.rawCheck(({ dataset, addIssue }) => {
 		for (const key in dataset.value) {
-			if (key.includes(customLabelKey) || key.includes(customContentKey)) {
+			if (
+				key.includes(customFieldLabelKey) ||
+				key.includes(customFieldContentKey)
+			) {
 				const parsedValue = safeParseCustomField(key, dataset.value[key]);
 
 				if (parsedValue?.issues) {
@@ -58,6 +62,6 @@ export function transformCompanyFormData(
 		customFields: parseCustomFields(data, 'companyCustomFieldId', {
 			id: companyId,
 			key: 'companyId',
-		}),
+		}) as Array<CompanyCustomField>,
 	};
 }

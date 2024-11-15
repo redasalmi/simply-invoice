@@ -6,7 +6,6 @@ import { MoveIcon, TrashIcon } from 'lucide-react';
 import { FormField } from '~/components/FormField';
 import { FormRoot } from '~/components/ui/form';
 import { Button } from '~/components/ui/button';
-import { Switch } from '~/components/ui/switch';
 import { addressFields, companyFields } from '~/lib/constants';
 import { cn } from '~/utils/shared.utils';
 
@@ -74,34 +73,22 @@ function CustomField({ field, index, error, deleteField }: CustomFieldProps) {
 				/>
 
 				<FormField
-					id={`custom-label-${customFieldId}`}
+					id={`custom-field-label-${customFieldId}`}
 					label="Label"
-					name={`custom-label-${customFieldId}`}
+					name={`custom-field-label-${customFieldId}`}
 					className="h-full flex-1"
 					serverError={error?.label}
 				/>
 
 				<FormField
-					id={`custom-content-${customFieldId}`}
+					id={`custom-field-content-${customFieldId}`}
 					label="Content"
-					name={`custom-content-${customFieldId}`}
+					name={`custom-field-content-${customFieldId}`}
 					className="h-full flex-1"
 					serverError={error?.content}
 				/>
 
 				<div className="flex gap-2">
-					<div className="flex items-center justify-center rounded-md py-2 px-4">
-						<label
-							htmlFor={`custom-show-label-in-invoice-${customFieldId}`}
-							className="sr-only"
-						>
-							Show label on invoice
-						</label>
-						<Switch
-							id={`custom-show-label-in-invoice-${customFieldId}`}
-							name={`custom-show-label-in-invoice-${customFieldId}`}
-						/>
-					</div>
 					<Button
 						aria-label="delete field"
 						variant="icon"
