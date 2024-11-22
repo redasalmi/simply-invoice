@@ -1,6 +1,6 @@
 import { type RouteConfig, route, index } from '@react-router/dev/routes';
 
-export const routes: RouteConfig = [
+export default [
 	index('./routes/home.tsx'),
 
 	route('companies', './routes/companies/companies-list.tsx', [
@@ -28,4 +28,4 @@ export const routes: RouteConfig = [
 	// route('/invoices/new', './routes/invoices/invoice-create.tsx'),
 
 	// route('/api/invoice-pdf', './routes/api/invoice-pdf.tsx'),
-];
+] satisfies RouteConfig;

@@ -10,7 +10,7 @@ const host = process.env.TAURI_DEV_HOST;
 export default defineConfig({
 	plugins: [
 		tailwindcss(),
-		reactRouter({ ssr: false }),
+		reactRouter(),
 		tsconfigPaths(),
 		babel({
 			filter: /\.[jt]sx?$/,
