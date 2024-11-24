@@ -21,8 +21,8 @@ function NavItem({ to, children }: SideBarLinkProps) {
 
 export function Navbar() {
 	return (
-		<nav className="py-6 font-bold">
-			<div className="container flex justify-between">
+		<nav className="container py-6 font-bold">
+			<div className="flex justify-between">
 				<Link className="hover:underline" to="/">
 					Simply Invoice
 				</Link>

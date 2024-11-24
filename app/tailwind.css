@@ -53,45 +53,9 @@
 	--color-red-10: #dc3e42;
 	--color-red-11: #ce2c31;
 	--color-red-12: #641723;
-
-	/* Widths */
-	--width-xxl: 40rem;
-	--width-8xl: 88rem;
-	--width-9xl: 96rem;
 }
 
-@layer utilities {
-	.container {
-		@apply mx-auto w-full px-8;
-	}
-
-	@media (min-width: 640px) {
-		.container {
-			@apply max-w-xxl;
-		}
-	}
-
-	@media (min-width: 768px) {
-		.container {
-			@apply max-w-3xl;
-		}
-	}
-
-	@media (min-width: 1024px) {
-		.container {
-			@apply max-w-5xl;
-		}
-	}
-
-	@media (min-width: 1280px) {
-		.container {
-			@apply max-w-7xl;
-		}
-	}
-
-	@media (min-width: 1536px) {
-		.container {
-			@apply max-w-9xl;
-		}
-	}
+@utility container {
+	margin-inline: auto;
+	padding-inline: 2rem;
 }
