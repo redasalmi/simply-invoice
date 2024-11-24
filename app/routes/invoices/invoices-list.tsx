@@ -8,7 +8,7 @@ import {
 	TableRow,
 } from '~/components/ui/table';
 import { db, getPage } from '~/lib/db';
-import type * as Route from './+types.invoices-list';
+import type { Route } from './+types/invoices-list';
 
 export async function clientLoader() {
 	return {

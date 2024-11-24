@@ -7,7 +7,7 @@ import { entityFormSchema } from '~/schemas/entity.schemas';
 import { parseFormData } from '~/utils/parseForm.utils';
 import type { UpdateCustomer } from '~/types/customer.types';
 import { useForm } from '~/hooks/useForm';
-import type * as Route from './+types.customer-update';
+import type { Route } from './+types/customer-update';
 
 export async function clientLoader({ params }: Route.ClientLoaderArgs) {
 	const customerId = params.id;

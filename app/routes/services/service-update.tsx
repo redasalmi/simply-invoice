@@ -8,7 +8,7 @@ import type { UpdatedService } from '~/types/service.types';
 import { serviceFormSchema } from '~/schemas/service.schemas';
 import { useForm } from '~/hooks/useForm';
 import { parseFormData } from '~/utils/parseForm.utils';
-import type * as Route from './+types.service-update';
+import type { Route } from './+types/service-update';
 
 export async function clientLoader({ params }: Route.ClientLoaderArgs) {
 	const serviceId = params.id;

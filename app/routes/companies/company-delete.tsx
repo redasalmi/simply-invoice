@@ -1,7 +1,7 @@
 import { redirect, useNavigate, useNavigation } from 'react-router';
 import { deleteCompany, getCompany } from '~/queries/company.queries';
 import { CompanyDelete } from '~/components/company/CompanyDelete';
-import type * as Route from './+types.company-delete';
+import type { Route } from './+types/company-delete';
 
 export async function clientLoader({ params }: Route.ClientLoaderArgs) {
 	const companyId = params.id;

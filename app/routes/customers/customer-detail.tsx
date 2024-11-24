@@ -11,7 +11,7 @@ import {
 	DialogTitle,
 } from '~/components/ui/dialog';
 import { db } from '~/lib/db';
-import type * as Route from './+types.customer-detail';
+import type { Route } from './+types/customer-detail';
 
 export async function clientLoader({ params }: Route.ClientLoaderArgs) {
 	const customerId = params.id;

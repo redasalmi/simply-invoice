@@ -28,7 +28,7 @@ import { Combobox } from '~/components/ui/combobox';
 import { Select } from '~/components/ui/select';
 import { FormRoot } from '~/components/ui/form';
 import { FormField } from '~/components/FormField';
-import type * as Route from './+types.invoice-create';
+import type { Route } from './+types/invoice-create';
 
 export async function clientLoader() {
 	try {

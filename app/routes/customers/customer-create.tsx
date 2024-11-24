@@ -7,7 +7,7 @@ import { entityFormSchema } from '~/schemas/entity.schemas';
 import type { Customer } from '~/types/customer.types';
 import { parseCustomFields } from '~/utils/parseCustomFields.utils';
 import { parseFormData } from '~/utils/parseForm.utils';
-import type * as Route from './+types.customer-create';
+import type { Route } from './+types/customer-create';
 
 export async function clientAction({ request }: Route.ClientActionArgs) {
 	const formData = await request.formData();

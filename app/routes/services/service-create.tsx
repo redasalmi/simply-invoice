@@ -9,7 +9,7 @@ import type { Service } from '~/types/service.types';
 import { useForm } from '~/hooks/useForm';
 import { serviceFormSchema } from '~/schemas/service.schemas';
 import { parseFormData } from '~/utils/parseForm.utils';
-import type * as Route from './+types.service-create';
+import type { Route } from './+types/service-create';
 
 export async function clientAction({ request }: Route.ClientActionArgs) {
 	const formData = await request.formData();

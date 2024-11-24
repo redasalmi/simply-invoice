@@ -2,7 +2,7 @@ import { Outlet } from 'react-router';
 import { CreateLink } from '~/components/CreateLink';
 import { CompaniesList } from '~/components/company/CompaniesList';
 import { getCompanies } from '~/queries/company.queries';
-import type * as Route from './+types.companies-list';
+import type { Route } from './+types/companies-list';
 
 export async function clientLoader() {
 	return {

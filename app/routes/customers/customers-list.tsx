@@ -2,7 +2,7 @@ import { Outlet } from 'react-router';
 import { CreateLink } from '~/components/CreateLink';
 import { EntitiesList } from '~/components/entity/List';
 import { db, getPage } from '~/lib/db';
-import type * as Route from './+types.customers-list';
+import type { Route } from './+types/customers-list';
 
 export async function clientLoader() {
 	return {

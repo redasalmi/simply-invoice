@@ -10,7 +10,7 @@ import {
 } from '~/components/ui/dialog';
 import { Table, TableBody, TableCell, TableRow } from '~/components/ui/table';
 import { db } from '~/lib/db';
-import type * as Route from './+types.service-detail';
+import type { Route } from './+types/service-detail';
 
 export async function clientLoader({ params }: Route.ClientLoaderArgs) {
 	const serviceId = params.id;

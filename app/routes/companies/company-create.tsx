@@ -9,7 +9,7 @@ import { createCompany } from '~/queries/company.queries';
 import { createAddress } from '~/queries/address.queries';
 import { createCompanyCustomField } from '~/queries/companyCustomFields.queries';
 import { CompanyCreate } from '~/components/company/CompanyCreate';
-import type * as Route from './+types.company-create';
+import type { Route } from './+types/company-create';
 
 export async function clientAction({ request }: Route.ClientActionArgs) {
 	const formData = await request.formData();

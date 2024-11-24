@@ -13,7 +13,7 @@ import { Navbar } from '~/components/Navbar';
 import { Footer } from '~/components/Footer';
 import loadDb from '~/lib/loadDb?raw';
 import '~/tailwind.css';
-import type * as Route from './+types.root';
+import type { Route } from './+types/root';
 
 export const links: LinksFunction = () => [
 	{ rel: 'preconnect', href: 'https://fonts.googleapis.com' },

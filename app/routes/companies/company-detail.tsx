@@ -9,7 +9,7 @@ import {
 	DialogTitle,
 } from '~/components/ui/dialog';
 import { getCompany } from '~/queries/company.queries';
-import type * as Route from './+types.company-detail';
+import type { Route } from './+types/company-detail';
 import CompanyDetail from '~/components/company/CompanyDetail';
 
 export async function clientLoader({ params }: Route.ClientLoaderArgs) {

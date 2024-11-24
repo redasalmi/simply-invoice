@@ -12,7 +12,7 @@ import {
 	AlertDialogRoot,
 	AlertDialogTitle,
 } from '~/components/ui/alert-dialog';
-import type * as Route from './+types.service-delete';
+import type { Route } from './+types/service-delete';
 
 export async function clientLoader({ params }: Route.ClientLoaderArgs) {
 	const serviceId = params.id;

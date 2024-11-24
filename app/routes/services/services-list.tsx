@@ -10,7 +10,7 @@ import {
 	TableRow,
 } from '~/components/ui/table';
 import { db, getPage } from '~/lib/db';
-import type * as Route from './+types.services-list';
+import type { Route } from './+types/services-list';
 
 export async function clientLoader() {
 	return {

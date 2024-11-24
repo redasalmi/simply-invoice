@@ -1,7 +1,7 @@
 import { redirect, useNavigate, useNavigation } from 'react-router';
 import { DeleteEntity, DeleteEntityError } from '~/components/entity/Delete';
 import { db } from '~/lib/db';
-import type * as Route from './+types.customer-delete';
+import type { Route } from './+types/customer-delete';
 
 export async function clientLoader({ params }: Route.ClientLoaderArgs) {
 	const customerId = params.id;

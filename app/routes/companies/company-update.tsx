@@ -14,7 +14,7 @@ import { parseFormData } from '~/utils/parseForm.utils';
 import { CompanyNotFound } from '~/components/company/CompanyNotFound';
 import { CompanyUpdate } from '~/components/company/CompanyUpdate';
 import { useForm } from '~/hooks/useForm';
-import type * as Route from './+types.company-update';
+import type { Route } from './+types/company-update';
 
 export async function clientLoader({ params }: Route.ClientLoaderArgs) {
 	const companyId = params.id;
