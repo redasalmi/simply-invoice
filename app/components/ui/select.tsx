@@ -55,6 +55,7 @@ export function Select<T extends string>({
 					value={selectedItem?.id || ''}
 					hidden
 					readOnly
+					className="hidden"
 				/>
 				<div
 					className="flex cursor-pointer justify-between bg-white p-2"
@@ -79,7 +80,7 @@ export function Select<T extends string>({
 							className={cn(
 								highlightedIndex === index && 'bg-blue-300',
 								selectedItem === item && 'font-bold',
-								'flex flex-col py-2 px-3 shadow-sm',
+								'flex flex-col px-3 py-2 shadow-sm',
 							)}
 							key={item.id}
 							{...getItemProps({ item, index })}

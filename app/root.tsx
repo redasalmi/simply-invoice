@@ -11,6 +11,7 @@ import {
 import { SaveDBPath } from '~/components/SaveDBPath';
 import { Navbar } from '~/components/Navbar';
 import { Footer } from '~/components/Footer';
+import { Spinner } from '~/components/Spinner';
 import loadDb from '~/lib/loadDb?raw';
 import '~/tailwind.css';
 import type { Route } from './+types/root';
@@ -94,4 +95,13 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
 export default function App() {
 	return <Outlet />;
+}
+
+export function HydrateFallback() {
+	return (
+		<div className="flex h-lvh w-lvw items-center justify-center">
+			<p>loading the app...</p>
+			<Spinner />
+		</div>
+	);
 }
