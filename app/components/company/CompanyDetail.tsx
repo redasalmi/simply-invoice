@@ -1,6 +1,6 @@
 import { Table, TableBody, TableCell, TableRow } from '~/components/ui/table';
 import { CompanyNotFound } from '~/components/company/CompanyNotFound';
-import { Company } from '~/types';
+import type { Company } from '~/types';
 
 type CompanyDetailProps = {
 	company?: Company;

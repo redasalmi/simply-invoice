@@ -10,7 +10,7 @@ import {
 	AlertDialogRoot,
 	AlertDialogTitle,
 } from '~/components/ui/alert-dialog';
-import { Company } from '~/types';
+import type { Company } from '~/types';
 
 type CompanyDeleteProps = {
 	company?: Company;

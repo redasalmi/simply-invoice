@@ -8,7 +8,7 @@ import {
 	TableHeader,
 	TableRow,
 } from '~/components/ui/table';
-import { Company, PaginatedResult } from '~/types';
+import type { Company, PaginatedResult } from '~/types';
 
 type CompaniesListProps = {
 	companies?: PaginatedResult<Company>;

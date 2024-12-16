@@ -8,12 +8,12 @@ import { FormRoot } from '~/components/ui/form';
 import { Button } from '~/components/ui/button';
 import { addressFields, companyFields } from '~/lib/constants';
 import { cn } from '~/utils/shared.utils';
-import { CompanyFormFlatErrors } from '~/schemas/company.schemas';
 import {
 	customFieldContentKey,
 	customFieldIndexKey,
 	customFieldLabelKey,
 } from '~/schemas/customField.schema';
+import type { CompanyFormFlatErrors } from '~/schemas/company.schemas';
 
 type CustomFieldProps = {
 	field: {

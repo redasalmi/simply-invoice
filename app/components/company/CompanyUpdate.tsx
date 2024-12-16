@@ -8,14 +8,14 @@ import { FormRoot } from '~/components/ui/form';
 import { Button } from '~/components/ui/button';
 import { addressFields, companyFields } from '~/lib/constants';
 import { cn } from '~/utils/shared.utils';
-import { Company, CompanyCustomField } from '~/types';
-import { CompanyFormFlatErrors } from '~/schemas/company.schemas';
 import {
 	customFieldActionKey,
 	customFieldContentKey,
 	customFieldIndexKey,
 	customFieldLabelKey,
 } from '~/schemas/customField.schema';
+import type { Company, CompanyCustomField } from '~/types';
+import type { CompanyFormFlatErrors } from '~/schemas/company.schemas';
 
 type CustomField = CompanyCustomField & {
 	action: 'create' | 'update' | 'delete';

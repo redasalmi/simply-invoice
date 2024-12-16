@@ -1,18 +1,10 @@
 {
-	"include": [
-		"**/*.ts",
-		"**/*.tsx",
-		"**/.server/**/*.ts",
-		"**/.server/**/*.tsx",
-		"**/.client/**/*.ts",
-		"**/.client/**/*.tsx",
-		".react-router/types/**/*"
-	],
+	"include": ["app", ".react-router/types/**/*"],
 	"compilerOptions": {
 		"useDefineForClassFields": true,
 		"allowImportingTsExtensions": true,
 		"lib": ["DOM", "DOM.Iterable", "ES2022"],
-		"types": ["node", "vite/client"],
+		"types": ["vite/client"],
 		"isolatedModules": true,
 		"esModuleInterop": true,
 		"jsx": "react-jsx",
