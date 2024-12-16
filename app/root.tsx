@@ -9,8 +9,7 @@ import {
 	type LinksFunction,
 } from 'react-router';
 import { SaveDBPath } from '~/components/SaveDBPath';
-import { Navbar } from '~/components/Navbar';
-import { Footer } from '~/components/Footer';
+import { Sidebar } from '~/components/Sidebar';
 import { Spinner } from '~/components/Spinner';
 import loadDb from '~/lib/loadDb?raw';
 import '~/tailwind.css';
@@ -66,11 +65,10 @@ function Page({ children }: { children: React.ReactNode }) {
 	}
 
 	return (
-		<>
-			<Navbar />
+		<div className="flex">
+			<Sidebar />
 			<main className="container py-8">{children}</main>
-			<Footer />
-		</>
+		</div>
 	);
 }
 
