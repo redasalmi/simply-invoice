@@ -7,7 +7,7 @@ import {
 	safeParseCustomField,
 } from '~/schemas/customField.schema';
 import { AddressFormSchema } from '~/schemas/address.schemas';
-import { CompanyCustomField, CustomFieldAction } from '~/types';
+import type { CompanyCustomField, CustomFieldAction } from '~/types';
 
 export const CompanyFormSchema = v.pipe(
 	v.objectWithRest(

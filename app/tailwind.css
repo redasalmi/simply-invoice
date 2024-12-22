@@ -191,3 +191,7 @@
 @utility editor-text-underlineStrikethrough {
 	text-decoration: underline line-through;
 }
+
+@utility root {
+	isolation: isolate;
+}

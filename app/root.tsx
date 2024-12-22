@@ -65,7 +65,7 @@ function Page({ children }: { children: React.ReactNode }) {
 	}
 
 	return (
-		<div className="flex">
+		<div className="root flex">
 			<Sidebar />
 			<main className="container py-8">{children}</main>
 		</div>
@@ -74,7 +74,7 @@ function Page({ children }: { children: React.ReactNode }) {
 
 export function Layout({ children }: { children: React.ReactNode }) {
 	return (
-		<html lang="en" className="h-[100%]">
+		<html lang="en">
 			<head>
 				<meta charSet="utf-8" />
 				<meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -82,7 +82,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 				<Links />
 				<script dangerouslySetInnerHTML={{ __html: loadDb }} />
 			</head>
-			<body className="grid h-[100%] grid-rows-[auto_1fr_auto]">
+			<body>
 				<Page>{children}</Page>
 				<ScrollRestoration />
 				<Scripts />

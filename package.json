@@ -11,6 +11,7 @@
 		"typecheck": "react-router typegen && tsc"
 	},
 	"dependencies": {
+		"@base-ui-components/react": "1.0.0-alpha.4",
 		"@lexical/react": "^0.21.0",
 		"@lexical/utils": "^0.21.0",
 		"@radix-ui/react-alert-dialog": "^1.1.4",

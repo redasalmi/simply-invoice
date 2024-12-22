@@ -1,12 +1,10 @@
 import { Form } from 'react-router';
 import {
-	AlertDialogAction,
+	AlertDialogPopup,
+	AlertDialogBackdrop,
 	AlertDialogActionButton,
-	AlertDialogCancel,
 	AlertDialogCancelButton,
-	AlertDialogContent,
 	AlertDialogDescription,
-	AlertDialogOverlay,
 	AlertDialogRoot,
 	AlertDialogTitle,
 } from '~/components/ui/alert-dialog';
@@ -30,53 +28,45 @@ export function CompanyDelete({
 	if (!company) {
 		return (
 			<AlertDialogRoot open>
-				<AlertDialogOverlay>
-					<AlertDialogContent>
-						<AlertDialogTitle>
-							{errors?.message || `Error Deleting Company!`}
-						</AlertDialogTitle>
-						<AlertDialogDescription>
-							{errors?.description ||
-								`An error happened while deleting your company, please try again later.`}
-						</AlertDialogDescription>
-						<div className="flex justify-end gap-[25px]">
-							<AlertDialogCancel onClick={closeAlert} asChild>
-								<AlertDialogCancelButton>Cancel</AlertDialogCancelButton>
-							</AlertDialogCancel>
-						</div>
-					</AlertDialogContent>
-				</AlertDialogOverlay>
+				<AlertDialogBackdrop />
+				<AlertDialogPopup>
+					<AlertDialogTitle>
+						{errors?.message || `Error Deleting Company!`}
+					</AlertDialogTitle>
+					<AlertDialogDescription>
+						{errors?.description ||
+							`An error happened while deleting your company, please try again later.`}
+					</AlertDialogDescription>
+					<div className="flex justify-end gap-[25px]">
+						<AlertDialogCancelButton onClick={closeAlert}>
+							Cancel
+						</AlertDialogCancelButton>
+					</div>
+				</AlertDialogPopup>
 			</AlertDialogRoot>
 		);
 	}
 
 	return (
 		<AlertDialogRoot open>
-			<AlertDialogOverlay>
-				<AlertDialogContent onEscapeKeyDown={closeAlert}>
-					<AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-					<AlertDialogDescription>
-						This action cannot be undone. This will permanently delete the{' '}
-						<span className="font-bold">{company.name}</span> company.
-					</AlertDialogDescription>
-					<div className="flex justify-end gap-[25px]">
-						<AlertDialogCancel
-							disabled={isSubmitting}
-							onClick={closeAlert}
-							asChild
-						>
-							<AlertDialogCancelButton>Cancel</AlertDialogCancelButton>
-						</AlertDialogCancel>
-						<AlertDialogAction asChild>
-							<Form method="POST">
-								<AlertDialogActionButton disabled={isSubmitting} type="submit">
-									{isLoading ? '...Deleting' : 'Delete'}
-								</AlertDialogActionButton>
-							</Form>
-						</AlertDialogAction>
-					</div>
-				</AlertDialogContent>
-			</AlertDialogOverlay>
+			<AlertDialogBackdrop />
+			<AlertDialogPopup onEscapeKeyDown={closeAlert}>
+				<AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+				<AlertDialogDescription>
+					This action cannot be undone. This will permanently delete the{' '}
+					<span className="font-bold">{company.name}</span> company.
+				</AlertDialogDescription>
+				<div className="flex justify-end gap-[25px]">
+					<AlertDialogCancelButton disabled={isSubmitting} onClick={closeAlert}>
+						Cancel
+					</AlertDialogCancelButton>
+					<Form method="POST">
+						<AlertDialogActionButton>
+							{isLoading ? '...Deleting' : 'Delete'}
+						</AlertDialogActionButton>
+					</Form>
+				</div>
+			</AlertDialogPopup>
 		</AlertDialogRoot>
 	);
 }

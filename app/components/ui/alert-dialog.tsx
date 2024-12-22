@@ -1,46 +1,37 @@
-import * as React from 'react';
-import * as AlertDialog from '@radix-ui/react-alert-dialog';
+import { AlertDialog } from '@base-ui-components/react/alert-dialog';
 import { cn } from '~/utils/shared.utils';
 import { Button } from '~/components/ui/button';
 
-type ButtonRef = HTMLButtonElement;
-type ButtonProps = Omit<React.ComponentPropsWithoutRef<'button'>, 'className'>;
-
-export function AlertDialogRoot(props: AlertDialog.AlertDialogProps) {
+export function AlertDialogRoot(props: AlertDialog.Root.Props) {
 	return <AlertDialog.Root {...props} />;
 }
 
-export const AlertDialogTrigger = React.forwardRef<
-	HTMLButtonElement,
-	AlertDialog.AlertDialogTriggerProps
->(function AlertDialogTrigger(props, ref) {
-	return <AlertDialog.Trigger ref={ref} {...props} />;
-});
+export function AlertDialogTrigger(props: AlertDialog.Trigger.Props) {
+	return <AlertDialog.Trigger {...props} />;
+}
 
-export function AlertDialogPortal(props: AlertDialog.AlertDialogPortalProps) {
+export function AlertDialogPortal(props: AlertDialog.Portal.Props) {
 	return <AlertDialog.Portal {...props} />;
 }
 
-export const AlertDialogOverlay = React.forwardRef<
-	HTMLDivElement,
-	AlertDialog.AlertDialogOverlayProps
->(function AlertDialogOverlay({ className, ...props }, ref) {
+export function AlertDialogBackdrop({
+	className,
+	...props
+}: AlertDialog.Backdrop.Props) {
 	return (
-		<AlertDialog.Overlay
-			ref={ref}
+		<AlertDialog.Backdrop
 			className={cn('bg-blackA6 fixed inset-0', className)}
 			{...props}
 		/>
 	);
-});
+}
 
-export const AlertDialogContent = React.forwardRef<
-	HTMLDivElement,
-	AlertDialog.AlertDialogContentProps
->(function AlertDialogContent({ className, ...props }, ref) {
+export function AlertDialogPopup({
+	className,
+	...props
+}: AlertDialog.Popup.Props) {
 	return (
-		<AlertDialog.Content
-			ref={ref}
+		<AlertDialog.Popup
 			className={cn(
 				'fixed top-[50%] left-[50%] max-h-[85vh] w-[90vw] max-w-[500px] translate-x-[-50%] translate-y-[-50%] rounded-[6px] bg-white p-[25px] shadow-[hsl(206_22%_7%_/_35%)_0px_10px_38px_-10px,_hsl(206_22%_7%_/_20%)_0px_10px_20px_-15px] focus:outline-none',
 				className,
@@ -48,28 +39,26 @@ export const AlertDialogContent = React.forwardRef<
 			{...props}
 		/>
 	);
-});
+}
 
-export const AlertDialogTitle = React.forwardRef<
-	HTMLHeadingElement,
-	AlertDialog.AlertDialogTitleProps
->(function AlertDialogTitle({ className, ...props }, ref) {
+export function AlertDialogTitle({
+	className,
+	...props
+}: AlertDialog.Title.Props) {
 	return (
 		<AlertDialog.Title
-			ref={ref}
 			className={cn('text-mauve-12 m-0 text-[17px] font-medium', className)}
 			{...props}
 		/>
 	);
-});
+}
 
-export const AlertDialogDescription = React.forwardRef<
-	HTMLParagraphElement,
-	AlertDialog.AlertDialogDescriptionProps
->(function AlertDialogDescription({ className, ...props }, ref) {
+export function AlertDialogDescription({
+	className,
+	...props
+}: AlertDialog.Description.Props) {
 	return (
 		<AlertDialog.Description
-			ref={ref}
 			className={cn(
 				'text-mauve-11 mt-4 mb-5 text-[15px] leading-normal',
 				className,
@@ -77,37 +66,18 @@ export const AlertDialogDescription = React.forwardRef<
 			{...props}
 		/>
 	);
-});
+}
 
-export const AlertDialogCancel = React.forwardRef<
-	HTMLButtonElement,
-	AlertDialog.AlertDialogCancelProps
->(function AlertDialogCancel(props, ref) {
-	return <AlertDialog.Cancel ref={ref} {...props} />;
-});
+export function AlertDialogClose(props: AlertDialog.Close.Props) {
+	return <AlertDialog.Close {...props} />;
+}
 
-export const AlertDialogAction = React.forwardRef<
-	HTMLButtonElement,
-	AlertDialog.AlertDialogActionProps
->(function AlertDialogAction(props, ref) {
-	return <AlertDialog.Action ref={ref} {...props} />;
-});
+export function AlertDialogCancelButton(props: AlertDialog.Close.Props) {
+	return (
+		<AlertDialog.Close render={<Button variant="alternative" />} {...props} />
+	);
+}
 
-export const AlertDialogTriggerButton = React.forwardRef<
-	ButtonRef,
-	ButtonProps
->(function AlertDialogTriggerButton(props, ref) {
-	return <Button ref={ref} {...props} />;
-});
-
-export const AlertDialogCancelButton = React.forwardRef<ButtonRef, ButtonProps>(
-	function AlertDialogCancelButton(props, ref) {
-		return <Button ref={ref} variant="alternative" {...props} />;
-	},
-);
-
-export const AlertDialogActionButton = React.forwardRef<ButtonRef, ButtonProps>(
-	function AlertDialogActionButton(props, ref) {
-		return <Button ref={ref} variant="danger" {...props} />;
-	},
-);
+export function AlertDialogActionButton(props: AlertDialog.Close.Props) {
+	return <AlertDialog.Close render={<Button variant="danger" />} {...props} />;
+}
