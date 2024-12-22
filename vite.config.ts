@@ -16,14 +16,7 @@ export default defineConfig({
 			filter: /\.[jt]sx?$/,
 			babelConfig: {
 				presets: ['@babel/preset-typescript'],
-				plugins: [
-					[
-						'babel-plugin-react-compiler',
-						{
-							target: '18',
-						},
-					],
-				],
+				plugins: [['babel-plugin-react-compiler']],
 			},
 		}),
 	],
