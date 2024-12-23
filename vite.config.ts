@@ -4,7 +4,6 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 import { defineConfig } from 'vite';
 import babel from 'vite-plugin-babel';
 
-// @ts-expect-error process is a nodejs global
 const host = process.env.TAURI_DEV_HOST;
 
 export default defineConfig({
@@ -16,7 +15,14 @@ export default defineConfig({
 			filter: /\.[jt]sx?$/,
 			babelConfig: {
 				presets: ['@babel/preset-typescript'],
-				plugins: [['babel-plugin-react-compiler']],
+				plugins: [
+					[
+						'babel-plugin-react-compiler',
+						{
+							target: '19',
+						},
+					],
+				],
 			},
 		}),
 	],

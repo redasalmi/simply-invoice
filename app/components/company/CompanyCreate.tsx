@@ -14,6 +14,7 @@ import {
 	customFieldLabelKey,
 } from '~/schemas/customField.schema';
 import type { CompanyFormFlatErrors } from '~/schemas/company.schemas';
+import { RichTextEditor } from '../RichText/editor';
 
 type CustomFieldProps = {
 	field: {
@@ -39,10 +40,10 @@ function CustomField({ field, index, error, deleteField }: CustomFieldProps) {
 		}
 
 		const observer = new MutationObserver(() => {
-			const hasDataInvalid = Boolean(
+			const hasInvalidData = Boolean(
 				containerRef.current?.querySelectorAll('[data-invalid=true]').length,
 			);
-			setHasError(hasDataInvalid);
+			setHasError(hasInvalidData);
 		});
 
 		observer.observe(containerRef.current, {
@@ -168,19 +169,18 @@ export function CompanyCreate({
 				</div>
 
 				<div>
-					<div className="flex items-center justify-between">
-						<div>
-							<h3 className="text-2xl">Custom Fields</h3>
-							<p className="mb-2 block text-sm">
-								Add any custom fields and order them
-							</p>
-						</div>
-						<div>
-							<Button onClick={addField}>Add New Custom Field</Button>
-						</div>
+					<div>
+						<h3 className="text-2xl">Custom Fields</h3>
+						<p className="mb-2 block text-sm">
+							Add any custom fields and order them
+						</p>
 					</div>
 
-					{customFields.length ? (
+					<div>
+						<RichTextEditor />
+					</div>
+
+					{/* {customFields.length ? (
 						<div>
 							<Reorder.Group values={customFields} onReorder={setCustomFields}>
 								{customFields.map((field, index) => (
@@ -203,7 +203,7 @@ export function CompanyCreate({
 								))}
 							</Reorder.Group>
 						</div>
-					) : null}
+					) : null} */}
 				</div>
 
 				<div>

@@ -25,11 +25,17 @@ export function CompanyDelete({
 	isSubmitting,
 	closeAlert,
 }: CompanyDeleteProps) {
+	const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+		if (event.key === 'Escape') {
+			closeAlert();
+		}
+	};
+
 	if (!company) {
 		return (
 			<AlertDialogRoot open>
 				<AlertDialogBackdrop />
-				<AlertDialogPopup>
+				<AlertDialogPopup onKeyDown={handleKeyDown}>
 					<AlertDialogTitle>
 						{errors?.message || `Error Deleting Company!`}
 					</AlertDialogTitle>
@@ -50,7 +56,7 @@ export function CompanyDelete({
 	return (
 		<AlertDialogRoot open>
 			<AlertDialogBackdrop />
-			<AlertDialogPopup onEscapeKeyDown={closeAlert}>
+			<AlertDialogPopup onKeyDown={handleKeyDown}>
 				<AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
 				<AlertDialogDescription>
 					This action cannot be undone. This will permanently delete the{' '}

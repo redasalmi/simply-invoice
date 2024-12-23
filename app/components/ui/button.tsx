@@ -19,12 +19,10 @@ export function Button({
 	className,
 	type = 'button',
 	variant = 'default',
-	ref,
 	...props
 }: ButtonProps) {
 	return (
 		<button
-			ref={ref}
 			type={type}
 			className={cn(buttonVariants[variant], className)}
 			{...props}
