@@ -9,17 +9,13 @@ import {
 	updateCompanySql,
 } from '~/sql/companies.sql';
 import { itemsPerPage } from '~/lib/pagination';
-import type {
-	Address,
-	Company,
-	CompanyCustomField,
-	PaginatedResult,
-} from '~/types';
+import type { Address, Company, PaginatedResult } from '~/types';
 
 type CompaniesSelectResult = Array<
-	Omit<Company, 'address' | 'customFields'> &
-		Omit<Address, 'createdAt' | 'updatedAt'> &
-		Omit<CompanyCustomField, 'companyId' | 'createdAt' | 'updatedAt'>
+	Omit<Company, 'address' | 'additionalInformation'> &
+		Address & {
+			additionalInformation: string | null;
+		}
 >;
 
 type CompaniesCountResult = [
@@ -29,13 +25,14 @@ type CompaniesCountResult = [
 ];
 
 function parseCompaniesSelectResult(companiesData: CompaniesSelectResult) {
-	const companies = new Map<string, Company>();
+	const companies: Array<Company> = [];
 
 	for (let index = 0; index < companiesData.length; index++) {
 		const {
 			companyId,
 			name,
 			email,
+			additionalInformation,
 			createdAt,
 			updatedAt,
 			addressId,
@@ -45,58 +42,27 @@ function parseCompaniesSelectResult(companiesData: CompaniesSelectResult) {
 			country,
 			province,
 			zip,
-			companyCustomFieldId,
-			customFieldIndex,
-			label,
-			content,
 		} = companiesData[index];
 
-		if (companies.has(companyId)) {
-			if (companyCustomFieldId) {
-				const company = companies.get(companyId) as Company;
-				const updatedCompany: Company = Object.assign(company, {
-					customFields: [
-						...company.customFields,
-						{
-							companyCustomFieldId,
-							customFieldIndex,
-							label,
-							content,
-						},
-					],
-				});
-
-				companies.set(companyId, updatedCompany);
-			}
-		} else {
-			const company: Company = {
-				companyId,
-				name: name,
-				email: email,
-				createdAt,
-				updatedAt,
-				address: {
-					addressId,
-					address1,
-					address2,
-					city,
-					country,
-					province,
-					zip,
-				},
-				customFields: [],
-			};
-			if (companyCustomFieldId) {
-				company.customFields.push({
-					companyCustomFieldId,
-					customFieldIndex,
-					label,
-					content,
-				});
-			}
-
-			companies.set(companyId, company);
-		}
+		companies.push({
+			companyId,
+			name: name,
+			email: email,
+			additionalInformation: additionalInformation
+				? JSON.parse(additionalInformation)
+				: undefined,
+			createdAt,
+			updatedAt,
+			address: {
+				addressId,
+				address1,
+				address2,
+				city,
+				country,
+				province,
+				zip,
+			},
+		});
 	}
 
 	return companies;
@@ -141,7 +107,6 @@ export async function getCompanies(
 
 	const companies = parseCompaniesSelectResult(companiesData);
 
-	const items = Array.from(companies.values());
 	const total = companiesCount[0]['COUNT(company_id)'];
 	const hasNextPage = Boolean(hasNextCompaniesCount[0]['COUNT(company_id)']);
 	const hasPreviousPage = Boolean(
@@ -149,7 +114,7 @@ export async function getCompanies(
 	);
 
 	return {
-		items,
+		items: companies,
 		total,
 		pageInfo: {
 			endCursor,
@@ -170,12 +135,13 @@ export async function getCompany(companyId: string) {
 		return undefined;
 	}
 
-	const company = parseCompaniesSelectResult(companiesData);
+	const companies = parseCompaniesSelectResult(companiesData);
 
-	return company.get(companyId);
+	return companies[0];
 }
 
 type CreateCompanyInput = Pick<Company, 'companyId' | 'name' | 'email'> & {
+	additionalInformation?: string;
 	addressId: string;
 };
 
@@ -185,6 +151,7 @@ export async function createCompany(company: CreateCompanyInput) {
 		company.name,
 		company.email,
 		company.addressId,
+		company.additionalInformation,
 	]);
 }
 

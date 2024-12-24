@@ -1,45 +1,18 @@
 import * as v from 'valibot';
 import { ulid } from 'ulid';
-import {
-	customFieldContentKey,
-	customFieldLabelKey,
-	parseCustomFields,
-	safeParseCustomField,
-} from '~/schemas/customField.schema';
 import { AddressFormSchema } from '~/schemas/address.schemas';
-import type { CompanyCustomField, CustomFieldAction } from '~/types';
 
-export const CompanyFormSchema = v.pipe(
-	v.objectWithRest(
-		{
-			'company-id': v.optional(v.pipe(v.string(), v.ulid())),
-			'company-name': v.pipe(v.string(), v.nonEmpty('Name is required')),
-			'company-email': v.pipe(
-				v.string(),
-				v.nonEmpty('Email is required'),
-				v.email('A valid email is required'),
-			),
-			...AddressFormSchema.entries,
-		},
+export const CompanyFormSchema = v.object({
+	'company-id': v.optional(v.pipe(v.string(), v.ulid())),
+	'company-name': v.pipe(v.string(), v.nonEmpty('Name is required')),
+	'company-email': v.pipe(
 		v.string(),
+		v.nonEmpty('Email is required'),
+		v.email('A valid email is required'),
 	),
-	v.rawCheck(({ dataset, addIssue }) => {
-		for (const key in dataset.value) {
-			if (
-				key.includes(customFieldLabelKey) ||
-				key.includes(customFieldContentKey)
-			) {
-				const parsedValue = safeParseCustomField(key, dataset.value[key]);
-
-				if (parsedValue?.issues) {
-					parsedValue.issues.forEach((issue) => {
-						addIssue(issue);
-					});
-				}
-			}
-		}
-	}),
-);
+	'company-additional-information': v.optional(v.string()),
+	...AddressFormSchema.entries,
+});
 
 export type CompanyFormFlatErrors = v.FlatErrors<typeof CompanyFormSchema>;
 
@@ -63,11 +36,8 @@ export function transformCompanyFormData(
 			companyId,
 			name: data['company-name'],
 			email: data['company-email'],
+			additionalInformation: data['company-additional-information'],
 			addressId,
 		},
-		customFields: parseCustomFields(data, 'companyCustomFieldId', {
-			id: companyId,
-			key: 'companyId',
-		}) as Array<CompanyCustomField & { action: CustomFieldAction }>,
 	};
 }

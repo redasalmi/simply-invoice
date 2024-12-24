@@ -1,113 +1,11 @@
 import * as React from 'react';
 import { Form } from 'react-router';
-import { ulid } from 'ulid';
-import { Reorder } from 'framer-motion';
-import { MoveIcon, TrashIcon } from 'lucide-react';
 import { FormField } from '~/components/FormField';
 import { FormRoot } from '~/components/ui/form';
 import { Button } from '~/components/ui/button';
+import { RichTextEditor } from '~/components/RichText/editor';
 import { addressFields, companyFields } from '~/lib/constants';
-import { cn } from '~/utils/shared.utils';
-import {
-	customFieldContentKey,
-	customFieldIndexKey,
-	customFieldLabelKey,
-} from '~/schemas/customField.schema';
 import type { CompanyFormFlatErrors } from '~/schemas/company.schemas';
-import { RichTextEditor } from '../RichText/editor';
-
-type CustomFieldProps = {
-	field: {
-		companyCustomFieldId: string;
-	};
-	index: number;
-	error?: {
-		label?: string;
-		content?: string;
-	};
-	deleteField: () => void;
-};
-
-function CustomField({ field, index, error, deleteField }: CustomFieldProps) {
-	const containerRef = React.useRef<HTMLDivElement | null>(null);
-	const [hasError, setHasError] = React.useState(false);
-
-	const customFieldId = field.companyCustomFieldId;
-
-	React.useEffect(() => {
-		if (!containerRef.current) {
-			return;
-		}
-
-		const observer = new MutationObserver(() => {
-			const hasInvalidData = Boolean(
-				containerRef.current?.querySelectorAll('[data-invalid=true]').length,
-			);
-			setHasError(hasInvalidData);
-		});
-
-		observer.observe(containerRef.current, {
-			attributes: true,
-			subtree: true,
-		});
-
-		return () => {
-			observer.disconnect();
-		};
-	}, []);
-
-	return (
-		<Reorder.Item value={field}>
-			<div
-				ref={containerRef}
-				className={cn(
-					'my-2 grid grid-cols-[auto_1fr_1fr_auto] items-end gap-2',
-					hasError && 'items-center',
-				)}
-			>
-				<div>
-					<Button variant="icon" className="active:cursor-grab">
-						<MoveIcon />
-					</Button>
-				</div>
-
-				<input
-					hidden
-					readOnly
-					name={`${customFieldIndexKey}-${customFieldId}`}
-					value={index}
-					className="hidden"
-				/>
-
-				<FormField
-					id={`${customFieldLabelKey}-${customFieldId}`}
-					label="Label"
-					name={`${customFieldLabelKey}-${customFieldId}`}
-					className="h-full flex-1"
-					serverError={error?.label}
-				/>
-
-				<FormField
-					id={`${customFieldContentKey}-${customFieldId}`}
-					label="Content"
-					name={`${customFieldContentKey}-${customFieldId}`}
-					className="h-full flex-1"
-					serverError={error?.content}
-				/>
-
-				<div className="flex gap-2">
-					<Button
-						aria-label="delete field"
-						variant="icon"
-						onClick={deleteField}
-					>
-						<TrashIcon />
-					</Button>
-				</div>
-			</div>
-		</Reorder.Item>
-	);
-}
 
 type CompanyCreateProps = {
 	isSubmitting?: boolean;
@@ -122,24 +20,6 @@ export function CompanyCreate({
 	errors,
 	handleSubmit,
 }: CompanyCreateProps) {
-	const [customFields, setCustomFields] = React.useState<
-		Array<{ companyCustomFieldId: string }>
-	>([]);
-
-	const addField = () => {
-		setCustomFields((prevFields) =>
-			prevFields.concat({ companyCustomFieldId: ulid() }),
-		);
-	};
-
-	const deleteField = (companyCustomFieldId: string) => {
-		setCustomFields((prevFields) =>
-			prevFields.filter(
-				(field) => field.companyCustomFieldId !== companyCustomFieldId,
-			),
-		);
-	};
-
 	return (
 		<FormRoot asChild>
 			<Form method="post" onSubmit={handleSubmit}>
@@ -170,40 +50,15 @@ export function CompanyCreate({
 
 				<div>
 					<div>
-						<h3 className="text-2xl">Custom Fields</h3>
+						<h3 className="text-2xl">Additional Information</h3>
 						<p className="mb-2 block text-sm">
-							Add any custom fields and order them
+							Add additional information about the company
 						</p>
 					</div>
 
 					<div>
-						<RichTextEditor />
+						<RichTextEditor name="company-additional-information" />
 					</div>
-
-					{/* {customFields.length ? (
-						<div>
-							<Reorder.Group values={customFields} onReorder={setCustomFields}>
-								{customFields.map((field, index) => (
-									<CustomField
-										key={field.companyCustomFieldId}
-										field={field}
-										index={index}
-										error={{
-											label:
-												errors?.nested?.[
-													`${customFieldLabelKey}-${field.companyCustomFieldId}`
-												]?.[0],
-											content:
-												errors?.nested?.[
-													`${customFieldContentKey}-${field.companyCustomFieldId}`
-												]?.[0],
-										}}
-										deleteField={() => deleteField(field.companyCustomFieldId)}
-									/>
-								))}
-							</Reorder.Group>
-						</div>
-					) : null} */}
 				</div>
 
 				<div>

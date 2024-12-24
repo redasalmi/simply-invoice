@@ -11,6 +11,7 @@ pub mod database {
     company_id VARCHAR(26) NOT NULL PRIMARY KEY,
     name TEXT NOT NULL,
     email TEXT NOT NULL,
+    additional_information JSON,
     address_id VARCHAR(26) NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at DATETIME,

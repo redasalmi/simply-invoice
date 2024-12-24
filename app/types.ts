@@ -1,3 +1,5 @@
+import type { PortableTextBlock } from '@portabletext/editor';
+
 export type Address = {
 	addressId: string;
 	address1: string;
@@ -23,7 +25,7 @@ export type Company = {
 	name: string;
 	email: string;
 	address: Address;
-	customFields: Array<CompanyCustomField>;
+	additionalInformation?: Array<PortableTextBlock>;
 	createdAt: string;
 	updatedAt?: string;
 };

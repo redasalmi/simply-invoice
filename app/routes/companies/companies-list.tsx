@@ -6,7 +6,7 @@ import type { Route } from './+types/companies-list';
 
 export async function clientLoader() {
 	return {
-		companies: await getCompanies(),
+		companies: await getCompanies(), // TODO: remove additional_information if not needed in list
 	};
 }
 

@@ -7,7 +7,6 @@ import {
 import { parseFormData } from '~/utils/parseForm.utils';
 import { createCompany } from '~/queries/company.queries';
 import { createAddress } from '~/queries/address.queries';
-import { createCompanyCustomField } from '~/queries/companyCustomFields.queries';
 import { CompanyCreate } from '~/components/company/CompanyCreate';
 import type { Route } from './+types/company-create';
 
@@ -21,15 +20,8 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
 		};
 	}
 
-	const { address, company, customFields } = transformCompanyFormData(data);
-	await createAddress(address);
-	await createCompany(company);
-
-	if (customFields.length) {
-		await Promise.all(
-			customFields.map((customField) => createCompanyCustomField(customField)),
-		);
-	}
+	const { address, company } = transformCompanyFormData(data);
+	await Promise.all([createAddress(address), createCompany(company)]);
 
 	return redirect('/companies');
 }

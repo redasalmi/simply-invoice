@@ -20,7 +20,9 @@ type RichTextEditorProps = {
 };
 
 export function RichTextEditor({ name, initialValue }: RichTextEditorProps) {
-	const [value, setValue] = useState<EditorValue>(() => initialValue || []);
+	const [value, setValue] = useState<EditorValue | undefined>(
+		() => initialValue,
+	);
 
 	const handleEditorEvent = (event: EditorEmittedEvent) => {
 		if (event.type === 'mutation') {
@@ -35,7 +37,10 @@ export function RichTextEditor({ name, initialValue }: RichTextEditorProps) {
 				initialValue: value,
 			}}
 		>
-			<input type="hidden" name={name} value={JSON.stringify(value)} />
+			{value ? (
+				<input type="hidden" name={name} value={JSON.stringify(value)} />
+			) : null}
+
 			<EditorEventListener on={handleEditorEvent} />
 			<Toolbar />
 			<PortableTextEditable
