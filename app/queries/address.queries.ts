@@ -1,5 +1,5 @@
 import { createAddressSql, updateAddressSql } from '~/sql/addresses.sql';
-import { Address } from '~/types';
+import type { Address } from '~/types';
 
 type CreateAddressInput = Omit<Address, 'createdAt' | 'updatedAt'>;
 

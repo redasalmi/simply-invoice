@@ -90,8 +90,8 @@ INSERT INTO companies (company_id, name, email, address_id, additional_informati
 
 export const updateCompanySql = /* sql */ `
 UPDATE companies 
-SET name = $1, email = $2, updated_at = CURRENT_TIMESTAMP
-WHERE company_id = $3;
+SET name = $1, email = $2, additional_information = JSON_INSERT($3), updated_at = CURRENT_TIMESTAMP
+WHERE company_id = $4;
 `;
 
 export const deleteCompanySql = /* sql */ `

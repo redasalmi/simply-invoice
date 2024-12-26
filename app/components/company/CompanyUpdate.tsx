@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { Form } from 'react-router';
-import { ulid } from 'ulid';
 import { Reorder } from 'framer-motion';
 import { MoveIcon, TrashIcon } from 'lucide-react';
 import { FormField } from '~/components/FormField';
 import { FormRoot } from '~/components/ui/form';
 import { Button } from '~/components/ui/button';
+import { RichTextEditor } from '~/components/RichText/editor';
 import { addressFields, companyFields } from '~/lib/constants';
 import { cn } from '~/utils/shared.utils';
 import {
@@ -140,56 +140,10 @@ export function CompanyUpdate({
 	errors,
 	handleSubmit,
 }: CompanyUpdateProps) {
-	const [customFields, setCustomFields] = React.useState<Array<CustomField>>(
-		company.customFields
-			? company.customFields.map((customField) => ({
-					...customField,
-					action: 'update',
-				}))
-			: [],
-	);
-
-	const addField = () => {
-		setCustomFields((prevFields) =>
-			prevFields.concat({
-				companyCustomFieldId: ulid(),
-				customFieldIndex: prevFields.length,
-				label: '',
-				content: '',
-				action: 'create',
-			}),
-		);
-	};
-
-	const deleteField = (companyCustomFieldId: string) => {
-		const updatedCustomFields = customFields
-			.map((customField) => {
-				if (customField.companyCustomFieldId === companyCustomFieldId) {
-					return customField.action === 'update'
-						? {
-								...customField,
-								action: 'delete',
-							}
-						: null;
-				}
-
-				return customField;
-			})
-			.filter(Boolean);
-
-		setCustomFields(updatedCustomFields);
-	};
-
 	return (
 		<FormRoot asChild>
 			<Form method="post" onSubmit={handleSubmit}>
-				<input
-					hidden
-					readOnly
-					name="company-id"
-					className="hidden"
-					value={company.companyId}
-				/>
+				<input type="hidden" name="company-id" value={company.companyId} />
 
 				<div>
 					{companyFields.map((field) => (
@@ -229,42 +183,19 @@ export function CompanyUpdate({
 				</div>
 
 				<div>
-					<div className="flex items-center justify-between">
-						<div>
-							<h3 className="text-2xl">Custom Fields</h3>
-							<p className="mb-2 block text-sm">
-								Add any custom fields and order them
-							</p>
-						</div>
-						<div>
-							<Button onClick={addField}>Add New Custom Field</Button>
-						</div>
+					<div>
+						<h3 className="text-2xl">Additional Information</h3>
+						<p className="mb-2 block text-sm">
+							Add additional information about the company
+						</p>
 					</div>
 
-					{customFields.length ? (
-						<div>
-							<Reorder.Group values={customFields} onReorder={setCustomFields}>
-								{customFields.map((field, index) => (
-									<CustomField
-										key={field.companyCustomFieldId}
-										field={field}
-										index={index}
-										error={{
-											label:
-												errors?.nested?.[
-													`${customFieldLabelKey}-${field.companyCustomFieldId}`
-												]?.[0],
-											content:
-												errors?.nested?.[
-													`${customFieldContentKey}-${field.companyCustomFieldId}`
-												]?.[0],
-										}}
-										deleteField={() => deleteField(field.companyCustomFieldId)}
-									/>
-								))}
-							</Reorder.Group>
-						</div>
-					) : null}
+					<div>
+						<RichTextEditor
+							name="company-additional-information"
+							initialValue={company.additionalInformation}
+						/>
+					</div>
 				</div>
 
 				<div>

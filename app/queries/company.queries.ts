@@ -155,12 +155,15 @@ export async function createCompany(company: CreateCompanyInput) {
 	]);
 }
 
-type UpdateCompanyInput = Pick<Company, 'companyId' | 'name' | 'email'>;
+type UpdateCompanyInput = Pick<Company, 'companyId' | 'name' | 'email'> & {
+	additionalInformation?: string;
+};
 
 export async function updateCompany(company: UpdateCompanyInput) {
 	return window.db.execute(updateCompanySql, [
 		company.name,
 		company.email,
+		company.additionalInformation,
 		company.companyId,
 	]);
 }

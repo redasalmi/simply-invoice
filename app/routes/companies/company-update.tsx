@@ -5,11 +5,6 @@ import {
 	transformCompanyFormData,
 } from '~/schemas/company.schemas';
 import { updateAddress } from '~/queries/address.queries';
-import {
-	createCompanyCustomField,
-	deleteCompanyCustomField,
-	updateCompanyCustomField,
-} from '~/queries/companyCustomFields.queries';
 import { parseFormData } from '~/utils/parseForm.utils';
 import { CompanyNotFound } from '~/components/company/CompanyNotFound';
 import { CompanyUpdate } from '~/components/company/CompanyUpdate';
@@ -34,29 +29,8 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
 		};
 	}
 
-	const { address, company, customFields } = transformCompanyFormData(data);
-	await updateAddress(address);
-	await updateCompany(company);
-
-	if (customFields.length) {
-		await Promise.all(
-			customFields
-				.map((customField) => {
-					if (customField.action === 'create') {
-						return createCompanyCustomField(customField);
-					}
-
-					if (customField.action === 'update') {
-						return updateCompanyCustomField(customField);
-					}
-
-					if (customField.action === 'delete') {
-						return deleteCompanyCustomField(customField.companyCustomFieldId);
-					}
-				})
-				.filter(Boolean),
-		);
-	}
+	const { address, company } = transformCompanyFormData(data);
+	await Promise.all([updateAddress(address), updateCompany(company)]);
 
 	return redirect('/companies');
 }
