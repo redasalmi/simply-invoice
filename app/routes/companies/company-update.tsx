@@ -1,4 +1,4 @@
-import { redirect, useNavigation } from 'react-router';
+import { redirect, useNavigation, Form } from 'react-router';
 import { getCompany, updateCompany } from '~/queries/company.queries';
 import {
 	CompanyFormSchema,
@@ -6,9 +6,14 @@ import {
 } from '~/schemas/company.schemas';
 import { updateAddress } from '~/queries/address.queries';
 import { parseFormData } from '~/utils/parseForm.utils';
-import { CompanyNotFound } from '~/components/company/CompanyNotFound';
-import { CompanyUpdate } from '~/components/company/CompanyUpdate';
+import { CompanyNotFound } from '~/routes/companies/components/CompanyNotFound';
+import { FormField } from '~/components/FormField';
+import { FormRoot } from '~/components/ui/form';
+import { Button } from '~/components/ui/button';
+import { RichTextEditor } from '~/components/RichText/editor';
+import { addressFields, companyFields } from '~/lib/constants';
 import { useForm } from '~/hooks/useForm';
+import type { Company } from '~/types';
 import type { Route } from './+types/company-update';
 
 export async function clientLoader({ params }: Route.ClientLoaderArgs) {
@@ -60,13 +65,88 @@ export default function CompanyUpdateRoute({
 
 	return (
 		<section>
-			<CompanyUpdate
-				company={company}
-				isLoading={isLoading}
-				isSubmitting={isSubmitting}
-				errors={errors}
-				handleSubmit={handleSubmit}
-			/>
+			<FormRoot asChild>
+				<Form method="post" onSubmit={handleSubmit}>
+					<input type="hidden" name="company-id" value={company.companyId} />
+
+					<div>
+						{companyFields.map((field) => (
+							<FormField
+								key={field.id}
+								className="my-2"
+								serverError={
+									errors?.nested?.[
+										field.name as keyof typeof errors.nested
+									]?.[0]
+								}
+								defaultValue={
+									company[
+										field.name.replace('company-', '') as keyof Pick<
+											Company,
+											'name' | 'email'
+										>
+									]
+								}
+								{...field}
+							/>
+						))}
+					</div>
+
+					<div>
+						<h3 className="text-2xl">Address</h3>
+						<div>
+							<input
+								type="hidden"
+								name="address-address-id"
+								value={company.address.addressId}
+							/>
+
+							{addressFields.map((field) => (
+								<FormField
+									key={field.id}
+									className="my-2"
+									serverError={
+										errors?.nested?.[
+											field.name as keyof typeof errors.nested
+										]?.[0]
+									}
+									defaultValue={
+										company.address[
+											field.name.replace(
+												'address-',
+												'',
+											) as keyof typeof company.address
+										]
+									}
+									{...field}
+								/>
+							))}
+						</div>
+					</div>
+
+					<div>
+						<div>
+							<h3 className="text-2xl">Additional Information</h3>
+							<p className="mb-2 block text-sm">
+								Add additional information about the company
+							</p>
+						</div>
+
+						<div>
+							<RichTextEditor
+								name="company-additional-information"
+								initialValue={company.additionalInformation}
+							/>
+						</div>
+					</div>
+
+					<div>
+						<Button disabled={isSubmitting} type="submit">
+							{isLoading ? '...Updating' : 'Update'} Company
+						</Button>
+					</div>
+				</Form>
+			</FormRoot>
 		</section>
 	);
 }

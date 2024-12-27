@@ -1,31 +1,8 @@
-import { z } from 'zod';
 import * as v from 'valibot';
 
-export type FormSchema<T extends z.ZodRawShape> =
-	| z.ZodObject<T>
-	| z.ZodEffects<z.ZodObject<T>>;
-
-export type FormErrors<T> = Record<keyof T, string>;
-
-export function parseFormDataErrors<T>(err: z.ZodError<T>) {
-	const zodErrors = err.format();
-	const errors = {} as FormErrors<T>;
-
-	for (const [key, value] of Object.entries(zodErrors)) {
-		if (key === '_errors' || !(value && '_errors' in value)) {
-			continue;
-		}
-
-		errors[key as keyof T] = value._errors[0];
-	}
-
-	return errors;
-}
-
-export function parseFormData<T extends v.BaseSchema>(
-	formData: FormData,
-	schema: T,
-) {
+export function parseFormData<
+	T extends v.BaseSchema<unknown, unknown, v.BaseIssue<unknown>>,
+>(formData: FormData, schema: T) {
 	const object = Object.fromEntries(formData);
 	const data = v.safeParse(schema, object);
 

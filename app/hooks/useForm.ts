@@ -2,7 +2,9 @@ import * as React from 'react';
 import * as v from 'valibot';
 import { parseFormData } from '~/utils/parseForm.utils';
 
-export function useForm<T extends v.BaseSchema>({
+export function useForm<
+	T extends v.BaseSchema<unknown, unknown, v.BaseIssue<unknown>>,
+>({
 	schema,
 	actionErrors,
 }: {
@@ -24,8 +26,8 @@ export function useForm<T extends v.BaseSchema>({
 		const { errors: newErrors } = parseFormData(formData, schema);
 
 		if (newErrors) {
-			setErrors(newErrors);
 			event.preventDefault();
+			setErrors(newErrors);
 
 			return;
 		}

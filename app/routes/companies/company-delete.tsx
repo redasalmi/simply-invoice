@@ -1,6 +1,14 @@
-import { redirect, useNavigate, useNavigation } from 'react-router';
+import { Form, redirect, useNavigate, useNavigation } from 'react-router';
 import { deleteCompany, getCompany } from '~/queries/company.queries';
-import { CompanyDelete } from '~/components/company/CompanyDelete';
+import {
+	AlertDialogPopup,
+	AlertDialogBackdrop,
+	AlertDialogActionButton,
+	AlertDialogCancelButton,
+	AlertDialogDescription,
+	AlertDialogRoot,
+	AlertDialogTitle,
+} from '~/components/ui/alert-dialog';
 import type { Route } from './+types/company-delete';
 
 export async function clientLoader({ params }: Route.ClientLoaderArgs) {
@@ -42,10 +50,11 @@ export default function CompanyDeleteRoute({
 	loaderData,
 	actionData,
 }: Route.ComponentProps) {
+	const company = loaderData?.company;
+	const errors = actionData?.errors;
+
 	const navigate = useNavigate();
 	const navigation = useNavigation();
-
-	const company = loaderData?.company;
 	const isLoading = navigation.state !== 'idle';
 	const isSubmitting = navigation.state === 'submitting';
 
@@ -53,13 +62,54 @@ export default function CompanyDeleteRoute({
 		navigate('/companies');
 	};
 
+	const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+		if (event.key === 'Escape') {
+			closeAlert();
+		}
+	};
+
+	if (!company) {
+		return (
+			<AlertDialogRoot open>
+				<AlertDialogBackdrop />
+				<AlertDialogPopup onKeyDown={handleKeyDown}>
+					<AlertDialogTitle>
+						{errors?.message || `Error Deleting Company!`}
+					</AlertDialogTitle>
+					<AlertDialogDescription>
+						{errors?.description ||
+							`An error happened while deleting your company, please try again later.`}
+					</AlertDialogDescription>
+					<div className="flex justify-end gap-[25px]">
+						<AlertDialogCancelButton onClick={closeAlert}>
+							Cancel
+						</AlertDialogCancelButton>
+					</div>
+				</AlertDialogPopup>
+			</AlertDialogRoot>
+		);
+	}
+
 	return (
-		<CompanyDelete
-			company={company}
-			errors={actionData?.errors}
-			isLoading={isLoading}
-			isSubmitting={isSubmitting}
-			closeAlert={closeAlert}
-		/>
+		<AlertDialogRoot open>
+			<AlertDialogBackdrop />
+			<AlertDialogPopup onKeyDown={handleKeyDown}>
+				<AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+				<AlertDialogDescription>
+					This action cannot be undone. This will permanently delete the{' '}
+					<span className="font-bold">{company.name}</span> company.
+				</AlertDialogDescription>
+				<div className="flex justify-end gap-[25px]">
+					<AlertDialogCancelButton disabled={isSubmitting} onClick={closeAlert}>
+						Cancel
+					</AlertDialogCancelButton>
+					<Form method="POST">
+						<AlertDialogActionButton type="submit">
+							{isLoading ? '...Deleting' : 'Delete'}
+						</AlertDialogActionButton>
+					</Form>
+				</div>
+			</AlertDialogPopup>
+		</AlertDialogRoot>
 	);
 }

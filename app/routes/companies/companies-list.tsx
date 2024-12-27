@@ -1,6 +1,14 @@
-import { Outlet } from 'react-router';
+import { Outlet, Link } from 'react-router';
+import { EyeIcon, PencilIcon, TrashIcon } from 'lucide-react';
 import { CreateLink } from '~/components/CreateLink';
-import { CompaniesList } from '~/components/company/CompaniesList';
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow,
+} from '~/components/ui/table';
 import { getCompanies } from '~/queries/company.queries';
 import type { Route } from './+types/companies-list';
 
@@ -22,7 +30,46 @@ export default function CompaniesListRoute({
 					<CreateLink to="/companies/new">Create Company</CreateLink>
 				</div>
 				<div className="mt-6">
-					<CompaniesList companies={companies} />
+					{!companies || !companies.items.length ? (
+						<p>No companies found.</p>
+					) : (
+						<Table>
+							<TableHeader>
+								<TableRow>
+									<TableHead>Name</TableHead>
+									<TableHead>Email</TableHead>
+								</TableRow>
+							</TableHeader>
+							<TableBody>
+								{companies.items.map(({ companyId, email, name }) => (
+									<TableRow key={companyId}>
+										<TableCell>{name}</TableCell>
+										<TableCell>{email}</TableCell>
+										<TableCell className="flex items-center gap-4">
+											<Link
+												to={`/companies/detail/${companyId}`}
+												aria-label={`view ${name} company details`}
+											>
+												<EyeIcon />
+											</Link>
+											<Link
+												to={`/companies/update/${companyId}`}
+												aria-label={`update ${name} company`}
+											>
+												<PencilIcon />
+											</Link>
+											<Link
+												to={`/companies/delete/${companyId}/`}
+												aria-label={`delete ${name} company`}
+											>
+												<TrashIcon />
+											</Link>
+										</TableCell>
+									</TableRow>
+								))}
+							</TableBody>
+						</Table>
+					)}
 				</div>
 			</section>
 			<Outlet />
