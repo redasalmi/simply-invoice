@@ -1,9 +1,6 @@
 import { redirect, useNavigation, Form } from 'react-router';
 import { getCompany, updateCompany } from '~/queries/company.queries';
-import {
-	CompanyFormSchema,
-	transformCompanyFormData,
-} from '~/schemas/company.schemas';
+import { CompanyFormSchema } from '~/schemas/company.schemas';
 import { updateAddress } from '~/queries/address.queries';
 import { parseFormData } from '~/utils/parseForm.utils';
 import { CompanyNotFound } from '~/routes/companies/components/CompanyNotFound';
@@ -34,8 +31,7 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
 		};
 	}
 
-	const { address, company } = transformCompanyFormData(data);
-	await Promise.all([updateAddress(address), updateCompany(company)]);
+	await Promise.all([updateAddress(data.address), updateCompany(data.company)]);
 
 	return redirect('/companies');
 }

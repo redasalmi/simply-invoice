@@ -1,8 +1,5 @@
 import { redirect, useNavigation, Form } from 'react-router';
-import {
-	CompanyFormSchema,
-	transformCompanyFormData,
-} from '~/schemas/company.schemas';
+import { CompanyFormSchema } from '~/schemas/company.schemas';
 import { createCompany } from '~/queries/company.queries';
 import { createAddress } from '~/queries/address.queries';
 import { FormField } from '~/components/FormField';
@@ -24,8 +21,7 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
 		};
 	}
 
-	const { address, company } = transformCompanyFormData(data);
-	await Promise.all([createAddress(address), createCompany(company)]);
+	await Promise.all([createAddress(data.address), createCompany(data.company)]);
 
 	return redirect('/companies');
 }
