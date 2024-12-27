@@ -1,5 +1,3 @@
-import type { FormFieldProps } from '~/components/FormField';
-
 export const idTypes = {
 	incremental: 'incremental',
 	random: 'random',
@@ -41,7 +39,7 @@ export const intents = {
 } as const;
 export type Intent = keyof typeof intents;
 
-export const informationFields: Array<FormFieldProps> = [
+export const informationFields = [
 	{
 		id: 'name',
 		label: 'Name',
@@ -53,9 +51,9 @@ export const informationFields: Array<FormFieldProps> = [
 		name: 'email',
 		type: 'email',
 	},
-];
+] as const;
 
-export const addressFields: Array<FormFieldProps> = [
+export const addressFields = [
 	{
 		id: 'address-address1',
 		label: 'Address 1',
@@ -86,9 +84,9 @@ export const addressFields: Array<FormFieldProps> = [
 		label: 'Zip',
 		name: 'address-zip',
 	},
-];
+] as const;
 
-export const servicesFields: Array<FormFieldProps> = [
+export const servicesFields = [
 	{
 		id: 'name',
 		label: 'Name',
@@ -105,9 +103,9 @@ export const servicesFields: Array<FormFieldProps> = [
 		name: 'rate',
 		type: 'number',
 	},
-];
+] as const;
 
-export const companyFields: Array<FormFieldProps> = [
+export const companyFields = [
 	{
 		id: 'company-name',
 		label: 'Name',
@@ -119,4 +117,4 @@ export const companyFields: Array<FormFieldProps> = [
 		name: 'company-email',
 		type: 'email',
 	},
-];
+] as const;

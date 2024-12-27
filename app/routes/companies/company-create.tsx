@@ -47,11 +47,7 @@ export default function CompanyCreateRoute({
 							<FormField
 								key={field.id}
 								className="my-2"
-								serverError={
-									errors?.nested?.[
-										field.name as keyof typeof errors.nested
-									]?.[0]
-								}
+								serverError={errors?.nested?.[field.name]?.[0]}
 								{...field}
 							/>
 						))}
@@ -64,11 +60,7 @@ export default function CompanyCreateRoute({
 								<FormField
 									key={field.id}
 									className="my-2"
-									serverError={
-										errors?.nested?.[
-											field.name as keyof typeof errors.nested
-										]?.[0]
-									}
+									serverError={errors?.nested?.[field.name]?.[0]}
 									{...field}
 								/>
 							))}

@@ -10,7 +10,7 @@ import { Button } from '~/components/ui/button';
 import { RichTextEditor } from '~/components/RichText/editor';
 import { addressFields, companyFields } from '~/lib/constants';
 import { useForm } from '~/hooks/useForm';
-import type { Company } from '~/types';
+import type { StringReplace } from '~/types';
 import type { Route } from './+types/company-update';
 
 export async function clientLoader({ params }: Route.ClientLoaderArgs) {
@@ -70,16 +70,13 @@ export default function CompanyUpdateRoute({
 							<FormField
 								key={field.id}
 								className="my-2"
-								serverError={
-									errors?.nested?.[
-										field.name as keyof typeof errors.nested
-									]?.[0]
-								}
+								serverError={errors?.nested?.[field.name]?.[0]}
 								defaultValue={
 									company[
-										field.name.replace('company-', '') as keyof Pick<
-											Company,
-											'name' | 'email'
+										field.name.replace('company-', '') as StringReplace<
+											typeof field.name,
+											'company-',
+											''
 										>
 									]
 								}
@@ -101,17 +98,14 @@ export default function CompanyUpdateRoute({
 								<FormField
 									key={field.id}
 									className="my-2"
-									serverError={
-										errors?.nested?.[
-											field.name as keyof typeof errors.nested
-										]?.[0]
-									}
+									serverError={errors?.nested?.[field.name]?.[0]}
 									defaultValue={
 										company.address[
-											field.name.replace(
+											field.name.replace('address-', '') as StringReplace<
+												typeof field.name,
 												'address-',
-												'',
-											) as keyof typeof company.address
+												''
+											>
 										]
 									}
 									{...field}
