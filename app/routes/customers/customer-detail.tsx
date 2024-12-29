@@ -1,8 +1,7 @@
 import { useNavigate } from 'react-router';
 import {
 	DialogClose,
-	DialogCloseButton,
-	DialogContent,
+	DialogPopup,
 	DialogOverlay,
 	DialogPortal,
 	DialogRoot,
@@ -36,7 +35,7 @@ export default function CustomerDetailRoute({
 		<DialogRoot open>
 			<DialogPortal>
 				<DialogOverlay />
-				<DialogContent onEscapeKeyDown={closeDialog}>
+				<DialogPopup onEscapeKeyDown={closeDialog}>
 					<DialogTitle>
 						{!customer ? 'No customer found!' : 'Customer Details'}
 					</DialogTitle>
@@ -94,10 +93,8 @@ export default function CustomerDetailRoute({
 						</div>
 					)}
 
-					<DialogClose asChild onClick={closeDialog}>
-						<DialogCloseButton />
-					</DialogClose>
-				</DialogContent>
+					<DialogClose onClick={closeDialog} />
+				</DialogPopup>
 			</DialogPortal>
 		</DialogRoot>
 	);

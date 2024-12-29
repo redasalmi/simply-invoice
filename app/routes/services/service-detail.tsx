@@ -1,8 +1,7 @@
 import { Link, useNavigate } from 'react-router';
 import {
 	DialogClose,
-	DialogCloseButton,
-	DialogContent,
+	DialogPopup,
 	DialogOverlay,
 	DialogPortal,
 	DialogRoot,
@@ -31,11 +30,17 @@ export default function ServiceDetailRoute({
 		navigate('/services');
 	};
 
+	const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+		if (event.key === 'Escape') {
+			closeDialog();
+		}
+	};
+
 	return (
 		<DialogRoot open>
 			<DialogPortal>
 				<DialogOverlay />
-				<DialogContent onEscapeKeyDown={closeDialog}>
+				<DialogPopup onKeyDown={handleKeyDown}>
 					{!service ? (
 						<>
 							<DialogTitle>No service found!</DialogTitle>
@@ -73,10 +78,8 @@ export default function ServiceDetailRoute({
 						</>
 					)}
 
-					<DialogClose asChild onClick={closeDialog}>
-						<DialogCloseButton />
-					</DialogClose>
-				</DialogContent>
+					<DialogClose onClick={closeDialog} />
+				</DialogPopup>
 			</DialogPortal>
 		</DialogRoot>
 	);

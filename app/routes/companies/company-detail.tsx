@@ -1,8 +1,7 @@
 import { useNavigate } from 'react-router';
 import {
 	DialogClose,
-	DialogCloseButton,
-	DialogContent,
+	DialogPopup,
 	DialogOverlay,
 	DialogPortal,
 	DialogRoot,
@@ -32,11 +31,17 @@ export default function CompanyDetailRoute({
 		navigate('/companies');
 	};
 
+	const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+		if (event.key === 'Escape') {
+			closeDialog();
+		}
+	};
+
 	return (
 		<DialogRoot open>
 			<DialogPortal>
 				<DialogOverlay />
-				<DialogContent onEscapeKeyDown={closeDialog}>
+				<DialogPopup onKeyDown={handleKeyDown}>
 					<DialogTitle>
 						{!company ? 'No company found!' : 'Company Details'}
 					</DialogTitle>
@@ -94,10 +99,8 @@ export default function CompanyDetailRoute({
 						</div>
 					)}
 
-					<DialogClose asChild onClick={closeDialog}>
-						<DialogCloseButton />
-					</DialogClose>
-				</DialogContent>
+					<DialogClose onClick={closeDialog} />
+				</DialogPopup>
 			</DialogPortal>
 		</DialogRoot>
 	);
