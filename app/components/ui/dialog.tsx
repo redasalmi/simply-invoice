@@ -63,7 +63,6 @@ export function DialogDescription({
 export function DialogClose(props: Dialog.Close.Props) {
 	return (
 		<Dialog.Close
-			{...props}
 			render={
 				<Button
 					variant="icon"
@@ -73,6 +72,7 @@ export function DialogClose(props: Dialog.Close.Props) {
 					<XIcon />
 				</Button>
 			}
+			{...props}
 		/>
 	);
 }
