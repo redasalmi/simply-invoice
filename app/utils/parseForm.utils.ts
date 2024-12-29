@@ -4,7 +4,7 @@ export function parseFormData<
 	T extends v.BaseSchema<unknown, unknown, v.BaseIssue<unknown>>,
 >(formData: FormData, schema: T) {
 	const object = Object.fromEntries(formData);
-	const data = v.safeParse(schema, object);
+	const data = v.safeParse(schema, object, { abortPipeEarly: true });
 
 	if (data.issues) {
 		return {

@@ -1,11 +1,16 @@
-import { redirect, useNavigation, Form } from 'react-router';
+import { redirect, useNavigation } from 'react-router';
 import { getCustomer, updateCustomer } from '~/queries/customer.queries';
 import { CustomerFormSchema } from '~/schemas/customer.schema';
 import { updateAddress } from '~/queries/address.queries';
 import { parseFormData } from '~/utils/parseForm.utils';
 import { CustomerNotFound } from '~/routes/customers/components/CustomerNotFound';
-import { FormField } from '~/components/FormField';
-import { FormRoot } from '~/components/ui/form';
+import { Form } from '~/components/ui/form';
+import {
+	FieldRoot,
+	FieldLabel,
+	FieldControl,
+	FieldError,
+} from '~/components/ui/field';
 import { Button } from '~/components/ui/button';
 import { RichTextEditor } from '~/components/RichText/editor';
 import { addressFields, customerFields } from '~/lib/constants';
@@ -49,7 +54,7 @@ export default function CustomerUpdateRoute({
 	const isLoading = navigation.state !== 'idle';
 	const isSubmitting = navigation.state === 'submitting';
 
-	const { errors, handleSubmit } = useForm({
+	const { errors, resetErrors, handleSubmit } = useForm({
 		schema: CustomerFormSchema,
 		actionErrors: actionData?.errors,
 	});
@@ -64,16 +69,20 @@ export default function CustomerUpdateRoute({
 
 	return (
 		<section>
-			<FormRoot asChild>
-				<Form method="post" onSubmit={handleSubmit}>
-					<input type="hidden" name="customer-id" value={customer.customerId} />
+			<Form
+				method="post"
+				errors={errors?.nested}
+				onClearErrors={resetErrors}
+				onSubmit={handleSubmit}
+			>
+				<input type="hidden" name="customer-id" value={customer.customerId} />
 
-					<div>
-						{customerFields.map((field) => (
-							<FormField
-								key={field.id}
-								className="my-2"
-								serverError={errors?.nested?.[field.name]?.[0]}
+				<div>
+					{customerFields.map((field) => (
+						<FieldRoot key={field.id} name={field.name} className="my-2">
+							<FieldLabel>{field.label}</FieldLabel>
+							<FieldControl
+								type="text"
 								defaultValue={
 									customer[
 										field.name.replace('customer-', '') as StringReplace<
@@ -83,25 +92,26 @@ export default function CustomerUpdateRoute({
 										>
 									]
 								}
-								{...field}
 							/>
-						))}
-					</div>
+							<FieldError />
+						</FieldRoot>
+					))}
+				</div>
 
+				<div>
+					<h3 className="text-2xl">Address</h3>
 					<div>
-						<h3 className="text-2xl">Address</h3>
-						<div>
-							<input
-								type="hidden"
-								name="address-address-id"
-								value={customer.address.addressId}
-							/>
+						<input
+							type="hidden"
+							name="address-address-id"
+							value={customer.address.addressId}
+						/>
 
-							{addressFields.map((field) => (
-								<FormField
-									key={field.id}
-									className="my-2"
-									serverError={errors?.nested?.[field.name]?.[0]}
+						{addressFields.map((field) => (
+							<FieldRoot key={field.id} name={field.name} className="my-2">
+								<FieldLabel>{field.label}</FieldLabel>
+								<FieldControl
+									type="text"
 									defaultValue={
 										customer.address[
 											field.name.replace('address-', '') as StringReplace<
@@ -111,35 +121,35 @@ export default function CustomerUpdateRoute({
 											>
 										]
 									}
-									{...field}
 								/>
-							))}
-						</div>
+								<FieldError />
+							</FieldRoot>
+						))}
+					</div>
+				</div>
+
+				<div>
+					<div>
+						<h3 className="text-2xl">Additional Information</h3>
+						<p className="mb-2 block text-sm">
+							Add additional information about the customer
+						</p>
 					</div>
 
 					<div>
-						<div>
-							<h3 className="text-2xl">Additional Information</h3>
-							<p className="mb-2 block text-sm">
-								Add additional information about the customer
-							</p>
-						</div>
-
-						<div>
-							<RichTextEditor
-								name="customer-additional-information"
-								initialValue={customer.additionalInformation}
-							/>
-						</div>
+						<RichTextEditor
+							name="customer-additional-information"
+							initialValue={customer.additionalInformation}
+						/>
 					</div>
+				</div>
 
-					<div>
-						<Button disabled={isSubmitting} type="submit">
-							{isLoading ? '...Updating' : 'Update'} Customer
-						</Button>
-					</div>
-				</Form>
-			</FormRoot>
+				<div>
+					<Button disabled={isSubmitting} type="submit">
+						{isLoading ? '...Updating' : 'Update'} Customer
+					</Button>
+				</div>
+			</Form>
 		</section>
 	);
 }

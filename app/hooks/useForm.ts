@@ -21,6 +21,10 @@ export function useForm<
 		}
 	}, [actionErrors]);
 
+	const resetErrors = () => {
+		setErrors(undefined);
+	};
+
 	const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
 		const formData = new FormData(event.currentTarget);
 		const { errors: newErrors } = parseFormData(formData, schema);
@@ -37,6 +41,7 @@ export function useForm<
 
 	return {
 		errors,
+		resetErrors,
 		handleSubmit,
 	};
 }
