@@ -24,6 +24,7 @@ pub mod database {
       customer_id VARCHAR(26) NOT NULL PRIMARY KEY,
       name TEXT NOT NULL,
       email TEXT NOT NULL,
+      additional_information JSON,
       address_id VARCHAR(26) NOT NULL,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
       updated_at DATETIME,
@@ -56,28 +57,6 @@ pub mod database {
   );
   
   CREATE INDEX addresses_index ON addresses (country, city);
-  
-  CREATE TABLE IF NOT EXISTS companies_custom_fields (
-    company_custom_field_id VARCHAR(26) NOT NULL PRIMARY KEY,
-    custom_field_index integer NOT NULL,
-    label TEXT NOT NULL,
-    content TEXT NOT NULL,
-    company_id VARCHAR(26) NOT NULL,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    updated_at DATETIME,
-    FOREIGN KEY (company_id) REFERENCES companies (company_id) ON DELETE CASCADE
-  );
-  
-  CREATE TABLE IF NOT EXISTS customers_custom_fields (
-    customer_custom_field_id VARCHAR(26) NOT NULL PRIMARY KEY,
-    custom_field_index integer NOT NULL,
-    label TEXT NOT NULL,
-    content TEXT NOT NULL,
-    customer_id VARCHAR(26) NOT NULL,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    updated_at DATETIME,
-    FOREIGN KEY (customer_id) REFERENCES customers (customer_id) ON DELETE CASCADE
-  );
   "
             .trim(),
             kind: MigrationKind::Up,

@@ -1,35 +1,43 @@
-import { redirect, useNavigate, useNavigation } from 'react-router';
-import { DeleteEntity, DeleteEntityError } from '~/components/entity/Delete';
-import { db } from '~/lib/db';
+import { Form, redirect, useNavigate, useNavigation } from 'react-router';
+import { deleteCustomer, getCustomer } from '~/queries/customer.queries';
+import {
+	AlertDialogPopup,
+	AlertDialogBackdrop,
+	AlertDialogActionButton,
+	AlertDialogCancelButton,
+	AlertDialogDescription,
+	AlertDialogRoot,
+	AlertDialogTitle,
+} from '~/components/ui/alert-dialog';
 import type { Route } from './+types/customer-delete';
 
 export async function clientLoader({ params }: Route.ClientLoaderArgs) {
 	const customerId = params.id;
 
 	return {
-		customer: await db.customers.get(customerId),
+		customer: await getCustomer(customerId),
 	};
 }
 
 export async function clientAction({ params }: Route.ClientActionArgs) {
 	try {
 		const customerId = params.id;
-		const customer = await db.customers.get(customerId);
+		const customer = await getCustomer(customerId);
 		if (!customer) {
 			return {
-				error: {
+				errors: {
 					message: 'No Customer Found!',
 					description: `Sorry but no customer with this ID: ${customerId} was found. Click the continue button to navigate back to your customers list.`,
 				},
 			};
 		}
 
-		await db.customers.delete(customerId);
+		await deleteCustomer(customerId);
 
 		return redirect('/customers');
 	} catch {
 		return {
-			error: {
+			errors: {
 				message: 'Error Deleting the Customer!',
 				description:
 					'An error happened while deleting your customer, please try again later.',
@@ -40,11 +48,13 @@ export async function clientAction({ params }: Route.ClientActionArgs) {
 
 export default function CustomerDeleteRoute({
 	loaderData,
+	actionData,
 }: Route.ComponentProps) {
+	const customer = loaderData?.customer;
+	const errors = actionData?.errors;
+
 	const navigate = useNavigate();
 	const navigation = useNavigation();
-
-	const customer = loaderData?.customer;
 	const isLoading = navigation.state !== 'idle';
 	const isSubmitting = navigation.state === 'submitting';
 
@@ -52,23 +62,54 @@ export default function CustomerDeleteRoute({
 		navigate('/customers');
 	};
 
+	const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+		if (event.key === 'Escape') {
+			closeAlert();
+		}
+	};
+
 	if (!customer) {
 		return (
-			<DeleteEntityError
-				type="customer"
-				error={actionData?.error}
-				closeAlert={closeAlert}
-			/>
+			<AlertDialogRoot open>
+				<AlertDialogBackdrop />
+				<AlertDialogPopup onKeyDown={handleKeyDown}>
+					<AlertDialogTitle>
+						{errors?.message || `Error Deleting Customer!`}
+					</AlertDialogTitle>
+					<AlertDialogDescription>
+						{errors?.description ||
+							`An error happened while deleting your customer, please try again later.`}
+					</AlertDialogDescription>
+					<div className="flex justify-end gap-[25px]">
+						<AlertDialogCancelButton onClick={closeAlert}>
+							Cancel
+						</AlertDialogCancelButton>
+					</div>
+				</AlertDialogPopup>
+			</AlertDialogRoot>
 		);
 	}
 
 	return (
-		<DeleteEntity
-			type="customer"
-			entityName={customer.name}
-			isLoading={isLoading}
-			isSubmitting={isSubmitting}
-			closeAlert={closeAlert}
-		/>
+		<AlertDialogRoot open>
+			<AlertDialogBackdrop />
+			<AlertDialogPopup onKeyDown={handleKeyDown}>
+				<AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+				<AlertDialogDescription>
+					This action cannot be undone. This will permanently delete the{' '}
+					<span className="font-bold">{customer.name}</span> customer.
+				</AlertDialogDescription>
+				<div className="flex justify-end gap-[25px]">
+					<AlertDialogCancelButton disabled={isSubmitting} onClick={closeAlert}>
+						Cancel
+					</AlertDialogCancelButton>
+					<Form method="POST">
+						<AlertDialogActionButton type="submit">
+							{isLoading ? '...Deleting' : 'Delete'}
+						</AlertDialogActionButton>
+					</Form>
+				</div>
+			</AlertDialogPopup>
+		</AlertDialogRoot>
 	);
 }

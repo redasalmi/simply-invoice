@@ -118,3 +118,17 @@ export const companyFields = [
 		type: 'email',
 	},
 ] as const;
+
+export const customerFields = [
+	{
+		id: 'customer-name',
+		label: 'Name',
+		name: 'customer-name',
+	},
+	{
+		id: 'customer-email',
+		label: 'Email',
+		name: 'customer-email',
+		type: 'email',
+	},
+] as const;

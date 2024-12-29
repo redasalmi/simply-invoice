@@ -1,6 +1,4 @@
 import { useNavigate } from 'react-router';
-import { EntityDetail } from '~/components/entity/Detail';
-import { EntityNotFound } from '~/components/entity/Error';
 import {
 	DialogClose,
 	DialogCloseButton,
@@ -10,14 +8,16 @@ import {
 	DialogRoot,
 	DialogTitle,
 } from '~/components/ui/dialog';
-import { db } from '~/lib/db';
+import { getCustomer } from '~/queries/customer.queries';
+import { Table, TableBody, TableCell, TableRow } from '~/components/ui/table';
+import { CustomerNotFound } from '~/routes/customers/components/CustomerNotFound';
 import type { Route } from './+types/customer-detail';
 
 export async function clientLoader({ params }: Route.ClientLoaderArgs) {
 	const customerId = params.id;
 
 	return {
-		customer: await db.customers.get(customerId),
+		customer: await getCustomer(customerId),
 	};
 }
 
@@ -37,16 +37,61 @@ export default function CustomerDetailRoute({
 			<DialogPortal>
 				<DialogOverlay />
 				<DialogContent onEscapeKeyDown={closeDialog}>
+					<DialogTitle>
+						{!customer ? 'No customer found!' : 'Customer Details'}
+					</DialogTitle>
+
 					{!customer ? (
-						<>
-							<DialogTitle>No customer found!</DialogTitle>
-							<EntityNotFound type="customer" baseUrl="/customers" />
-						</>
+						<CustomerNotFound />
 					) : (
-						<>
-							<DialogTitle>Customer Details</DialogTitle>
-							<EntityDetail entity={customer} />
-						</>
+						<div>
+							<div>
+								<Table>
+									<TableBody>
+										<TableRow>
+											<TableCell>Name:</TableCell>
+											<TableCell>{customer.name}</TableCell>
+										</TableRow>
+										<TableRow>
+											<TableCell>Email:</TableCell>
+											<TableCell>{customer.email}</TableCell>
+										</TableRow>
+									</TableBody>
+								</Table>
+							</div>
+
+							<div>
+								<p>Address:</p>
+								<Table>
+									<TableBody>
+										<TableRow>
+											<TableCell>Address 1:</TableCell>
+											<TableCell>{customer.address.address1}</TableCell>
+										</TableRow>
+										<TableRow>
+											<TableCell>Address 2:</TableCell>
+											<TableCell>{customer.address.address2}</TableCell>
+										</TableRow>
+										<TableRow>
+											<TableCell>Country:</TableCell>
+											<TableCell>{customer.address.country}</TableCell>
+										</TableRow>
+										<TableRow>
+											<TableCell>Province:</TableCell>
+											<TableCell>{customer.address.province}</TableCell>
+										</TableRow>
+										<TableRow>
+											<TableCell>City:</TableCell>
+											<TableCell>{customer.address.city}</TableCell>
+										</TableRow>
+										<TableRow>
+											<TableCell>Zip:</TableCell>
+											<TableCell>{customer.address.zip}</TableCell>
+										</TableRow>
+									</TableBody>
+								</Table>
+							</div>
+						</div>
 					)}
 
 					<DialogClose asChild onClick={closeDialog}>
