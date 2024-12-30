@@ -39,6 +39,14 @@ export type Service = {
 	updatedAt?: string;
 };
 
+export type Tax = {
+	taxId: string;
+	name: string;
+	rate: number;
+	createdAt: string;
+	updatedAt?: string;
+};
+
 export type PageInfo = {
 	endCursor?: string;
 	hasNextPage: boolean;

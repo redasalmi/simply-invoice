@@ -6,7 +6,22 @@ pub mod database {
         let migrations = vec![Migration {
             version: 1,
             description: "create_initial_tables",
+            kind: MigrationKind::Up,
             sql: "
+  CREATE TABLE IF NOT EXISTS addresses (
+    address_id VARCHAR(26) NOT NULL PRIMARY KEY,
+    address1 TEXT NOT NULL,
+    address2 TEXT,
+    city TEXT,
+    country TEXT NOT NULL,
+    province TEXT,
+    zip TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at DATETIME
+  );
+
+  CREATE INDEX addresses_index ON addresses (country, city);
+
   CREATE TABLE IF NOT EXISTS companies (
     company_id VARCHAR(26) NOT NULL PRIMARY KEY,
     name TEXT NOT NULL,
@@ -43,23 +58,18 @@ pub mod database {
   );
   
   CREATE INDEX services_index ON services (name, rate);
-  
-  CREATE TABLE IF NOT EXISTS addresses (
-    address_id VARCHAR(26) NOT NULL PRIMARY KEY,
-    address1 TEXT NOT NULL,
-    address2 TEXT,
-    city TEXT,
-    country TEXT NOT NULL,
-    province TEXT,
-    zip TEXT,
+
+  CREATE TABLE IF NOT EXISTS taxes (
+    tax_id VARCHAR(26) NOT NULL PRIMARY KEY,
+    name TEXT NOT NULL,
+    rate NUMERIC NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at DATETIME
   );
   
-  CREATE INDEX addresses_index ON addresses (country, city);
+  CREATE INDEX taxes_index ON taxes (name, rate);
   "
             .trim(),
-            kind: MigrationKind::Up,
         }];
 
         let _ = app_handle.plugin(

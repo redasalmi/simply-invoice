@@ -24,6 +24,13 @@ export default [
 	route('/services/new', './routes/services/service-create.tsx'),
 	route('/services/update/:id', './routes/services/service-update.tsx'),
 
+	route('taxes', './routes/taxes/taxes-list.tsx', [
+		route('detail/:id', './routes/taxes/tax-detail.tsx'),
+		route('delete/:id', './routes/taxes/tax-delete.tsx'),
+	]),
+	route('/taxes/new', './routes/taxes/tax-create.tsx'),
+	route('/taxes/update/:id', './routes/taxes/tax-update.tsx'),
+
 	// route('/invoices', './routes/invoices/invoices-list.tsx'),
 	// route('/invoices/new', './routes/invoices/invoice-create.tsx'),
 

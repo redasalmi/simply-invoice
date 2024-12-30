@@ -28,6 +28,7 @@ export function Sidebar() {
 			<NavItem to="/companies">Companies</NavItem>
 			<NavItem to="/customers">Customers</NavItem>
 			<NavItem to="/services">Services</NavItem>
+			<NavItem to="/taxes">Taxes</NavItem>
 			<NavItem to="/invoices">Invoices</NavItem>
 		</nav>
 	);
