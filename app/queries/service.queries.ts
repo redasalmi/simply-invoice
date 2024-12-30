@@ -63,6 +63,19 @@ export async function getServices(
 	};
 }
 
+export async function getService(serviceId: string) {
+	const servicesData = await window.db.select<Array<Service>>(
+		sql.serviceQuery,
+		[serviceId],
+	);
+
+	if (!servicesData.length) {
+		return undefined;
+	}
+
+	return servicesData[0];
+}
+
 type CreateServiceInput = Omit<Service, 'createdAt' | 'updatedAt'>;
 
 export async function createService(service: CreateServiceInput) {
@@ -72,4 +85,19 @@ export async function createService(service: CreateServiceInput) {
 		service.description,
 		service.rate,
 	]);
+}
+
+type UpdateServiceInput = Omit<Service, 'createdAt' | 'updatedAt'>;
+
+export async function updateService(service: UpdateServiceInput) {
+	return window.db.execute(sql.updateServiceMutation, [
+		service.name,
+		service.description,
+		service.rate,
+		service.serviceId,
+	]);
+}
+
+export async function deleteService(serviceId: string) {
+	return window.db.execute(sql.deleteServiceMutation, [serviceId]);
 }

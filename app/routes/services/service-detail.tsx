@@ -8,14 +8,14 @@ import {
 	DialogTitle,
 } from '~/components/ui/dialog';
 import { Table, TableBody, TableCell, TableRow } from '~/components/ui/table';
-import { db } from '~/lib/db';
+import { getService } from '~/queries/service.queries';
 import type { Route } from './+types/service-detail';
 
 export async function clientLoader({ params }: Route.ClientLoaderArgs) {
 	const serviceId = params.id;
 
 	return {
-		service: await db.services.get(serviceId),
+		service: await getService(serviceId),
 	};
 }
 
@@ -65,10 +65,12 @@ export default function ServiceDetailRoute({
 										<TableCell>Name:</TableCell>
 										<TableCell>{service.name}</TableCell>
 									</TableRow>
-									<TableRow>
-										<TableCell>Description:</TableCell>
-										<TableCell>{service.description}</TableCell>
-									</TableRow>
+									{service.description ? (
+										<TableRow>
+											<TableCell>Description:</TableCell>
+											<TableCell>{service.description}</TableCell>
+										</TableRow>
+									) : null}
 									<TableRow>
 										<TableCell>Rate:</TableCell>
 										<TableCell>{service.rate}</TableCell>

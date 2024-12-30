@@ -104,7 +104,7 @@ export default function CompanyDeleteRoute({
 						Cancel
 					</AlertDialogCancelButton>
 					<Form method="POST">
-						<AlertDialogActionButton type="submit">
+						<AlertDialogActionButton type="submit" disabled={isSubmitting}>
 							{isLoading ? '...Deleting' : 'Delete'}
 						</AlertDialogActionButton>
 					</Form>

@@ -1,14 +1,11 @@
 import { Form, redirect, useNavigate, useNavigation } from 'react-router';
-import { db } from '~/lib/db';
+import { deleteService, getService } from '~/queries/service.queries';
 import {
-	AlertDialogAction,
+	AlertDialogPopup,
+	AlertDialogBackdrop,
 	AlertDialogActionButton,
-	AlertDialogCancel,
 	AlertDialogCancelButton,
-	AlertDialogContent,
 	AlertDialogDescription,
-	AlertDialogOverlay,
-	AlertDialogPortal,
 	AlertDialogRoot,
 	AlertDialogTitle,
 } from '~/components/ui/alert-dialog';
@@ -18,14 +15,14 @@ export async function clientLoader({ params }: Route.ClientLoaderArgs) {
 	const serviceId = params.id;
 
 	return {
-		service: await db.services.get(serviceId),
+		service: await getService(serviceId),
 	};
 }
 
 export async function clientAction({ params }: Route.ClientActionArgs) {
 	try {
 		const serviceId = params.id;
-		const service = await db.services.get(serviceId);
+		const service = await getService(serviceId);
 		if (!service) {
 			return {
 				error: {
@@ -35,7 +32,7 @@ export async function clientAction({ params }: Route.ClientActionArgs) {
 			};
 		}
 
-		await db.services.delete(serviceId);
+		await deleteService(serviceId);
 
 		return redirect('/services');
 	} catch {
@@ -64,56 +61,54 @@ export default function ServiceDeleteRoute({
 		navigate('/services');
 	};
 
+	const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+		if (event.key === 'Escape') {
+			closeAlert();
+		}
+	};
+
 	return (
 		<AlertDialogRoot open>
-			<AlertDialogPortal>
-				<AlertDialogOverlay />
-				<AlertDialogContent onEscapeKeyDown={closeAlert}>
-					{!service ? (
-						<>
-							<AlertDialogTitle>
-								{actionData?.error?.message || 'Error Deleting Service!'}
-							</AlertDialogTitle>
-							<AlertDialogDescription>
-								{actionData?.error?.description ||
-									'An error happened while deleting your service, please try again later.'}
-							</AlertDialogDescription>
-							<div className="flex justify-end gap-[25px]">
-								<AlertDialogCancel onClick={closeAlert} asChild>
-									<AlertDialogCancelButton>Close</AlertDialogCancelButton>
-								</AlertDialogCancel>
-							</div>
-						</>
-					) : (
-						<>
-							<AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-							<AlertDialogDescription>
-								This action cannot be undone. This will permanently delete the{' '}
-								<span className="font-bold">{service.name}</span> service.{' '}
-							</AlertDialogDescription>
-							<div className="flex justify-end gap-[25px]">
-								<AlertDialogCancel
-									disabled={isSubmitting}
-									onClick={closeAlert}
-									asChild
-								>
-									<AlertDialogCancelButton>Cancel</AlertDialogCancelButton>
-								</AlertDialogCancel>
-								<AlertDialogAction asChild>
-									<Form method="POST">
-										<AlertDialogActionButton
-											type="submit"
-											disabled={isSubmitting}
-										>
-											{isLoading ? '...Deleting' : 'Delete'}
-										</AlertDialogActionButton>
-									</Form>
-								</AlertDialogAction>
-							</div>
-						</>
-					)}
-				</AlertDialogContent>
-			</AlertDialogPortal>
+			<AlertDialogBackdrop />
+			<AlertDialogPopup onKeyDown={handleKeyDown}>
+				{!service ? (
+					<>
+						<AlertDialogTitle>
+							{actionData?.error?.message || 'Error Deleting Service!'}
+						</AlertDialogTitle>
+						<AlertDialogDescription>
+							{actionData?.error?.description ||
+								'An error happened while deleting your service, please try again later.'}
+						</AlertDialogDescription>
+						<div className="flex justify-end gap-[25px]">
+							<AlertDialogCancelButton onClick={closeAlert}>
+								Close
+							</AlertDialogCancelButton>
+						</div>
+					</>
+				) : (
+					<>
+						<AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+						<AlertDialogDescription>
+							This action cannot be undone. This will permanently delete the{' '}
+							<span className="font-bold">{service.name}</span> service.{' '}
+						</AlertDialogDescription>
+						<div className="flex justify-end gap-[25px]">
+							<AlertDialogCancelButton
+								disabled={isSubmitting}
+								onClick={closeAlert}
+							>
+								Cancel
+							</AlertDialogCancelButton>
+							<Form method="POST">
+								<AlertDialogActionButton type="submit" disabled={isSubmitting}>
+									{isLoading ? '...Deleting' : 'Delete'}
+								</AlertDialogActionButton>
+							</Form>
+						</div>
+					</>
+				)}
+			</AlertDialogPopup>
 		</AlertDialogRoot>
 	);
 }

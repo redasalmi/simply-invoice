@@ -1,11 +1,22 @@
-import { Form, Link, redirect, useNavigation } from 'react-router';
+import { Link, redirect, useNavigation } from 'react-router';
 import { Button } from '~/components/ui/button';
-import { db } from '~/lib/db';
-import { servicesFields } from '~/lib/constants';
-import { FormField } from '~/components/FormField';
-import { FormRoot } from '~/components/ui/form';
-import type { UpdatedService } from '~/types/service.types';
-import { serviceFormSchema } from '~/schemas/service.schemas';
+import { Form } from '~/components/ui/form';
+import {
+	FieldRoot,
+	FieldLabel,
+	FieldControl,
+	FieldError,
+} from '~/components/ui/field';
+import {
+	NumberFieldDecrement,
+	NumberFieldGroup,
+	NumberFieldIncrement,
+	NumberFieldInput,
+	NumberFieldLabel,
+	NumberFieldRoot,
+} from '~/components/ui/number-field';
+import { getService, updateService } from '~/queries/service.queries';
+import { ServiceFormSchema } from '~/schemas/service.schemas';
 import { useForm } from '~/hooks/useForm';
 import { parseFormData } from '~/utils/parseForm.utils';
 import type { Route } from './+types/service-update';
@@ -14,18 +25,13 @@ export async function clientLoader({ params }: Route.ClientLoaderArgs) {
 	const serviceId = params.id;
 
 	return {
-		service: await db.services.get(serviceId),
+		service: await getService(serviceId),
 	};
 }
 
-export async function clientAction({
-	params,
-	request,
-}: Route.ClientActionArgs) {
-	const serviceId = params.id;
-
+export async function clientAction({ request }: Route.ClientActionArgs) {
 	const formData = await request.formData();
-	const { data, errors } = parseFormData(formData, serviceFormSchema);
+	const { data: service, errors } = parseFormData(formData, ServiceFormSchema);
 
 	if (errors) {
 		return {
@@ -33,14 +39,7 @@ export async function clientAction({
 		};
 	}
 
-	const today = new Date().toISOString();
-	const updatedService: UpdatedService = Object.assign(
-		{
-			updatedAt: today,
-		},
-		data,
-	);
-	await db.services.update(serviceId, updatedService);
+	await updateService(service);
 
 	return redirect('/services');
 }
@@ -55,8 +54,8 @@ export default function ServiceUpdateRoute({
 	const isLoading = navigation.state !== 'idle';
 	const isSubmitting = navigation.state === 'submitting';
 
-	const { errors, handleSubmit } = useForm({
-		schema: serviceFormSchema,
+	const { errors, resetErrors, handleSubmit } = useForm({
+		schema: ServiceFormSchema,
 		actionErrors: actionData?.errors,
 	});
 
@@ -82,23 +81,50 @@ export default function ServiceUpdateRoute({
 
 	return (
 		<section>
-			<FormRoot asChild>
-				<Form method="POST" onSubmit={handleSubmit}>
-					{servicesFields.map((field) => (
-						<FormField
-							key={field.id}
-							className="my-2"
-							defaultValue={service[field.name]}
-							serverError={errors?.[field.name]}
-							{...field}
-						/>
-					))}
+			<Form
+				method="post"
+				errors={errors?.nested}
+				onClearErrors={resetErrors}
+				onSubmit={handleSubmit}
+			>
+				<input type="hidden" name="service-id" value={service.serviceId} />
 
-					<Button disabled={isSubmitting} type="submit">
-						{isLoading ? 'Updating Service...' : 'Update Service'}
-					</Button>
-				</Form>
-			</FormRoot>
+				<FieldRoot name="name" className="my-2">
+					<FieldLabel>Name</FieldLabel>
+					<FieldControl type="text" defaultValue={service.name} />
+					<FieldError />
+				</FieldRoot>
+
+				<FieldRoot name="description" className="my-2">
+					<FieldLabel>Description</FieldLabel>
+					<FieldControl type="text" defaultValue={service.description} />
+					<FieldError />
+				</FieldRoot>
+
+				<FieldRoot name="rate" className="my-2">
+					{/* NumberField is not integrated very well with the Form component for now, 
+								that's why it's wrapper with a FieldRoot, look into this when a new version is released  
+							*/}
+					<NumberFieldRoot
+						id="rate"
+						name="rate"
+						defaultValue={service.rate}
+						onValueChange={resetErrors}
+					>
+						<NumberFieldLabel htmlFor="rate">Rate</NumberFieldLabel>
+						<NumberFieldGroup>
+							<NumberFieldDecrement />
+							<NumberFieldInput name="rate" />
+							<NumberFieldIncrement />
+						</NumberFieldGroup>
+					</NumberFieldRoot>
+					<FieldError />
+				</FieldRoot>
+
+				<Button disabled={isSubmitting} type="submit">
+					{isLoading ? 'Updating Service...' : 'Update Service'}
+				</Button>
+			</Form>
 		</section>
 	);
 }

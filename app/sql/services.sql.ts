@@ -39,7 +39,7 @@ LIMIT $2 + 1
 `;
 
 export const serviceQuery = /* sql */ `
-SELECT service_id,
+SELECT service_id as serviceId,
   name,
   description,
   rate,
