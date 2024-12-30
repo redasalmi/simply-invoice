@@ -10,7 +10,7 @@ import {
 	FieldError,
 } from '~/components/ui/field';
 import { Button } from '~/components/ui/button';
-import { RichTextEditor } from '~/components/RichText/editor';
+import { RichTextEditor } from '~/components/rich-text/editor';
 import { parseFormData } from '~/utils/parseForm.utils';
 import { addressFields, customerFields } from '~/lib/constants';
 import { useForm } from '~/hooks/useForm';

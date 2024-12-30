@@ -12,7 +12,7 @@ import {
 	FieldError,
 } from '~/components/ui/field';
 import { Button } from '~/components/ui/button';
-import { RichTextEditor } from '~/components/RichText/editor';
+import { RichTextEditor } from '~/components/rich-text/editor';
 import { addressFields, companyFields } from '~/lib/constants';
 import { useForm } from '~/hooks/useForm';
 import type { StringReplace } from '~/types';
