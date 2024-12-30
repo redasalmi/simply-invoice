@@ -31,11 +31,17 @@ export default function CustomerDetailRoute({
 		navigate('/customers');
 	};
 
+	const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+		if (event.key === 'Escape') {
+			closeDialog();
+		}
+	};
+
 	return (
 		<DialogRoot open>
 			<DialogPortal>
 				<DialogOverlay />
-				<DialogPopup onEscapeKeyDown={closeDialog}>
+				<DialogPopup onKeyDown={handleKeyDown}>
 					<DialogTitle>
 						{!customer ? 'No customer found!' : 'Customer Details'}
 					</DialogTitle>
