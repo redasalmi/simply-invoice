@@ -1,8 +1,8 @@
-export const getCompaniesCountSql = /* sql */ `
+export const companiesCountQuery = /* sql */ `
 SELECT COUNT(company_id) FROM companies;
 `;
 
-export const getCompaniesSql = /* sql */ `
+export const companiesQuery = /* sql */ `
 SELECT c.company_id as companyId,
   c.name,
   c.email,
@@ -32,7 +32,7 @@ FROM (
   LEFT JOIN addresses as a ON a.address_id = c.address_id;
 `;
 
-export const getCompaniesHasPreviousPageSql = /* sql */ `
+export const companiesHasPreviousPageQuery = /* sql */ `
 SELECT COUNT(company_id)
 FROM companies
 WHERE company_id < (
@@ -44,7 +44,7 @@ ORDER BY company_id DESC
 LIMIT $2 + 1
 `;
 
-export const getCompaniesHasNextPageSql = /* sql */ `
+export const companiesHasNextPageQuery = /* sql */ `
 SELECT COUNT(company_id)
 FROM companies
 WHERE company_id > (
@@ -56,7 +56,7 @@ ORDER BY company_id DESC
 LIMIT $2 + 1
 `;
 
-export const getCompanySql = /* sql */ `
+export const companyQuery = /* sql */ `
 SELECT c.company_id as companyId,
   c.name,
   c.email,
@@ -84,17 +84,17 @@ FROM (
   LEFT JOIN addresses as a ON a.address_id = c.address_id;
 `;
 
-export const createCompanySql = /* sql */ `
+export const createCompanyMutation = /* sql */ `
 INSERT INTO companies (company_id, name, email, address_id, additional_information) VALUES ($1, $2, $3, $4, JSON_INSERT($5));
 `;
 
-export const updateCompanySql = /* sql */ `
+export const updateCompanyMutation = /* sql */ `
 UPDATE companies 
 SET name = $1, email = $2, additional_information = JSON_INSERT($3), updated_at = CURRENT_TIMESTAMP
 WHERE company_id = $4;
 `;
 
-export const deleteCompanySql = /* sql */ `
+export const deleteCompanyMutation = /* sql */ `
 DELETE FROM companies
 WHERE company_id = $1;
 `;

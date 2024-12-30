@@ -79,7 +79,7 @@ export default function CompanyUpdateRoute({
 						<FieldRoot key={field.id} name={field.name} className="my-2">
 							<FieldLabel>{field.label}</FieldLabel>
 							<FieldControl
-								type="text"
+								type={field.type}
 								defaultValue={
 									company[
 										field.name.replace('company-', '') as StringReplace<

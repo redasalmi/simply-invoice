@@ -1,19 +1,29 @@
-import { Form, useNavigation, redirect } from 'react-router';
-import { FormField } from '~/components/FormField';
-import { FormRoot } from '~/components/ui/form';
+import { useNavigation, redirect } from 'react-router';
 import { Button } from '~/components/ui/button';
-import { db } from '~/lib/db';
-import { servicesFields } from '~/lib/constants';
-import { ulid } from 'ulid';
-import type { Service } from '~/types/service.types';
+import { Form } from '~/components/ui/form';
+import {
+	FieldRoot,
+	FieldLabel,
+	FieldControl,
+	FieldError,
+} from '~/components/ui/field';
+import {
+	NumberFieldDecrement,
+	NumberFieldGroup,
+	NumberFieldIncrement,
+	NumberFieldInput,
+	NumberFieldLabel,
+	NumberFieldRoot,
+} from '~/components/ui/number-field';
 import { useForm } from '~/hooks/useForm';
-import { serviceFormSchema } from '~/schemas/service.schemas';
+import { ServiceFormSchema } from '~/schemas/service.schemas';
 import { parseFormData } from '~/utils/parseForm.utils';
+import { createService } from '~/queries/service.queries';
 import type { Route } from './+types/service-create';
 
 export async function clientAction({ request }: Route.ClientActionArgs) {
 	const formData = await request.formData();
-	const { data, errors } = parseFormData(formData, serviceFormSchema);
+	const { data: service, errors } = parseFormData(formData, ServiceFormSchema);
 
 	if (errors) {
 		return {
@@ -21,16 +31,7 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
 		};
 	}
 
-	const today = new Date().toISOString();
-	const newService: Service = Object.assign(
-		{
-			id: ulid(),
-			createdAt: today,
-			updatedAt: today,
-		},
-		data,
-	);
-	await db.services.add(newService);
+	await createService(service);
 
 	return redirect('/services');
 }
@@ -42,29 +43,50 @@ export default function ServiceCreateRoute({
 	const isLoading = navigation.state !== 'idle';
 	const isSubmitting = navigation.state === 'submitting';
 
-	const { errors, handleSubmit } = useForm({
-		schema: serviceFormSchema,
+	const { errors, resetErrors, handleSubmit } = useForm({
+		schema: ServiceFormSchema,
 		actionErrors: actionData?.errors,
 	});
 
 	return (
 		<section>
-			<FormRoot asChild>
-				<Form method="POST" onSubmit={handleSubmit}>
-					{servicesFields.map((field) => (
-						<FormField
-							key={field.id}
-							className="my-2"
-							serverError={errors?.[field.name]}
-							{...field}
-						/>
-					))}
+			<Form
+				method="post"
+				errors={errors?.nested}
+				onClearErrors={resetErrors}
+				onSubmit={handleSubmit}
+			>
+				<FieldRoot name="name" className="my-2">
+					<FieldLabel>Name</FieldLabel>
+					<FieldControl type="text" />
+					<FieldError />
+				</FieldRoot>
 
-					<Button disabled={isSubmitting} type="submit">
-						{isLoading ? 'Saving Service...' : 'Save Service'}
-					</Button>
-				</Form>
-			</FormRoot>
+				<FieldRoot name="description" className="my-2">
+					<FieldLabel>Description</FieldLabel>
+					<FieldControl type="text" />
+					<FieldError />
+				</FieldRoot>
+
+				<FieldRoot name="rate" className="my-2">
+					{/* NumberField is not integrated very well with the Form component for now, 
+						that's why it's wrapper with a FieldRoot, look into this when a new version is released  
+					*/}
+					<NumberFieldRoot id="rate" name="rate" onValueChange={resetErrors}>
+						<NumberFieldLabel htmlFor="rate">Rate</NumberFieldLabel>
+						<NumberFieldGroup>
+							<NumberFieldDecrement />
+							<NumberFieldInput name="rate" />
+							<NumberFieldIncrement />
+						</NumberFieldGroup>
+					</NumberFieldRoot>
+					<FieldError />
+				</FieldRoot>
+
+				<Button disabled={isSubmitting} type="submit">
+					{isLoading ? 'Saving Service...' : 'Save Service'}
+				</Button>
+			</Form>
 		</section>
 	);
 }

@@ -1,10 +1,24 @@
-import { z } from 'zod';
+import * as v from 'valibot';
+import { ulid } from 'ulid';
 
-export const serviceFormSchema = z.object({
-	name: z.coerce.string().min(1, 'Name is required'),
-	description: z.coerce.string().optional(),
-	rate: z
-		.string()
-		.min(1, 'Rate is required')
-		.pipe(z.coerce.number().min(0, 'Rate must be greater than or equal to 0')),
-});
+export const ServiceFormSchema = v.pipe(
+	v.object({
+		'service-id': v.optional(v.pipe(v.string(), v.ulid()), ulid()),
+		name: v.pipe(v.string(), v.nonEmpty('Name is required')),
+		description: v.optional(v.string()),
+		rate: v.pipe(
+			v.string('Rate is required'),
+			v.decimal('Rate is required'),
+			v.transform(Number),
+			v.minValue(0, 'Rate must be greater than or equal to 0'),
+		),
+	}),
+	v.transform((input) => {
+		return {
+			serviceId: input['service-id'],
+			name: input['name'],
+			description: input['description'],
+			rate: input['rate'],
+		};
+	}),
+);

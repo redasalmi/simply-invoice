@@ -82,7 +82,7 @@ export default function CustomerUpdateRoute({
 						<FieldRoot key={field.id} name={field.name} className="my-2">
 							<FieldLabel>{field.label}</FieldLabel>
 							<FieldControl
-								type="text"
+								type={field.type}
 								defaultValue={
 									customer[
 										field.name.replace('customer-', '') as StringReplace<

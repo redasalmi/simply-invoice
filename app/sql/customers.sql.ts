@@ -1,8 +1,8 @@
-export const getCustomersCountSql = /* sql */ `
+export const customersCountQuery = /* sql */ `
 SELECT COUNT(customer_id) FROM customers;
 `;
 
-export const getCustomersSql = /* sql */ `
+export const customersQuery = /* sql */ `
 SELECT c.customer_id as customerId,
   c.name,
   c.email,
@@ -32,7 +32,7 @@ FROM (
   LEFT JOIN addresses as a ON a.address_id = c.address_id;
 `;
 
-export const getCustomersHasPreviousPageSql = /* sql */ `
+export const customersHasPreviousPageQuery = /* sql */ `
 SELECT COUNT(customer_id)
 FROM customers
 WHERE customer_id < (
@@ -44,7 +44,7 @@ ORDER BY customer_id DESC
 LIMIT $2 + 1
 `;
 
-export const getCustomersHasNextPageSql = /* sql */ `
+export const customersHasNextPageQuery = /* sql */ `
 SELECT COUNT(customer_id)
 FROM customers
 WHERE customer_id > (
@@ -56,7 +56,7 @@ ORDER BY customer_id DESC
 LIMIT $2 + 1
 `;
 
-export const getCustomerSql = /* sql */ `
+export const customerQuery = /* sql */ `
 SELECT c.customer_id as customerId,
   c.name,
   c.email,
@@ -84,17 +84,17 @@ FROM (
   LEFT JOIN addresses as a ON a.address_id = c.address_id;
 `;
 
-export const createCustomerSql = /* sql */ `
+export const createCustomerMutation = /* sql */ `
 INSERT INTO customers (customer_id, name, email, address_id, additional_information) VALUES ($1, $2, $3, $4, JSON_INSERT($5));
 `;
 
-export const updateCustomerSql = /* sql */ `
+export const updateCustomerMutation = /* sql */ `
 UPDATE customers 
 SET name = $1, email = $2, additional_information = JSON_INSERT($3), updated_at = CURRENT_TIMESTAMP
 WHERE customer_id = $4;
 `;
 
-export const deleteCustomerSql = /* sql */ `
+export const deleteCustomerMutation = /* sql */ `
 DELETE FROM customers
 WHERE customer_id = $1;
 `;

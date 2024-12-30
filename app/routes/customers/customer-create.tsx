@@ -58,7 +58,7 @@ export default function CustomerCreateRoute({
 					{customerFields.map((field) => (
 						<FieldRoot key={field.id} name={field.name} className="my-2">
 							<FieldLabel>{field.label}</FieldLabel>
-							<FieldControl type="text" />
+							<FieldControl type={field.type} />
 							<FieldError />
 						</FieldRoot>
 					))}

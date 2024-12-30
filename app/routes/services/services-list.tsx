@@ -9,12 +9,12 @@ import {
 	TableHeader,
 	TableRow,
 } from '~/components/ui/table';
-import { db, getPage } from '~/lib/db';
+import { getServices } from '~/queries/service.queries';
 import type { Route } from './+types/services-list';
 
 export async function clientLoader() {
 	return {
-		services: await getPage(db.services, 1),
+		services: await getServices(),
 	};
 }
 
@@ -39,25 +39,25 @@ export default function ServicesListRoute({
 								</TableRow>
 							</TableHeader>
 							<TableBody>
-								{services.items.map(({ id, name, rate }) => (
-									<TableRow key={id}>
+								{services.items.map(({ serviceId, name, rate }) => (
+									<TableRow key={serviceId}>
 										<TableCell>{name}</TableCell>
 										<TableCell>{rate}</TableCell>
 										<TableCell className="flex items-center gap-4">
 											<Link
-												to={`/services/detail/${id}`}
+												to={`/services/detail/${serviceId}`}
 												aria-label={`view ${name} service details`}
 											>
 												<EyeIcon />
 											</Link>
 											<Link
-												to={`/services/update/${id}`}
+												to={`/services/update/${serviceId}`}
 												aria-label={`update ${name} service`}
 											>
 												<PencilIcon />
 											</Link>
 											<Link
-												to={`/services/delete/${id}`}
+												to={`/services/delete/${serviceId}`}
 												aria-label={`delete ${name} service`}
 											>
 												<TrashIcon />

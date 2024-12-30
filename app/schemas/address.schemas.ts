@@ -1,7 +1,8 @@
 import * as v from 'valibot';
+import { ulid } from 'ulid';
 
 export const AddressFormSchema = v.object({
-	'address-address-id': v.optional(v.pipe(v.string(), v.ulid())),
+	'address-address-id': v.optional(v.pipe(v.string(), v.ulid()), ulid()),
 	'address-address1': v.pipe(v.string(), v.nonEmpty('Address 1 is required')),
 	'address-address2': v.optional(v.string()),
 	'address-city': v.optional(v.string()),

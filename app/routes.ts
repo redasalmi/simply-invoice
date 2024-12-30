@@ -17,11 +17,11 @@ export default [
 	route('/customers/new', './routes/customers/customer-create.tsx'),
 	route('/customers/update/:id', './routes/customers/customer-update.tsx'),
 
-	// route('services', './routes/services/services-list.tsx', [
-	// 	route('detail/:id', './routes/services/service-detail.tsx'),
-	// 	route('delete/:id', './routes/services/service-delete.tsx'),
-	// ]),
-	// route('/services/new', './routes/services/service-create.tsx'),
+	route('services', './routes/services/services-list.tsx', [
+		// route('detail/:id', './routes/services/service-detail.tsx'),
+		// route('delete/:id', './routes/services/service-delete.tsx'),
+	]),
+	route('/services/new', './routes/services/service-create.tsx'),
 	// route('/services/update/:id', './routes/services/service-update.tsx'),
 
 	// route('/invoices', './routes/invoices/invoices-list.tsx'),

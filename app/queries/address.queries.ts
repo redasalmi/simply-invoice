@@ -1,10 +1,10 @@
-import { createAddressSql, updateAddressSql } from '~/sql/addresses.sql';
+import * as sql from '~/sql/addresses.sql';
 import type { Address } from '~/types';
 
 type CreateAddressInput = Omit<Address, 'createdAt' | 'updatedAt'>;
 
 export async function createAddress(address: CreateAddressInput) {
-	return window.db.execute(createAddressSql, [
+	return window.db.execute(sql.createAddressMutation, [
 		address.addressId,
 		address.address1,
 		address.address2,
@@ -18,7 +18,7 @@ export async function createAddress(address: CreateAddressInput) {
 type UpdateAddressInput = Omit<Address, 'createdAt' | 'updatedAt'>;
 
 export async function updateAddress(address: UpdateAddressInput) {
-	return window.db.execute(updateAddressSql, [
+	return window.db.execute(sql.updateAddressMutation, [
 		address.address1,
 		address.address2,
 		address.city,

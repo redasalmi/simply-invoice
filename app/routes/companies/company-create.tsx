@@ -55,7 +55,7 @@ export default function CompanyCreateRoute({
 					{companyFields.map((field) => (
 						<FieldRoot key={field.id} name={field.name} className="my-2">
 							<FieldLabel>{field.label}</FieldLabel>
-							<FieldControl type="text" />
+							<FieldControl type={field.type} />
 							<FieldError />
 						</FieldRoot>
 					))}
@@ -89,7 +89,7 @@ export default function CompanyCreateRoute({
 
 				<div>
 					<Button disabled={isSubmitting} type="submit">
-						{isLoading ? '...Saving' : 'Save'} Company
+						{isLoading ? 'Saving Company...' : 'Save Company'}
 					</Button>
 				</div>
 			</Form>

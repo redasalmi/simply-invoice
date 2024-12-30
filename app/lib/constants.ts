@@ -39,20 +39,6 @@ export const intents = {
 } as const;
 export type Intent = keyof typeof intents;
 
-export const informationFields = [
-	{
-		id: 'name',
-		label: 'Name',
-		name: 'name',
-	},
-	{
-		id: 'email',
-		label: 'Email',
-		name: 'email',
-		type: 'email',
-	},
-] as const;
-
 export const addressFields = [
 	{
 		id: 'address-address1',
@@ -86,30 +72,12 @@ export const addressFields = [
 	},
 ] as const;
 
-export const servicesFields = [
-	{
-		id: 'name',
-		label: 'Name',
-		name: 'name',
-	},
-	{
-		id: 'description',
-		label: 'Description',
-		name: 'description',
-	},
-	{
-		id: 'rate',
-		label: 'Rate',
-		name: 'rate',
-		type: 'number',
-	},
-] as const;
-
 export const companyFields = [
 	{
 		id: 'company-name',
 		label: 'Name',
 		name: 'company-name',
+		type: 'text',
 	},
 	{
 		id: 'company-email',
@@ -124,6 +92,7 @@ export const customerFields = [
 		id: 'customer-name',
 		label: 'Name',
 		name: 'customer-name',
+		type: 'text',
 	},
 	{
 		id: 'customer-email',

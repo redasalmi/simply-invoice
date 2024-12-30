@@ -1,13 +1,4 @@
-import {
-	createCustomerSql,
-	deleteCustomerSql,
-	getCustomersCountSql,
-	getCustomersHasNextPageSql,
-	getCustomersHasPreviousPageSql,
-	getCustomerSql,
-	getCustomersSql,
-	updateCustomerSql,
-} from '~/sql/customers.sql';
+import * as sql from '~/sql/customers.sql';
 import { itemsPerPage } from '~/lib/pagination';
 import type { Address, Customer, PaginatedResult } from '~/types';
 
@@ -72,11 +63,11 @@ export async function getCustomers(
 	startCursor: string = '',
 ): Promise<PaginatedResult<Customer>> {
 	const [customersData, customersCount] = await Promise.all([
-		window.db.select<CustomersSelectResult>(getCustomersSql, [
+		window.db.select<CustomersSelectResult>(sql.customersQuery, [
 			startCursor,
 			itemsPerPage,
 		]),
-		window.db.select<CustomersCountResult>(getCustomersCountSql),
+		window.db.select<CustomersCountResult>(sql.customersCountQuery),
 	]);
 
 	if (!customersData.length) {
@@ -95,11 +86,11 @@ export async function getCustomers(
 	const endCursor = customersData[customersData.length - 1].customerId;
 
 	const [hasPreviousCustomersCount, hasNextCustomersCount] = await Promise.all([
-		window.db.select<CustomersCountResult>(getCustomersHasPreviousPageSql, [
+		window.db.select<CustomersCountResult>(sql.customersHasPreviousPageQuery, [
 			startCursor,
 			itemsPerPage,
 		]),
-		window.db.select<CustomersCountResult>(getCustomersHasNextPageSql, [
+		window.db.select<CustomersCountResult>(sql.customersHasNextPageQuery, [
 			endCursor,
 			itemsPerPage,
 		]),
@@ -127,7 +118,7 @@ export async function getCustomers(
 
 export async function getCustomer(customerId: string) {
 	const customersData = await window.db.select<CustomersSelectResult>(
-		getCustomerSql,
+		sql.customerQuery,
 		[customerId],
 	);
 
@@ -146,7 +137,7 @@ type CreateCustomerInput = Pick<Customer, 'customerId' | 'name' | 'email'> & {
 };
 
 export async function createCustomer(customer: CreateCustomerInput) {
-	return window.db.execute(createCustomerSql, [
+	return window.db.execute(sql.createCustomerMutation, [
 		customer.customerId,
 		customer.name,
 		customer.email,
@@ -160,7 +151,7 @@ type UpdateCustomerInput = Pick<Customer, 'customerId' | 'name' | 'email'> & {
 };
 
 export async function updateCustomer(customer: UpdateCustomerInput) {
-	return window.db.execute(updateCustomerSql, [
+	return window.db.execute(sql.updateCustomerMutation, [
 		customer.name,
 		customer.email,
 		customer.additionalInformation,
@@ -169,5 +160,5 @@ export async function updateCustomer(customer: UpdateCustomerInput) {
 }
 
 export async function deleteCustomer(customerId: string) {
-	return window.db.execute(deleteCustomerSql, [customerId]);
+	return window.db.execute(sql.deleteCustomerMutation, [customerId]);
 }

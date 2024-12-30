@@ -1,13 +1,4 @@
-import {
-	getCompaniesSql,
-	getCompaniesCountSql,
-	getCompaniesHasPreviousPageSql,
-	getCompaniesHasNextPageSql,
-	createCompanySql,
-	getCompanySql,
-	deleteCompanySql,
-	updateCompanySql,
-} from '~/sql/companies.sql';
+import * as sql from '~/sql/companies.sql';
 import { itemsPerPage } from '~/lib/pagination';
 import type { Address, Company, PaginatedResult } from '~/types';
 
@@ -72,11 +63,11 @@ export async function getCompanies(
 	startCursor: string = '',
 ): Promise<PaginatedResult<Company>> {
 	const [companiesData, companiesCount] = await Promise.all([
-		window.db.select<CompaniesSelectResult>(getCompaniesSql, [
+		window.db.select<CompaniesSelectResult>(sql.companiesQuery, [
 			startCursor,
 			itemsPerPage,
 		]),
-		window.db.select<CompaniesCountResult>(getCompaniesCountSql),
+		window.db.select<CompaniesCountResult>(sql.companiesCountQuery),
 	]);
 
 	if (!companiesData.length) {
@@ -95,11 +86,11 @@ export async function getCompanies(
 	const endCursor = companiesData[companiesData.length - 1].companyId;
 
 	const [hasPreviousCompaniesCount, hasNextCompaniesCount] = await Promise.all([
-		window.db.select<CompaniesCountResult>(getCompaniesHasPreviousPageSql, [
+		window.db.select<CompaniesCountResult>(sql.companiesHasPreviousPageQuery, [
 			startCursor,
 			itemsPerPage,
 		]),
-		window.db.select<CompaniesCountResult>(getCompaniesHasNextPageSql, [
+		window.db.select<CompaniesCountResult>(sql.companiesHasNextPageQuery, [
 			endCursor,
 			itemsPerPage,
 		]),
@@ -127,7 +118,7 @@ export async function getCompanies(
 
 export async function getCompany(companyId: string) {
 	const companiesData = await window.db.select<CompaniesSelectResult>(
-		getCompanySql,
+		sql.companyQuery,
 		[companyId],
 	);
 
@@ -146,7 +137,7 @@ type CreateCompanyInput = Pick<Company, 'companyId' | 'name' | 'email'> & {
 };
 
 export async function createCompany(company: CreateCompanyInput) {
-	return window.db.execute(createCompanySql, [
+	return window.db.execute(sql.createCompanyMutation, [
 		company.companyId,
 		company.name,
 		company.email,
@@ -160,7 +151,7 @@ type UpdateCompanyInput = Pick<Company, 'companyId' | 'name' | 'email'> & {
 };
 
 export async function updateCompany(company: UpdateCompanyInput) {
-	return window.db.execute(updateCompanySql, [
+	return window.db.execute(sql.updateCompanyMutation, [
 		company.name,
 		company.email,
 		company.additionalInformation,
@@ -169,5 +160,5 @@ export async function updateCompany(company: UpdateCompanyInput) {
 }
 
 export async function deleteCompany(companyId: string) {
-	return window.db.execute(deleteCompanySql, [companyId]);
+	return window.db.execute(sql.deleteCompanyMutation, [companyId]);
 }
