@@ -10,32 +10,12 @@ export type Address = {
 	zip?: string;
 };
 
-export type CompanyCustomField = {
-	companyCustomFieldId: string;
-	customFieldIndex: number;
-	label: string;
-	content: string;
-	companyId: string;
-	createdAt: string;
-	updatedAt?: string;
-};
-
 export type Company = {
 	companyId: string;
 	name: string;
 	email: string;
 	address: Address;
 	additionalInformation?: Array<PortableTextBlock>;
-	createdAt: string;
-	updatedAt?: string;
-};
-
-export type CustomerCustomField = {
-	customerCustomFieldId: string;
-	customFieldIndex: number;
-	label: string;
-	content: string;
-	customerId: string;
 	createdAt: string;
 	updatedAt?: string;
 };
@@ -70,19 +50,6 @@ export type PaginatedResult<T> = {
 	items: T[];
 	total: number;
 	pageInfo: PageInfo;
-};
-
-export type CustomFieldAction = 'create' | 'update' | 'delete';
-
-export type CustomField<T extends string, K extends string> = {
-	[key in T]: string;
-} & {
-	[key in K]: string;
-} & {
-	customFieldIndex: number;
-	label: string;
-	content: string;
-	action?: CustomFieldAction;
 };
 
 export type StringReplace<

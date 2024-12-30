@@ -1,5 +1,5 @@
 import * as sql from '~/sql/services.sql';
-import { itemsPerPage } from '~/lib/pagination';
+import { emptyResult, itemsPerPage } from '~/lib/pagination';
 import type { Service, PaginatedResult } from '~/types';
 
 type ServicesCountResult = [
@@ -20,16 +20,7 @@ export async function getServices(
 	]);
 
 	if (!servicesData.length) {
-		return {
-			items: [],
-			total: 0,
-			pageInfo: {
-				endCursor: '',
-				hasNextPage: false,
-				hasPreviousPage: false,
-				startCursor: '',
-			},
-		};
+		return emptyResult as PaginatedResult<Service>;
 	}
 
 	const endCursor = servicesData[servicesData.length - 1].serviceId;

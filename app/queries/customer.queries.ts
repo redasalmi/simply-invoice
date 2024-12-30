@@ -1,5 +1,5 @@
 import * as sql from '~/sql/customers.sql';
-import { itemsPerPage } from '~/lib/pagination';
+import { emptyResult, itemsPerPage } from '~/lib/pagination';
 import type { Address, Customer, PaginatedResult } from '~/types';
 
 type CustomersSelectResult = Array<
@@ -71,16 +71,7 @@ export async function getCustomers(
 	]);
 
 	if (!customersData.length) {
-		return {
-			items: [],
-			total: 0,
-			pageInfo: {
-				endCursor: '',
-				hasNextPage: false,
-				hasPreviousPage: false,
-				startCursor: '',
-			},
-		};
+		return emptyResult as PaginatedResult<Customer>;
 	}
 
 	const endCursor = customersData[customersData.length - 1].customerId;

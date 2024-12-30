@@ -1,5 +1,5 @@
 import * as sql from '~/sql/companies.sql';
-import { itemsPerPage } from '~/lib/pagination';
+import { emptyResult, itemsPerPage } from '~/lib/pagination';
 import type { Address, Company, PaginatedResult } from '~/types';
 
 type CompaniesSelectResult = Array<
@@ -71,16 +71,7 @@ export async function getCompanies(
 	]);
 
 	if (!companiesData.length) {
-		return {
-			items: [],
-			total: 0,
-			pageInfo: {
-				endCursor: '',
-				hasNextPage: false,
-				hasPreviousPage: false,
-				startCursor: '',
-			},
-		};
+		return emptyResult as PaginatedResult<Company>;
 	}
 
 	const endCursor = companiesData[companiesData.length - 1].companyId;
