@@ -1,118 +1,127 @@
-import * as React from 'react';
-import { useCombobox } from 'downshift';
-import { ChevronDownIcon, ChevronUpIcon } from 'lucide-react';
+import { useId, useState } from 'react';
+import {
+	Field,
+	Label,
+	Combobox as UICombobox,
+	ComboboxButton,
+	ComboboxInput,
+	ComboboxOption,
+	ComboboxOptions,
+} from '@headlessui/react';
+import { CheckIcon, ChevronDownIcon } from 'lucide-react';
 import { cn } from '~/utils/shared.utils';
-import { Button } from '~/components/ui/button';
 
-type ComboboxProps = {
-	id: string;
+type ComboboxItem<T extends string> = Record<T, string> & { name: string };
+
+type ComboboxProps<T extends string> = {
 	name: string;
 	label: string;
-	placeholder: string;
+	placeholder?: string;
+	className?: string;
+	itemIdKey: T;
+	items: Array<ComboboxItem<T>>;
 	errorMessage?: string;
-	listItems: Array<{
-		id: string;
-		name: string;
-	}>;
-	inputValueChangeCallback?: (itemId?: string) => void;
+	onChange?: (value: ComboboxItem<T> | null) => void;
 };
 
-export function Combobox({
-	id,
+export function Combobox<T extends string>({
 	name,
 	label,
 	placeholder,
+	className,
+	itemIdKey,
+	items,
 	errorMessage,
-	listItems,
-	inputValueChangeCallback,
-}: ComboboxProps) {
-	const [items, setItems] = React.useState(listItems);
-	const {
-		isOpen,
-		getToggleButtonProps,
-		getLabelProps,
-		getMenuProps,
-		getInputProps,
-		highlightedIndex,
-		getItemProps,
-		selectedItem,
-		reset,
-	} = useCombobox({
-		onInputValueChange({ inputValue, selectedItem: newSelectedItem }) {
-			const lowerCasedInputValue = inputValue.toLowerCase();
-			const filteredItems = listItems.filter(({ name }) => {
-				return !inputValue || name.toLowerCase().includes(lowerCasedInputValue);
-			});
+	onChange,
+}: ComboboxProps<T>) {
+	const descriptionId = useId();
+	const [query, setQuery] = useState('');
+	const [selectedItem, setSelectedItem] = useState<ComboboxItem<T> | null>(
+		null,
+	);
 
-			setItems(filteredItems);
+	const hasError = Boolean(errorMessage?.length);
 
-			if (!inputValue) {
-				reset();
-			}
+	const filteredItems =
+		query === ''
+			? items
+			: items.filter((item) => {
+					return item.name.toLowerCase().includes(query.toLowerCase());
+				});
 
-			if (inputValueChangeCallback) {
-				inputValueChangeCallback(inputValue ? newSelectedItem?.id : undefined);
-			}
-		},
-		items,
-		itemToString(item) {
-			return item ? item.name : '';
-		},
-	});
+	const handleOnChange = (value: ComboboxItem<T> | null) => {
+		setSelectedItem(value);
+
+		if (onChange) {
+			onChange(value);
+		}
+	};
 
 	return (
-		<div>
-			<div className="flex w-72 flex-col gap-1">
-				<label className="w-fit" {...getLabelProps()}>
-					{label}
-				</label>
-				<div className="flex gap-0.5 bg-white shadow-sm">
-					<input
-						id={id}
-						type="text"
-						name={name}
-						value={selectedItem?.id || ''}
-						hidden
-						readOnly
-						className="hidden"
-					/>
-					<input
-						placeholder={placeholder}
-						className="w-full p-1.5"
-						{...getInputProps()}
-					/>
-					<Button
-						aria-label="toggle menu"
-						variant="icon"
-						className="border-none px-2 hover:bg-transparent hover:text-blue-700 focus:ring-0"
-						{...getToggleButtonProps()}
-					>
-						{isOpen ? <ChevronUpIcon /> : <ChevronDownIcon />}
-					</Button>
-				</div>
-				{errorMessage ? <p>{errorMessage}</p> : null}
-			</div>
-			<ul
-				className={`absolute z-10 mt-1 max-h-80 w-72 overflow-scroll bg-white p-0 shadow-md ${
-					!(isOpen && items.length) && 'hidden'
-				}`}
-				{...getMenuProps()}
+		<Field className={className}>
+			<input
+				type="hidden"
+				name={name}
+				value={selectedItem?.[itemIdKey] || ''}
+			/>
+
+			<Label className="mb-1 block text-sm font-medium text-gray-900">
+				{label}
+			</Label>
+			<UICombobox
+				value={selectedItem}
+				onChange={handleOnChange}
+				onClose={() => setQuery('')}
 			>
-				{isOpen &&
-					items.map((item, index) => (
-						<li
-							className={cn(
-								highlightedIndex === index && 'bg-blue-300',
-								selectedItem === item && 'font-bold',
-								'flex flex-col px-3 py-2 shadow-sm',
-							)}
-							key={item.id}
-							{...getItemProps({ item, index })}
+				<div className="relative">
+					<ComboboxInput
+						placeholder={placeholder}
+						aria-describedby={descriptionId}
+						aria-invalid={hasError || undefined}
+						data-invalid={hasError || undefined}
+						className={cn(
+							'block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500',
+							'data-[invalid]:bg-red-50 data-[invalid]:text-red-900 data-[invalid]:placeholder-red-700 data-[invalid]:focus:border-red-500 data-[invalid]:focus:ring-red-500 data-[invalid="true"]:border-red-500',
+						)}
+						displayValue={(item) => item?.name}
+						onChange={(event) => setQuery(event.target.value)}
+					/>
+
+					<ComboboxButton className="group absolute inset-y-0 right-0 cursor-pointer px-2.5">
+						<ChevronDownIcon className="size-4 fill-white/60 group-data-[hover]:fill-white" />
+					</ComboboxButton>
+				</div>
+
+				{errorMessage ? (
+					<p
+						data-invalid
+						id={descriptionId}
+						className="font-medium text-red-900"
+					>
+						{errorMessage}
+					</p>
+				) : null}
+
+				<ComboboxOptions
+					anchor="bottom"
+					transition
+					className={cn(
+						'w-[var(--input-width)] rounded-xl border border-white/5 bg-gray-50 p-1 [--anchor-gap:var(--spacing-1)] empty:invisible',
+						'transition duration-100 ease-in data-[leave]:data-[closed]:opacity-0',
+					)}
+				>
+					{filteredItems.map((item) => (
+						<ComboboxOption
+							key={item[itemIdKey]}
+							value={item}
+							className="group flex cursor-default items-center gap-2 rounded-lg px-3 py-1.5 select-none data-[focus]:bg-white/10"
 						>
-							{item.name}
-						</li>
+							<CheckIcon className="invisible size-4 text-gray-900 group-data-[selected]:visible" />
+							<div className="text-sm/6 text-gray-900">{item.name}</div>
+						</ComboboxOption>
 					))}
-			</ul>
-		</div>
+				</ComboboxOptions>
+			</UICombobox>
+		</Field>
 	);
 }

@@ -1646,3 +1646,10 @@ export const countries = [
 	},
 ] as const;
 export type CountryCode = (typeof countries)[number]['countryCode'];
+
+export const currencies = countries.map(
+	({ countryName, currencySymbol, countryCode }) => ({
+		id: countryCode,
+		name: `${countryName} - ${currencySymbol}`,
+	}),
+);

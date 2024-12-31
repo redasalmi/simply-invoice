@@ -56,8 +56,8 @@ export type Invoice = {
 	locale: Locale;
 	countryCode: CountryCode;
 
-	Date: string;
-	DueDate?: string;
+	date: string;
+	dueDate?: string;
 
 	company: Company;
 	customer: Customer;

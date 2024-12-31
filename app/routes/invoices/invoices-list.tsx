@@ -7,22 +7,22 @@ import {
 	TableHeader,
 	TableRow,
 } from '~/components/ui/table';
-import { db, getPage } from '~/lib/db';
 import type { Route } from './+types/invoices-list';
 
 export async function clientLoader() {
 	return {
-		invoices: await getPage(db.invoices, 1),
+		invoices: [],
 	};
 }
 
-const formatter = new Intl.DateTimeFormat('en-GB', {
-	month: 'short',
-	day: '2-digit',
-	year: 'numeric',
-});
+// TODO replace this with the formatter from the utils folder
+// const formatter = new Intl.DateTimeFormat('en-GB', {
+// 	month: 'short',
+// 	day: '2-digit',
+// 	year: 'numeric',
+// });
 
-export default function InvoicesListRoutes({
+export default function InvoicesListRoute({
 	loaderData,
 }: Route.ComponentProps) {
 	const invoices = loaderData?.invoices;
@@ -32,7 +32,7 @@ export default function InvoicesListRoutes({
 			<div className="flex justify-end">
 				<CreateLink to="/invoices/new">Create Invoice</CreateLink>
 			</div>
-			<div className="mt-6">
+			{/* <div className="mt-6">
 				{invoices && invoices.items.length > 0 ? (
 					<Table>
 						<TableHeader>
@@ -55,7 +55,7 @@ export default function InvoicesListRoutes({
 				) : (
 					<p>No invoice found.</p>
 				)}
-			</div>
+			</div> */}
 		</section>
 	);
 }

@@ -1,3 +1,4 @@
+import * as v from 'valibot';
 import { z } from 'zod';
 
 export const newInvoiceLoaderSchema = z.object({
@@ -53,3 +54,46 @@ export const createInvoiceSchema = z.object({
 export type CreateInvoiceSchemaErrors = z.inferFormattedError<
 	typeof createInvoiceSchema
 >;
+
+export const NewInvoiceLoaderSchema = v.object({
+	companies: v.pipe(
+		v.array(
+			v.object({
+				companyId: v.pipe(v.string(), v.ulid()),
+				name: v.pipe(v.string(), v.nonEmpty('Name is required')),
+			}),
+		),
+		v.minLength(1, 'At least one company must be available!'),
+	),
+	customers: v.pipe(
+		v.array(
+			v.object({
+				customerId: v.pipe(v.string(), v.ulid()),
+				name: v.pipe(v.string(), v.nonEmpty('Name is required')),
+			}),
+		),
+		v.minLength(1, 'At least one customer must be available!'),
+	),
+	services: v.pipe(
+		v.array(
+			v.object({
+				serviceId: v.pipe(v.string(), v.ulid()),
+				name: v.pipe(v.string(), v.nonEmpty('Name is required')),
+			}),
+		),
+		v.minLength(1, 'At least one service must be available!'),
+	),
+	taxes: v.pipe(
+		v.array(
+			v.object({
+				taxId: v.pipe(v.string(), v.ulid()),
+				name: v.pipe(v.string(), v.nonEmpty('Name is required')),
+			}),
+		),
+		v.minLength(1, 'At least one tax must be available!'),
+	),
+	lastIncrementalInvoiceId: v.pipe(
+		v.number('lastIncrementalInvoiceId is required'),
+		v.minValue(0, 'last ID must be greater than or equal to 0'),
+	),
+});
