@@ -1,16 +1,16 @@
-export const idTypes = {
+export const identifierTypes = {
 	incremental: 'incremental',
 	random: 'random',
 } as const;
-export type IdType = keyof typeof idTypes;
+export type IdentifierType = keyof typeof identifierTypes;
 
-export const idTypesList = [
+export const identifierTypesList = [
 	{
-		id: idTypes.incremental,
+		id: identifierTypes.incremental,
 		name: 'Incremental ID',
 	},
 	{
-		id: idTypes.random,
+		id: identifierTypes.random,
 		name: 'Random ID',
 	},
 ];

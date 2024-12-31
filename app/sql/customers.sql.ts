@@ -2,6 +2,13 @@ export const customersCountQuery = /* sql */ `
 SELECT COUNT(customer_id) FROM customers;
 `;
 
+export const allCustomersQuery = /* sql */ `
+SELECT customer_id as customerId,
+  name
+  FROM customers
+  ORDER BY customer_id DESC;
+`;
+
 export const customersQuery = /* sql */ `
 SELECT c.customer_id as customerId,
   c.name,

@@ -3,7 +3,7 @@ import { ulid } from 'ulid';
 
 export const ServiceFormSchema = v.pipe(
 	v.object({
-		'service-id': v.optional(v.pipe(v.string(), v.ulid()), ulid()),
+		'service-id': v.optional(v.pipe(v.string(), v.ulid())),
 		name: v.pipe(v.string(), v.nonEmpty('Name is required')),
 		description: v.optional(v.string()),
 		rate: v.pipe(
@@ -15,7 +15,7 @@ export const ServiceFormSchema = v.pipe(
 	}),
 	v.transform((input) => {
 		return {
-			serviceId: input['service-id'],
+			serviceId: input['service-id'] || ulid(),
 			name: input['name'],
 			description: input['description'],
 			rate: input['rate'],

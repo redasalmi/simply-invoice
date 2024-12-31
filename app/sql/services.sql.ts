@@ -2,6 +2,13 @@ export const servicesCountQuery = /* sql */ `
 SELECT COUNT(service_id) FROM services;
 `;
 
+export const allServicesQuery = /* sql */ `
+SELECT service_id as serviceId,
+  name
+  FROM services
+  ORDER BY service_id DESC;
+`;
+
 export const servicesQuery = /* sql */ `
 SELECT service_id as serviceId,
   name,

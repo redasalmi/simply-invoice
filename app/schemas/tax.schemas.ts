@@ -3,7 +3,7 @@ import { ulid } from 'ulid';
 
 export const TaxFormSchema = v.pipe(
 	v.object({
-		'tax-id': v.optional(v.pipe(v.string(), v.ulid()), ulid()),
+		'tax-id': v.optional(v.pipe(v.string(), v.ulid())),
 		name: v.pipe(v.string(), v.nonEmpty('Name is required')),
 		rate: v.pipe(
 			v.string('Rate is required'),
@@ -14,7 +14,7 @@ export const TaxFormSchema = v.pipe(
 	}),
 	v.transform((input) => {
 		return {
-			taxId: input['tax-id'],
+			taxId: input['tax-id'] || ulid(),
 			name: input['name'],
 			rate: input['rate'],
 		};

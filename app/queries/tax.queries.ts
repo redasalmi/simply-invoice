@@ -8,12 +8,51 @@ type TaxesCountResult = [
 	},
 ];
 
+async function getTaxesCount() {
+	const taxesCount = await window.db.select<TaxesCountResult>(
+		sql.taxesCountQuery,
+	);
+
+	return taxesCount[0]['COUNT(tax_id)'];
+}
+
+export async function getAllTaxes() {
+	return window.db.select<Array<Pick<Tax, 'taxId' | 'name'>>>(
+		sql.allTaxesQuery,
+	);
+}
+
+async function getPaginatedTaxes(startCursor: string = '') {
+	return window.db.select<Array<Tax>>(sql.taxesQuery, [
+		startCursor,
+		itemsPerPage,
+	]);
+}
+
+async function hasPreviousTaxesPage(startCursor: string = '') {
+	const hasPreviousTaxesCount = await window.db.select<TaxesCountResult>(
+		sql.taxesHasPreviousPageQuery,
+		[startCursor, itemsPerPage],
+	);
+
+	return Boolean(hasPreviousTaxesCount[0]['COUNT(tax_id)']);
+}
+
+async function hasNextTaxesPage(endCursor: string) {
+	const hasNextTaxesCount = await window.db.select<TaxesCountResult>(
+		sql.taxesHasNextPageQuery,
+		[endCursor, itemsPerPage],
+	);
+
+	return Boolean(hasNextTaxesCount[0]['COUNT(tax_id)']);
+}
+
 export async function getTaxes(
 	startCursor: string = '',
 ): Promise<PaginatedResult<Tax>> {
-	const [taxesData, taxesCount] = await Promise.all([
-		window.db.select<Array<Tax>>(sql.taxesQuery, [startCursor, itemsPerPage]),
-		window.db.select<TaxesCountResult>(sql.taxesCountQuery),
+	const [taxesData, taxesTotal] = await Promise.all([
+		getPaginatedTaxes(startCursor),
+		getTaxesCount(),
 	]);
 
 	if (!taxesData.length) {
@@ -22,24 +61,14 @@ export async function getTaxes(
 
 	const endCursor = taxesData[taxesData.length - 1].taxId;
 
-	const [hasPreviousTaxesCount, hasNextTaxesCount] = await Promise.all([
-		window.db.select<TaxesCountResult>(sql.taxesHasPreviousPageQuery, [
-			startCursor,
-			itemsPerPage,
-		]),
-		window.db.select<TaxesCountResult>(sql.taxesHasNextPageQuery, [
-			endCursor,
-			itemsPerPage,
-		]),
+	const [hasPreviousPage, hasNextPage] = await Promise.all([
+		hasPreviousTaxesPage(startCursor),
+		hasNextTaxesPage(endCursor),
 	]);
-
-	const total = taxesCount[0]['COUNT(tax_id)'];
-	const hasNextPage = Boolean(hasNextTaxesCount[0]['COUNT(tax_id)']);
-	const hasPreviousPage = Boolean(hasPreviousTaxesCount[0]['COUNT(tax_id)']);
 
 	return {
 		items: taxesData,
-		total,
+		total: taxesTotal,
 		pageInfo: {
 			endCursor,
 			hasNextPage,

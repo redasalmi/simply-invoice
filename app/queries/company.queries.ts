@@ -59,15 +59,52 @@ function parseCompaniesSelectResult(companiesData: CompaniesSelectResult) {
 	return companies;
 }
 
+async function getCompaniesCount() {
+	const companiesCount = await window.db.select<CompaniesCountResult>(
+		sql.companiesCountQuery,
+	);
+
+	return companiesCount[0]['COUNT(company_id)'];
+}
+
+export async function getAllCompanies() {
+	return window.db.select<Array<Pick<Company, 'companyId' | 'name'>>>(
+		sql.allCompaniesQuery,
+	);
+}
+
+async function getPaginatedCompanies(startCursor: string = '') {
+	return window.db.select<CompaniesSelectResult>(sql.companiesQuery, [
+		startCursor,
+		itemsPerPage,
+	]);
+}
+
+async function hasPreviousCompaniesPage(startCursor: string = '') {
+	const hasPreviousCompaniesCount =
+		await window.db.select<CompaniesCountResult>(
+			sql.companiesHasPreviousPageQuery,
+			[startCursor, itemsPerPage],
+		);
+
+	return Boolean(hasPreviousCompaniesCount[0]['COUNT(company_id)']);
+}
+
+async function hasNextCompaniesPage(endCursor: string) {
+	const hasNextCompaniesCount = await window.db.select<CompaniesCountResult>(
+		sql.companiesHasNextPageQuery,
+		[endCursor, itemsPerPage],
+	);
+
+	return Boolean(hasNextCompaniesCount[0]['COUNT(company_id)']);
+}
+
 export async function getCompanies(
 	startCursor: string = '',
 ): Promise<PaginatedResult<Company>> {
-	const [companiesData, companiesCount] = await Promise.all([
-		window.db.select<CompaniesSelectResult>(sql.companiesQuery, [
-			startCursor,
-			itemsPerPage,
-		]),
-		window.db.select<CompaniesCountResult>(sql.companiesCountQuery),
+	const [companiesData, companiesTotal] = await Promise.all([
+		getPaginatedCompanies(startCursor),
+		getCompaniesCount(),
 	]);
 
 	if (!companiesData.length) {
@@ -76,28 +113,16 @@ export async function getCompanies(
 
 	const endCursor = companiesData[companiesData.length - 1].companyId;
 
-	const [hasPreviousCompaniesCount, hasNextCompaniesCount] = await Promise.all([
-		window.db.select<CompaniesCountResult>(sql.companiesHasPreviousPageQuery, [
-			startCursor,
-			itemsPerPage,
-		]),
-		window.db.select<CompaniesCountResult>(sql.companiesHasNextPageQuery, [
-			endCursor,
-			itemsPerPage,
-		]),
+	const [hasPreviousPage, hasNextPage] = await Promise.all([
+		hasPreviousCompaniesPage(startCursor),
+		hasNextCompaniesPage(endCursor),
 	]);
 
 	const companies = parseCompaniesSelectResult(companiesData);
 
-	const total = companiesCount[0]['COUNT(company_id)'];
-	const hasNextPage = Boolean(hasNextCompaniesCount[0]['COUNT(company_id)']);
-	const hasPreviousPage = Boolean(
-		hasPreviousCompaniesCount[0]['COUNT(company_id)'],
-	);
-
 	return {
 		items: companies,
-		total,
+		total: companiesTotal,
 		pageInfo: {
 			endCursor,
 			hasNextPage,

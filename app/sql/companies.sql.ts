@@ -2,6 +2,13 @@ export const companiesCountQuery = /* sql */ `
 SELECT COUNT(company_id) FROM companies;
 `;
 
+export const allCompaniesQuery = /* sql */ `
+  SELECT company_id as companyId,
+  name
+  FROM companies
+  ORDER BY company_id DESC;
+`;
+
 export const companiesQuery = /* sql */ `
 SELECT c.company_id as companyId,
   c.name,

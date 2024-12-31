@@ -2,6 +2,13 @@ export const taxesCountQuery = /* sql */ `
 SELECT COUNT(tax_id) FROM taxes;
 `;
 
+export const allTaxesQuery = /* sql */ `
+SELECT tax_id as taxId,
+  name
+  FROM taxes
+  ORDER BY tax_id DESC;
+`;
+
 export const taxesQuery = /* sql */ `
 SELECT tax_id as taxId,
   name,

@@ -8,15 +8,51 @@ type ServicesCountResult = [
 	},
 ];
 
+async function getServicesCount() {
+	const servicesCount = await window.db.select<ServicesCountResult>(
+		sql.servicesCountQuery,
+	);
+
+	return servicesCount[0]['COUNT(service_id)'];
+}
+
+export async function getAllServices() {
+	return window.db.select<Array<Pick<Service, 'serviceId' | 'name'>>>(
+		sql.allServicesQuery,
+	);
+}
+
+async function getPaginatedServices(startCursor: string = '') {
+	return window.db.select<Array<Service>>(sql.servicesQuery, [
+		startCursor,
+		itemsPerPage,
+	]);
+}
+
+async function hasPreviousServicesPage(startCursor: string = '') {
+	const hasPreviousServicesCount = await window.db.select<ServicesCountResult>(
+		sql.servicesHasPreviousPageQuery,
+		[startCursor, itemsPerPage],
+	);
+
+	return Boolean(hasPreviousServicesCount[0]['COUNT(service_id)']);
+}
+
+async function hasNextServicesPage(endCursor: string) {
+	const hasNextServicesCount = await window.db.select<ServicesCountResult>(
+		sql.servicesHasNextPageQuery,
+		[endCursor, itemsPerPage],
+	);
+
+	return Boolean(hasNextServicesCount[0]['COUNT(service_id)']);
+}
+
 export async function getServices(
 	startCursor: string = '',
 ): Promise<PaginatedResult<Service>> {
-	const [servicesData, servicesCount] = await Promise.all([
-		window.db.select<Array<Service>>(sql.servicesQuery, [
-			startCursor,
-			itemsPerPage,
-		]),
-		window.db.select<ServicesCountResult>(sql.servicesCountQuery),
+	const [servicesData, servicesTotal] = await Promise.all([
+		getPaginatedServices(startCursor),
+		getServicesCount(),
 	]);
 
 	if (!servicesData.length) {
@@ -25,26 +61,14 @@ export async function getServices(
 
 	const endCursor = servicesData[servicesData.length - 1].serviceId;
 
-	const [hasPreviousServicesCount, hasNextServicesCount] = await Promise.all([
-		window.db.select<ServicesCountResult>(sql.servicesHasPreviousPageQuery, [
-			startCursor,
-			itemsPerPage,
-		]),
-		window.db.select<ServicesCountResult>(sql.servicesHasNextPageQuery, [
-			endCursor,
-			itemsPerPage,
-		]),
+	const [hasPreviousPage, hasNextPage] = await Promise.all([
+		hasPreviousServicesPage(startCursor),
+		hasNextServicesPage(endCursor),
 	]);
-
-	const total = servicesCount[0]['COUNT(service_id)'];
-	const hasNextPage = Boolean(hasNextServicesCount[0]['COUNT(service_id)']);
-	const hasPreviousPage = Boolean(
-		hasPreviousServicesCount[0]['COUNT(service_id)'],
-	);
 
 	return {
 		items: servicesData,
-		total,
+		total: servicesTotal,
 		pageInfo: {
 			endCursor,
 			hasNextPage,

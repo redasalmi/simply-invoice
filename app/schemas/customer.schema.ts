@@ -4,7 +4,7 @@ import { AddressFormSchema } from '~/schemas/address.schemas';
 
 export const CustomerFormSchema = v.pipe(
 	v.object({
-		'customer-id': v.optional(v.pipe(v.string(), v.ulid()), ulid()),
+		'customer-id': v.optional(v.pipe(v.string(), v.ulid())),
 		'customer-name': v.pipe(v.string(), v.nonEmpty('Name is required')),
 		'customer-email': v.pipe(
 			v.string(),
@@ -15,8 +15,8 @@ export const CustomerFormSchema = v.pipe(
 		...AddressFormSchema.entries,
 	}),
 	v.transform((input) => {
-		const customerId = input['customer-id'];
-		const addressId = input['address-address-id'];
+		const customerId = input['customer-id'] || ulid();
+		const addressId = input['address-address-id'] || ulid();
 
 		return {
 			address: {

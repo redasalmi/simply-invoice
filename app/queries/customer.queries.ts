@@ -59,15 +59,52 @@ function parseCustomersSelectResult(customersData: CustomersSelectResult) {
 	return customers;
 }
 
+async function getCustomersCount() {
+	const customersCount = await window.db.select<CustomersCountResult>(
+		sql.customersCountQuery,
+	);
+
+	return customersCount[0]['COUNT(customer_id)'];
+}
+
+export async function getAllCustomers() {
+	return window.db.select<Array<Pick<Customer, 'customerId' | 'name'>>>(
+		sql.allCustomersQuery,
+	);
+}
+
+async function getPaginatedCustomers(startCursor: string = '') {
+	return window.db.select<CustomersSelectResult>(sql.customersQuery, [
+		startCursor,
+		itemsPerPage,
+	]);
+}
+
+async function hasPreviousCustomersPage(startCursor: string = '') {
+	const hasPreviousCustomersCount =
+		await window.db.select<CustomersCountResult>(
+			sql.customersHasPreviousPageQuery,
+			[startCursor, itemsPerPage],
+		);
+
+	return Boolean(hasPreviousCustomersCount[0]['COUNT(customer_id)']);
+}
+
+async function hasNextCustomersPage(endCursor: string) {
+	const hasNextCustomersCount = await window.db.select<CustomersCountResult>(
+		sql.customersHasNextPageQuery,
+		[endCursor, itemsPerPage],
+	);
+
+	return Boolean(hasNextCustomersCount[0]['COUNT(customer_id)']);
+}
+
 export async function getCustomers(
 	startCursor: string = '',
 ): Promise<PaginatedResult<Customer>> {
-	const [customersData, customersCount] = await Promise.all([
-		window.db.select<CustomersSelectResult>(sql.customersQuery, [
-			startCursor,
-			itemsPerPage,
-		]),
-		window.db.select<CustomersCountResult>(sql.customersCountQuery),
+	const [customersData, customersTotal] = await Promise.all([
+		getPaginatedCustomers(startCursor),
+		getCustomersCount(),
 	]);
 
 	if (!customersData.length) {
@@ -76,28 +113,16 @@ export async function getCustomers(
 
 	const endCursor = customersData[customersData.length - 1].customerId;
 
-	const [hasPreviousCustomersCount, hasNextCustomersCount] = await Promise.all([
-		window.db.select<CustomersCountResult>(sql.customersHasPreviousPageQuery, [
-			startCursor,
-			itemsPerPage,
-		]),
-		window.db.select<CustomersCountResult>(sql.customersHasNextPageQuery, [
-			endCursor,
-			itemsPerPage,
-		]),
+	const [hasPreviousPage, hasNextPage] = await Promise.all([
+		hasPreviousCustomersPage(startCursor),
+		hasNextCustomersPage(endCursor),
 	]);
 
 	const customers = parseCustomersSelectResult(customersData);
 
-	const total = customersCount[0]['COUNT(customer_id)'];
-	const hasNextPage = Boolean(hasNextCustomersCount[0]['COUNT(customer_id)']);
-	const hasPreviousPage = Boolean(
-		hasPreviousCustomersCount[0]['COUNT(customer_id)'],
-	);
-
 	return {
 		items: customers,
-		total,
+		total: customersTotal,
 		pageInfo: {
 			endCursor,
 			hasNextPage,
