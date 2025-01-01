@@ -3,6 +3,7 @@ import { reactRouter } from '@react-router/dev/vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import { defineConfig } from 'vite';
 import babel from 'vite-plugin-babel';
+import { visualizer } from 'rollup-plugin-visualizer';
 
 const host = process.env.TAURI_DEV_HOST;
 
@@ -24,6 +25,10 @@ export default defineConfig({
 					],
 				],
 			},
+		}),
+		visualizer({
+			gzipSize: true,
+			brotliSize: true,
 		}),
 	],
 
