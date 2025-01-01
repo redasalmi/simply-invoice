@@ -32,7 +32,7 @@ export default [
 	route('/taxes/update/:id', './routes/taxes/tax-update.tsx'),
 
 	route('/invoices', './routes/invoices/invoices-list.tsx'),
-	route('/invoices/new', './routes/invoices/create.tsx'),
+	route('/invoices/new', './routes/invoices/create/route.tsx'),
 
 	// route('/api/invoice-pdf', './routes/api/invoice-pdf.tsx'),
 ] satisfies RouteConfig;

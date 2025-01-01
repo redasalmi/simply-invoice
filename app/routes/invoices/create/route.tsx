@@ -1,12 +1,5 @@
 import * as React from 'react';
-import * as v from 'valibot';
 import { nanoid } from 'nanoid';
-import { getAllCompanies } from '~/queries/company.queries';
-import { getAllCustomers } from '~/queries/customer.queries';
-import { getAllServices } from '~/queries/service.queries';
-import { getAllTaxes } from '~/queries/tax.queries';
-import { getLastIncrementalInvoiceId } from '~/queries/invoice.queries';
-import { NewInvoiceLoaderSchema } from '~/schemas/invoice.schemas';
 import {
 	identifierTypes,
 	identifierTypesList,
@@ -26,42 +19,9 @@ import {
 	FieldRoot,
 } from '~/components/ui/field';
 import { currencies } from '~/lib/currencies';
-import type { Route } from './+types/create';
+import type { Route } from './+types/route';
 
-export async function clientLoader() {
-	const [companies, customers, services, taxes, lastIncrementalInvoiceId] =
-		await Promise.all([
-			getAllCompanies(),
-			getAllCustomers(),
-			getAllServices(),
-			getAllTaxes(),
-			getLastIncrementalInvoiceId(),
-		]);
-
-	const data = v.safeParse(
-		NewInvoiceLoaderSchema,
-		{
-			companies,
-			customers,
-			services,
-			taxes,
-			lastIncrementalInvoiceId,
-		},
-		{ abortPipeEarly: true },
-	);
-
-	if (data.issues) {
-		return {
-			data: null,
-			errors: v.flatten(data.issues),
-		};
-	}
-
-	return {
-		data: data.output,
-		errors: null,
-	};
-}
+export { clientLoader } from './loader';
 
 export default function InvoiceCreateRoute({
 	loaderData,
@@ -100,6 +60,9 @@ export default function InvoiceCreateRoute({
 
 	const { companies, customers, services, taxes, lastIncrementalInvoiceId } =
 		data;
+	console.log({
+		loaderData,
+	});
 
 	const handleInvoiceIdTypeChange = (identifierType: IdentifierType) => {
 		let invoiceIdValue = '';
@@ -184,8 +147,8 @@ export default function InvoiceCreateRoute({
 
 				{/* <div className="my-4">
           TODO: maybe add a service-order field to save the services order
-					<ServicesTable services={services} />
-				</div> */}
+          <ServicesTable services={services} />
+        </div> */}
 
 				<div className="my-4">
 					<p>Note</p>

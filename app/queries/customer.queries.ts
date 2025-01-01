@@ -1,4 +1,4 @@
-import * as sql from '~/sql/customers.sql';
+import * as sql from '~/sql/customers/customers.sql';
 import { emptyResult, itemsPerPage } from '~/lib/pagination';
 import type { Address, Customer, PaginatedResult } from '~/types';
 

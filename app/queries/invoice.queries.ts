@@ -1,4 +1,4 @@
-import * as sql from '~/sql/invoices.sql';
+import * as sql from '~/sql/invoices/invoices.sql';
 
 type LastIncrementalInvoiceIdResult = [
 	{

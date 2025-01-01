@@ -1,4 +1,4 @@
-import * as sql from '~/sql/taxes.sql';
+import * as sql from '~/sql/taxes/taxes.sql';
 import { emptyResult, itemsPerPage } from '~/lib/pagination';
 import type { Tax, PaginatedResult } from '~/types';
 

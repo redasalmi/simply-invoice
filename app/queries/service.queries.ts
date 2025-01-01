@@ -1,4 +1,4 @@
-import * as sql from '~/sql/services.sql';
+import * as sql from '~/sql/services/services.sql';
 import { emptyResult, itemsPerPage } from '~/lib/pagination';
 import type { Service, PaginatedResult } from '~/types';
 
