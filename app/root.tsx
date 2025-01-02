@@ -9,9 +9,9 @@ import {
 	type LinksFunction,
 } from 'react-router';
 import { SaveDBPath } from '~/components/SaveDBPath';
+import { LoadDB } from '~/components/LoadDB';
 import { Sidebar } from '~/components/Sidebar';
 import { Spinner } from '~/components/Spinner';
-import loadDb from '~/lib/loadDb?raw';
 import '~/tailwind.css';
 import type { Route } from './+types/root';
 
@@ -80,11 +80,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
 				<meta name="viewport" content="width=device-width,initial-scale=1" />
 				<Meta />
 				<Links />
-				<script dangerouslySetInnerHTML={{ __html: loadDb }} />
 			</head>
 			<body>
 				<Page>{children}</Page>
 				<ScrollRestoration />
+				<LoadDB />
 				<Scripts />
 			</body>
 		</html>
