@@ -11,7 +11,7 @@ import {
 	localesList,
 } from '~/lib/constants';
 import { countries } from '~/lib/currencies';
-import { ServicesTable } from '~/components/ServicesTable';
+import { ServicesTable } from '~/routes/invoices/components/ServicesTable';
 import {
 	// createInvoiceSchema,
 	newInvoiceLoaderSchema,

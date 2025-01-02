@@ -1,4 +1,5 @@
 SELECT service_id as serviceId,
-  name
+  name,
+  rate
 FROM services
 ORDER BY service_id DESC

@@ -17,7 +17,7 @@ async function getServicesCount() {
 }
 
 export async function getAllServices() {
-	return window.db.select<Array<Pick<Service, 'serviceId' | 'name'>>>(
+	return window.db.select<Array<Pick<Service, 'serviceId' | 'name' | 'rate'>>>(
 		sql.allServicesQuery,
 	);
 }

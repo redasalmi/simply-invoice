@@ -11,22 +11,26 @@ import {
 import { CheckIcon, ChevronDownIcon } from 'lucide-react';
 import { cn } from '~/utils/shared.utils';
 
-type ComboboxItem<T extends string> = Record<T, string> & { name: string };
+export type ComboboxItem<T> = T & {
+	name: string;
+};
 
-type ComboboxProps<T extends string> = {
+type ComboboxProps<T> = {
 	name: string;
 	label: string;
+	hideLabel?: boolean;
 	placeholder?: string;
 	className?: string;
-	itemIdKey: T;
+	itemIdKey: keyof T;
 	items: Array<ComboboxItem<T>>;
 	errorMessage?: string;
 	onChange?: (value: ComboboxItem<T> | null) => void;
 };
 
-export function Combobox<T extends string>({
+export function Combobox<T>({
 	name,
 	label,
+	hideLabel,
 	placeholder,
 	className,
 	itemIdKey,
@@ -62,10 +66,15 @@ export function Combobox<T extends string>({
 			<input
 				type="hidden"
 				name={name}
-				value={selectedItem?.[itemIdKey] || ''}
+				value={(selectedItem?.[itemIdKey] as string | undefined) || ''}
 			/>
 
-			<Label className="mb-1 block text-sm font-medium text-gray-900">
+			<Label
+				className={cn(
+					'mb-1 block text-sm font-medium text-gray-900',
+					hideLabel && 'sr-only',
+				)}
+			>
 				{label}
 			</Label>
 			<UICombobox
@@ -112,7 +121,7 @@ export function Combobox<T extends string>({
 				>
 					{filteredItems.map((item) => (
 						<ComboboxOption
-							key={item[itemIdKey]}
+							key={item[itemIdKey] as string}
 							value={item}
 							className="group flex cursor-default items-center gap-2 rounded-lg px-3 py-1.5 select-none data-[focus]:bg-white/10"
 						>

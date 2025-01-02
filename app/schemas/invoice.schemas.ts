@@ -79,6 +79,7 @@ export const NewInvoiceLoaderSchema = v.object({
 			v.object({
 				serviceId: v.pipe(v.string(), v.ulid()),
 				name: v.pipe(v.string(), v.nonEmpty('Name is required')),
+				rate: v.number(),
 			}),
 		),
 		v.minLength(1, 'At least one service must be available!'),
@@ -88,6 +89,7 @@ export const NewInvoiceLoaderSchema = v.object({
 			v.object({
 				taxId: v.pipe(v.string(), v.ulid()),
 				name: v.pipe(v.string(), v.nonEmpty('Name is required')),
+				rate: v.number(),
 			}),
 		),
 		v.minLength(1, 'At least one tax must be available!'),

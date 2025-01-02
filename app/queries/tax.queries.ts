@@ -17,7 +17,7 @@ async function getTaxesCount() {
 }
 
 export async function getAllTaxes() {
-	return window.db.select<Array<Pick<Tax, 'taxId' | 'name'>>>(
+	return window.db.select<Array<Pick<Tax, 'taxId' | 'name' | 'rate'>>>(
 		sql.allTaxesQuery,
 	);
 }

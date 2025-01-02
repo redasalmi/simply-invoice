@@ -1,4 +1,5 @@
 SELECT tax_id as taxId,
-  name
+  name,
+  rate
 FROM taxes
 ORDER BY tax_id DESC
