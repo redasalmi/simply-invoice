@@ -1,7 +1,7 @@
 import { preinit } from 'react-dom';
 
 export function LoadDB() {
-	preinit('http://localhost:1420/loadDb.js', { as: 'script' });
+	preinit('/loadDb.js', { as: 'script', fetchPriority: 'high' });
 
-	return <script async src="loadDb.js" />;
+	return <script async src="/loadDb.js" />;
 }

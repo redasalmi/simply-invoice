@@ -14,6 +14,8 @@ import type { Service, Tax } from '~/types';
 type ServicesTablesProps = {
 	services: Array<Pick<Service, 'serviceId' | 'name' | 'rate'>>;
 	taxes: Array<Pick<Tax, 'taxId' | 'name' | 'rate'>>;
+	errors?: Record<string, [string, ...string[]] | undefined>;
+	resetErrors: () => void;
 };
 
 export type SelectedService = {
@@ -23,7 +25,12 @@ export type SelectedService = {
 	quantity: number;
 };
 
-export function ServicesTable({ services, taxes }: ServicesTablesProps) {
+export function ServicesTable({
+	services,
+	taxes,
+	errors,
+	resetErrors,
+}: ServicesTablesProps) {
 	const [servicesList, setServicesList] = React.useState<
 		Array<SelectedService>
 	>([
@@ -58,6 +65,7 @@ export function ServicesTable({ services, taxes }: ServicesTablesProps) {
 				quantity: 0,
 			});
 		});
+		resetErrors();
 	};
 
 	const updateService = (service: SelectedService) => {
@@ -70,16 +78,21 @@ export function ServicesTable({ services, taxes }: ServicesTablesProps) {
 				return prevService;
 			}),
 		);
+		resetErrors();
 	};
 
 	const deleteService = (id: string) => {
 		setServicesList((prevServices) =>
 			prevServices.filter((field) => field.id !== id),
 		);
+		resetErrors();
 	};
 
 	return (
 		<div>
+			<input type="hidden" name="subtotal-amount" value={subtotalAmount} />
+			<input type="hidden" name="total-amount" value={totalAmount} />
+
 			<div className="flex items-center justify-between">
 				<h3>Services</h3>
 				<Button onClick={addService}>Add new service</Button>
@@ -104,6 +117,7 @@ export function ServicesTable({ services, taxes }: ServicesTablesProps) {
 							taxes={taxes}
 							updateService={updateService}
 							deleteService={() => deleteService(id)}
+							errors={errors}
 						/>
 					))}
 				</TableBody>

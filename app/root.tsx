@@ -15,6 +15,7 @@ import { Spinner } from '~/components/Spinner';
 import '~/tailwind.css';
 import type { Route } from './+types/root';
 
+// TODO: download font to a local folder and get it from there
 export const links: LinksFunction = () => [
 	{ rel: 'preconnect', href: 'https://fonts.googleapis.com' },
 	{

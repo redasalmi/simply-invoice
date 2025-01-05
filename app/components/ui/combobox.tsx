@@ -1,4 +1,4 @@
-import { useId, useState } from 'react';
+import React, { useId, useState } from 'react';
 import {
 	Field,
 	Label,
@@ -23,6 +23,7 @@ type ComboboxProps<T> = {
 	className?: string;
 	itemIdKey: keyof T;
 	items: Array<ComboboxItem<T>>;
+	renderItemName?: (item: T) => React.ReactNode;
 	errorMessage?: string;
 	onChange?: (value: ComboboxItem<T> | null) => void;
 };
@@ -35,6 +36,7 @@ export function Combobox<T>({
 	className,
 	itemIdKey,
 	items,
+	renderItemName,
 	errorMessage,
 	onChange,
 }: ComboboxProps<T>) {
@@ -92,7 +94,9 @@ export function Combobox<T>({
 							'block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500',
 							'data-[invalid]:bg-red-50 data-[invalid]:text-red-900 data-[invalid]:placeholder-red-700 data-[invalid]:focus:border-red-500 data-[invalid]:focus:ring-red-500 data-[invalid="true"]:border-red-500',
 						)}
-						displayValue={(item) => item?.name}
+						displayValue={(item) =>
+							item && renderItemName ? renderItemName(item as T) : item?.name
+						}
 						onChange={(event) => setQuery(event.target.value)}
 					/>
 
@@ -126,7 +130,9 @@ export function Combobox<T>({
 							className="group flex cursor-default items-center gap-2 rounded-lg px-3 py-1.5 select-none data-[focus]:bg-white/10"
 						>
 							<CheckIcon className="invisible size-4 text-gray-900 group-data-[selected]:visible" />
-							<div className="text-sm/6 text-gray-900">{item.name}</div>
+							<div className="text-sm/6 text-gray-900">
+								{renderItemName ? renderItemName(item) : item.name}
+							</div>
 						</ComboboxOption>
 					))}
 				</ComboboxOptions>

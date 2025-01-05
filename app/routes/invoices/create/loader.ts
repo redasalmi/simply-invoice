@@ -4,7 +4,7 @@ import { getAllCustomers } from '~/queries/customer.queries';
 import { getLastIncrementalInvoiceId } from '~/queries/invoice.queries';
 import { getAllServices } from '~/queries/service.queries';
 import { getAllTaxes } from '~/queries/tax.queries';
-import { NewInvoiceLoaderSchema } from '~/schemas/invoice.schemas';
+import { CreateInvoiceLoaderSchema } from '~/schemas/invoice.schemas';
 
 export async function clientLoader() {
 	const [companies, customers, services, taxes, lastIncrementalInvoiceId] =
@@ -17,7 +17,7 @@ export async function clientLoader() {
 		]);
 
 	const data = v.safeParse(
-		NewInvoiceLoaderSchema,
+		CreateInvoiceLoaderSchema,
 		{
 			companies,
 			customers,

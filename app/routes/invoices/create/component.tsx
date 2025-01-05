@@ -1,9 +1,9 @@
 import * as React from 'react';
+import { useNavigation } from 'react-router';
 import { nanoid } from 'nanoid';
 import {
 	identifierTypes,
 	identifierTypesList,
-	intents,
 	localesList,
 	type IdentifierType,
 } from '~/lib/constants';
@@ -19,20 +19,32 @@ import {
 	FieldRoot,
 } from '~/components/ui/field';
 import { currencies } from '~/lib/currencies';
-import type { Route } from './+types/route';
 import { ServicesTable } from '../components/ServicesTable';
+import { useForm } from '~/hooks/useForm';
+import { InvoiceFormSchema } from '~/schemas/invoice.schemas';
+import type { Route } from './+types/route';
 
 export default function InvoiceCreateRoute({
 	loaderData,
+	actionData,
 }: Route.ComponentProps) {
-	const { data, errors } = loaderData;
+	const { data, errors: loaderErrors } = loaderData;
+
+	const navigation = useNavigation();
+	const isLoading = navigation.state !== 'idle';
+	const isSubmitting = navigation.state === 'submitting';
 
 	const [invoiceId, setInvoiceId] = React.useState(
 		String((data?.lastIncrementalInvoiceId || 0) + 1),
 	);
 
-	if (errors?.nested) {
-		const errorsList = Object.values(errors.nested).flat();
+	const { errors, resetErrors, handleSubmit } = useForm({
+		schema: InvoiceFormSchema,
+		actionErrors: actionData?.errors,
+	});
+
+	if (loaderErrors?.nested) {
+		const errorsList = Object.values(loaderErrors.nested).flat();
 
 		return (
 			<section>
@@ -69,24 +81,31 @@ export default function InvoiceCreateRoute({
 		}
 
 		setInvoiceId(invoiceIdValue);
+		resetErrors();
 	};
 
 	return (
 		<section>
-			<Form method="post">
+			<Form
+				method="post"
+				errors={errors?.nested}
+				onClearErrors={resetErrors}
+				onSubmit={handleSubmit}
+			>
 				<div className="my-4 flex gap-3">
 					<Select
 						name="identifier-type"
-						label="Invoice Identifier Type"
+						label="Invoice ID Type"
 						itemIdKey="id"
 						items={identifierTypesList}
 						onChange={(value) =>
 							handleInvoiceIdTypeChange(value as IdentifierType)
 						}
+						errorMessage={errors?.nested?.['identifier-type']?.[0]}
 					/>
 
 					<FieldRoot name="identifier">
-						<FieldLabel>Invoice Identifier</FieldLabel>
+						<FieldLabel>Invoice ID</FieldLabel>
 						<FieldControl value={invoiceId} readOnly />
 						<FieldError />
 					</FieldRoot>
@@ -95,9 +114,11 @@ export default function InvoiceCreateRoute({
 				<div className="my-4 flex gap-3">
 					<Select
 						name="locale"
-						label="Invoice Language"
+						label="Language"
 						itemIdKey="id"
 						items={localesList}
+						onChange={resetErrors}
+						errorMessage={errors?.nested?.['locale']?.[0]}
 					/>
 
 					<Combobox
@@ -106,18 +127,20 @@ export default function InvoiceCreateRoute({
 						placeholder="Select a currency"
 						itemIdKey="id"
 						items={currencies}
+						onChange={resetErrors}
+						errorMessage={errors?.nested?.['country-code']?.[0]}
 					/>
 				</div>
 
 				<div className="my-4 flex gap-3">
 					<FieldRoot name="date">
-						<FieldLabel>Invoice date</FieldLabel>
+						<FieldLabel>Date</FieldLabel>
 						<FieldControl type="date" />
 						<FieldError />
 					</FieldRoot>
 
 					<FieldRoot name="due-date">
-						<FieldLabel>Invoice due date</FieldLabel>
+						<FieldLabel>Due date</FieldLabel>
 						<FieldControl type="date" />
 						<FieldError />
 					</FieldRoot>
@@ -130,6 +153,8 @@ export default function InvoiceCreateRoute({
 						placeholder="Select a company"
 						itemIdKey="companyId"
 						items={companies}
+						onChange={resetErrors}
+						errorMessage={errors?.nested?.['company-id']?.[0]}
 					/>
 
 					<Combobox
@@ -138,11 +163,18 @@ export default function InvoiceCreateRoute({
 						placeholder="Select a customer"
 						itemIdKey="customerId"
 						items={customers}
+						onChange={resetErrors}
+						errorMessage={errors?.nested?.['customer-id']?.[0]}
 					/>
 				</div>
 
 				<div className="my-4">
-					<ServicesTable services={services} taxes={taxes} />
+					<ServicesTable
+						services={services}
+						taxes={taxes}
+						errors={errors?.nested}
+						resetErrors={resetErrors}
+					/>
 				</div>
 
 				<div className="my-4">
@@ -151,14 +183,10 @@ export default function InvoiceCreateRoute({
 				</div>
 
 				<div className="flex items-center gap-2">
-					<Button type="submit" name="intent" value={intents.preview}>
-						Preview Invoice
-					</Button>
-					<Button type="submit" name="intent" value={intents.download}>
-						Download Invoice
-					</Button>
-					<Button type="submit" name="intent" value={intents.save}>
-						Save Invoice
+					<Button disabled={isSubmitting}>Preview Invoice</Button>
+					<Button disabled={isSubmitting}>Download Invoice</Button>
+					<Button type="submit" disabled={isSubmitting}>
+						{isLoading ? 'Saving Invoice...' : 'Save Invoice'}
 					</Button>
 				</div>
 			</Form>

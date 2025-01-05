@@ -1,61 +1,14 @@
 import * as v from 'valibot';
-// import { z } from 'zod';
+import { ulid } from 'ulid';
 
-// export const newInvoiceLoaderSchema = z.object({
-// 	companiesLength: z.number().min(1),
-// 	customersLength: z.number().min(1),
-// 	servicesLength: z.number().min(1),
-// });
+type InvoiceService = {
+	invoiceServiceId: string;
+	serviceId: string;
+	quantity: string;
+	taxId: string;
+};
 
-// export type NewInvoiceLoaderSchemaErrors = z.inferFormattedError<
-// 	typeof newInvoiceLoaderSchema
-// >;
-
-// export const createInvoiceSchema = z.object({
-// 	id: z.string(),
-// 	invoiceIdType: z.string().min(1, 'Invoice ID type is required'),
-// 	invoiceId: z.string().min(1, 'Invoice ID is required'),
-// 	locale: z.string().min(1, 'Invoice Language is required'),
-// 	countryCode: z.string().min(1, 'Currency is required'),
-
-// 	invoiceDate: z.string().min(1, 'Invoice Date is required'),
-// 	dueDate: z.string().optional(),
-// 	dateFormat: z.string().optional(),
-
-// 	companyId: z.string().min(1, 'Please select a company'),
-// 	customerId: z.string().min(1, 'Please select a customer'),
-
-// 	services: z
-// 		.array(
-// 			z.object({
-// 				id: z.string(),
-// 				serviceId: z.string().min(1, 'Please select a service'),
-// 				quantity: z.number().gt(0, 'Quantity must be higher than 0'),
-// 			}),
-// 			{ message: 'At least one service must be added' },
-// 		)
-// 		.nonempty({ message: 'At least one service must be added' }),
-
-// 	shipping: z
-// 		.number()
-// 		.min(0, 'Shipping must be higher or equal to 0')
-// 		.optional(),
-// 	tax: z
-// 		.number()
-// 		.min(0, 'Tax must be higher or equal to 0')
-// 		.max(100, 'Tax must be lower or equal to 100')
-// 		.optional(),
-
-// 	note: z.string().optional(),
-// 	createdAt: z.string(),
-// 	updatedAt: z.string(),
-// });
-
-// export type CreateInvoiceSchemaErrors = z.inferFormattedError<
-// 	typeof createInvoiceSchema
-// >;
-
-export const NewInvoiceLoaderSchema = v.object({
+export const CreateInvoiceLoaderSchema = v.object({
 	companies: v.pipe(
 		v.array(
 			v.object({
@@ -99,3 +52,183 @@ export const NewInvoiceLoaderSchema = v.object({
 		v.minValue(0, 'last ID must be greater than or equal to 0'),
 	),
 });
+
+export const InvoiceFormSchema = v.pipe(
+	v.looseObject({
+		'invoice-id': v.optional(v.pipe(v.string(), v.ulid())),
+		identifier: v.pipe(v.string(), v.nonEmpty('Invoice ID is required')),
+		'identifier-type': v.pipe(
+			v.string(),
+			v.nonEmpty('Invoice ID type is required'),
+		),
+		locale: v.pipe(v.string(), v.nonEmpty('Invoice language is required')),
+		'country-code': v.pipe(v.string(), v.nonEmpty('Currency is required')),
+		date: v.pipe(v.string(), v.isoDate('Date is required')),
+		'due-date': v.optional(v.string()),
+		'company-id': v.pipe(v.string(), v.nonEmpty('Company is required')),
+		'customer-id': v.pipe(v.string(), v.nonEmpty('Customer is required')),
+		'subtotal-amount': v.pipe(
+			v.string('Subtotal amount is required'),
+			v.decimal('Subtotal amount is required'),
+			v.transform(Number),
+			v.minValue(0, 'Subtotal amount must be greater than or equal to 0'),
+		),
+		'total-amount': v.pipe(
+			v.string('Total amount is required'),
+			v.decimal('Total amount is required'),
+			v.transform(Number),
+			v.minValue(0, 'Total amount must be greater than or equal to 0'),
+		),
+		note: v.optional(v.string()),
+	}),
+	v.forward(
+		v.partialCheck(
+			[['date'], ['due-date']],
+			(input) => {
+				const { date, 'due-date': dueDate } = input;
+				if (!dueDate) {
+					return true;
+				}
+
+				return new Date(date) <= new Date(dueDate);
+			},
+			'Due Date must be bigger than or equal to the invoice date',
+		),
+		['due-date'],
+	),
+	v.rawTransform(({ dataset, addIssue, NEVER }) => {
+		const entries = Object.entries(dataset.value);
+		const servicesObject: Record<string, Partial<InvoiceService>> = {};
+		const issues: Array<{ key: string; message: string }> = [];
+
+		for (let index = 0; index < entries.length; index++) {
+			const [key, value] = entries[index] as [string, string];
+			if (!key.startsWith('service-')) {
+				continue;
+			}
+
+			const splitKey = key.split('-');
+			const id = splitKey[splitKey.length - 1];
+
+			if (key.includes('service-invoice-service-id')) {
+				servicesObject[id] = {
+					invoiceServiceId: id,
+				};
+				const parsedInvoiceServiceId = v.safeParse(
+					v.pipe(v.string(), v.nonEmpty('Invoice service ID is required')),
+					value,
+				);
+
+				if (parsedInvoiceServiceId.issues) {
+					parsedInvoiceServiceId.issues.forEach((issue) => {
+						issues.push({
+							key,
+							message: issue.message,
+						});
+					});
+				}
+			} else if (key.includes('service-service-id')) {
+				servicesObject[id].serviceId = value;
+				const parsedServiceId = v.safeParse(
+					v.pipe(v.string(), v.nonEmpty('Service ID is required')),
+					value,
+				);
+
+				if (parsedServiceId.issues) {
+					parsedServiceId.issues.forEach((issue) => {
+						issues.push({
+							key,
+							message: issue.message,
+						});
+					});
+				}
+			} else if (key.includes('service-quantity')) {
+				servicesObject[id].quantity = value;
+				const parsedQuantity = v.safeParse(
+					v.pipe(
+						v.string('Quantity is required'),
+						v.decimal('Quantity is required'),
+						v.transform(Number),
+						v.minValue(0, 'Quantity must be greater than or equal to 0'),
+					),
+					value,
+				);
+
+				if (parsedQuantity.issues) {
+					parsedQuantity.issues.forEach((issue) => {
+						issues.push({
+							key,
+							message: issue.message,
+						});
+					});
+				}
+			} else if (key.includes('service-tax-id')) {
+				servicesObject[id].taxId = value;
+				const parsedTaxId = v.safeParse(
+					v.pipe(v.string(), v.nonEmpty('Tax ID is required')),
+					value,
+				);
+
+				if (parsedTaxId.issues) {
+					parsedTaxId.issues.forEach((issue) => {
+						issues.push({
+							key,
+							message: issue.message,
+						});
+					});
+				}
+			}
+		}
+
+		if (issues.length) {
+			issues.forEach(({ key, message }) => {
+				addIssue({
+					message,
+					path: [
+						{
+							type: 'object',
+							origin: 'value',
+							input: dataset.value,
+							key: key,
+							value: dataset.value[key],
+						},
+					],
+				});
+			});
+
+			return NEVER;
+		}
+
+		const {
+			'invoice-id': invoiceId,
+			identifier,
+			'identifier-type': identifierType,
+			locale,
+			'country-code': countryCode,
+			date,
+			'due-date': dueDate,
+			'company-id': companyId,
+			'customer-id': customerId,
+			'subtotal-amount': subtotalAmount,
+			'total-amount': totalAmount,
+			note,
+		} = dataset.value;
+		const services = Object.values(servicesObject) as Array<InvoiceService>;
+
+		return {
+			invoiceId: invoiceId || ulid(),
+			identifier,
+			identifierType,
+			locale,
+			countryCode,
+			date,
+			dueDate,
+			companyId,
+			customerId,
+			services,
+			subtotalAmount,
+			totalAmount,
+			note,
+		};
+	}),
+);

@@ -39,7 +39,9 @@ export function Select<T extends string>({
 
 	return (
 		<Field className={className}>
-			<Label className="text-sm/6 font-medium text-white">{label}</Label>
+			<Label className="mb-1 block text-sm font-medium text-gray-900">
+				{label}
+			</Label>
 			<div className="relative">
 				<UISelect
 					name={name}

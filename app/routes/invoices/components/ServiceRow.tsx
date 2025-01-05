@@ -3,7 +3,6 @@ import { TrashIcon } from 'lucide-react';
 import { TableCell, TableRow } from '~/components/ui/table';
 import { Button } from '~/components/ui/button';
 import { Combobox, type ComboboxItem } from '~/components/ui/combobox';
-import type { Service, Tax } from '~/types';
 import { FieldError, FieldRoot } from '~/components/ui/field';
 import {
 	NumberFieldDecrement,
@@ -13,6 +12,7 @@ import {
 	NumberFieldLabel,
 	NumberFieldRoot,
 } from '~/components/ui/number-field';
+import type { Service, Tax } from '~/types';
 
 type PartialService = Pick<Service, 'serviceId' | 'name' | 'rate'>;
 type PartialTax = Pick<Tax, 'taxId' | 'name' | 'rate'>;
@@ -28,6 +28,7 @@ type ServiceRowProps = {
 		quantity: number;
 	}) => void;
 	deleteService: () => void;
+	errors?: Record<string, [string, ...string[]] | undefined>;
 };
 
 export function ServiceRow({
@@ -36,6 +37,7 @@ export function ServiceRow({
 	taxes,
 	updateService,
 	deleteService,
+	errors,
 }: ServiceRowProps) {
 	const [serviceRate, setServiceRate] = React.useState(0);
 	const [quantity, setQuantity] = React.useState(0);
@@ -84,6 +86,14 @@ export function ServiceRow({
 
 	return (
 		<TableRow>
+			<TableCell className="hidden">
+				<input
+					type="hidden"
+					name={`service-invoice-service-id-${id}`}
+					value={id}
+				/>
+			</TableCell>
+
 			<TableCell>
 				<Combobox
 					hideLabel
@@ -93,6 +103,7 @@ export function ServiceRow({
 					itemIdKey="serviceId"
 					items={services}
 					onChange={onServiceChange}
+					errorMessage={errors?.[`service-service-id-${id}`]?.[0]}
 				/>
 			</TableCell>
 
@@ -132,7 +143,9 @@ export function ServiceRow({
 					placeholder="Select a tax"
 					itemIdKey="taxId"
 					items={taxes}
+					renderItemName={(item) => `${item.name} (${item.rate}%)`}
 					onChange={onTaxChange}
+					errorMessage={errors?.[`service-tax-id-${id}`]?.[0]}
 				/>
 			</TableCell>
 
