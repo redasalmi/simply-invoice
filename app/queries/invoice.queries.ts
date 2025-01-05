@@ -3,7 +3,7 @@ import type { Invoice } from '~/types';
 
 type LastIncrementalInvoiceIdResult = [
 	{
-		'MAX(identifier)': number;
+		'MAX(identifier)': string | null;
 	},
 ];
 
@@ -11,8 +11,9 @@ export async function getLastIncrementalInvoiceId() {
 	const lastIdResult = await window.db.select<LastIncrementalInvoiceIdResult>(
 		sql.lastIncrementalInvoiceIdQuery,
 	);
+	const lastId = lastIdResult[0]['MAX(identifier)'];
 
-	return lastIdResult[0]['MAX(identifier)'] || 0;
+	return Number(lastId || 0);
 }
 
 type createInvoiceInput = Pick<

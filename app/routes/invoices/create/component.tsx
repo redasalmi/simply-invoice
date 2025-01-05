@@ -24,7 +24,7 @@ import { useForm } from '~/hooks/useForm';
 import { InvoiceFormSchema } from '~/schemas/invoice.schemas';
 import type { Route } from './+types/route';
 
-export default function InvoiceCreateRoute({
+export function InvoiceCreateRoute({
 	loaderData,
 	actionData,
 }: Route.ComponentProps) {
