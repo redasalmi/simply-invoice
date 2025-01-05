@@ -15,19 +15,19 @@ export const identifierTypesList = [
 	},
 ];
 
-const locales = {
-	enUS: 'en-US',
-	frFR: 'fr-FR',
+export const locales = {
+	'en-US': 'en-US',
+	'fr-FR': 'fr-FR',
 } as const;
 export type Locale = keyof typeof locales;
 
 export const localesList = [
 	{
-		id: locales.enUS,
+		id: locales['en-US'],
 		name: 'English',
 	},
 	{
-		id: locales.frFR,
+		id: locales['fr-FR'],
 		name: 'French',
 	},
 ];

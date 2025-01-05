@@ -122,13 +122,13 @@ export default function InvoiceCreateRoute({
 					/>
 
 					<Combobox
-						name="country-code"
+						name="currency-country-code"
 						label="Currency"
 						placeholder="Select a currency"
 						itemIdKey="id"
 						items={currencies}
 						onChange={resetErrors}
-						errorMessage={errors?.nested?.['country-code']?.[0]}
+						errorMessage={errors?.nested?.['currency-country-code']?.[0]}
 					/>
 				</div>
 

@@ -1,12 +1,8 @@
 import * as v from 'valibot';
 import { ulid } from 'ulid';
-
-type InvoiceService = {
-	invoiceServiceId: string;
-	serviceId: string;
-	quantity: string;
-	taxId: string;
-};
+import { identifierTypesList, localesList } from '~/lib/constants';
+import { currencies } from '~/lib/currencies';
+import type { InvoiceService } from '~/types';
 
 export const CreateInvoiceLoaderSchema = v.object({
 	companies: v.pipe(
@@ -57,12 +53,18 @@ export const InvoiceFormSchema = v.pipe(
 	v.looseObject({
 		'invoice-id': v.optional(v.pipe(v.string(), v.ulid())),
 		identifier: v.pipe(v.string(), v.nonEmpty('Invoice ID is required')),
-		'identifier-type': v.pipe(
-			v.string(),
-			v.nonEmpty('Invoice ID type is required'),
+		'identifier-type': v.picklist(
+			identifierTypesList.map(({ id }) => id),
+			'Invoice ID type is required',
 		),
-		locale: v.pipe(v.string(), v.nonEmpty('Invoice language is required')),
-		'country-code': v.pipe(v.string(), v.nonEmpty('Currency is required')),
+		locale: v.picklist(
+			localesList.map(({ id }) => id),
+			'Language is required',
+		),
+		'currency-country-code': v.picklist(
+			currencies.map(({ id }) => id),
+			'Currency is required',
+		),
 		date: v.pipe(v.string(), v.isoDate('Date is required')),
 		'due-date': v.optional(v.string()),
 		'company-id': v.pipe(v.string(), v.nonEmpty('Company is required')),
@@ -98,6 +100,8 @@ export const InvoiceFormSchema = v.pipe(
 	),
 	v.rawTransform(({ dataset, addIssue, NEVER }) => {
 		const entries = Object.entries(dataset.value);
+		const invoiceId = dataset.value['invoice-id'] || ulid();
+
 		const servicesObject: Record<string, Partial<InvoiceService>> = {};
 		const issues: Array<{ key: string; message: string }> = [];
 
@@ -110,10 +114,14 @@ export const InvoiceFormSchema = v.pipe(
 			const splitKey = key.split('-');
 			const id = splitKey[splitKey.length - 1];
 
-			if (key.includes('service-invoice-service-id')) {
+			if (!servicesObject[id]) {
 				servicesObject[id] = {
-					invoiceServiceId: id,
+					invoiceId,
 				};
+			}
+
+			if (key.includes('service-invoice-service-id')) {
+				servicesObject[id].invoiceServiceId = id;
 				const parsedInvoiceServiceId = v.safeParse(
 					v.pipe(v.string(), v.nonEmpty('Invoice service ID is required')),
 					value,
@@ -143,7 +151,7 @@ export const InvoiceFormSchema = v.pipe(
 					});
 				}
 			} else if (key.includes('service-quantity')) {
-				servicesObject[id].quantity = value;
+				servicesObject[id].quantity = Number(value);
 				const parsedQuantity = v.safeParse(
 					v.pipe(
 						v.string('Quantity is required'),
@@ -200,11 +208,10 @@ export const InvoiceFormSchema = v.pipe(
 		}
 
 		const {
-			'invoice-id': invoiceId,
 			identifier,
 			'identifier-type': identifierType,
 			locale,
-			'country-code': countryCode,
+			'currency-country-code': currencyCountryCode,
 			date,
 			'due-date': dueDate,
 			'company-id': companyId,
@@ -216,11 +223,11 @@ export const InvoiceFormSchema = v.pipe(
 		const services = Object.values(servicesObject) as Array<InvoiceService>;
 
 		return {
-			invoiceId: invoiceId || ulid(),
+			invoiceId,
 			identifier,
 			identifierType,
 			locale,
-			countryCode,
+			currencyCountryCode,
 			date,
 			dueDate,
 			companyId,

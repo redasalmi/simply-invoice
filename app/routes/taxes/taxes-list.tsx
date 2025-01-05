@@ -25,7 +25,7 @@ export default function TaxesListRoute({ loaderData }: Route.ComponentProps) {
 		<>
 			<section>
 				<div className="flex justify-end">
-					<CreateLink to="/taxes/new">Create Tax</CreateLink>
+					<CreateLink to="/taxes/create">Create Tax</CreateLink>
 				</div>
 				<div className="mt-6">
 					{taxes && taxes.items.length > 0 ? (

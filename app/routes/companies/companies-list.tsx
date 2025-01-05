@@ -27,7 +27,7 @@ export default function CompaniesListRoute({
 		<>
 			<section>
 				<div className="flex justify-end">
-					<CreateLink to="/companies/new">Create Company</CreateLink>
+					<CreateLink to="/companies/create">Create Company</CreateLink>
 				</div>
 				<div className="mt-6">
 					{!companies || !companies.items.length ? (

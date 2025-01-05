@@ -27,6 +27,7 @@ export function SaveDBPath() {
 			const file = await create(path);
 			await file.close();
 			await window.store.set(dbPathKey, `sqlite:${path}`);
+			// TODO: fix this because the page is not reloaded after loading the DB
 			revalidate();
 		} catch (err) {
 			console.log({ err });

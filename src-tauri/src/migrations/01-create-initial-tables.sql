@@ -54,7 +54,7 @@ CREATE TABLE IF NOT EXISTS invoices (
   identifier TEXT NOT NULL,
   identifier_type TEXT NOT NULL,
   locale VARCHAR(4) NOT NULL,
-  country_code VARCHAR(2) NOT NULL,
+  currency_country_code VARCHAR(2) NOT NULL,
   date DATETIME NOT NULL,
   due_date DATETIME,
   company_id VARCHAR(26) NOT NULL,
@@ -69,7 +69,7 @@ CREATE TABLE IF NOT EXISTS invoices (
 );
 CREATE INDEX invoices_index ON invoices (
   locale,
-  country_code,
+  currency_country_code,
   date,
   subtotal_amount,
   total_amount
@@ -80,6 +80,8 @@ CREATE TABLE IF NOT EXISTS invoice_services (
   invoice_id VARCHAR(26) NOT NULL,
   quantity NUMERIC NOT NULL,
   tax_id VARCHAR(26) NOT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  updated_at DATETIME,
   FOREIGN KEY (service_id) REFERENCES services (service_id),
   FOREIGN KEY (invoice_id) REFERENCES invoices (invoice_id),
   FOREIGN KEY (tax_id) REFERENCES taxes (tax_id)

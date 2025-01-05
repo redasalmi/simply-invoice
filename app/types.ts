@@ -1,6 +1,6 @@
 import type { PortableTextBlock } from '@portabletext/editor';
 import type { IdentifierType, Locale } from '~/lib/constants';
-import type { CountryCode } from '~/lib/currencies';
+import type { CountryCode } from '~/lib/countries';
 
 export type Address = {
 	addressId: string;
@@ -54,19 +54,19 @@ export type Invoice = {
 	identifier: string;
 	identifierType: IdentifierType;
 	locale: Locale;
-	countryCode: CountryCode;
+	currencyCountryCode: CountryCode;
 
 	date: string;
 	dueDate?: string;
 
 	company: Company;
 	customer: Customer;
-	services: Array<
-		Service & {
-			quantity: number;
-			tax: Tax;
-		}
-	>;
+	services: Array<{
+		invoiceServiceId: string;
+		service: Service;
+		quantity: number;
+		tax: Tax;
+	}>;
 
 	// this calculation could be done using an aggregation I guess
 	cost: {
@@ -77,6 +77,14 @@ export type Invoice = {
 	note?: Array<PortableTextBlock>;
 	createdAt: string;
 	updatedAt?: string;
+};
+
+export type InvoiceService = {
+	invoiceServiceId: string;
+	invoiceId: string;
+	serviceId: string;
+	quantity: number;
+	taxId: string;
 };
 
 export type PageInfo = {

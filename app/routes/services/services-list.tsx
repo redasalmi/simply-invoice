@@ -27,7 +27,7 @@ export default function ServicesListRoute({
 		<>
 			<section>
 				<div className="flex justify-end">
-					<CreateLink to="/services/new">Create Service</CreateLink>
+					<CreateLink to="/services/create">Create Service</CreateLink>
 				</div>
 				<div className="mt-6">
 					{services && services.items.length > 0 ? (

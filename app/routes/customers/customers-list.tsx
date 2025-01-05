@@ -27,7 +27,7 @@ export default function CustomersListRoute({
 		<>
 			<section>
 				<div className="flex justify-end">
-					<CreateLink to="/customers/new">Create Customer</CreateLink>
+					<CreateLink to="/customers/create">Create Customer</CreateLink>
 				</div>
 				<div className="mt-6">
 					{!customers || !customers.items.length ? (

@@ -30,7 +30,7 @@ export default function InvoicesListRoute({
 	return (
 		<section>
 			<div className="flex justify-end">
-				<CreateLink to="/invoices/new">Create Invoice</CreateLink>
+				<CreateLink to="/invoices/create">Create Invoice</CreateLink>
 			</div>
 			{/* <div className="mt-6">
 				{invoices && invoices.items.length > 0 ? (
