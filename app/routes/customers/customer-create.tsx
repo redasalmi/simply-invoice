@@ -26,10 +26,8 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
 		};
 	}
 
-	await Promise.all([
-		createAddress(data.address),
-		createCustomer(data.customer),
-	]);
+	await createAddress(data.address);
+	await createCustomer(data.customer);
 
 	return redirect('/customers');
 }

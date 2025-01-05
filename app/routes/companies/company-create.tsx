@@ -26,7 +26,8 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
 		};
 	}
 
-	await Promise.all([createAddress(data.address), createCompany(data.company)]);
+	await createAddress(data.address);
+	await createCompany(data.company);
 
 	return redirect('/companies');
 }
