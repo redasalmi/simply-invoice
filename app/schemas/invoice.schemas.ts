@@ -138,7 +138,7 @@ export const InvoiceFormSchema = v.pipe(
 			} else if (key.includes('service-service-id')) {
 				servicesObject[id].serviceId = value;
 				const parsedServiceId = v.safeParse(
-					v.pipe(v.string(), v.nonEmpty('Service ID is required')),
+					v.pipe(v.string(), v.nonEmpty('Service is required')),
 					value,
 				);
 
@@ -173,7 +173,7 @@ export const InvoiceFormSchema = v.pipe(
 			} else if (key.includes('service-tax-id')) {
 				servicesObject[id].taxId = value;
 				const parsedTaxId = v.safeParse(
-					v.pipe(v.string(), v.nonEmpty('Tax ID is required')),
+					v.pipe(v.string(), v.nonEmpty('Tax is required')),
 					value,
 				);
 

@@ -31,7 +31,9 @@ export default [
 	route('/taxes/create', './routes/taxes/tax-create.tsx'),
 	route('/taxes/update/:id', './routes/taxes/tax-update.tsx'),
 
-	route('invoices', './routes/invoices/invoices-list.tsx'),
+	route('invoices', './routes/invoices/invoices-list.tsx', [
+		route('delete/:id', './routes/invoices/invoice-delete.tsx'),
+	]),
 	route('/invoices/create', './routes/invoices/create/route.tsx'),
 	// TODO: an invoice can be viewed before it has been saved to the DB, find a solution to this :p we'll use the /invoices/detail/:id and /invoices/download/:id routes when the invoice is in the DB
 	// we'll render the component directly and pass it the invoice object when the invoice is not saved yet

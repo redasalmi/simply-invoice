@@ -83,6 +83,6 @@ CREATE TABLE IF NOT EXISTS invoice_services (
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
   updated_at DATETIME,
   FOREIGN KEY (service_id) REFERENCES services (service_id),
-  FOREIGN KEY (invoice_id) REFERENCES invoices (invoice_id),
+  FOREIGN KEY (invoice_id) REFERENCES invoices (invoice_id) ON DELETE CASCADE,
   FOREIGN KEY (tax_id) REFERENCES taxes (tax_id)
 );

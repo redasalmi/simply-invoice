@@ -1,6 +1,6 @@
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
-import { countries, type CountryCode } from '~/lib/countries';
+import { countries } from '~/lib/countries';
 
 export function cn(...inputs: Array<ClassValue>) {
 	return twMerge(clsx(inputs));
@@ -14,32 +14,34 @@ export function dateFormatter(
 	locale: string = 'en-Us',
 	options?: Intl.DateTimeFormatOptions,
 ) {
-	const opt = Object.assign(
-		{},
-		{ month: 'long', day: '2-digit', year: 'numeric' },
-		options,
-	);
+	const opt = Object.assign({}, options, {
+		month: 'long',
+		day: '2-digit',
+		year: 'numeric',
+	});
 	const formatter = new Intl.DateTimeFormat(locale, opt);
 
 	return formatter;
 }
 
-export function formatMoney(
-	amount: number,
-	currencyCountryCode: CountryCode,
-	locale: string = 'en-Us',
-) {
-	const country = countries.find(
-		({ countryCode }) => countryCode === currencyCountryCode,
-	);
-	if (!country) {
-		return null;
-	}
+type FormatMoneyInput = {
+	amount: number;
+	locale?: string;
+	options?: Intl.NumberFormatOptions;
+};
 
-	const money = new Intl.NumberFormat(locale, {
+export function formatMoney({ amount, locale, options }: FormatMoneyInput) {
+	const country = options?.currency
+		? countries.find(({ countryCode }) => countryCode === options.currency)
+		: null;
+
+	const opt = Object.assign({}, options, {
 		style: 'currency',
-		currency: country.currencyCode,
-	}).format(amount);
+		maximumFractionDigits: 2,
+		currency: country?.currencyCode,
+	});
+
+	const money = new Intl.NumberFormat(locale || 'en-Us', opt).format(amount);
 
 	return money;
 }

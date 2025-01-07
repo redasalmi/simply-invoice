@@ -113,6 +113,21 @@ export async function getInvoices(
 	};
 }
 
+export async function getInvoice(invoiceId: string) {
+	const invoicesData = await window.db.select<Array<InvoiceSelectResult>>(
+		sql.invoiceQuery,
+		[invoiceId],
+	);
+
+	if (!invoicesData.length) {
+		return undefined;
+	}
+
+	const invoices = parseInvoicesSelectResult(invoicesData);
+
+	return invoices[0];
+}
+
 export async function getLastIncrementalInvoiceId() {
 	const lastIdResult = await window.db.select<LastIncrementalInvoiceIdResult>(
 		sql.lastIncrementalInvoiceIdQuery,
@@ -154,4 +169,8 @@ export async function createInvoice(invoice: createInvoiceInput) {
 		invoice.totalAmount,
 		invoice.note,
 	]);
+}
+
+export async function deleteInvoice(invoiceId: string) {
+	return window.db.execute(sql.deleteInvoiceMutation, [invoiceId]);
 }
