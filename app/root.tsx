@@ -6,28 +6,14 @@ import {
 	Scripts,
 	ScrollRestoration,
 	useLoaderData,
-	type LinksFunction,
 } from 'react-router';
 import { SaveDBPath } from '~/components/SaveDBPath';
 import { LoadDB } from '~/components/LoadDB';
 import { Sidebar } from '~/components/Sidebar';
 import { Spinner } from '~/components/Spinner';
+import '~/inter.css';
 import '~/tailwind.css';
 import type { Route } from './+types/root';
-
-// TODO: download font to a local folder and get it from there
-export const links: LinksFunction = () => [
-	{ rel: 'preconnect', href: 'https://fonts.googleapis.com' },
-	{
-		rel: 'preconnect',
-		href: 'https://fonts.gstatic.com',
-		crossOrigin: 'anonymous',
-	},
-	{
-		rel: 'stylesheet',
-		href: 'https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap',
-	},
-];
 
 export async function clientLoader() {
 	return {
