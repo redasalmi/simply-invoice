@@ -33,6 +33,10 @@ export default [
 
 	route('invoices', './routes/invoices/invoices-list.tsx'),
 	route('/invoices/create', './routes/invoices/create/route.tsx'),
+	// TODO: an invoice can be viewed before it has been saved to the DB, find a solution to this :p we'll use the /invoices/detail/:id and /invoices/download/:id routes when the invoice is in the DB
+	// we'll render the component directly and pass it the invoice object when the invoice is not saved yet
+	// /invoices/detail/:id => to view the invoice PDF :p
+	// /invoices/download/:id => to download the invoice PDF => show a loader, while using the download component from react-pdf in the background to generate and download the PDF
 
 	// route('/api/invoice-pdf', './routes/api/invoice-pdf.tsx'),
 ] satisfies RouteConfig;

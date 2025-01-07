@@ -1,3 +1,5 @@
+import { Link } from 'react-router';
+import { EyeIcon, PencilIcon, TrashIcon, DownloadIcon } from 'lucide-react';
 import { CreateLink } from '~/components/CreateLink';
 import {
 	Table,
@@ -56,6 +58,32 @@ export default function InvoicesListRoute({
 										<TableCell>{customer.email}</TableCell>
 										<TableCell>
 											{formatMoney(cost.totalAmount, currencyCountryCode)}
+										</TableCell>
+										<TableCell className="flex items-center gap-4">
+											<Link
+												to={`/invoices/detail/${invoiceId}`}
+												aria-label={`view invoice details`}
+											>
+												<EyeIcon />
+											</Link>
+											<Link
+												to={`/invoices/download/${invoiceId}`}
+												aria-label={`download invoice`}
+											>
+												<DownloadIcon />
+											</Link>
+											<Link
+												to={`/invoices/update/${invoiceId}`}
+												aria-label={`update invoice`}
+											>
+												<PencilIcon />
+											</Link>
+											<Link
+												to={`/invoices/delete/${invoiceId}/`}
+												aria-label={`delete invoice`}
+											>
+												<TrashIcon />
+											</Link>
 										</TableCell>
 									</TableRow>
 								),
