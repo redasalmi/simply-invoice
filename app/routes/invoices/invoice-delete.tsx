@@ -8,6 +8,7 @@ import {
 	AlertDialogDescription,
 	AlertDialogRoot,
 	AlertDialogTitle,
+	AlertDialogPortal,
 } from '~/components/ui/alert-dialog';
 import type { Route } from './+types/invoice-delete';
 
@@ -70,48 +71,53 @@ export default function InvoiceDeleteRoute({
 		}
 	};
 
-	if (!invoice) {
-		return (
-			<AlertDialogRoot open>
-				<AlertDialogBackdrop />
-				<AlertDialogPopup onKeyDown={handleKeyDown}>
-					<AlertDialogTitle>
-						{errors?.message || `Error Deleting Invoice!`}
-					</AlertDialogTitle>
-					<AlertDialogDescription>
-						{errors?.description ||
-							`An error happened while deleting your invoice, please try again later.`}
-					</AlertDialogDescription>
-					<div className="flex justify-end gap-[25px]">
-						<AlertDialogCancelButton onClick={closeAlert}>
-							Cancel
-						</AlertDialogCancelButton>
-					</div>
-				</AlertDialogPopup>
-			</AlertDialogRoot>
-		);
-	}
-
 	return (
 		<AlertDialogRoot open>
-			<AlertDialogBackdrop />
-			<AlertDialogPopup onKeyDown={handleKeyDown}>
-				<AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-				<AlertDialogDescription>
-					This action cannot be undone. This will permanently delete the
-					invoice.
-				</AlertDialogDescription>
-				<div className="flex justify-end gap-[25px]">
-					<AlertDialogCancelButton disabled={isSubmitting} onClick={closeAlert}>
-						Cancel
-					</AlertDialogCancelButton>
-					<Form method="POST">
-						<AlertDialogActionButton type="submit" disabled={isSubmitting}>
-							{isLoading ? '...Deleting' : 'Delete'}
-						</AlertDialogActionButton>
-					</Form>
-				</div>
-			</AlertDialogPopup>
+			<AlertDialogPortal>
+				<AlertDialogBackdrop />
+				<AlertDialogPopup onKeyDown={handleKeyDown}>
+					{!invoice ? (
+						<>
+							<AlertDialogTitle>
+								{errors?.message || `Error Deleting Invoice!`}
+							</AlertDialogTitle>
+							<AlertDialogDescription>
+								{errors?.description ||
+									`An error happened while deleting your invoice, please try again later.`}
+							</AlertDialogDescription>
+							<div className="flex justify-end gap-[25px]">
+								<AlertDialogCancelButton onClick={closeAlert}>
+									Close
+								</AlertDialogCancelButton>
+							</div>
+						</>
+					) : (
+						<>
+							<AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+							<AlertDialogDescription>
+								This action cannot be undone. This will permanently delete the
+								invoice.
+							</AlertDialogDescription>
+							<div className="flex justify-end gap-[25px]">
+								<AlertDialogCancelButton
+									disabled={isSubmitting}
+									onClick={closeAlert}
+								>
+									Cancel
+								</AlertDialogCancelButton>
+								<Form method="POST">
+									<AlertDialogActionButton
+										type="submit"
+										disabled={isSubmitting}
+									>
+										{isLoading ? '...Deleting' : 'Delete'}
+									</AlertDialogActionButton>
+								</Form>
+							</div>
+						</>
+					)}
+				</AlertDialogPopup>
+			</AlertDialogPortal>
 		</AlertDialogRoot>
 	);
 }

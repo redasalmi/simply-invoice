@@ -8,6 +8,7 @@ import {
 	AlertDialogDescription,
 	AlertDialogRoot,
 	AlertDialogTitle,
+	AlertDialogPortal,
 } from '~/components/ui/alert-dialog';
 import type { Route } from './+types/tax-delete';
 
@@ -69,46 +70,51 @@ export default function TaxDeleteRoute({
 
 	return (
 		<AlertDialogRoot open>
-			<AlertDialogBackdrop />
-			<AlertDialogPopup onKeyDown={handleKeyDown}>
-				{!tax ? (
-					<>
-						<AlertDialogTitle>
-							{actionData?.error?.message || 'Error Deleting Tax!'}
-						</AlertDialogTitle>
-						<AlertDialogDescription>
-							{actionData?.error?.description ||
-								'An error happened while deleting your tax, please try again later.'}
-						</AlertDialogDescription>
-						<div className="flex justify-end gap-[25px]">
-							<AlertDialogCancelButton onClick={closeAlert}>
-								Close
-							</AlertDialogCancelButton>
-						</div>
-					</>
-				) : (
-					<>
-						<AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-						<AlertDialogDescription>
-							This action cannot be undone. This will permanently delete the{' '}
-							<span className="font-bold">{tax.name}</span> tax.{' '}
-						</AlertDialogDescription>
-						<div className="flex justify-end gap-[25px]">
-							<AlertDialogCancelButton
-								disabled={isSubmitting}
-								onClick={closeAlert}
-							>
-								Cancel
-							</AlertDialogCancelButton>
-							<Form method="POST">
-								<AlertDialogActionButton type="submit" disabled={isSubmitting}>
-									{isLoading ? '...Deleting' : 'Delete'}
-								</AlertDialogActionButton>
-							</Form>
-						</div>
-					</>
-				)}
-			</AlertDialogPopup>
+			<AlertDialogPortal>
+				<AlertDialogBackdrop />
+				<AlertDialogPopup onKeyDown={handleKeyDown}>
+					{!tax ? (
+						<>
+							<AlertDialogTitle>
+								{actionData?.error?.message || 'Error Deleting Tax!'}
+							</AlertDialogTitle>
+							<AlertDialogDescription>
+								{actionData?.error?.description ||
+									'An error happened while deleting your tax, please try again later.'}
+							</AlertDialogDescription>
+							<div className="flex justify-end gap-[25px]">
+								<AlertDialogCancelButton onClick={closeAlert}>
+									Close
+								</AlertDialogCancelButton>
+							</div>
+						</>
+					) : (
+						<>
+							<AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+							<AlertDialogDescription>
+								This action cannot be undone. This will permanently delete the{' '}
+								<span className="font-bold">{tax.name}</span> tax.{' '}
+							</AlertDialogDescription>
+							<div className="flex justify-end gap-[25px]">
+								<AlertDialogCancelButton
+									disabled={isSubmitting}
+									onClick={closeAlert}
+								>
+									Cancel
+								</AlertDialogCancelButton>
+								<Form method="POST">
+									<AlertDialogActionButton
+										type="submit"
+										disabled={isSubmitting}
+									>
+										{isLoading ? '...Deleting' : 'Delete'}
+									</AlertDialogActionButton>
+								</Form>
+							</div>
+						</>
+					)}
+				</AlertDialogPopup>
+			</AlertDialogPortal>
 		</AlertDialogRoot>
 	);
 }

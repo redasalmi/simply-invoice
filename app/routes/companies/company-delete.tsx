@@ -8,6 +8,7 @@ import {
 	AlertDialogDescription,
 	AlertDialogRoot,
 	AlertDialogTitle,
+	AlertDialogPortal,
 } from '~/components/ui/alert-dialog';
 import type { Route } from './+types/company-delete';
 
@@ -68,48 +69,53 @@ export default function CompanyDeleteRoute({
 		}
 	};
 
-	if (!company) {
-		return (
-			<AlertDialogRoot open>
-				<AlertDialogBackdrop />
-				<AlertDialogPopup onKeyDown={handleKeyDown}>
-					<AlertDialogTitle>
-						{errors?.message || `Error Deleting Company!`}
-					</AlertDialogTitle>
-					<AlertDialogDescription>
-						{errors?.description ||
-							`An error happened while deleting your company, please try again later.`}
-					</AlertDialogDescription>
-					<div className="flex justify-end gap-[25px]">
-						<AlertDialogCancelButton onClick={closeAlert}>
-							Cancel
-						</AlertDialogCancelButton>
-					</div>
-				</AlertDialogPopup>
-			</AlertDialogRoot>
-		);
-	}
-
 	return (
 		<AlertDialogRoot open>
-			<AlertDialogBackdrop />
-			<AlertDialogPopup onKeyDown={handleKeyDown}>
-				<AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-				<AlertDialogDescription>
-					This action cannot be undone. This will permanently delete the{' '}
-					<span className="font-bold">{company.name}</span> company.
-				</AlertDialogDescription>
-				<div className="flex justify-end gap-[25px]">
-					<AlertDialogCancelButton disabled={isSubmitting} onClick={closeAlert}>
-						Cancel
-					</AlertDialogCancelButton>
-					<Form method="POST">
-						<AlertDialogActionButton type="submit" disabled={isSubmitting}>
-							{isLoading ? '...Deleting' : 'Delete'}
-						</AlertDialogActionButton>
-					</Form>
-				</div>
-			</AlertDialogPopup>
+			<AlertDialogPortal>
+				<AlertDialogBackdrop />
+				<AlertDialogPopup onKeyDown={handleKeyDown}>
+					{!company ? (
+						<>
+							<AlertDialogTitle>
+								{errors?.message || `Error Deleting Company!`}
+							</AlertDialogTitle>
+							<AlertDialogDescription>
+								{errors?.description ||
+									`An error happened while deleting your company, please try again later.`}
+							</AlertDialogDescription>
+							<div className="flex justify-end gap-[25px]">
+								<AlertDialogCancelButton onClick={closeAlert}>
+									Close
+								</AlertDialogCancelButton>
+							</div>
+						</>
+					) : (
+						<>
+							<AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+							<AlertDialogDescription>
+								This action cannot be undone. This will permanently delete the{' '}
+								<span className="font-bold">{company.name}</span> company.
+							</AlertDialogDescription>
+							<div className="flex justify-end gap-[25px]">
+								<AlertDialogCancelButton
+									disabled={isSubmitting}
+									onClick={closeAlert}
+								>
+									Cancel
+								</AlertDialogCancelButton>
+								<Form method="POST">
+									<AlertDialogActionButton
+										type="submit"
+										disabled={isSubmitting}
+									>
+										{isLoading ? '...Deleting' : 'Delete'}
+									</AlertDialogActionButton>
+								</Form>
+							</div>
+						</>
+					)}
+				</AlertDialogPopup>
+			</AlertDialogPortal>
 		</AlertDialogRoot>
 	);
 }
