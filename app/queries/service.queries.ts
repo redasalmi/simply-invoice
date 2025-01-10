@@ -1,5 +1,9 @@
 import * as sql from '~/sql/services/services.sql';
-import { emptyResult, itemsPerPage } from '~/lib/pagination';
+import {
+	emptyResult,
+	itemsPerPage,
+	type PaginationType,
+} from '~/lib/pagination';
 import type { Service, PaginatedResult } from '~/types';
 
 type ServicesCountResult = [
@@ -22,14 +26,27 @@ export async function getAllServices() {
 	);
 }
 
-async function getPaginatedServices(startCursor: string = '') {
-	return window.db.select<Array<Service>>(sql.servicesQuery, [
+async function getPreviousServices(startCursor: string) {
+	return window.db.select<Array<Service>>(sql.previousServicesQuery, [
 		startCursor,
 		itemsPerPage,
 	]);
 }
 
-async function hasPreviousServicesPage(startCursor: string = '') {
+async function getNextServices(endCursor: string) {
+	return window.db.select<Array<Service>>(sql.nextServicesQuery, [
+		endCursor,
+		itemsPerPage,
+	]);
+}
+
+async function getFirstServices() {
+	return window.db.select<Array<Service>>(sql.firstServicesQuery, [
+		itemsPerPage,
+	]);
+}
+
+async function hasPreviousServicesPage(startCursor: string) {
 	const hasPreviousServicesCount = await window.db.select<ServicesCountResult>(
 		sql.servicesHasPreviousPageQuery,
 		[startCursor, itemsPerPage],
@@ -48,10 +65,15 @@ async function hasNextServicesPage(endCursor: string) {
 }
 
 export async function getServices(
-	startCursor: string = '',
+	cursor: string | null,
+	paginationType: PaginationType | null,
 ): Promise<PaginatedResult<Service>> {
 	const [servicesData, servicesTotal] = await Promise.all([
-		getPaginatedServices(startCursor),
+		cursor && paginationType
+			? paginationType === 'previous'
+				? getPreviousServices(cursor)
+				: getNextServices(cursor)
+			: getFirstServices(),
 		getServicesCount(),
 	]);
 
@@ -59,6 +81,7 @@ export async function getServices(
 		return emptyResult as PaginatedResult<Service>;
 	}
 
+	const startCursor = servicesData[0].serviceId;
 	const endCursor = servicesData[servicesData.length - 1].serviceId;
 
 	const [hasPreviousPage, hasNextPage] = await Promise.all([

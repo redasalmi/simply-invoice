@@ -1,6 +1,6 @@
 SELECT COUNT(service_id)
 FROM services
-WHERE service_id < (
+WHERE service_id > (
     SELECT service_id
     FROM services
     WHERE service_id = $1

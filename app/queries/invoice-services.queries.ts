@@ -33,9 +33,3 @@ export async function updateInvoiceService(
 		invoiceService.invoiceServiceId,
 	]);
 }
-
-export async function deleteInvoiceService(invoiceServiceId: string) {
-	return window.db.execute(sql.deleteInvoiceServiceMutation, [
-		invoiceServiceId,
-	]);
-}

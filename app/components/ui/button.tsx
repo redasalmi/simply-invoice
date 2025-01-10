@@ -3,7 +3,7 @@ import { cn } from '~/utils/shared.utils';
 
 export const buttonVariants = {
 	default:
-		'cursor-pointer rounded-lg bg-blue-700 py-2.5 px-5 text-sm font-medium text-white hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 focus:outline-none',
+		'cursor-pointer rounded-lg bg-blue-700 py-2.5 px-5 text-sm font-medium text-white hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 focus:outline-none disabled:bg-gray-500 disabled:cursor-not-allowed',
 	alternative:
 		'cursor-pointer rounded-lg border border-gray-200 bg-white py-2.5 px-5 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 focus:outline-none',
 	danger:

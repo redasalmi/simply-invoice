@@ -13,3 +13,9 @@ export const emptyResult: PaginatedResult<unknown> = {
 		startCursor: '',
 	},
 };
+
+export const paginationTypes = {
+	previous: 'previous',
+	next: 'next',
+};
+export type PaginationType = keyof typeof paginationTypes;
