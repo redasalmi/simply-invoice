@@ -19,3 +19,19 @@ export const paginationTypes = {
 	next: 'next',
 };
 export type PaginationType = keyof typeof paginationTypes;
+
+export const cursorParam = 'cursor';
+export const paginationTypeParam = 'pagination-type';
+
+export function getPaginationParams(requestUrl: string) {
+	const url = new URL(requestUrl);
+	const cursor = url.searchParams.get(cursorParam);
+	const paginationType = url.searchParams.get(
+		paginationTypeParam,
+	) as PaginationType | null;
+
+	return {
+		cursor,
+		paginationType,
+	};
+}

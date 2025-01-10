@@ -1,6 +1,6 @@
 SELECT COUNT(tax_id)
 FROM taxes
-WHERE tax_id < (
+WHERE tax_id > (
     SELECT tax_id
     FROM taxes
     WHERE tax_id = $1

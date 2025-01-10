@@ -1,5 +1,9 @@
 import * as sql from '~/sql/taxes/taxes.sql';
-import { emptyResult, itemsPerPage } from '~/lib/pagination';
+import {
+	emptyResult,
+	itemsPerPage,
+	type PaginationType,
+} from '~/lib/pagination';
 import type { Tax, PaginatedResult } from '~/types';
 
 type TaxesCountResult = [
@@ -22,11 +26,22 @@ export async function getAllTaxes() {
 	);
 }
 
-async function getPaginatedTaxes(startCursor: string = '') {
-	return window.db.select<Array<Tax>>(sql.taxesQuery, [
+async function getPreviousTaxes(startCursor: string) {
+	return window.db.select<Array<Tax>>(sql.previousTaxesQuery, [
 		startCursor,
 		itemsPerPage,
 	]);
+}
+
+async function getNextTaxes(endCursor: string) {
+	return window.db.select<Array<Tax>>(sql.nextTaxesQuery, [
+		endCursor,
+		itemsPerPage,
+	]);
+}
+
+async function getFirstTaxes() {
+	return window.db.select<Array<Tax>>(sql.firstTaxesQuery, [itemsPerPage]);
 }
 
 async function hasPreviousTaxesPage(startCursor: string = '') {
@@ -48,10 +63,15 @@ async function hasNextTaxesPage(endCursor: string) {
 }
 
 export async function getTaxes(
-	startCursor: string = '',
+	cursor: string | null,
+	paginationType: PaginationType | null,
 ): Promise<PaginatedResult<Tax>> {
 	const [taxesData, taxesTotal] = await Promise.all([
-		getPaginatedTaxes(startCursor),
+		cursor && paginationType
+			? paginationType === 'previous'
+				? getPreviousTaxes(cursor)
+				: getNextTaxes(cursor)
+			: getFirstTaxes(),
 		getTaxesCount(),
 	]);
 
@@ -59,6 +79,7 @@ export async function getTaxes(
 		return emptyResult as PaginatedResult<Tax>;
 	}
 
+	const startCursor = taxesData[0].taxId;
 	const endCursor = taxesData[taxesData.length - 1].taxId;
 
 	const [hasPreviousPage, hasNextPage] = await Promise.all([

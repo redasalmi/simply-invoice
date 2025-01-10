@@ -11,15 +11,11 @@ import {
 } from '~/components/ui/table';
 import { getServices } from '~/queries/service.queries';
 import { Pagination } from '~/components/Pagination';
-import { itemsPerPage, type PaginationType } from '~/lib/pagination';
+import { getPaginationParams, itemsPerPage } from '~/lib/pagination';
 import type { Route } from './+types/services-list';
 
 export async function clientLoader({ request }: Route.ClientLoaderArgs) {
-	const url = new URL(request.url);
-	const cursor = url.searchParams.get('cursor');
-	const paginationType = url.searchParams.get(
-		'pagination-type',
-	) as PaginationType | null;
+	const { cursor, paginationType } = getPaginationParams(request.url);
 
 	return {
 		services: await getServices(cursor, paginationType),
@@ -34,7 +30,8 @@ export default function ServicesListRoute({
 	return (
 		<>
 			<section>
-				<div className="flex justify-end">
+				<div className="flex items-center justify-between">
+					{services.total ? <p>Total services: {services.total}</p> : null}
 					<CreateLink to="/services/create">Create Service</CreateLink>
 				</div>
 				<div className="mt-6">
@@ -77,12 +74,7 @@ export default function ServicesListRoute({
 								</TableBody>
 							</Table>
 							{services.total > itemsPerPage ? (
-								<Pagination
-									baseUrl="/services"
-									totalLabel="Total services:"
-									total={services.total}
-									pageInfo={services.pageInfo}
-								/>
+								<Pagination baseUrl="/services" pageInfo={services.pageInfo} />
 							) : null}
 						</>
 					) : (
