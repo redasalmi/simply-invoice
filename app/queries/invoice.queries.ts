@@ -1,5 +1,9 @@
 import * as sql from '~/sql/invoices/invoices.sql';
-import { emptyResult, itemsPerPage } from '~/lib/pagination';
+import {
+	emptyResult,
+	itemsPerPage,
+	type PaginationType,
+} from '~/lib/pagination';
 import type { Customer, Invoice, PaginatedResult } from '~/types';
 
 type InvoiceSelectResult = Pick<
@@ -55,9 +59,22 @@ async function getInvoicesCount() {
 	return invoicesCount[0]['COUNT(invoice_id)'];
 }
 
-async function getPaginatedInvoices(startCursor: string = '') {
-	return window.db.select<Array<InvoiceSelectResult>>(sql.invoicesQuery, [
-		startCursor,
+async function getPreviousInvoices(startCursor: string) {
+	return window.db.select<Array<InvoiceSelectResult>>(
+		sql.previousInvoicesQuery,
+		[startCursor, itemsPerPage],
+	);
+}
+
+async function getNextInvoices(endCursor: string) {
+	return window.db.select<Array<InvoiceSelectResult>>(sql.nextInvoicesQuery, [
+		endCursor,
+		itemsPerPage,
+	]);
+}
+
+async function getFirstInvoices() {
+	return window.db.select<Array<InvoiceSelectResult>>(sql.firstInvoicesQuery, [
 		itemsPerPage,
 	]);
 }
@@ -81,10 +98,15 @@ async function hasNextInvoicesPage(endCursor: string) {
 }
 
 export async function getInvoices(
-	startCursor: string = '',
+	cursor: string | null,
+	paginationType: PaginationType | null,
 ): Promise<PaginatedResult<PartialInvoice>> {
 	const [invoicesData, invoicesTotal] = await Promise.all([
-		getPaginatedInvoices(startCursor),
+		cursor && paginationType
+			? paginationType === 'previous'
+				? getPreviousInvoices(cursor)
+				: getNextInvoices(cursor)
+			: getFirstInvoices(),
 		getInvoicesCount(),
 	]);
 
@@ -92,6 +114,7 @@ export async function getInvoices(
 		return emptyResult as PaginatedResult<PartialInvoice>;
 	}
 
+	const startCursor = invoicesData[0].invoiceId;
 	const endCursor = invoicesData[invoicesData.length - 1].invoiceId;
 
 	const [hasPreviousPage, hasNextPage] = await Promise.all([

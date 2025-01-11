@@ -1,6 +1,6 @@
 SELECT COUNT(invoice_id)
 FROM invoices
-WHERE invoice_id < (
+WHERE invoice_id > (
     SELECT invoice_id
     FROM invoices
     WHERE invoice_id = $1
