@@ -20,8 +20,7 @@ FROM (
       c.address_id,
       c.additional_information
     FROM companies as c
-    WHERE c.company_id > $1
     ORDER BY c.company_id DESC
-    LIMIT $2
+    LIMIT $1
   ) c
   LEFT JOIN addresses as a ON a.address_id = c.address_id

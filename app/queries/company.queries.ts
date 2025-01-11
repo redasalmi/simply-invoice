@@ -1,13 +1,15 @@
 import * as sql from '~/sql/companies/companies.sql';
-import { emptyResult, itemsPerPage } from '~/lib/pagination';
+import {
+	emptyResult,
+	itemsPerPage,
+	type PaginationType,
+} from '~/lib/pagination';
 import type { Address, Company, PaginatedResult } from '~/types';
 
-type CompaniesSelectResult = Array<
-	Omit<Company, 'address' | 'additionalInformation'> &
-		Address & {
-			additionalInformation: string | null;
-		}
->;
+type CompanySelectResult = Omit<Company, 'address' | 'additionalInformation'> &
+	Address & {
+		additionalInformation: string | null;
+	};
 
 type CompaniesCountResult = [
 	{
@@ -15,7 +17,7 @@ type CompaniesCountResult = [
 	},
 ];
 
-function parseCompaniesSelectResult(companiesData: CompaniesSelectResult) {
+function parseCompaniesSelectResult(companiesData: Array<CompanySelectResult>) {
 	const companies: Array<Company> = [];
 
 	for (let index = 0; index < companiesData.length; index++) {
@@ -73,9 +75,22 @@ export async function getAllCompanies() {
 	);
 }
 
-async function getPaginatedCompanies(startCursor: string = '') {
-	return window.db.select<CompaniesSelectResult>(sql.companiesQuery, [
-		startCursor,
+async function getPreviousCompanies(startCursor: string) {
+	return window.db.select<Array<CompanySelectResult>>(
+		sql.previousCompaniesQuery,
+		[startCursor, itemsPerPage],
+	);
+}
+
+async function getNextCompanies(endCursor: string) {
+	return window.db.select<Array<CompanySelectResult>>(sql.nextCompaniesQuery, [
+		endCursor,
+		itemsPerPage,
+	]);
+}
+
+async function getFirstCompanies() {
+	return window.db.select<Array<CompanySelectResult>>(sql.firstCompaniesQuery, [
 		itemsPerPage,
 	]);
 }
@@ -100,10 +115,15 @@ async function hasNextCompaniesPage(endCursor: string) {
 }
 
 export async function getCompanies(
-	startCursor: string = '',
+	cursor: string | null,
+	paginationType: PaginationType | null,
 ): Promise<PaginatedResult<Company>> {
 	const [companiesData, companiesTotal] = await Promise.all([
-		getPaginatedCompanies(startCursor),
+		cursor && paginationType
+			? paginationType === 'previous'
+				? getPreviousCompanies(cursor)
+				: getNextCompanies(cursor)
+			: getFirstCompanies(),
 		getCompaniesCount(),
 	]);
 
@@ -111,6 +131,7 @@ export async function getCompanies(
 		return emptyResult as PaginatedResult<Company>;
 	}
 
+	const startCursor = companiesData[0].companyId;
 	const endCursor = companiesData[companiesData.length - 1].companyId;
 
 	const [hasPreviousPage, hasNextPage] = await Promise.all([
@@ -133,7 +154,7 @@ export async function getCompanies(
 }
 
 export async function getCompany(companyId: string) {
-	const companiesData = await window.db.select<CompaniesSelectResult>(
+	const companiesData = await window.db.select<Array<CompanySelectResult>>(
 		sql.companyQuery,
 		[companyId],
 	);

@@ -1,6 +1,6 @@
 SELECT COUNT(company_id)
 FROM companies
-WHERE company_id > (
+WHERE company_id < (
     SELECT company_id
     FROM companies
     WHERE company_id = $1
