@@ -3,13 +3,12 @@ import { TrashIcon } from 'lucide-react';
 import { TableCell, TableRow } from '~/components/ui/table';
 import { Button } from '~/components/ui/button';
 import { Combobox, type ComboboxItem } from '~/components/ui/combobox';
-import { FieldError, FieldRoot } from '~/components/ui/field';
+import { FieldError, FieldLabel, FieldRoot } from '~/components/ui/field';
 import {
 	NumberFieldDecrement,
 	NumberFieldGroup,
 	NumberFieldIncrement,
 	NumberFieldInput,
-	NumberFieldLabel,
 	NumberFieldRoot,
 } from '~/components/ui/number-field';
 import type { Service, Tax } from '~/types';
@@ -111,18 +110,13 @@ export function ServiceRow({
 
 			<TableCell>
 				<FieldRoot name={`service-quantity-${id}`} className="my-2">
-					{/* NumberField is not integrated very well with the Form component for now, 
-            that's why it's wrapper with a FieldRoot, look into this when a new version is released  
-          */}
+					{/* TODO: improve this when a new version is released or some examples are available */}
+					<FieldLabel className="sr-only">Quantity</FieldLabel>
 					<NumberFieldRoot
-						id={`service-quantity-${id}`}
-						name={`service-quantity-${id}`}
 						value={quantity}
+						name={`service-quantity-${id}`}
 						onValueChange={onQuantityChange}
 					>
-						<NumberFieldLabel htmlFor="rate" className="sr-only">
-							Quantity
-						</NumberFieldLabel>
 						<NumberFieldGroup>
 							<NumberFieldDecrement />
 							<NumberFieldInput name={`service-quantity-${id}`} />

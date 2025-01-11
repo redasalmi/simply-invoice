@@ -1,7 +1,6 @@
 import { NumberField } from '@base-ui-components/react';
 import { PlusIcon, MinusIcon } from 'lucide-react';
 import { cn } from '~/utils/shared.utils';
-import type { ComponentPropsWithRef } from 'react';
 
 export function NumberFieldRoot(props: NumberField.Root.Props) {
 	return <NumberField.Root format={{ useGrouping: false }} {...props} />;
@@ -9,19 +8,6 @@ export function NumberFieldRoot(props: NumberField.Root.Props) {
 
 export function NumberFieldScrubArea(props: NumberField.ScrubArea.Props) {
 	return <NumberField.ScrubArea {...props} />;
-}
-
-export function NumberFieldLabel({
-	className,
-	...props
-}: ComponentPropsWithRef<'label'>) {
-	return (
-		// eslint-disable-next-line jsx-a11y/label-has-associated-control
-		<label
-			className={cn('mb-1 block text-sm font-medium text-gray-900', className)}
-			{...props}
-		/>
-	);
 }
 
 export function NumberFieldScrubAreaCursor(

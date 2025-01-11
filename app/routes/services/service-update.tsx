@@ -12,7 +12,6 @@ import {
 	NumberFieldGroup,
 	NumberFieldIncrement,
 	NumberFieldInput,
-	NumberFieldLabel,
 	NumberFieldRoot,
 } from '~/components/ui/number-field';
 import { getService, updateService } from '~/queries/service.queries';
@@ -101,20 +100,13 @@ export default function ServiceUpdateRoute({
 					<FieldError />
 				</FieldRoot>
 
-				<FieldRoot name="rate" className="my-2">
-					{/* NumberField is not integrated very well with the Form component for now, 
-								that's why it's wrapper with a FieldRoot, look into this when a new version is released  
-							*/}
-					<NumberFieldRoot
-						id="rate"
-						name="rate"
-						defaultValue={service.rate}
-						onValueChange={resetErrors}
-					>
-						<NumberFieldLabel htmlFor="rate">Rate</NumberFieldLabel>
+				<FieldRoot name="rate" className="my-2" onChange={resetErrors}>
+					{/* TODO: improve this when a new version is released or some examples are available */}
+					<FieldLabel>Rate</FieldLabel>
+					<NumberFieldRoot name="rate" defaultValue={service.rate}>
 						<NumberFieldGroup>
 							<NumberFieldDecrement />
-							<NumberFieldInput name="rate" />
+							<NumberFieldInput />
 							<NumberFieldIncrement />
 						</NumberFieldGroup>
 					</NumberFieldRoot>
