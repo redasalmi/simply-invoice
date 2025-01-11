@@ -20,7 +20,7 @@ FROM (
       c.address_id,
       c.additional_information
     FROM customers as c
-    WHERE c.customer_id > $1
+    WHERE c.customer_id < $1
     ORDER BY c.customer_id DESC
     LIMIT $2
   ) c

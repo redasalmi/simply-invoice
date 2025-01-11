@@ -1,13 +1,18 @@
 import * as sql from '~/sql/customers/customers.sql';
-import { emptyResult, itemsPerPage } from '~/lib/pagination';
+import {
+	emptyResult,
+	itemsPerPage,
+	type PaginationType,
+} from '~/lib/pagination';
 import type { Address, Customer, PaginatedResult } from '~/types';
 
-type CustomersSelectResult = Array<
-	Omit<Customer, 'address' | 'additionalInformation'> &
-		Address & {
-			additionalInformation: string | null;
-		}
->;
+type CustomerSelectResult = Omit<
+	Customer,
+	'address' | 'additionalInformation'
+> &
+	Address & {
+		additionalInformation: string | null;
+	};
 
 type CustomersCountResult = [
 	{
@@ -15,7 +20,9 @@ type CustomersCountResult = [
 	},
 ];
 
-function parseCustomersSelectResult(customersData: CustomersSelectResult) {
+function parseCustomersSelectResult(
+	customersData: Array<CustomerSelectResult>,
+) {
 	const customers: Array<Customer> = [];
 
 	for (let index = 0; index < customersData.length; index++) {
@@ -73,11 +80,25 @@ export async function getAllCustomers() {
 	);
 }
 
-async function getPaginatedCustomers(startCursor: string = '') {
-	return window.db.select<CustomersSelectResult>(sql.customersQuery, [
-		startCursor,
+async function getPreviousCustomers(startCursor: string) {
+	return window.db.select<Array<CustomerSelectResult>>(
+		sql.previousCustomersQuery,
+		[startCursor, itemsPerPage],
+	);
+}
+
+async function getNextCustomers(endCursor: string) {
+	return window.db.select<Array<CustomerSelectResult>>(sql.nextCustomersQuery, [
+		endCursor,
 		itemsPerPage,
 	]);
+}
+
+async function getFirstCustomers() {
+	return window.db.select<Array<CustomerSelectResult>>(
+		sql.firstCustomersQuery,
+		[itemsPerPage],
+	);
 }
 
 async function hasPreviousCustomersPage(startCursor: string = '') {
@@ -100,10 +121,15 @@ async function hasNextCustomersPage(endCursor: string) {
 }
 
 export async function getCustomers(
-	startCursor: string = '',
+	cursor: string | null,
+	paginationType: PaginationType | null,
 ): Promise<PaginatedResult<Customer>> {
 	const [customersData, customersTotal] = await Promise.all([
-		getPaginatedCustomers(startCursor),
+		cursor && paginationType
+			? paginationType === 'previous'
+				? getPreviousCustomers(cursor)
+				: getNextCustomers(cursor)
+			: getFirstCustomers(),
 		getCustomersCount(),
 	]);
 
@@ -111,6 +137,7 @@ export async function getCustomers(
 		return emptyResult as PaginatedResult<Customer>;
 	}
 
+	const startCursor = customersData[0].customerId;
 	const endCursor = customersData[customersData.length - 1].customerId;
 
 	const [hasPreviousPage, hasNextPage] = await Promise.all([
@@ -133,7 +160,7 @@ export async function getCustomers(
 }
 
 export async function getCustomer(customerId: string) {
-	const customersData = await window.db.select<CustomersSelectResult>(
+	const customersData = await window.db.select<Array<CustomerSelectResult>>(
 		sql.customerQuery,
 		[customerId],
 	);

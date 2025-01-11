@@ -1,6 +1,6 @@
 SELECT COUNT(customer_id)
 FROM customers
-WHERE customer_id < (
+WHERE customer_id > (
     SELECT customer_id
     FROM customers
     WHERE customer_id = $1
