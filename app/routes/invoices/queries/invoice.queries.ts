@@ -1,6 +1,6 @@
 import invoicesCountQuery from '~/routes/invoices/queries/invoicesCountQuery.sql?raw';
-import invoicesHasNextPageQuery from '~/routes/invoices/queries/invoicesHasNextPageQuery.sql?raw';
-import invoicesHasPreviousPageQuery from '~/routes/invoices/queries/invoicesHasPreviousPageQuery.sql?raw';
+import nextInvoicesCountQuery from '~/routes/invoices/queries/nextInvoicesCountQuery.sql?raw';
+import previousInvoicesCountQuery from '~/routes/invoices/queries/previousInvoicesCountQuery.sql?raw';
 import firstInvoicesQuery from '~/routes/invoices/queries/firstInvoicesQuery.sql?raw';
 import previousInvoicesQuery from '~/routes/invoices/queries/previousInvoicesQuery.sql?raw';
 import nextInvoicesQuery from '~/routes/invoices/queries/nextInvoicesQuery.sql?raw';
@@ -94,22 +94,22 @@ async function getFirstInvoices() {
 	]);
 }
 
-async function hasPreviousInvoicesPage(startCursor: string = '') {
-	const hasPreviousInvoicesCount = await window.db.select<InvoicesCountResult>(
-		invoicesHasPreviousPageQuery,
+async function getPreviousInvoicesCount(startCursor: string) {
+	const previousInvoicesCount = await window.db.select<InvoicesCountResult>(
+		previousInvoicesCountQuery,
 		[startCursor, itemsPerPage],
 	);
 
-	return Boolean(hasPreviousInvoicesCount[0]['COUNT(invoice_id)']);
+	return previousInvoicesCount[0]['COUNT(invoice_id)'];
 }
 
-async function hasNextInvoicesPage(endCursor: string) {
-	const hasNextInvoicesCount = await window.db.select<InvoicesCountResult>(
-		invoicesHasNextPageQuery,
+async function getNextInvoicesCount(endCursor: string) {
+	const nextInvoicesCount = await window.db.select<InvoicesCountResult>(
+		nextInvoicesCountQuery,
 		[endCursor, itemsPerPage],
 	);
 
-	return Boolean(hasNextInvoicesCount[0]['COUNT(invoice_id)']);
+	return nextInvoicesCount[0]['COUNT(invoice_id)'];
 }
 
 export async function getInvoices(
@@ -132,9 +132,9 @@ export async function getInvoices(
 	const startCursor = invoicesData[0].invoiceId;
 	const endCursor = invoicesData[invoicesData.length - 1].invoiceId;
 
-	const [hasPreviousPage, hasNextPage] = await Promise.all([
-		hasPreviousInvoicesPage(startCursor),
-		hasNextInvoicesPage(endCursor),
+	const [previousInvoicesCount, nextInvoicesCount] = await Promise.all([
+		getPreviousInvoicesCount(startCursor),
+		getNextInvoicesCount(endCursor),
 	]);
 
 	const invoices = parseInvoicesSelectResult(invoicesData);
@@ -144,8 +144,8 @@ export async function getInvoices(
 		total: invoicesTotal,
 		pageInfo: {
 			endCursor,
-			hasNextPage,
-			hasPreviousPage,
+			hasNextPage: Boolean(nextInvoicesCount),
+			hasPreviousPage: Boolean(previousInvoicesCount),
 			startCursor,
 		},
 	};

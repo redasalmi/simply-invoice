@@ -1,7 +1,7 @@
 import allCustomersQuery from '~/routes/customers/queries/allCustomersQuery.sql?raw';
 import customersCountQuery from '~/routes/customers/queries/customersCountQuery.sql?raw';
-import customersHasNextPageQuery from '~/routes/customers/queries/customersHasNextPageQuery.sql?raw';
-import customersHasPreviousPageQuery from '~/routes/customers/queries/customersHasPreviousPageQuery.sql?raw';
+import nextCustomersCountQuery from '~/routes/customers/queries/nextCustomersCountQuery.sql?raw';
+import previousCustomersCountQuery from '~/routes/customers/queries/previousCustomersCountQuery.sql?raw';
 import firstCustomersQuery from '~/routes/customers/queries/firstCustomersQuery.sql?raw';
 import previousCustomersQuery from '~/routes/customers/queries/previousCustomersQuery.sql?raw';
 import nextCustomersQuery from '~/routes/customers/queries/nextCustomersQuery.sql?raw';
@@ -109,23 +109,22 @@ async function getFirstCustomers() {
 	]);
 }
 
-async function hasPreviousCustomersPage(startCursor: string = '') {
-	const hasPreviousCustomersCount =
-		await window.db.select<CustomersCountResult>(
-			customersHasPreviousPageQuery,
-			[startCursor, itemsPerPage],
-		);
+async function getPreviousCustomersCount(startCursor: string) {
+	const previousCustomersCount = await window.db.select<CustomersCountResult>(
+		previousCustomersCountQuery,
+		[startCursor, itemsPerPage],
+	);
 
-	return Boolean(hasPreviousCustomersCount[0]['COUNT(customer_id)']);
+	return previousCustomersCount[0]['COUNT(customer_id)'];
 }
 
-async function hasNextCustomersPage(endCursor: string) {
-	const hasNextCustomersCount = await window.db.select<CustomersCountResult>(
-		customersHasNextPageQuery,
+async function getNextCustomersCount(endCursor: string) {
+	const nextCustomersCount = await window.db.select<CustomersCountResult>(
+		nextCustomersCountQuery,
 		[endCursor, itemsPerPage],
 	);
 
-	return Boolean(hasNextCustomersCount[0]['COUNT(customer_id)']);
+	return nextCustomersCount[0]['COUNT(customer_id)'];
 }
 
 export async function getCustomers(
@@ -148,9 +147,9 @@ export async function getCustomers(
 	const startCursor = customersData[0].customerId;
 	const endCursor = customersData[customersData.length - 1].customerId;
 
-	const [hasPreviousPage, hasNextPage] = await Promise.all([
-		hasPreviousCustomersPage(startCursor),
-		hasNextCustomersPage(endCursor),
+	const [previousCustomersCount, nextCustomersCount] = await Promise.all([
+		getPreviousCustomersCount(startCursor),
+		getNextCustomersCount(endCursor),
 	]);
 
 	const customers = parseCustomersSelectResult(customersData);
@@ -160,8 +159,8 @@ export async function getCustomers(
 		total: customersTotal,
 		pageInfo: {
 			endCursor,
-			hasNextPage,
-			hasPreviousPage,
+			hasNextPage: Boolean(nextCustomersCount),
+			hasPreviousPage: Boolean(previousCustomersCount),
 			startCursor,
 		},
 	};

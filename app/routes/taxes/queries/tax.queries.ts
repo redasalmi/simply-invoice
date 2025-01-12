@@ -1,7 +1,7 @@
 import allTaxesQuery from '~/routes/taxes/queries/allTaxesQuery.sql?raw';
 import taxesCountQuery from '~/routes/taxes/queries/taxesCountQuery.sql?raw';
-import taxesHasNextPageQuery from '~/routes/taxes/queries/taxesHasNextPageQuery.sql?raw';
-import taxesHasPreviousPageQuery from '~/routes/taxes/queries/taxesHasPreviousPageQuery.sql?raw';
+import nextTaxesCountQuery from '~/routes/taxes/queries/nextTaxesCountQuery.sql?raw';
+import previousTaxesCountQuery from '~/routes/taxes/queries/previousTaxesCountQuery.sql?raw';
 import firstTaxesQuery from '~/routes/taxes/queries/firstTaxesQuery.sql?raw';
 import previousTaxesQuery from '~/routes/taxes/queries/previousTaxesQuery.sql?raw';
 import nextTaxesQuery from '~/routes/taxes/queries/nextTaxesQuery.sql?raw';
@@ -52,22 +52,22 @@ async function getFirstTaxes() {
 	return window.db.select<Array<Tax>>(firstTaxesQuery, [itemsPerPage]);
 }
 
-async function hasPreviousTaxesPage(startCursor: string = '') {
-	const hasPreviousTaxesCount = await window.db.select<TaxesCountResult>(
-		taxesHasPreviousPageQuery,
+async function getPreviousTaxesCount(startCursor: string) {
+	const previousTaxesCount = await window.db.select<TaxesCountResult>(
+		previousTaxesCountQuery,
 		[startCursor, itemsPerPage],
 	);
 
-	return Boolean(hasPreviousTaxesCount[0]['COUNT(tax_id)']);
+	return previousTaxesCount[0]['COUNT(tax_id)'];
 }
 
-async function hasNextTaxesPage(endCursor: string) {
-	const hasNextTaxesCount = await window.db.select<TaxesCountResult>(
-		taxesHasNextPageQuery,
+async function getNextTaxesCount(endCursor: string) {
+	const nextTaxesCount = await window.db.select<TaxesCountResult>(
+		nextTaxesCountQuery,
 		[endCursor, itemsPerPage],
 	);
 
-	return Boolean(hasNextTaxesCount[0]['COUNT(tax_id)']);
+	return nextTaxesCount[0]['COUNT(tax_id)'];
 }
 
 export async function getTaxes(
@@ -90,9 +90,9 @@ export async function getTaxes(
 	const startCursor = taxesData[0].taxId;
 	const endCursor = taxesData[taxesData.length - 1].taxId;
 
-	const [hasPreviousPage, hasNextPage] = await Promise.all([
-		hasPreviousTaxesPage(startCursor),
-		hasNextTaxesPage(endCursor),
+	const [previousTaxesCount, nextTaxesCount] = await Promise.all([
+		getPreviousTaxesCount(startCursor),
+		getNextTaxesCount(endCursor),
 	]);
 
 	return {
@@ -100,8 +100,8 @@ export async function getTaxes(
 		total: taxesTotal,
 		pageInfo: {
 			endCursor,
-			hasNextPage,
-			hasPreviousPage,
+			hasNextPage: Boolean(nextTaxesCount),
+			hasPreviousPage: Boolean(previousTaxesCount),
 			startCursor,
 		},
 	};

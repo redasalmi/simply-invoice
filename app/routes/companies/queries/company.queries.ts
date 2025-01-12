@@ -1,7 +1,7 @@
 import allCompaniesQuery from '~/routes/companies/queries/allCompaniesQuery.sql?raw';
 import companiesCountQuery from '~/routes/companies/queries/companiesCountQuery.sql?raw';
-import companiesHasNextPageQuery from '~/routes/companies/queries/companiesHasNextPageQuery.sql?raw';
-import companiesHasPreviousPageQuery from '~/routes/companies/queries/companiesHasPreviousPageQuery.sql?raw';
+import nextCompaniesCountQuery from '~/routes/companies/queries/nextCompaniesCountQuery.sql?raw';
+import previousCompaniesCountQuery from '~/routes/companies/queries/previousCompaniesCountQuery.sql?raw';
 import firstCompaniesQuery from '~/routes/companies/queries/firstCompaniesQuery.sql?raw';
 import previousCompaniesQuery from '~/routes/companies/queries/previousCompaniesQuery.sql?raw';
 import nextCompaniesQuery from '~/routes/companies/queries/nextCompaniesQuery.sql?raw';
@@ -104,23 +104,22 @@ async function getFirstCompanies() {
 	]);
 }
 
-async function hasPreviousCompaniesPage(startCursor: string = '') {
-	const hasPreviousCompaniesCount =
-		await window.db.select<CompaniesCountResult>(
-			companiesHasPreviousPageQuery,
-			[startCursor, itemsPerPage],
-		);
+async function getPreviousCompaniesCount(startCursor: string) {
+	const previousCompaniesCount = await window.db.select<CompaniesCountResult>(
+		previousCompaniesCountQuery,
+		[startCursor, itemsPerPage],
+	);
 
-	return Boolean(hasPreviousCompaniesCount[0]['COUNT(company_id)']);
+	return previousCompaniesCount[0]['COUNT(company_id)'];
 }
 
-async function hasNextCompaniesPage(endCursor: string) {
-	const hasNextCompaniesCount = await window.db.select<CompaniesCountResult>(
-		companiesHasNextPageQuery,
+async function getNextCompaniesCount(endCursor: string) {
+	const nextCompaniesCount = await window.db.select<CompaniesCountResult>(
+		nextCompaniesCountQuery,
 		[endCursor, itemsPerPage],
 	);
 
-	return Boolean(hasNextCompaniesCount[0]['COUNT(company_id)']);
+	return nextCompaniesCount[0]['COUNT(company_id)'];
 }
 
 export async function getCompanies(
@@ -143,9 +142,9 @@ export async function getCompanies(
 	const startCursor = companiesData[0].companyId;
 	const endCursor = companiesData[companiesData.length - 1].companyId;
 
-	const [hasPreviousPage, hasNextPage] = await Promise.all([
-		hasPreviousCompaniesPage(startCursor),
-		hasNextCompaniesPage(endCursor),
+	const [previousCompaniesCount, nextCompaniesCount] = await Promise.all([
+		getPreviousCompaniesCount(startCursor),
+		getNextCompaniesCount(endCursor),
 	]);
 
 	const companies = parseCompaniesSelectResult(companiesData);
@@ -155,8 +154,8 @@ export async function getCompanies(
 		total: companiesTotal,
 		pageInfo: {
 			endCursor,
-			hasNextPage,
-			hasPreviousPage,
+			hasNextPage: Boolean(nextCompaniesCount),
+			hasPreviousPage: Boolean(previousCompaniesCount),
 			startCursor,
 		},
 	};
