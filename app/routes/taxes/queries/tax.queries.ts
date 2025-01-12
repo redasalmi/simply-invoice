@@ -1,4 +1,14 @@
-import * as sql from '~/sql/taxes/taxes.sql';
+import allTaxesQuery from '~/routes/taxes/queries/allTaxesQuery.sql?raw';
+import taxesCountQuery from '~/routes/taxes/queries/taxesCountQuery.sql?raw';
+import taxesHasNextPageQuery from '~/routes/taxes/queries/taxesHasNextPageQuery.sql?raw';
+import taxesHasPreviousPageQuery from '~/routes/taxes/queries/taxesHasPreviousPageQuery.sql?raw';
+import firstTaxesQuery from '~/routes/taxes/queries/firstTaxesQuery.sql?raw';
+import previousTaxesQuery from '~/routes/taxes/queries/previousTaxesQuery.sql?raw';
+import nextTaxesQuery from '~/routes/taxes/queries/nextTaxesQuery.sql?raw';
+import taxQuery from '~/routes/taxes/queries/taxQuery.sql?raw';
+import createTaxMutation from '~/routes/taxes/queries/createTaxMutation.sql?raw';
+import deleteTaxMutation from '~/routes/taxes/queries/deleteTaxMutation.sql?raw';
+import updateTaxMutation from '~/routes/taxes/queries/updateTaxMutation.sql?raw';
 import {
 	emptyResult,
 	itemsPerPage,
@@ -13,40 +23,38 @@ type TaxesCountResult = [
 ];
 
 async function getTaxesCount() {
-	const taxesCount = await window.db.select<TaxesCountResult>(
-		sql.taxesCountQuery,
-	);
+	const taxesCount = await window.db.select<TaxesCountResult>(taxesCountQuery);
 
 	return taxesCount[0]['COUNT(tax_id)'];
 }
 
 export async function getAllTaxes() {
 	return window.db.select<Array<Pick<Tax, 'taxId' | 'name' | 'rate'>>>(
-		sql.allTaxesQuery,
+		allTaxesQuery,
 	);
 }
 
 async function getPreviousTaxes(startCursor: string) {
-	return window.db.select<Array<Tax>>(sql.previousTaxesQuery, [
+	return window.db.select<Array<Tax>>(previousTaxesQuery, [
 		startCursor,
 		itemsPerPage,
 	]);
 }
 
 async function getNextTaxes(endCursor: string) {
-	return window.db.select<Array<Tax>>(sql.nextTaxesQuery, [
+	return window.db.select<Array<Tax>>(nextTaxesQuery, [
 		endCursor,
 		itemsPerPage,
 	]);
 }
 
 async function getFirstTaxes() {
-	return window.db.select<Array<Tax>>(sql.firstTaxesQuery, [itemsPerPage]);
+	return window.db.select<Array<Tax>>(firstTaxesQuery, [itemsPerPage]);
 }
 
 async function hasPreviousTaxesPage(startCursor: string = '') {
 	const hasPreviousTaxesCount = await window.db.select<TaxesCountResult>(
-		sql.taxesHasPreviousPageQuery,
+		taxesHasPreviousPageQuery,
 		[startCursor, itemsPerPage],
 	);
 
@@ -55,7 +63,7 @@ async function hasPreviousTaxesPage(startCursor: string = '') {
 
 async function hasNextTaxesPage(endCursor: string) {
 	const hasNextTaxesCount = await window.db.select<TaxesCountResult>(
-		sql.taxesHasNextPageQuery,
+		taxesHasNextPageQuery,
 		[endCursor, itemsPerPage],
 	);
 
@@ -100,7 +108,7 @@ export async function getTaxes(
 }
 
 export async function getTax(taxId: string) {
-	const taxesData = await window.db.select<Array<Tax>>(sql.taxQuery, [taxId]);
+	const taxesData = await window.db.select<Array<Tax>>(taxQuery, [taxId]);
 
 	if (!taxesData.length) {
 		return undefined;
@@ -112,23 +120,15 @@ export async function getTax(taxId: string) {
 type CreateTaxInput = Omit<Tax, 'createdAt' | 'updatedAt'>;
 
 export async function createTax(tax: CreateTaxInput) {
-	return window.db.execute(sql.createTaxMutation, [
-		tax.taxId,
-		tax.name,
-		tax.rate,
-	]);
+	return window.db.execute(createTaxMutation, [tax.taxId, tax.name, tax.rate]);
 }
 
 type UpdateTaxInput = Omit<Tax, 'createdAt' | 'updatedAt'>;
 
 export async function updateTax(tax: UpdateTaxInput) {
-	return window.db.execute(sql.updateTaxMutation, [
-		tax.name,
-		tax.rate,
-		tax.taxId,
-	]);
+	return window.db.execute(updateTaxMutation, [tax.name, tax.rate, tax.taxId]);
 }
 
 export async function deleteTax(taxId: string) {
-	return window.db.execute(sql.deleteTaxMutation, [taxId]);
+	return window.db.execute(deleteTaxMutation, [taxId]);
 }

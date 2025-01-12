@@ -1,5 +1,5 @@
 import { Form, redirect, useNavigate, useNavigation } from 'react-router';
-import { deleteTax, getTax } from '~/queries/tax.queries';
+import { deleteTax, getTax } from '~/routes/taxes/queries/tax.queries';
 import {
 	AlertDialogPopup,
 	AlertDialogBackdrop,

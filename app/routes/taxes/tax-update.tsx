@@ -14,8 +14,8 @@ import {
 	NumberFieldInput,
 	NumberFieldRoot,
 } from '~/components/ui/number-field';
-import { getTax, updateTax } from '~/queries/tax.queries';
-import { TaxFormSchema } from '~/schemas/tax.schemas';
+import { getTax, updateTax } from '~/routes/taxes/queries/tax.queries';
+import { TaxFormSchema } from '~/routes/taxes/tax.schemas';
 import { useForm } from '~/hooks/useForm';
 import { parseFormData } from '~/utils/parseForm.utils';
 import type { Route } from './+types/tax-update';

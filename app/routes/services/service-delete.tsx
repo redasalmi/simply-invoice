@@ -1,5 +1,8 @@
 import { Form, redirect, useNavigate, useNavigation } from 'react-router';
-import { deleteService, getService } from '~/queries/service.queries';
+import {
+	deleteService,
+	getService,
+} from '~/routes/services/queries/service.queries';
 import {
 	AlertDialogPopup,
 	AlertDialogBackdrop,

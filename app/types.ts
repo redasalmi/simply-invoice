@@ -68,7 +68,7 @@ export type Invoice = {
 		tax: Tax;
 	}>;
 
-	// this calculation could be done using an aggregation I guess
+	// TODO: this calculation could be done using an aggregation I guess
 	cost: {
 		subtotalAmount: number;
 		totalAmount: number;

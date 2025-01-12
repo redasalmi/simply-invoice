@@ -15,9 +15,9 @@ import {
 	NumberFieldRoot,
 } from '~/components/ui/number-field';
 import { useForm } from '~/hooks/useForm';
-import { ServiceFormSchema } from '~/schemas/service.schemas';
+import { ServiceFormSchema } from '~/routes/services/service.schemas';
 import { parseFormData } from '~/utils/parseForm.utils';
-import { createService } from '~/queries/service.queries';
+import { createService } from '~/routes/services/queries/service.queries';
 import type { Route } from './+types/service-create';
 
 export async function clientAction({ request }: Route.ClientActionArgs) {

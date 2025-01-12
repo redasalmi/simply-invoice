@@ -1,7 +1,10 @@
 import { redirect, useNavigation } from 'react-router';
-import { getCustomer, updateCustomer } from '~/queries/customer.queries';
-import { CustomerFormSchema } from '~/schemas/customer.schema';
-import { updateAddress } from '~/queries/address.queries';
+import {
+	getCustomer,
+	updateCustomer,
+} from '~/routes/customers/queries/customer.queries';
+import { CustomerFormSchema } from '~/routes/customers/customer.schema';
+import { updateAddress } from '~/lib/address/address.queries';
 import { parseFormData } from '~/utils/parseForm.utils';
 import { CustomerNotFound } from '~/routes/customers/components/CustomerNotFound';
 import { Form } from '~/components/ui/form';

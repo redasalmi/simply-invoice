@@ -9,7 +9,7 @@ import {
 	TableHeader,
 	TableRow,
 } from '~/components/ui/table';
-import { getCompanies } from '~/queries/company.queries';
+import { getCompanies } from '~/routes/companies/queries/company.queries';
 import { Pagination } from '~/components/Pagination';
 import { getPaginationParams, itemsPerPage } from '~/lib/pagination';
 import type { Route } from './+types/companies-list';

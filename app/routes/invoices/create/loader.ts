@@ -1,10 +1,10 @@
 import * as v from 'valibot';
-import { getAllCompanies } from '~/queries/company.queries';
-import { getAllCustomers } from '~/queries/customer.queries';
-import { getLastIncrementalInvoiceId } from '~/queries/invoice.queries';
-import { getAllServices } from '~/queries/service.queries';
-import { getAllTaxes } from '~/queries/tax.queries';
-import { CreateInvoiceLoaderSchema } from '~/schemas/invoice.schemas';
+import { getAllCompanies } from '~/routes/companies/queries/company.queries';
+import { getAllCustomers } from '~/routes/customers/queries/customer.queries';
+import { getLastIncrementalInvoiceId } from '~/routes/invoices/queries/invoice.queries';
+import { getAllServices } from '~/routes/services/queries/service.queries';
+import { getAllTaxes } from '~/routes/taxes/queries/tax.queries';
+import { CreateInvoiceLoaderSchema } from '~/routes/invoices/invoice.schemas';
 
 export async function clientLoader() {
 	const [companies, customers, services, taxes, lastIncrementalInvoiceId] =

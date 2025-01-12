@@ -1,7 +1,10 @@
 import { redirect, useNavigation } from 'react-router';
-import { getCompany, updateCompany } from '~/queries/company.queries';
-import { CompanyFormSchema } from '~/schemas/company.schemas';
-import { updateAddress } from '~/queries/address.queries';
+import {
+	getCompany,
+	updateCompany,
+} from '~/routes/companies/queries/company.queries';
+import { CompanyFormSchema } from '~/routes/companies/company.schemas';
+import { updateAddress } from '~/lib/address/address.queries';
 import { parseFormData } from '~/utils/parseForm.utils';
 import { CompanyNotFound } from '~/routes/companies/components/CompanyNotFound';
 import { Form } from '~/components/ui/form';

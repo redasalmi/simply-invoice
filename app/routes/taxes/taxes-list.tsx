@@ -9,7 +9,7 @@ import {
 	TableHeader,
 	TableRow,
 } from '~/components/ui/table';
-import { getTaxes } from '~/queries/tax.queries';
+import { getTaxes } from '~/routes/taxes/queries/tax.queries';
 import { Pagination } from '~/components/Pagination';
 import { getPaginationParams, itemsPerPage } from '~/lib/pagination';
 import type { Route } from './+types/taxes-list';

@@ -1,5 +1,8 @@
 import { Form, redirect, useNavigate, useNavigation } from 'react-router';
-import { deleteCustomer, getCustomer } from '~/queries/customer.queries';
+import {
+	deleteCustomer,
+	getCustomer,
+} from '~/routes/customers/queries/customer.queries';
 import {
 	AlertDialogPopup,
 	AlertDialogBackdrop,

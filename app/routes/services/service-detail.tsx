@@ -8,7 +8,7 @@ import {
 	DialogTitle,
 } from '~/components/ui/dialog';
 import { Table, TableBody, TableCell, TableRow } from '~/components/ui/table';
-import { getService } from '~/queries/service.queries';
+import { getService } from '~/routes/services/queries/service.queries';
 import type { Route } from './+types/service-detail';
 
 export async function clientLoader({ params }: Route.ClientLoaderArgs) {

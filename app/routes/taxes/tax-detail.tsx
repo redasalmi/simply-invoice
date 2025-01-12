@@ -8,7 +8,7 @@ import {
 	DialogTitle,
 } from '~/components/ui/dialog';
 import { Table, TableBody, TableCell, TableRow } from '~/components/ui/table';
-import { getTax } from '~/queries/tax.queries';
+import { getTax } from '~/routes/taxes/queries/tax.queries';
 import type { Route } from './+types/tax-detail';
 
 export async function clientLoader({ params }: Route.ClientLoaderArgs) {

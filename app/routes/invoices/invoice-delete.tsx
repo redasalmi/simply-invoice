@@ -1,5 +1,8 @@
 import { Form, redirect, useNavigate, useNavigation } from 'react-router';
-import { deleteInvoice, getInvoice } from '~/queries/invoice.queries';
+import {
+	deleteInvoice,
+	getInvoice,
+} from '~/routes/invoices/queries/invoice.queries';
 import {
 	AlertDialogPopup,
 	AlertDialogBackdrop,

@@ -1,6 +1,6 @@
 import * as v from 'valibot';
 import { ulid } from 'ulid';
-import { AddressFormSchema } from '~/schemas/address.schemas';
+import { AddressFormSchema } from '~/lib/address/address.schemas';
 
 export const CompanyFormSchema = v.pipe(
 	v.object({

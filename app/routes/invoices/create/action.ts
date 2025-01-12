@@ -1,8 +1,10 @@
 import { redirect } from 'react-router';
 import { parseFormData } from '~/utils/parseForm.utils';
-import { InvoiceFormSchema } from '~/schemas/invoice.schemas';
-import { createInvoice } from '~/queries/invoice.queries';
-import { createInvoiceService } from '~/queries/invoice-services.queries';
+import { InvoiceFormSchema } from '~/routes/invoices/invoice.schemas';
+import {
+	createInvoice,
+	createInvoiceService,
+} from '~/routes/invoices/queries/invoice.queries';
 import type { Route } from './+types/route';
 
 export async function clientAction({ request }: Route.ClientActionArgs) {

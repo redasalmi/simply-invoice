@@ -7,7 +7,7 @@ import {
 	DialogRoot,
 	DialogTitle,
 } from '~/components/ui/dialog';
-import { getCompany } from '~/queries/company.queries';
+import { getCompany } from '~/routes/companies/queries/company.queries';
 import { Table, TableBody, TableCell, TableRow } from '~/components/ui/table';
 import { CompanyNotFound } from '~/routes/companies/components/CompanyNotFound';
 import type { Route } from './+types/company-detail';

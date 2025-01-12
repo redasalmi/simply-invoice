@@ -19,9 +19,9 @@ import {
 	FieldRoot,
 } from '~/components/ui/field';
 import { currencies } from '~/lib/currencies';
-import { ServicesTable } from '../components/ServicesTable';
+import { ServicesTable } from '~/routes/invoices/components/ServicesTable';
 import { useForm } from '~/hooks/useForm';
-import { InvoiceFormSchema } from '~/schemas/invoice.schemas';
+import { InvoiceFormSchema } from '~/routes/invoices/invoice.schemas';
 import type { Route } from './+types/route';
 
 export function InvoiceCreateRoute({

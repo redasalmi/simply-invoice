@@ -1,10 +1,26 @@
-import * as sql from '~/sql/invoices/invoices.sql';
+import invoicesCountQuery from '~/routes/invoices/queries/invoicesCountQuery.sql?raw';
+import invoicesHasNextPageQuery from '~/routes/invoices/queries/invoicesHasNextPageQuery.sql?raw';
+import invoicesHasPreviousPageQuery from '~/routes/invoices/queries/invoicesHasPreviousPageQuery.sql?raw';
+import firstInvoicesQuery from '~/routes/invoices/queries/firstInvoicesQuery.sql?raw';
+import previousInvoicesQuery from '~/routes/invoices/queries/previousInvoicesQuery.sql?raw';
+import nextInvoicesQuery from '~/routes/invoices/queries/nextInvoicesQuery.sql?raw';
+import invoiceQuery from '~/routes/invoices/queries/invoiceQuery.sql?raw';
+import lastIncrementalInvoiceIdQuery from '~/routes/invoices/queries/lastIncrementalInvoiceIdQuery.sql?raw';
+import createInvoiceMutation from '~/routes/invoices/queries/createInvoiceMutation.sql?raw';
+import deleteInvoiceMutation from '~/routes/invoices/queries/deleteInvoiceMutation.sql?raw';
+import createInvoiceServiceMutation from '~/routes/invoices/queries/createInvoiceServiceMutation.sql?raw';
+import updateInvoiceServiceMutation from '~/routes/invoices/queries/updateInvoiceServiceMutation.sql?raw';
 import {
 	emptyResult,
 	itemsPerPage,
 	type PaginationType,
 } from '~/lib/pagination';
-import type { Customer, Invoice, PaginatedResult } from '~/types';
+import type {
+	Customer,
+	Invoice,
+	InvoiceService,
+	PaginatedResult,
+} from '~/types';
 
 type InvoiceSelectResult = Pick<
 	Invoice,
@@ -52,36 +68,35 @@ function parseInvoicesSelectResult(
 }
 
 async function getInvoicesCount() {
-	const invoicesCount = await window.db.select<InvoicesCountResult>(
-		sql.invoicesCountQuery,
-	);
+	const invoicesCount =
+		await window.db.select<InvoicesCountResult>(invoicesCountQuery);
 
 	return invoicesCount[0]['COUNT(invoice_id)'];
 }
 
 async function getPreviousInvoices(startCursor: string) {
-	return window.db.select<Array<InvoiceSelectResult>>(
-		sql.previousInvoicesQuery,
-		[startCursor, itemsPerPage],
-	);
+	return window.db.select<Array<InvoiceSelectResult>>(previousInvoicesQuery, [
+		startCursor,
+		itemsPerPage,
+	]);
 }
 
 async function getNextInvoices(endCursor: string) {
-	return window.db.select<Array<InvoiceSelectResult>>(sql.nextInvoicesQuery, [
+	return window.db.select<Array<InvoiceSelectResult>>(nextInvoicesQuery, [
 		endCursor,
 		itemsPerPage,
 	]);
 }
 
 async function getFirstInvoices() {
-	return window.db.select<Array<InvoiceSelectResult>>(sql.firstInvoicesQuery, [
+	return window.db.select<Array<InvoiceSelectResult>>(firstInvoicesQuery, [
 		itemsPerPage,
 	]);
 }
 
 async function hasPreviousInvoicesPage(startCursor: string = '') {
 	const hasPreviousInvoicesCount = await window.db.select<InvoicesCountResult>(
-		sql.invoicesHasPreviousPageQuery,
+		invoicesHasPreviousPageQuery,
 		[startCursor, itemsPerPage],
 	);
 
@@ -90,7 +105,7 @@ async function hasPreviousInvoicesPage(startCursor: string = '') {
 
 async function hasNextInvoicesPage(endCursor: string) {
 	const hasNextInvoicesCount = await window.db.select<InvoicesCountResult>(
-		sql.invoicesHasNextPageQuery,
+		invoicesHasNextPageQuery,
 		[endCursor, itemsPerPage],
 	);
 
@@ -138,7 +153,7 @@ export async function getInvoices(
 
 export async function getInvoice(invoiceId: string) {
 	const invoicesData = await window.db.select<Array<InvoiceSelectResult>>(
-		sql.invoiceQuery,
+		invoiceQuery,
 		[invoiceId],
 	);
 
@@ -153,7 +168,7 @@ export async function getInvoice(invoiceId: string) {
 
 export async function getLastIncrementalInvoiceId() {
 	const lastIdResult = await window.db.select<LastIncrementalInvoiceIdResult>(
-		sql.lastIncrementalInvoiceIdQuery,
+		lastIncrementalInvoiceIdQuery,
 	);
 	const lastId = lastIdResult[0]['MAX(identifier)'];
 
@@ -178,7 +193,7 @@ type createInvoiceInput = Pick<
 };
 
 export async function createInvoice(invoice: createInvoiceInput) {
-	return window.db.execute(sql.createInvoiceMutation, [
+	return window.db.execute(createInvoiceMutation, [
 		invoice.invoiceId,
 		invoice.identifier,
 		invoice.identifierType,
@@ -195,5 +210,38 @@ export async function createInvoice(invoice: createInvoiceInput) {
 }
 
 export async function deleteInvoice(invoiceId: string) {
-	return window.db.execute(sql.deleteInvoiceMutation, [invoiceId]);
+	return window.db.execute(deleteInvoiceMutation, [invoiceId]);
+}
+
+type CreateInvoiceServiceInput = Omit<
+	InvoiceService,
+	'createdAt' | 'updatedAt'
+>;
+
+export async function createInvoiceService(
+	invoiceService: CreateInvoiceServiceInput,
+) {
+	return window.db.execute(createInvoiceServiceMutation, [
+		invoiceService.invoiceServiceId,
+		invoiceService.serviceId,
+		invoiceService.invoiceId,
+		invoiceService.quantity,
+		invoiceService.taxId,
+	]);
+}
+
+type UpdateInvoiceServiceInput = Omit<
+	InvoiceService,
+	'invoiceId' | 'createdAt' | 'updatedAt'
+>;
+
+export async function updateInvoiceService(
+	invoiceService: UpdateInvoiceServiceInput,
+) {
+	return window.db.execute(updateInvoiceServiceMutation, [
+		invoiceService.serviceId,
+		invoiceService.quantity,
+		invoiceService.taxId,
+		invoiceService.invoiceServiceId,
+	]);
 }

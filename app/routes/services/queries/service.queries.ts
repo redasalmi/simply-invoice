@@ -1,4 +1,14 @@
-import * as sql from '~/sql/services/services.sql';
+import allServicesQuery from '~/routes/services/queries/allServicesQuery.sql?raw';
+import servicesCountQuery from '~/routes/services/queries/servicesCountQuery.sql?raw';
+import servicesHasNextPageQuery from '~/routes/services/queries/servicesHasNextPageQuery.sql?raw';
+import servicesHasPreviousPageQuery from '~/routes/services/queries/servicesHasPreviousPageQuery.sql?raw';
+import firstServicesQuery from '~/routes/services/queries/firstServicesQuery.sql?raw';
+import previousServicesQuery from '~/routes/services/queries/previousServicesQuery.sql?raw';
+import nextServicesQuery from '~/routes/services/queries/nextServicesQuery.sql?raw';
+import serviceQuery from '~/routes/services/queries/serviceQuery.sql?raw';
+import createServiceMutation from '~/routes/services/queries/createServiceMutation.sql?raw';
+import deleteServiceMutation from '~/routes/services/queries/deleteServiceMutation.sql?raw';
+import updateServiceMutation from '~/routes/services/queries/updateServiceMutation.sql?raw';
 import {
 	emptyResult,
 	itemsPerPage,
@@ -13,42 +23,39 @@ type ServicesCountResult = [
 ];
 
 async function getServicesCount() {
-	const servicesCount = await window.db.select<ServicesCountResult>(
-		sql.servicesCountQuery,
-	);
+	const servicesCount =
+		await window.db.select<ServicesCountResult>(servicesCountQuery);
 
 	return servicesCount[0]['COUNT(service_id)'];
 }
 
 export async function getAllServices() {
 	return window.db.select<Array<Pick<Service, 'serviceId' | 'name' | 'rate'>>>(
-		sql.allServicesQuery,
+		allServicesQuery,
 	);
 }
 
 async function getPreviousServices(startCursor: string) {
-	return window.db.select<Array<Service>>(sql.previousServicesQuery, [
+	return window.db.select<Array<Service>>(previousServicesQuery, [
 		startCursor,
 		itemsPerPage,
 	]);
 }
 
 async function getNextServices(endCursor: string) {
-	return window.db.select<Array<Service>>(sql.nextServicesQuery, [
+	return window.db.select<Array<Service>>(nextServicesQuery, [
 		endCursor,
 		itemsPerPage,
 	]);
 }
 
 async function getFirstServices() {
-	return window.db.select<Array<Service>>(sql.firstServicesQuery, [
-		itemsPerPage,
-	]);
+	return window.db.select<Array<Service>>(firstServicesQuery, [itemsPerPage]);
 }
 
 async function hasPreviousServicesPage(startCursor: string) {
 	const hasPreviousServicesCount = await window.db.select<ServicesCountResult>(
-		sql.servicesHasPreviousPageQuery,
+		servicesHasPreviousPageQuery,
 		[startCursor, itemsPerPage],
 	);
 
@@ -57,7 +64,7 @@ async function hasPreviousServicesPage(startCursor: string) {
 
 async function hasNextServicesPage(endCursor: string) {
 	const hasNextServicesCount = await window.db.select<ServicesCountResult>(
-		sql.servicesHasNextPageQuery,
+		servicesHasNextPageQuery,
 		[endCursor, itemsPerPage],
 	);
 
@@ -102,10 +109,9 @@ export async function getServices(
 }
 
 export async function getService(serviceId: string) {
-	const servicesData = await window.db.select<Array<Service>>(
-		sql.serviceQuery,
-		[serviceId],
-	);
+	const servicesData = await window.db.select<Array<Service>>(serviceQuery, [
+		serviceId,
+	]);
 
 	if (!servicesData.length) {
 		return undefined;
@@ -117,7 +123,7 @@ export async function getService(serviceId: string) {
 type CreateServiceInput = Omit<Service, 'createdAt' | 'updatedAt'>;
 
 export async function createService(service: CreateServiceInput) {
-	return window.db.execute(sql.createServiceMutation, [
+	return window.db.execute(createServiceMutation, [
 		service.serviceId,
 		service.name,
 		service.description,
@@ -128,7 +134,7 @@ export async function createService(service: CreateServiceInput) {
 type UpdateServiceInput = Omit<Service, 'createdAt' | 'updatedAt'>;
 
 export async function updateService(service: UpdateServiceInput) {
-	return window.db.execute(sql.updateServiceMutation, [
+	return window.db.execute(updateServiceMutation, [
 		service.name,
 		service.description,
 		service.rate,
@@ -137,5 +143,5 @@ export async function updateService(service: UpdateServiceInput) {
 }
 
 export async function deleteService(serviceId: string) {
-	return window.db.execute(sql.deleteServiceMutation, [serviceId]);
+	return window.db.execute(deleteServiceMutation, [serviceId]);
 }

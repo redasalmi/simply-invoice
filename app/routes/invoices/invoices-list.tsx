@@ -9,7 +9,7 @@ import {
 	TableHeader,
 	TableRow,
 } from '~/components/ui/table';
-import { getInvoices } from '~/queries/invoice.queries';
+import { getInvoices } from '~/routes/invoices/queries/invoice.queries';
 import { dateFormatter, formatMoney } from '~/utils/shared.utils';
 import { Pagination } from '~/components/Pagination';
 import { getPaginationParams, itemsPerPage } from '~/lib/pagination';

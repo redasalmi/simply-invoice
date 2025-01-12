@@ -1,4 +1,14 @@
-import * as sql from '~/sql/companies/companies.sql';
+import allCompaniesQuery from '~/routes/companies/queries/allCompaniesQuery.sql?raw';
+import companiesCountQuery from '~/routes/companies/queries/companiesCountQuery.sql?raw';
+import companiesHasNextPageQuery from '~/routes/companies/queries/companiesHasNextPageQuery.sql?raw';
+import companiesHasPreviousPageQuery from '~/routes/companies/queries/companiesHasPreviousPageQuery.sql?raw';
+import firstCompaniesQuery from '~/routes/companies/queries/firstCompaniesQuery.sql?raw';
+import previousCompaniesQuery from '~/routes/companies/queries/previousCompaniesQuery.sql?raw';
+import nextCompaniesQuery from '~/routes/companies/queries/nextCompaniesQuery.sql?raw';
+import companyQuery from '~/routes/companies/queries/companyQuery.sql?raw';
+import createCompanyMutation from '~/routes/companies/queries/createCompanyMutation.sql?raw';
+import deleteCompanyMutation from '~/routes/companies/queries/deleteCompanyMutation.sql?raw';
+import updateCompanyMutation from '~/routes/companies/queries/updateCompanyMutation.sql?raw';
 import {
 	emptyResult,
 	itemsPerPage,
@@ -62,35 +72,34 @@ function parseCompaniesSelectResult(companiesData: Array<CompanySelectResult>) {
 }
 
 async function getCompaniesCount() {
-	const companiesCount = await window.db.select<CompaniesCountResult>(
-		sql.companiesCountQuery,
-	);
+	const companiesCount =
+		await window.db.select<CompaniesCountResult>(companiesCountQuery);
 
 	return companiesCount[0]['COUNT(company_id)'];
 }
 
 export async function getAllCompanies() {
 	return window.db.select<Array<Pick<Company, 'companyId' | 'name'>>>(
-		sql.allCompaniesQuery,
+		allCompaniesQuery,
 	);
 }
 
 async function getPreviousCompanies(startCursor: string) {
-	return window.db.select<Array<CompanySelectResult>>(
-		sql.previousCompaniesQuery,
-		[startCursor, itemsPerPage],
-	);
+	return window.db.select<Array<CompanySelectResult>>(previousCompaniesQuery, [
+		startCursor,
+		itemsPerPage,
+	]);
 }
 
 async function getNextCompanies(endCursor: string) {
-	return window.db.select<Array<CompanySelectResult>>(sql.nextCompaniesQuery, [
+	return window.db.select<Array<CompanySelectResult>>(nextCompaniesQuery, [
 		endCursor,
 		itemsPerPage,
 	]);
 }
 
 async function getFirstCompanies() {
-	return window.db.select<Array<CompanySelectResult>>(sql.firstCompaniesQuery, [
+	return window.db.select<Array<CompanySelectResult>>(firstCompaniesQuery, [
 		itemsPerPage,
 	]);
 }
@@ -98,7 +107,7 @@ async function getFirstCompanies() {
 async function hasPreviousCompaniesPage(startCursor: string = '') {
 	const hasPreviousCompaniesCount =
 		await window.db.select<CompaniesCountResult>(
-			sql.companiesHasPreviousPageQuery,
+			companiesHasPreviousPageQuery,
 			[startCursor, itemsPerPage],
 		);
 
@@ -107,7 +116,7 @@ async function hasPreviousCompaniesPage(startCursor: string = '') {
 
 async function hasNextCompaniesPage(endCursor: string) {
 	const hasNextCompaniesCount = await window.db.select<CompaniesCountResult>(
-		sql.companiesHasNextPageQuery,
+		companiesHasNextPageQuery,
 		[endCursor, itemsPerPage],
 	);
 
@@ -155,7 +164,7 @@ export async function getCompanies(
 
 export async function getCompany(companyId: string) {
 	const companiesData = await window.db.select<Array<CompanySelectResult>>(
-		sql.companyQuery,
+		companyQuery,
 		[companyId],
 	);
 
@@ -174,7 +183,7 @@ type CreateCompanyInput = Pick<Company, 'companyId' | 'name' | 'email'> & {
 };
 
 export async function createCompany(company: CreateCompanyInput) {
-	return window.db.execute(sql.createCompanyMutation, [
+	return window.db.execute(createCompanyMutation, [
 		company.companyId,
 		company.name,
 		company.email,
@@ -188,7 +197,7 @@ type UpdateCompanyInput = Pick<Company, 'companyId' | 'name' | 'email'> & {
 };
 
 export async function updateCompany(company: UpdateCompanyInput) {
-	return window.db.execute(sql.updateCompanyMutation, [
+	return window.db.execute(updateCompanyMutation, [
 		company.name,
 		company.email,
 		company.additionalInformation,
@@ -197,5 +206,5 @@ export async function updateCompany(company: UpdateCompanyInput) {
 }
 
 export async function deleteCompany(companyId: string) {
-	return window.db.execute(sql.deleteCompanyMutation, [companyId]);
+	return window.db.execute(deleteCompanyMutation, [companyId]);
 }

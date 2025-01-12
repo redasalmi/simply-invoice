@@ -1,7 +1,7 @@
 import { redirect, useNavigation } from 'react-router';
-import { CustomerFormSchema } from '~/schemas/customer.schema';
-import { createCustomer } from '~/queries/customer.queries';
-import { createAddress } from '~/queries/address.queries';
+import { CustomerFormSchema } from '~/routes/customers/customer.schema';
+import { createCustomer } from '~/routes/customers/queries/customer.queries';
+import { createAddress } from '~/lib/address/address.queries';
 import { Form } from '~/components/ui/form';
 import {
 	FieldRoot,

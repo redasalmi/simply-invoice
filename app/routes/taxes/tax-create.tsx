@@ -15,9 +15,9 @@ import {
 	NumberFieldRoot,
 } from '~/components/ui/number-field';
 import { useForm } from '~/hooks/useForm';
-import { TaxFormSchema } from '~/schemas/tax.schemas';
+import { TaxFormSchema } from '~/routes/taxes/tax.schemas';
 import { parseFormData } from '~/utils/parseForm.utils';
-import { createTax } from '~/queries/tax.queries';
+import { createTax } from '~/routes/taxes/queries/tax.queries';
 import type { Route } from './+types/tax-create';
 
 export async function clientAction({ request }: Route.ClientActionArgs) {

@@ -7,7 +7,7 @@ import {
 	DialogRoot,
 	DialogTitle,
 } from '~/components/ui/dialog';
-import { getCustomer } from '~/queries/customer.queries';
+import { getCustomer } from '~/routes/customers/queries/customer.queries';
 import { Table, TableBody, TableCell, TableRow } from '~/components/ui/table';
 import { CustomerNotFound } from '~/routes/customers/components/CustomerNotFound';
 import type { Route } from './+types/customer-detail';

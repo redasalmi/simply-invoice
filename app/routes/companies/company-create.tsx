@@ -1,7 +1,7 @@
 import { redirect, useNavigation } from 'react-router';
-import { CompanyFormSchema } from '~/schemas/company.schemas';
-import { createCompany } from '~/queries/company.queries';
-import { createAddress } from '~/queries/address.queries';
+import { CompanyFormSchema } from '~/routes/companies/company.schemas';
+import { createCompany } from '~/routes/companies/queries/company.queries';
+import { createAddress } from '~/lib/address/address.queries';
 import { Form } from '~/components/ui/form';
 import {
 	FieldRoot,

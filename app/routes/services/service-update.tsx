@@ -14,8 +14,11 @@ import {
 	NumberFieldInput,
 	NumberFieldRoot,
 } from '~/components/ui/number-field';
-import { getService, updateService } from '~/queries/service.queries';
-import { ServiceFormSchema } from '~/schemas/service.schemas';
+import {
+	getService,
+	updateService,
+} from '~/routes/services/queries/service.queries';
+import { ServiceFormSchema } from '~/routes/services/service.schemas';
 import { useForm } from '~/hooks/useForm';
 import { parseFormData } from '~/utils/parseForm.utils';
 import type { Route } from './+types/service-update';
