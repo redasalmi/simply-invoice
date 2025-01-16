@@ -8,6 +8,7 @@ type SelectItem<T extends string> = Record<T, string> & { name: string };
 type SelectProps<T extends string> = {
 	name: string;
 	label: string;
+	defaultValue?: string | number | readonly string[];
 	className?: string;
 	itemIdKey: T;
 	items: Array<SelectItem<T>>;
@@ -19,6 +20,7 @@ export function Select<T extends string>({
 	name,
 	label,
 	className,
+	defaultValue,
 	itemIdKey,
 	items,
 	errorMessage,
@@ -45,6 +47,7 @@ export function Select<T extends string>({
 			<div className="relative">
 				<UISelect
 					name={name}
+					defaultValue={defaultValue}
 					aria-description={descriptionId}
 					aria-invalid={hasError || undefined}
 					data-invalid={hasError || undefined}

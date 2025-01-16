@@ -2,9 +2,9 @@ import * as v from 'valibot';
 import { ulid } from 'ulid';
 import { identifierTypesList, localesList } from '~/lib/constants';
 import { currencies } from '~/lib/currencies';
-import type { InvoiceService } from '~/types';
+import { invoiceServiceIntents } from './components/InvoiceServicesTable';
 
-export const CreateInvoiceLoaderSchema = v.object({
+export const InvoiceLoaderSchema = v.object({
 	companies: v.pipe(
 		v.array(
 			v.object({
@@ -48,6 +48,53 @@ export const CreateInvoiceLoaderSchema = v.object({
 		v.minValue(0, 'last ID must be greater than or equal to 0'),
 	),
 });
+
+const CreateOrUpdateInvoiceServiceFormSchema = v.object({
+	'invoice-service-id': v.pipe(v.string(), v.ulid()),
+	intent: v.picklist(
+		[invoiceServiceIntents.create, invoiceServiceIntents.update],
+		'Intent is required',
+	),
+	'invoice-id': v.pipe(v.string(), v.ulid()),
+	'service-id': v.pipe(v.string(), v.ulid('Service is required')),
+	quantity: v.pipe(
+		v.string('Quantity is required'),
+		v.decimal('Quantity is required'),
+		v.transform(Number),
+		v.minValue(0, 'Quantity must be greater than or equal to 0'),
+	),
+	'tax-id': v.pipe(v.string(), v.ulid('Tax is required')),
+});
+
+const DeleteInvoiceServiceFormSchema = v.object({
+	'invoice-service-id': v.pipe(v.string(), v.ulid()),
+	intent: v.literal(invoiceServiceIntents.delete, 'Intent is required'),
+});
+
+const InvoiceServiceFormSchema = v.pipe(
+	v.variant('intent', [
+		CreateOrUpdateInvoiceServiceFormSchema,
+		DeleteInvoiceServiceFormSchema,
+	]),
+	v.transform((input) => {
+		if (input.intent === invoiceServiceIntents.delete) {
+			return {
+				invoiceServiceId: input['invoice-service-id'],
+				intent: input.intent,
+			};
+		}
+
+		return {
+			invoiceServiceId: input['invoice-service-id'],
+			invoiceId: input['invoice-id'],
+			serviceId: input['service-id'],
+			quantity: Number(input.quantity),
+			taxId: input['tax-id'],
+			intent: input.intent,
+		};
+	}),
+);
+type InvoiceServiceFormInput = v.InferInput<typeof InvoiceServiceFormSchema>;
 
 export const InvoiceFormSchema = v.pipe(
 	v.looseObject({
@@ -102,105 +149,69 @@ export const InvoiceFormSchema = v.pipe(
 		const entries = Object.entries(dataset.value);
 		const invoiceId = dataset.value['invoice-id'] || ulid();
 
-		const servicesObject: Record<string, Partial<InvoiceService>> = {};
-		const issues: Array<{ key: string; message: string }> = [];
+		const services = Object.values(
+			entries.reduce(
+				(acc, entry) => {
+					const [key, value] = entry as [string, string];
+					if (!key.startsWith('invoice-service')) {
+						return acc;
+					}
 
-		for (let index = 0; index < entries.length; index++) {
-			const [key, value] = entries[index] as [string, string];
-			if (!key.startsWith('service-')) {
-				continue;
-			}
+					const [, index, parsedKey] = key.split('.') as [
+						string,
+						string,
+						keyof InvoiceServiceFormInput,
+					];
 
-			const splitKey = key.split('-');
-			const id = splitKey[splitKey.length - 1];
+					if (!acc[index]) {
+						acc[index] = {
+							[parsedKey]: value,
+							'invoice-id': invoiceId,
+						};
 
-			if (!servicesObject[id]) {
-				servicesObject[id] = {
-					invoiceId,
-				};
-			}
+						return acc;
+					}
 
-			if (key.includes('service-invoice-service-id')) {
-				servicesObject[id].invoiceServiceId = id;
-				const parsedInvoiceServiceId = v.safeParse(
-					v.pipe(v.string(), v.nonEmpty('Invoice service ID is required')),
-					value,
-				);
+					acc[index][parsedKey] = value;
 
-				if (parsedInvoiceServiceId.issues) {
-					parsedInvoiceServiceId.issues.forEach((issue) => {
-						issues.push({
-							key,
-							message: issue.message,
-						});
-					});
-				}
-			} else if (key.includes('service-service-id')) {
-				servicesObject[id].serviceId = value;
-				const parsedServiceId = v.safeParse(
-					v.pipe(v.string(), v.nonEmpty('Service is required')),
-					value,
-				);
+					return acc;
+				},
+				{} as Record<string, Partial<InvoiceServiceFormInput>>,
+			),
+		);
 
-				if (parsedServiceId.issues) {
-					parsedServiceId.issues.forEach((issue) => {
-						issues.push({
-							key,
-							message: issue.message,
-						});
-					});
-				}
-			} else if (key.includes('service-quantity')) {
-				servicesObject[id].quantity = Number(value);
-				const parsedQuantity = v.safeParse(
-					v.pipe(
-						v.string('Quantity is required'),
-						v.decimal('Quantity is required'),
-						v.transform(Number),
-						v.minValue(0, 'Quantity must be greater than or equal to 0'),
-					),
-					value,
-				);
+		const parsedServices = v.safeParse(
+			v.pipe(
+				v.array(InvoiceServiceFormSchema),
+				v.minLength(1, 'At least one service is required!'),
+				v.someItem(
+					(service) =>
+						service.intent === invoiceServiceIntents.create ||
+						service.intent === invoiceServiceIntents.update,
+					'At least one service is required!',
+				),
+			),
+			services,
+			{ abortPipeEarly: true },
+		);
 
-				if (parsedQuantity.issues) {
-					parsedQuantity.issues.forEach((issue) => {
-						issues.push({
-							key,
-							message: issue.message,
-						});
-					});
-				}
-			} else if (key.includes('service-tax-id')) {
-				servicesObject[id].taxId = value;
-				const parsedTaxId = v.safeParse(
-					v.pipe(v.string(), v.nonEmpty('Tax is required')),
-					value,
-				);
-
-				if (parsedTaxId.issues) {
-					parsedTaxId.issues.forEach((issue) => {
-						issues.push({
-							key,
-							message: issue.message,
-						});
-					});
-				}
-			}
-		}
-
-		if (issues.length) {
-			issues.forEach(({ key, message }) => {
+		if (parsedServices.issues) {
+			parsedServices.issues.forEach((issue) => {
 				addIssue({
-					message,
-					path: [
-						{
-							type: 'object',
-							origin: 'value',
-							input: dataset.value,
-							key: key,
-							value: dataset.value[key],
-						},
-					],
+					...issue,
+					path: issue.path
+						? [
+								{
+									...issue.path[0],
+									key: 'invoice-service',
+								},
+								...issue.path,
+							]
+						: [
+								{
+									key: 'invoice-service',
+								},
+							],
 				});
 			});
 
@@ -220,7 +231,6 @@ export const InvoiceFormSchema = v.pipe(
 			'total-amount': totalAmount,
 			note,
 		} = dataset.value;
-		const services = Object.values(servicesObject) as Array<InvoiceService>;
 
 		return {
 			invoiceId,
@@ -232,7 +242,7 @@ export const InvoiceFormSchema = v.pipe(
 			dueDate,
 			companyId,
 			customerId,
-			services,
+			services: parsedServices.output,
 			subtotalAmount,
 			totalAmount,
 			note,

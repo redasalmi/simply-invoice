@@ -7,9 +7,11 @@ import nextInvoicesQuery from '~/routes/invoices/queries/nextInvoicesQuery.sql?r
 import invoiceQuery from '~/routes/invoices/queries/invoiceQuery.sql?raw';
 import lastIncrementalInvoiceIdQuery from '~/routes/invoices/queries/lastIncrementalInvoiceIdQuery.sql?raw';
 import createInvoiceMutation from '~/routes/invoices/queries/createInvoiceMutation.sql?raw';
+import updateInvoiceMutation from '~/routes/invoices/queries/updateInvoiceMutation.sql?raw';
 import deleteInvoiceMutation from '~/routes/invoices/queries/deleteInvoiceMutation.sql?raw';
 import createInvoiceServiceMutation from '~/routes/invoices/queries/createInvoiceServiceMutation.sql?raw';
 import updateInvoiceServiceMutation from '~/routes/invoices/queries/updateInvoiceServiceMutation.sql?raw';
+import deleteInvoiceServiceMutation from '~/routes/invoices/queries/deleteInvoiceServiceMutation.sql?raw';
 import {
 	emptyResult,
 	itemsPerPage,
@@ -21,16 +23,33 @@ import type {
 	InvoiceService,
 	PaginatedResult,
 } from '~/types';
+import type { CountryCode } from '~/lib/countries';
+import type { IdentifierType, Locale } from '~/lib/constants';
 
-type InvoiceSelectResult = Pick<
-	Invoice,
-	'invoiceId' | 'identifier' | 'currencyCountryCode' | 'date'
-> & {
+type InvoicesQueryResult = {
+	invoiceId: string;
+	identifier: string;
+	currencyCountryCode: CountryCode;
+	date: string;
 	totalAmount: number;
 	customerEmail: string;
 };
 
-type InvoicesCountResult = [
+type InvoiceQueryResult = {
+	invoiceId: string;
+	identifier: string;
+	identifierType: IdentifierType;
+	locale: Locale;
+	currencyCountryCode: CountryCode;
+	date: string;
+	dueDate?: string;
+	companyId: string;
+	customerId: string;
+	note: string | null;
+	services: string;
+};
+
+type InvoicesCountQueryResult = [
 	{
 		'COUNT(invoice_id)': number;
 	},
@@ -42,7 +61,7 @@ type LastIncrementalInvoiceIdResult = [
 	},
 ];
 
-type PartialInvoice = Pick<
+type ParsedInvoicesQueryResult = Pick<
 	Invoice,
 	'invoiceId' | 'identifier' | 'currencyCountryCode' | 'date'
 > & {
@@ -50,9 +69,23 @@ type PartialInvoice = Pick<
 	cost: Pick<Invoice['cost'], 'totalAmount'>;
 };
 
-function parseInvoicesSelectResult(
-	invoicesData: Array<InvoiceSelectResult>,
-): Array<PartialInvoice> {
+type ParsedInvoiceQueryResult = Omit<
+	Invoice,
+	'company' | 'customer' | 'services' | 'cost' | 'createdAt' | 'updatedAt'
+> & {
+	companyId: string;
+	customerId: string;
+	services: Array<{
+		invoiceServiceId: string;
+		serviceId: string;
+		quantity: number;
+		taxId: string;
+	}>;
+};
+
+function parseInvoicesQueryResult(
+	invoicesData: Array<InvoicesQueryResult>,
+): Array<ParsedInvoicesQueryResult> {
 	return invoicesData.map((invoice) => ({
 		invoiceId: invoice.invoiceId,
 		identifier: invoice.identifier,
@@ -67,44 +100,56 @@ function parseInvoicesSelectResult(
 	}));
 }
 
+function parseInvoiceQueryResult(
+	invoiceData: InvoiceQueryResult,
+): ParsedInvoiceQueryResult {
+	const { note, services, ...invoice } = invoiceData;
+
+	return Object.assign({}, invoice, {
+		note: note ? JSON.parse(note) : undefined,
+		services: JSON.parse(services),
+	});
+}
+
 async function getInvoicesCount() {
 	const invoicesCount =
-		await window.db.select<InvoicesCountResult>(invoicesCountQuery);
+		await window.db.select<InvoicesCountQueryResult>(invoicesCountQuery);
 
 	return invoicesCount[0]['COUNT(invoice_id)'];
 }
 
 async function getPreviousInvoices(startCursor: string) {
-	return window.db.select<Array<InvoiceSelectResult>>(previousInvoicesQuery, [
+	return window.db.select<Array<InvoicesQueryResult>>(previousInvoicesQuery, [
 		startCursor,
 		itemsPerPage,
 	]);
 }
 
 async function getNextInvoices(endCursor: string) {
-	return window.db.select<Array<InvoiceSelectResult>>(nextInvoicesQuery, [
+	return window.db.select<Array<InvoicesQueryResult>>(nextInvoicesQuery, [
 		endCursor,
 		itemsPerPage,
 	]);
 }
 
 async function getFirstInvoices() {
-	return window.db.select<Array<InvoiceSelectResult>>(firstInvoicesQuery, [
+	return window.db.select<Array<InvoicesQueryResult>>(firstInvoicesQuery, [
 		itemsPerPage,
 	]);
 }
 
 async function getPreviousInvoicesCount(startCursor: string) {
-	const previousInvoicesCount = await window.db.select<InvoicesCountResult>(
-		previousInvoicesCountQuery,
-		[startCursor, itemsPerPage],
-	);
+	const previousInvoicesCount =
+		await window.db.select<InvoicesCountQueryResult>(
+			previousInvoicesCountQuery,
+			[startCursor, itemsPerPage],
+		);
 
 	return previousInvoicesCount[0]['COUNT(invoice_id)'];
 }
 
 async function getNextInvoicesCount(endCursor: string) {
-	const nextInvoicesCount = await window.db.select<InvoicesCountResult>(
+	const nextInvoicesCount = await window.db.select<InvoicesCountQueryResult>(
 		nextInvoicesCountQuery,
 		[endCursor, itemsPerPage],
 	);
@@ -115,7 +160,7 @@ async function getNextInvoicesCount(endCursor: string) {
 export async function getInvoices(
 	cursor: string | null,
 	paginationType: PaginationType | null,
-): Promise<PaginatedResult<PartialInvoice>> {
+): Promise<PaginatedResult<ParsedInvoicesQueryResult>> {
 	const [invoicesData, invoicesTotal] = await Promise.all([
 		cursor && paginationType
 			? paginationType === 'previous'
@@ -126,7 +171,7 @@ export async function getInvoices(
 	]);
 
 	if (!invoicesData.length) {
-		return emptyResult as PaginatedResult<PartialInvoice>;
+		return emptyResult as PaginatedResult<ParsedInvoicesQueryResult>;
 	}
 
 	const startCursor = invoicesData[0].invoiceId;
@@ -137,7 +182,7 @@ export async function getInvoices(
 		getNextInvoicesCount(endCursor),
 	]);
 
-	const invoices = parseInvoicesSelectResult(invoicesData);
+	const invoices = parseInvoicesQueryResult(invoicesData);
 
 	return {
 		items: invoices,
@@ -152,7 +197,7 @@ export async function getInvoices(
 }
 
 export async function getInvoice(invoiceId: string) {
-	const invoicesData = await window.db.select<Array<InvoiceSelectResult>>(
+	const invoicesData = await window.db.select<Array<InvoiceQueryResult>>(
 		invoiceQuery,
 		[invoiceId],
 	);
@@ -161,9 +206,9 @@ export async function getInvoice(invoiceId: string) {
 		return undefined;
 	}
 
-	const invoices = parseInvoicesSelectResult(invoicesData);
+	const invoice = parseInvoiceQueryResult(invoicesData[0]);
 
-	return invoices[0];
+	return invoice;
 }
 
 export async function getLastIncrementalInvoiceId() {
@@ -209,6 +254,40 @@ export async function createInvoice(invoice: createInvoiceInput) {
 	]);
 }
 
+type UpdateInvoiceInput = Pick<
+	Invoice,
+	| 'invoiceId'
+	| 'identifier'
+	| 'identifierType'
+	| 'locale'
+	| 'currencyCountryCode'
+	| 'date'
+	| 'dueDate'
+> & {
+	companyId: string;
+	customerId: string;
+	subtotalAmount: number;
+	totalAmount: number;
+	note?: string;
+};
+
+export async function updateInvoice(invoice: UpdateInvoiceInput) {
+	return window.db.execute(updateInvoiceMutation, [
+		invoice.identifier,
+		invoice.identifierType,
+		invoice.locale,
+		invoice.currencyCountryCode,
+		invoice.date,
+		invoice.dueDate,
+		invoice.companyId,
+		invoice.customerId,
+		invoice.subtotalAmount,
+		invoice.totalAmount,
+		invoice.note,
+		invoice.invoiceId,
+	]);
+}
+
 export async function deleteInvoice(invoiceId: string) {
 	return window.db.execute(deleteInvoiceMutation, [invoiceId]);
 }
@@ -244,4 +323,8 @@ export async function updateInvoiceService(
 		invoiceService.taxId,
 		invoiceService.invoiceServiceId,
 	]);
+}
+
+export async function deleteInvoiceService(invoiceServiceId: string) {
+	return window.db.execute(deleteInvoiceServiceMutation, [invoiceServiceId]);
 }

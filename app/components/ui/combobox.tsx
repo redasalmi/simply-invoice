@@ -19,6 +19,7 @@ type ComboboxProps<T> = {
 	name: string;
 	label: string;
 	hideLabel?: boolean;
+	defaultValue?: string;
 	placeholder?: string;
 	className?: string;
 	itemIdKey: keyof T;
@@ -32,6 +33,7 @@ export function Combobox<T>({
 	name,
 	label,
 	hideLabel,
+	defaultValue,
 	placeholder,
 	className,
 	itemIdKey,
@@ -43,7 +45,13 @@ export function Combobox<T>({
 	const descriptionId = useId();
 	const [query, setQuery] = useState('');
 	const [selectedItem, setSelectedItem] = useState<ComboboxItem<T> | null>(
-		null,
+		() => {
+			if (!defaultValue) {
+				return null;
+			}
+
+			return items.find((item) => item[itemIdKey] === defaultValue) || null;
+		},
 	);
 
 	const hasError = Boolean(errorMessage?.length);

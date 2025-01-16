@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useNavigation } from 'react-router';
+import { Link, useNavigation } from 'react-router';
 import { nanoid } from 'nanoid';
 import {
 	identifierTypes,
@@ -19,12 +19,15 @@ import {
 	FieldRoot,
 } from '~/components/ui/field';
 import { currencies } from '~/lib/currencies';
-import { InvoiceServicesTable } from '~/routes/invoices/components/InvoiceServicesTable';
+import {
+	invoiceServiceIntents,
+	InvoiceServicesTable,
+} from '~/routes/invoices/components/InvoiceServicesTable';
 import { useForm } from '~/hooks/useForm';
 import { InvoiceFormSchema } from '~/routes/invoices/invoice.schemas';
 import type { Route } from './+types/route';
 
-export function InvoiceCreateRoute({
+export function InvoiceUpdateRoute({
 	loaderData,
 	actionData,
 }: Route.ComponentProps) {
@@ -34,8 +37,10 @@ export function InvoiceCreateRoute({
 	const isLoading = navigation.state !== 'idle';
 	const isSubmitting = navigation.state === 'submitting';
 
-	const [invoiceId, setInvoiceId] = React.useState(
-		String((data?.lastIncrementalInvoiceId || 0) + 1),
+	const [invoiceId, setInvoiceId] = React.useState(() =>
+		data?.invoice?.identifier
+			? data.invoice.identifier
+			: String((data?.lastIncrementalInvoiceId || 0) + 1),
 	);
 
 	const { errors, resetErrors, handleSubmit } = useForm({
@@ -69,8 +74,52 @@ export function InvoiceCreateRoute({
 		);
 	}
 
-	const { companies, customers, services, taxes, lastIncrementalInvoiceId } =
-		data;
+	if (!data.invoice) {
+		return (
+			<section>
+				<div>
+					<p className="m-12">
+						Sorry, but no invoice with this ID was found! Please click{' '}
+						<Link
+							to="/invoices"
+							aria-label="invoices list"
+							className="hover:underline"
+						>
+							Here
+						</Link>{' '}
+						to navigate back to your invoice list.
+					</p>
+				</div>
+			</section>
+		);
+	}
+
+	const {
+		invoice,
+		companies,
+		customers,
+		services,
+		taxes,
+		lastIncrementalInvoiceId,
+	} = data;
+
+	const invoiceServicesList = invoice.services.map(
+		({ invoiceServiceId, serviceId, taxId, quantity }) => {
+			const serviceRate =
+				services.find((service) => service.serviceId === serviceId)?.rate || 0;
+			const taxRate = taxes.find((tax) => tax.taxId === taxId)?.rate || 0;
+
+			return {
+				invoiceServiceId,
+				serviceId,
+				serviceRate,
+				taxId,
+				taxRate,
+				quantity,
+				intent: invoiceServiceIntents.update,
+			};
+		},
+	);
 
 	const handleInvoiceIdTypeChange = (identifierType: IdentifierType) => {
 		let invoiceIdValue = '';
@@ -92,10 +141,13 @@ export function InvoiceCreateRoute({
 				onClearErrors={resetErrors}
 				onSubmit={handleSubmit}
 			>
+				<input type="hidden" name="invoice-id" value={invoice.invoiceId} />
+
 				<div className="my-4 flex gap-3">
 					<Select
 						name="identifier-type"
 						label="Invoice ID Type"
+						defaultValue={invoice.identifierType}
 						itemIdKey="id"
 						items={identifierTypesList}
 						onChange={(value) =>
@@ -115,6 +167,7 @@ export function InvoiceCreateRoute({
 					<Select
 						name="locale"
 						label="Language"
+						defaultValue={invoice.locale}
 						itemIdKey="id"
 						items={localesList}
 						onChange={resetErrors}
@@ -124,6 +177,7 @@ export function InvoiceCreateRoute({
 					<Combobox
 						name="currency-country-code"
 						label="Currency"
+						defaultValue={invoice.currencyCountryCode}
 						placeholder="Select a currency"
 						itemIdKey="id"
 						items={currencies}
@@ -135,13 +189,13 @@ export function InvoiceCreateRoute({
 				<div className="my-4 flex gap-3">
 					<FieldRoot name="date">
 						<FieldLabel>Date</FieldLabel>
-						<FieldControl type="date" />
+						<FieldControl type="date" defaultValue={invoice.date} />
 						<FieldError />
 					</FieldRoot>
 
 					<FieldRoot name="due-date">
 						<FieldLabel>Due date</FieldLabel>
-						<FieldControl type="date" />
+						<FieldControl type="date" defaultValue={invoice.dueDate} />
 						<FieldError />
 					</FieldRoot>
 				</div>
@@ -150,6 +204,7 @@ export function InvoiceCreateRoute({
 					<Combobox
 						name="company-id"
 						label="Company"
+						defaultValue={invoice.companyId}
 						placeholder="Select a company"
 						itemIdKey="companyId"
 						items={companies}
@@ -160,6 +215,7 @@ export function InvoiceCreateRoute({
 					<Combobox
 						name="customer-id"
 						label="Customer"
+						defaultValue={invoice.customerId}
 						placeholder="Select a customer"
 						itemIdKey="customerId"
 						items={customers}
@@ -174,19 +230,20 @@ export function InvoiceCreateRoute({
 						taxes={taxes}
 						errors={errors?.nested}
 						resetErrors={resetErrors}
+						invoiceServicesList={invoiceServicesList}
 					/>
 				</div>
 
 				<div className="my-4">
 					<p>Note</p>
-					<RichTextEditor name="note" />
+					<RichTextEditor name="note" initialValue={invoice.note} />
 				</div>
 
 				<div className="flex items-center gap-2">
 					<Button disabled={isSubmitting}>Preview Invoice</Button>
 					<Button disabled={isSubmitting}>Download Invoice</Button>
 					<Button type="submit" disabled={isSubmitting}>
-						{isLoading ? 'Saving Invoice...' : 'Save Invoice'}
+						{isLoading ? 'Updating Invoice...' : 'Update Invoice'}
 					</Button>
 				</div>
 			</Form>
