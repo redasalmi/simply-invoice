@@ -7,10 +7,10 @@ import {
 } from '~/lib/pagination';
 import type { PageInfo } from '~/types';
 
-type PaginationProps = {
+interface PaginationProps {
 	baseUrl: string;
 	pageInfo: PageInfo;
-};
+}
 
 export function Pagination({ baseUrl, pageInfo }: PaginationProps) {
 	const navigation = useNavigation();

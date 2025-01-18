@@ -14,10 +14,10 @@ import { renderAnnotation, renderDecorator, renderStyle } from './renderers';
 import './editor.css';
 
 type EditorValue = Array<PortableTextBlock>;
-type RichTextEditorProps = {
+interface RichTextEditorProps {
 	name: string;
 	initialValue?: EditorValue;
-};
+}
 
 export function RichTextEditor({ name, initialValue }: RichTextEditorProps) {
 	const [value, setValue] = useState<EditorValue | undefined>(

@@ -14,9 +14,9 @@ import {
 	ListOrderedIcon,
 } from 'lucide-react';
 
-export type SchemaDefinition = BaseDefinition & {
+export interface SchemaDefinition extends BaseDefinition {
 	icon: () => React.ReactNode;
-};
+}
 
 export const schemaDefinition = defineSchema({
 	decorators: [

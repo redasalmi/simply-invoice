@@ -18,7 +18,7 @@ export const invoiceServiceIntents = {
 } as const;
 export type InvoiceServiceIntent = keyof typeof invoiceServiceIntents;
 
-export type SelectedInvoiceService = {
+export interface SelectedInvoiceService {
 	invoiceServiceId: string;
 	serviceId: string;
 	serviceRate: number;
@@ -26,15 +26,15 @@ export type SelectedInvoiceService = {
 	taxRate: number;
 	quantity: number;
 	intent: InvoiceServiceIntent;
-};
+}
 
-type ServicesTablesProps = {
+interface ServicesTablesProps {
 	invoiceServicesList?: Array<SelectedInvoiceService>;
 	services: Array<Pick<Service, 'serviceId' | 'name' | 'rate'>>;
 	taxes: Array<Pick<Tax, 'taxId' | 'name' | 'rate'>>;
 	errors?: Record<string, [string, ...string[]] | undefined>;
 	resetErrors: () => void;
-};
+}
 
 export function InvoiceServicesTable({
 	invoiceServicesList,

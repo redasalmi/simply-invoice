@@ -14,12 +14,11 @@ import {
 	itemsPerPage,
 	type PaginationType,
 } from '~/lib/pagination';
-import type { Address, Company, PaginatedResult } from '~/types';
+import type { Company, DBCompany, PaginatedResult } from '~/types';
 
-type CompanySelectResult = Omit<Company, 'address' | 'additionalInformation'> &
-	Address & {
-		additionalInformation: string | null;
-	};
+interface CompanySelectResult extends Omit<DBCompany, 'addressId'> {
+	address: string;
+}
 
 type CompaniesCountResult = [
 	{
@@ -38,13 +37,7 @@ function parseCompaniesSelectResult(companiesData: Array<CompanySelectResult>) {
 			additionalInformation,
 			createdAt,
 			updatedAt,
-			addressId,
-			address1,
-			address2,
-			city,
-			country,
-			province,
-			zip,
+			address,
 		} = companiesData[index];
 
 		companies.push({
@@ -54,17 +47,9 @@ function parseCompaniesSelectResult(companiesData: Array<CompanySelectResult>) {
 			additionalInformation: additionalInformation
 				? JSON.parse(additionalInformation)
 				: undefined,
+			address: JSON.parse(address),
 			createdAt,
 			updatedAt,
-			address: {
-				addressId,
-				address1,
-				address2,
-				city,
-				country,
-				province,
-				zip,
-			},
 		});
 	}
 
@@ -176,10 +161,7 @@ export async function getCompany(companyId: string) {
 	return companies[0];
 }
 
-type CreateCompanyInput = Pick<Company, 'companyId' | 'name' | 'email'> & {
-	additionalInformation?: string;
-	addressId: string;
-};
+type CreateCompanyInput = Omit<DBCompany, 'createdAt' | 'updatedAt'>;
 
 export async function createCompany(company: CreateCompanyInput) {
 	return window.db.execute(createCompanyMutation, [
@@ -191,9 +173,10 @@ export async function createCompany(company: CreateCompanyInput) {
 	]);
 }
 
-type UpdateCompanyInput = Pick<Company, 'companyId' | 'name' | 'email'> & {
-	additionalInformation?: string;
-};
+type UpdateCompanyInput = Omit<
+	DBCompany,
+	'addressId' | 'createdAt' | 'updatedAt'
+>;
 
 export async function updateCompany(company: UpdateCompanyInput) {
 	return window.db.execute(updateCompanyMutation, [

@@ -24,11 +24,11 @@ export function dateFormatter(
 	return formatter;
 }
 
-type FormatMoneyInput = {
+interface FormatMoneyInput {
 	amount: number;
 	locale?: string;
 	options?: Intl.NumberFormatOptions;
-};
+}
 
 export function formatMoney({ amount, locale, options }: FormatMoneyInput) {
 	const country = options?.currency

@@ -5,7 +5,7 @@ import { cn } from '~/utils/shared.utils';
 
 type SelectItem<T extends string> = Record<T, string> & { name: string };
 
-type SelectProps<T extends string> = {
+interface SelectProps<T extends string> {
 	name: string;
 	label: string;
 	defaultValue?: string | number | readonly string[];
@@ -14,7 +14,7 @@ type SelectProps<T extends string> = {
 	items: Array<SelectItem<T>>;
 	errorMessage?: string;
 	onChange?: (value: string) => void;
-};
+}
 
 export function Select<T extends string>({
 	name,

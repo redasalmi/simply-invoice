@@ -1,10 +1,10 @@
 import { Link, NavLink } from 'react-router';
 import { cn } from '~/utils/shared.utils';
 
-type SideBarLinkProps = {
+interface SideBarLinkProps {
 	to: string;
 	children: React.ReactNode;
-};
+}
 
 function NavItem({ to, children }: SideBarLinkProps) {
 	return (

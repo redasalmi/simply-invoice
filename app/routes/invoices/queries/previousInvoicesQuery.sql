@@ -2,8 +2,8 @@ SELECT i.invoice_id as invoiceId,
   i.identifier,
   i.currency_country_code as currencyCountryCode,
   i.date,
-  i.total_amount as totalAmount,
-  c.email as customerEmail
+  json_object('totalAmount', i.total_amount) cost,
+  json_object('email', c.email) customer
 FROM (
     SELECT i.invoice_id,
       i.identifier,

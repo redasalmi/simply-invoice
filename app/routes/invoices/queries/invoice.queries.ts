@@ -19,35 +19,28 @@ import {
 } from '~/lib/pagination';
 import type {
 	Customer,
+	DBInvoice,
+	DBInvoiceService,
 	Invoice,
-	InvoiceService,
 	PaginatedResult,
 } from '~/types';
-import type { CountryCode } from '~/lib/countries';
-import type { IdentifierType, Locale } from '~/lib/constants';
 
-type InvoicesQueryResult = {
-	invoiceId: string;
-	identifier: string;
-	currencyCountryCode: CountryCode;
-	date: string;
-	totalAmount: number;
-	customerEmail: string;
-};
+interface InvoicesQueryResult
+	extends Pick<
+		DBInvoice,
+		'invoiceId' | 'identifier' | 'currencyCountryCode' | 'date'
+	> {
+	cost: string;
+	customer: string;
+}
 
-type InvoiceQueryResult = {
-	invoiceId: string;
-	identifier: string;
-	identifierType: IdentifierType;
-	locale: Locale;
-	currencyCountryCode: CountryCode;
-	date: string;
-	dueDate?: string;
-	companyId: string;
-	customerId: string;
-	note: string | null;
+interface InvoiceQueryResult
+	extends Omit<
+		DBInvoice,
+		'subtotalAmount' | 'totalAmount' | 'createdAt' | 'updatedAt'
+	> {
 	services: string;
-};
+}
 
 type InvoicesCountQueryResult = [
 	{
@@ -61,18 +54,20 @@ type LastIncrementalInvoiceIdResult = [
 	},
 ];
 
-type ParsedInvoicesQueryResult = Pick<
-	Invoice,
-	'invoiceId' | 'identifier' | 'currencyCountryCode' | 'date'
-> & {
+interface ParsedInvoicesQueryResult
+	extends Pick<
+		Invoice,
+		'invoiceId' | 'identifier' | 'currencyCountryCode' | 'date'
+	> {
 	customer: Pick<Customer, 'email'>;
 	cost: Pick<Invoice['cost'], 'totalAmount'>;
-};
+}
 
-type ParsedInvoiceQueryResult = Omit<
-	Invoice,
-	'company' | 'customer' | 'services' | 'cost' | 'createdAt' | 'updatedAt'
-> & {
+interface ParsedInvoiceQueryResult
+	extends Omit<
+		Invoice,
+		'company' | 'customer' | 'services' | 'cost' | 'createdAt' | 'updatedAt'
+	> {
 	companyId: string;
 	customerId: string;
 	services: Array<{
@@ -81,23 +76,21 @@ type ParsedInvoiceQueryResult = Omit<
 		quantity: number;
 		taxId: string;
 	}>;
-};
+}
 
 function parseInvoicesQueryResult(
 	invoicesData: Array<InvoicesQueryResult>,
 ): Array<ParsedInvoicesQueryResult> {
-	return invoicesData.map((invoice) => ({
-		invoiceId: invoice.invoiceId,
-		identifier: invoice.identifier,
-		currencyCountryCode: invoice.currencyCountryCode,
-		date: invoice.date,
-		customer: {
-			email: invoice.customerEmail,
-		},
-		cost: {
-			totalAmount: invoice.totalAmount,
-		},
-	}));
+	return invoicesData.map(
+		({ invoiceId, identifier, currencyCountryCode, date, customer, cost }) => ({
+			invoiceId,
+			identifier,
+			currencyCountryCode,
+			date,
+			customer: JSON.parse(customer),
+			cost: JSON.parse(cost),
+		}),
+	);
 }
 
 function parseInvoiceQueryResult(
@@ -220,22 +213,7 @@ export async function getLastIncrementalInvoiceId() {
 	return Number(lastId || 0);
 }
 
-type createInvoiceInput = Pick<
-	Invoice,
-	| 'invoiceId'
-	| 'identifier'
-	| 'identifierType'
-	| 'locale'
-	| 'currencyCountryCode'
-	| 'date'
-	| 'dueDate'
-> & {
-	companyId: string;
-	customerId: string;
-	subtotalAmount: number;
-	totalAmount: number;
-	note?: string;
-};
+type createInvoiceInput = Omit<DBInvoice, 'createdAt' | 'updatedAt'>;
 
 export async function createInvoice(invoice: createInvoiceInput) {
 	return window.db.execute(createInvoiceMutation, [
@@ -254,22 +232,7 @@ export async function createInvoice(invoice: createInvoiceInput) {
 	]);
 }
 
-type UpdateInvoiceInput = Pick<
-	Invoice,
-	| 'invoiceId'
-	| 'identifier'
-	| 'identifierType'
-	| 'locale'
-	| 'currencyCountryCode'
-	| 'date'
-	| 'dueDate'
-> & {
-	companyId: string;
-	customerId: string;
-	subtotalAmount: number;
-	totalAmount: number;
-	note?: string;
-};
+type UpdateInvoiceInput = Omit<DBInvoice, 'createdAt' | 'updatedAt'>;
 
 export async function updateInvoice(invoice: UpdateInvoiceInput) {
 	return window.db.execute(updateInvoiceMutation, [
@@ -293,7 +256,7 @@ export async function deleteInvoice(invoiceId: string) {
 }
 
 type CreateInvoiceServiceInput = Omit<
-	InvoiceService,
+	DBInvoiceService,
 	'createdAt' | 'updatedAt'
 >;
 
@@ -310,7 +273,7 @@ export async function createInvoiceService(
 }
 
 type UpdateInvoiceServiceInput = Omit<
-	InvoiceService,
+	DBInvoiceService,
 	'invoiceId' | 'createdAt' | 'updatedAt'
 >;
 

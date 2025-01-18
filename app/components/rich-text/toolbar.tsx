@@ -11,10 +11,10 @@ import { cn } from '~/utils/shared.utils';
 
 import { schemaDefinition, type SchemaDefinition } from './schema';
 
-type ToolbarButtonProps = SchemaDefinition & {
+interface ToolbarButtonProps extends SchemaDefinition {
 	active: boolean;
 	onClick: () => void;
-};
+}
 
 function ToolbarButton({ name, icon, active, onClick }: ToolbarButtonProps) {
 	const editor = useEditor();

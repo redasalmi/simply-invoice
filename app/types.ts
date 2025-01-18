@@ -2,7 +2,7 @@ import type { PortableTextBlock } from '@portabletext/editor';
 import type { IdentifierType, Locale } from '~/lib/constants';
 import type { CountryCode } from '~/lib/countries';
 
-export type Address = {
+export interface Address {
 	addressId: string;
 	address1: string;
 	address2?: string;
@@ -10,55 +10,84 @@ export type Address = {
 	country: string;
 	province?: string;
 	zip?: string;
-};
+	createdAt: string;
+	updatedAt?: string;
+}
 
-export type Company = {
+export interface DBCompany {
 	companyId: string;
 	name: string;
 	email: string;
-	address: Address;
-	additionalInformation?: Array<PortableTextBlock>;
+	additionalInformation?: string;
+	addressId: string;
 	createdAt: string;
 	updatedAt?: string;
-};
+}
 
-export type Customer = {
+export interface Company
+	extends Omit<DBCompany, 'additionalInformation' | 'addressId'> {
+	additionalInformation?: Array<PortableTextBlock>;
+	address: Address;
+}
+
+export interface DBCustomer {
 	customerId: string;
 	name: string;
 	email: string;
-	address: Address;
-	additionalInformation?: Array<PortableTextBlock>;
+	additionalInformation?: string;
+	addressId: string;
 	createdAt: string;
 	updatedAt?: string;
-};
+}
 
-export type Service = {
+export interface Customer
+	extends Omit<DBCustomer, 'additionalInformation' | 'addressId'> {
+	additionalInformation?: Array<PortableTextBlock>;
+	address: Address;
+}
+
+export interface Service {
 	serviceId: string;
 	name: string;
 	description?: string;
 	rate: number;
 	createdAt: string;
 	updatedAt?: string;
-};
+}
 
-export type Tax = {
+export interface Tax {
 	taxId: string;
 	name: string;
 	rate: number;
 	createdAt: string;
 	updatedAt?: string;
-};
+}
 
-export type Invoice = {
+export interface DBInvoice {
 	invoiceId: string;
 	identifier: string;
 	identifierType: IdentifierType;
 	locale: Locale;
 	currencyCountryCode: CountryCode;
-
 	date: string;
 	dueDate?: string;
+	companyId: string;
+	customerId: string;
+	subtotalAmount: number;
+	totalAmount: number;
+	note?: string;
+	createdAt: string;
+	updatedAt?: string;
+}
 
+export interface Invoice {
+	invoiceId: string;
+	identifier: string;
+	identifierType: IdentifierType;
+	locale: Locale;
+	currencyCountryCode: CountryCode;
+	date: string;
+	dueDate?: string;
 	company: Company;
 	customer: Customer;
 	services: Array<{
@@ -67,38 +96,47 @@ export type Invoice = {
 		quantity: number;
 		tax: Tax;
 	}>;
-
-	// TODO: this calculation could be done using an aggregation I guess
 	cost: {
 		subtotalAmount: number;
 		totalAmount: number;
 	};
-
 	note?: Array<PortableTextBlock>;
 	createdAt: string;
 	updatedAt?: string;
-};
+}
 
-export type InvoiceService = {
+export interface DBInvoiceService {
 	invoiceServiceId: string;
 	invoiceId: string;
 	serviceId: string;
 	quantity: number;
 	taxId: string;
-};
+	createdAt: string;
+	updatedAt?: string;
+}
 
-export type PageInfo = {
+export interface InvoiceService {
+	invoiceServiceId: string;
+	service: Service;
+	invoiceId: string;
+	quantity: number;
+	tax: Tax;
+	createdAt: string;
+	updatedAt?: string;
+}
+
+export interface PageInfo {
 	endCursor?: string;
 	hasNextPage: boolean;
 	hasPreviousPage: boolean;
 	startCursor?: string;
-};
+}
 
-export type PaginatedResult<T> = {
+export interface PaginatedResult<T> {
 	items: T[];
 	total: number;
 	pageInfo: PageInfo;
-};
+}
 
 export type StringReplace<
 	TString extends string,

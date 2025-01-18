@@ -21,7 +21,7 @@ import { cn } from '~/utils/shared.utils';
 type PartialService = Pick<Service, 'serviceId' | 'name' | 'rate'>;
 type PartialTax = Pick<Tax, 'taxId' | 'name' | 'rate'>;
 
-type ServiceRowProps = {
+interface ServiceRowProps {
 	invoiceService: SelectedInvoiceService;
 	services: Array<PartialService>;
 	taxes: Array<PartialTax>;
@@ -29,7 +29,7 @@ type ServiceRowProps = {
 	updateService: (service: SelectedInvoiceService) => void;
 	deleteService: () => void;
 	errors?: Record<string, [string, ...string[]] | undefined>;
-};
+}
 
 export function InvoiceServiceRow({
 	invoiceService,

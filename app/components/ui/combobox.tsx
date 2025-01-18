@@ -15,7 +15,7 @@ export type ComboboxItem<T> = T & {
 	name: string;
 };
 
-type ComboboxProps<T> = {
+interface ComboboxProps<T> {
 	name: string;
 	label: string;
 	hideLabel?: boolean;
@@ -27,7 +27,7 @@ type ComboboxProps<T> = {
 	renderItemName?: (item: T) => React.ReactNode;
 	errorMessage?: string;
 	onChange?: (value: ComboboxItem<T> | null) => void;
-};
+}
 
 export function Combobox<T>({
 	name,

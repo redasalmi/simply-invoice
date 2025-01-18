@@ -7,8 +7,8 @@ import {
 	updateInvoiceService,
 	deleteInvoiceService,
 } from '~/routes/invoices/queries/invoice.queries';
+import { invoiceServiceIntents } from '~/routes/invoices/components/InvoiceServicesTable';
 import type { Route } from './+types/route';
-import { invoiceServiceIntents } from '../components/InvoiceServicesTable';
 
 export async function clientAction({ request }: Route.ClientActionArgs) {
 	const formData = await request.formData();

@@ -14,15 +14,11 @@ import {
 	itemsPerPage,
 	type PaginationType,
 } from '~/lib/pagination';
-import type { Address, Customer, PaginatedResult } from '~/types';
+import type { Customer, DBCustomer, PaginatedResult } from '~/types';
 
-type CustomerSelectResult = Omit<
-	Customer,
-	'address' | 'additionalInformation'
-> &
-	Address & {
-		additionalInformation: string | null;
-	};
+interface CustomerSelectResult extends Omit<DBCustomer, 'addressId'> {
+	address: string;
+}
 
 type CustomersCountResult = [
 	{
@@ -43,13 +39,7 @@ function parseCustomersSelectResult(
 			additionalInformation,
 			createdAt,
 			updatedAt,
-			addressId,
-			address1,
-			address2,
-			city,
-			country,
-			province,
-			zip,
+			address,
 		} = customersData[index];
 
 		customers.push({
@@ -59,17 +49,9 @@ function parseCustomersSelectResult(
 			additionalInformation: additionalInformation
 				? JSON.parse(additionalInformation)
 				: undefined,
+			address: JSON.parse(address),
 			createdAt,
 			updatedAt,
-			address: {
-				addressId,
-				address1,
-				address2,
-				city,
-				country,
-				province,
-				zip,
-			},
 		});
 	}
 
@@ -181,10 +163,7 @@ export async function getCustomer(customerId: string) {
 	return customers[0];
 }
 
-type CreateCustomerInput = Pick<Customer, 'customerId' | 'name' | 'email'> & {
-	additionalInformation?: string;
-	addressId: string;
-};
+type CreateCustomerInput = Omit<DBCustomer, 'createdAt' | 'updatedAt'>;
 
 export async function createCustomer(customer: CreateCustomerInput) {
 	return window.db.execute(createCustomerMutation, [
@@ -196,9 +175,10 @@ export async function createCustomer(customer: CreateCustomerInput) {
 	]);
 }
 
-type UpdateCustomerInput = Pick<Customer, 'customerId' | 'name' | 'email'> & {
-	additionalInformation?: string;
-};
+type UpdateCustomerInput = Omit<
+	DBCustomer,
+	'addressId' | 'createdAt' | 'updatedAt'
+>;
 
 export async function updateCustomer(customer: UpdateCustomerInput) {
 	return window.db.execute(updateCustomerMutation, [

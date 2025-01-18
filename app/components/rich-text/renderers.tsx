@@ -1,7 +1,7 @@
-import {
-	type RenderAnnotationFunction,
-	type RenderDecoratorFunction,
-	type RenderStyleFunction,
+import type {
+	RenderAnnotationFunction,
+	RenderDecoratorFunction,
+	RenderStyleFunction,
 } from '@portabletext/editor';
 
 export const renderDecorator: RenderDecoratorFunction = ({
