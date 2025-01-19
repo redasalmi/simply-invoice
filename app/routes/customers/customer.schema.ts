@@ -1,15 +1,16 @@
 import * as v from 'valibot';
 import { ulid } from 'ulid';
 import { AddressFormSchema } from '~/lib/address/address.schemas';
+import { requiredEmail, requiredName, requiredValidEmail } from '~/lib/errors';
 
 export const CustomerFormSchema = v.pipe(
 	v.object({
 		'customer-id': v.optional(v.pipe(v.string(), v.ulid())),
-		'customer-name': v.pipe(v.string(), v.nonEmpty('Name is required')),
+		'customer-name': v.pipe(v.string(requiredName), v.nonEmpty(requiredName)),
 		'customer-email': v.pipe(
-			v.string(),
-			v.nonEmpty('Email is required'),
-			v.email('A valid email is required'),
+			v.string(requiredEmail),
+			v.nonEmpty(requiredEmail),
+			v.email(requiredValidEmail),
 		),
 		'customer-additional-information': v.optional(v.string()),
 		...AddressFormSchema.entries,

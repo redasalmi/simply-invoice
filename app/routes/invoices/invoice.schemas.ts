@@ -3,49 +3,77 @@ import { ulid } from 'ulid';
 import { identifierTypesList, localesList } from '~/lib/constants';
 import { currencies } from '~/lib/currencies';
 import { invoiceServiceIntents } from './components/InvoiceServicesTable';
+import {
+	dueDateGteToDate,
+	lastIncrementalInvoiceIdGteToZero,
+	oneCompanyAtLeast,
+	oneCustomerAtLeast,
+	oneServiceAtLeast,
+	oneTaxAtLeast,
+	quantityGteToZero,
+	requiredAtLeastOneService,
+	requiredCompany,
+	requiredCurrencyCountryCode,
+	requiredCustomer,
+	requiredDate,
+	requiredIntent,
+	requiredInvoiceId,
+	requiredInvoiceIdType,
+	requiredInvoiceServiceId,
+	requiredLanguage,
+	requiredLastIncrementalInvoiceId,
+	requiredName,
+	requiredQuantity,
+	requiredService,
+	requiredSubtotalAmount,
+	requiredTax,
+	requiredTotalAmount,
+	subtotalAmountGteToZero,
+	totalAmountGteToZero,
+} from '~/lib/errors';
 
 export const InvoiceLoaderSchema = v.object({
 	companies: v.pipe(
 		v.array(
 			v.object({
 				companyId: v.pipe(v.string(), v.ulid()),
-				name: v.pipe(v.string(), v.nonEmpty('Name is required')),
+				name: v.pipe(v.string(requiredName), v.nonEmpty(requiredName)),
 			}),
 		),
-		v.minLength(1, 'At least one company must be available!'),
+		v.minLength(1, oneCompanyAtLeast),
 	),
 	customers: v.pipe(
 		v.array(
 			v.object({
 				customerId: v.pipe(v.string(), v.ulid()),
-				name: v.pipe(v.string(), v.nonEmpty('Name is required')),
+				name: v.pipe(v.string(requiredName), v.nonEmpty(requiredName)),
 			}),
 		),
-		v.minLength(1, 'At least one customer must be available!'),
+		v.minLength(1, oneCustomerAtLeast),
 	),
 	services: v.pipe(
 		v.array(
 			v.object({
 				serviceId: v.pipe(v.string(), v.ulid()),
-				name: v.pipe(v.string(), v.nonEmpty('Name is required')),
+				name: v.pipe(v.string(requiredName), v.nonEmpty(requiredName)),
 				rate: v.number(),
 			}),
 		),
-		v.minLength(1, 'At least one service must be available!'),
+		v.minLength(1, oneServiceAtLeast),
 	),
 	taxes: v.pipe(
 		v.array(
 			v.object({
 				taxId: v.pipe(v.string(), v.ulid()),
-				name: v.pipe(v.string(), v.nonEmpty('Name is required')),
+				name: v.pipe(v.string(requiredName), v.nonEmpty(requiredName)),
 				rate: v.number(),
 			}),
 		),
-		v.minLength(1, 'At least one tax must be available!'),
+		v.minLength(1, oneTaxAtLeast),
 	),
 	lastIncrementalInvoiceId: v.pipe(
-		v.number('lastIncrementalInvoiceId is required'),
-		v.minValue(0, 'last ID must be greater than or equal to 0'),
+		v.number(requiredLastIncrementalInvoiceId),
+		v.minValue(0, lastIncrementalInvoiceIdGteToZero),
 	),
 });
 
@@ -53,22 +81,25 @@ const CreateOrUpdateInvoiceServiceFormSchema = v.object({
 	'invoice-service-id': v.pipe(v.string(), v.ulid()),
 	intent: v.picklist(
 		[invoiceServiceIntents.create, invoiceServiceIntents.update],
-		'Intent is required',
+		requiredIntent,
 	),
-	'invoice-id': v.pipe(v.string(), v.ulid()),
-	'service-id': v.pipe(v.string(), v.ulid('Service is required')),
+	'invoice-id': v.pipe(v.string(requiredInvoiceId), v.ulid(requiredInvoiceId)),
+	'service-id': v.pipe(v.string(requiredService), v.ulid(requiredService)),
 	quantity: v.pipe(
-		v.string('Quantity is required'),
-		v.decimal('Quantity is required'),
+		v.string(requiredQuantity),
+		v.decimal(requiredQuantity),
 		v.transform(Number),
-		v.minValue(0, 'Quantity must be greater than or equal to 0'),
+		v.minValue(0, quantityGteToZero),
 	),
-	'tax-id': v.pipe(v.string(), v.ulid('Tax is required')),
+	'tax-id': v.pipe(v.string(requiredTax), v.ulid(requiredTax)),
 });
 
 const DeleteInvoiceServiceFormSchema = v.object({
-	'invoice-service-id': v.pipe(v.string(), v.ulid()),
-	intent: v.literal(invoiceServiceIntents.delete, 'Intent is required'),
+	'invoice-service-id': v.pipe(
+		v.string(requiredInvoiceServiceId),
+		v.ulid(requiredInvoiceServiceId),
+	),
+	intent: v.literal(invoiceServiceIntents.delete, requiredIntent),
 });
 
 const InvoiceServiceFormSchema = v.pipe(
@@ -99,34 +130,43 @@ type InvoiceServiceFormInput = v.InferInput<typeof InvoiceServiceFormSchema>;
 export const InvoiceFormSchema = v.pipe(
 	v.looseObject({
 		'invoice-id': v.optional(v.pipe(v.string(), v.ulid())),
-		identifier: v.pipe(v.string(), v.nonEmpty('Invoice ID is required')),
+		identifier: v.pipe(
+			v.string(requiredInvoiceId),
+			v.nonEmpty(requiredInvoiceId),
+		),
 		'identifier-type': v.picklist(
 			identifierTypesList.map(({ id }) => id),
-			'Invoice ID type is required',
+			requiredInvoiceIdType,
 		),
 		locale: v.picklist(
 			localesList.map(({ id }) => id),
-			'Language is required',
+			requiredLanguage,
 		),
 		'currency-country-code': v.picklist(
 			currencies.map(({ id }) => id),
-			'Currency is required',
+			requiredCurrencyCountryCode,
 		),
-		date: v.pipe(v.string(), v.isoDate('Date is required')),
+		date: v.pipe(v.string(requiredDate), v.isoDate(requiredDate)),
 		'due-date': v.optional(v.string()),
-		'company-id': v.pipe(v.string(), v.nonEmpty('Company is required')),
-		'customer-id': v.pipe(v.string(), v.nonEmpty('Customer is required')),
+		'company-id': v.pipe(
+			v.string(requiredCompany),
+			v.nonEmpty(requiredCompany),
+		),
+		'customer-id': v.pipe(
+			v.string(requiredCustomer),
+			v.nonEmpty(requiredCustomer),
+		),
 		'subtotal-amount': v.pipe(
-			v.string('Subtotal amount is required'),
-			v.decimal('Subtotal amount is required'),
+			v.string(requiredSubtotalAmount),
+			v.decimal(requiredSubtotalAmount),
 			v.transform(Number),
-			v.minValue(0, 'Subtotal amount must be greater than or equal to 0'),
+			v.minValue(0, subtotalAmountGteToZero),
 		),
 		'total-amount': v.pipe(
-			v.string('Total amount is required'),
-			v.decimal('Total amount is required'),
+			v.string(requiredTotalAmount),
+			v.decimal(requiredTotalAmount),
 			v.transform(Number),
-			v.minValue(0, 'Total amount must be greater than or equal to 0'),
+			v.minValue(0, totalAmountGteToZero),
 		),
 		note: v.optional(v.string()),
 	}),
@@ -141,7 +181,7 @@ export const InvoiceFormSchema = v.pipe(
 
 				return new Date(date) <= new Date(dueDate);
 			},
-			'Due Date must be bigger than or equal to the invoice date',
+			dueDateGteToDate,
 		),
 		['due-date'],
 	),
@@ -183,12 +223,12 @@ export const InvoiceFormSchema = v.pipe(
 		const parsedServices = v.safeParse(
 			v.pipe(
 				v.array(InvoiceServiceFormSchema),
-				v.minLength(1, 'At least one service is required!'),
+				v.minLength(1, requiredAtLeastOneService),
 				v.someItem(
 					(service) =>
 						service.intent === invoiceServiceIntents.create ||
 						service.intent === invoiceServiceIntents.update,
-					'At least one service is required!',
+					requiredAtLeastOneService,
 				),
 			),
 			services,
