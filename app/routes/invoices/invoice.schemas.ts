@@ -78,7 +78,10 @@ export const InvoiceLoaderSchema = v.object({
 });
 
 const CreateOrUpdateInvoiceServiceFormSchema = v.object({
-	'invoice-service-id': v.pipe(v.string(), v.ulid()),
+	'invoice-service-id': v.pipe(
+		v.string(requiredInvoiceServiceId),
+		v.ulid(requiredInvoiceServiceId),
+	),
 	intent: v.picklist(
 		[invoiceServiceIntents.create, invoiceServiceIntents.update],
 		requiredIntent,
@@ -125,7 +128,6 @@ const InvoiceServiceFormSchema = v.pipe(
 		};
 	}),
 );
-type InvoiceServiceFormInput = v.InferInput<typeof InvoiceServiceFormSchema>;
 
 export const InvoiceFormSchema = v.pipe(
 	v.looseObject({
@@ -200,7 +202,7 @@ export const InvoiceFormSchema = v.pipe(
 					const [, index, parsedKey] = key.split('.') as [
 						string,
 						string,
-						keyof InvoiceServiceFormInput,
+						string,
 					];
 
 					if (!acc[index]) {
@@ -216,7 +218,7 @@ export const InvoiceFormSchema = v.pipe(
 
 					return acc;
 				},
-				{} as Record<string, Partial<InvoiceServiceFormInput>>,
+				{} as Record<string, Record<string, string>>,
 			),
 		);
 
@@ -239,7 +241,7 @@ export const InvoiceFormSchema = v.pipe(
 			parsedServices.issues.forEach((issue) => {
 				addIssue({
 					...issue,
-					path: issue.path
+					path: issue.path?.length
 						? [
 								{
 									...issue.path[0],

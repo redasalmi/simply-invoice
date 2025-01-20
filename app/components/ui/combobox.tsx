@@ -1,4 +1,4 @@
-import React, { useId, useState } from 'react';
+import { useId, useState } from 'react';
 import {
 	Field,
 	Label,
@@ -24,9 +24,15 @@ interface ComboboxProps<T> {
 	className?: string;
 	itemIdKey: keyof T;
 	items: Array<ComboboxItem<T>>;
-	renderItemName?: (item: T) => React.ReactNode;
+	renderItemName?: (item: T) => string;
 	errorMessage?: string;
 	onChange?: (value: ComboboxItem<T> | null) => void;
+}
+
+function isComboboxItem<T>(x: unknown): x is ComboboxItem<T> {
+	return Boolean(
+		typeof x === 'object' && x && 'name' in x && typeof x.name === 'string',
+	);
 }
 
 export function Combobox<T>({
@@ -71,6 +77,14 @@ export function Combobox<T>({
 		}
 	};
 
+	const displayValue = (item: ComboboxItem<T> | unknown) => {
+		if (!item || !isComboboxItem(item)) {
+			return '';
+		}
+
+		return renderItemName ? renderItemName(item as ComboboxItem<T>) : item.name;
+	};
+
 	return (
 		<Field className={className}>
 			<input
@@ -102,9 +116,7 @@ export function Combobox<T>({
 							'block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500',
 							'data-[invalid]:bg-red-50 data-[invalid]:text-red-900 data-[invalid]:placeholder-red-700 data-[invalid]:focus:border-red-500 data-[invalid]:focus:ring-red-500 data-[invalid="true"]:border-red-500',
 						)}
-						displayValue={(item) =>
-							item && renderItemName ? renderItemName(item as T) : item?.name
-						}
+						displayValue={displayValue}
 						onChange={(event) => setQuery(event.target.value)}
 					/>
 
