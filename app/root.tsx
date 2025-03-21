@@ -22,6 +22,9 @@ export async function clientLoader() {
 	};
 }
 
+// TODO look into hydrating client loaders
+// clientLoader.hydrate = true as const;
+
 function Page({ children }: { children: React.ReactNode }) {
 	const loaderData = useLoaderData() as Route.ComponentProps['loaderData'];
 	const { dbAvailable, storeAvailable } = loaderData || {};
