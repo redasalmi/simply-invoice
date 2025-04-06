@@ -7,10 +7,10 @@ import {
 	ScrollRestoration,
 	useLoaderData,
 } from 'react-router';
+import { Button } from '~/components/ui/button';
 import { SaveDBPath } from '~/components/SaveDBPath';
 import { LoadDB } from '~/components/LoadDB';
 import { Sidebar } from '~/components/Sidebar';
-import { Spinner } from '~/components/Spinner';
 import '~/inter.css';
 import '~/tailwind.css';
 import type { Route } from './+types/root';
@@ -21,9 +21,6 @@ export async function clientLoader() {
 		dbAvailable: Boolean(window.db),
 	};
 }
-
-// TODO look into hydrating client loaders
-// clientLoader.hydrate = true as const;
 
 function Page({ children }: { children: React.ReactNode }) {
 	const loaderData = useLoaderData() as Route.ComponentProps['loaderData'];
@@ -42,6 +39,9 @@ function Page({ children }: { children: React.ReactNode }) {
 		return (
 			<main>
 				<p>Something went wrong, please restart the application</p>
+				<Button onClick={() => window.location.reload()}>
+					Restart Application
+				</Button>
 			</main>
 		);
 	}
@@ -83,13 +83,4 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
 export default function App() {
 	return <Outlet />;
-}
-
-export function HydrateFallback() {
-	return (
-		<div className="flex h-lvh w-lvw items-center justify-center">
-			<p>loading the app...</p>
-			<Spinner />
-		</div>
-	);
 }
