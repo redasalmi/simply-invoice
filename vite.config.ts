@@ -4,13 +4,11 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 import { defineConfig } from 'vite';
 import babel from 'vite-plugin-babel';
 import { visualizer } from 'rollup-plugin-visualizer';
-import { reactRouterDevTools } from 'react-router-devtools';
 
 const host = process.env.TAURI_DEV_HOST;
 
 export default defineConfig({
 	plugins: [
-		reactRouterDevTools(),
 		tailwindcss(),
 		reactRouter(),
 		tsconfigPaths(),
