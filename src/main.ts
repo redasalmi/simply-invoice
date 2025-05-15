@@ -1,5 +1,5 @@
 import path from "node:path";
-import { BrowserWindow, app } from "electron";
+import { BrowserWindow, app, ipcMain } from "electron";
 import started from "electron-squirrel-startup";
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -25,6 +25,12 @@ const createWindow = () => {
 			path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`),
 		);
 	}
+
+	ipcMain.on("set-title", (event, title: string) => {
+		const webContents = event.sender;
+		const win = BrowserWindow.fromWebContents(webContents);
+		win?.setTitle(title);
+	});
 
 	// Open the DevTools.
 	mainWindow.webContents.openDevTools();
