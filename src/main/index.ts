@@ -1,13 +1,12 @@
 import { join } from "node:path";
 import { electronApp, is, optimizer } from "@electron-toolkit/utils";
-import { count } from "drizzle-orm";
 import { app, BrowserWindow, ipcMain, shell } from "electron";
 import icon from "../../resources/icon.png?asset";
 import { db } from "../db/config";
 import { migrateDb } from "../db/migrate";
-import { usersTable } from "../db/schema";
+import { taxesTable } from "../db/schema";
 
-async function createWindow(): Promise<void> {
+function createWindow() {
 	// Create the browser window.
 	const mainWindow = new BrowserWindow({
 		width: 1920,
@@ -20,8 +19,6 @@ async function createWindow(): Promise<void> {
 			sandbox: false,
 		},
 	});
-
-	await migrateDb();
 
 	mainWindow.on("ready-to-show", () => {
 		mainWindow.show();
@@ -49,6 +46,8 @@ async function createWindow(): Promise<void> {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(async () => {
+	await migrateDb();
+
 	// Set app user model id for windows
 	electronApp.setAppUserModelId("com.electron");
 
@@ -59,36 +58,21 @@ app.whenReady().then(async () => {
 		optimizer.watchWindowShortcuts(window);
 	});
 
-	// IPC test
-	ipcMain.on("ping", () => console.log("pong"));
-
-	ipcMain.handle("test-db-users", async () => {
-		const user: typeof usersTable.$inferInsert = {
-			name: "John",
-			age: 30,
-			email: `john@example.com-${Date.now()}`,
-		};
-
-		await db.insert(usersTable).values(user);
-		console.log("New user created!");
-
-		const users = await db.select().from(usersTable);
-		console.log("Getting all users from the database: ", users);
+	ipcMain.handle("create-tax", (_, tax: typeof taxesTable.$inferInsert) => {
+		return db.insert(taxesTable).values(tax);
 	});
 
-	ipcMain.handle("get-number-of-users", async () => {
-		const users = await db.select({ count: count() }).from(usersTable);
-
-		return users[0].count;
+	ipcMain.handle("get-all-taxes", () => {
+		return db.select().from(taxesTable);
 	});
 
-	await createWindow();
+	createWindow();
 
 	app.on("activate", async () => {
 		// On macOS it's common to re-create a window in the app when the
 		// dock icon is clicked and there are no other windows open.
 		if (BrowserWindow.getAllWindows().length === 0) {
-			await createWindow();
+			createWindow();
 		}
 	});
 });

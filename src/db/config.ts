@@ -10,4 +10,4 @@ const dbFile = isDev
 	? `file:local.db`
 	: `file:${path.join(app.getPath("exe"), "..", "local.db")}`;
 
-export const db = drizzle(dbFile);
+export const db = drizzle(dbFile, { logger: isDev });

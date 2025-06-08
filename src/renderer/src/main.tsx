@@ -1,4 +1,4 @@
-import { StrictMode, useCallback, useEffect, useState } from "react";
+import { StrictMode, useCallback, useState } from "react";
 import { createRoot } from "react-dom/client";
 
 const rootEle = document.getElementById("root");
@@ -7,34 +7,36 @@ if (!rootEle) {
 }
 
 function Home() {
-	const [numberOfUsers, setNumberOfUsers] = useState<number | null>(null);
+	const [taxes, setTaxes] = useState([]);
 
-	const getNumberOfUsers = useCallback(async () => {
-		const numberOfUsers = await window.api.db.numberOfUsers();
-		console.log({ numberOfUsers });
-		setNumberOfUsers(numberOfUsers);
+	const createTax = useCallback(async () => {
+		const randomRate = Math.random() * 100;
+		await window.api.db.createTax({
+			name: `VAT ${randomRate}%`,
+			description: `Value Added Tax ${randomRate}%`,
+			rate: randomRate,
+		});
+
+		const taxes = await window.api.db.getAllTaxes();
+		setTaxes(taxes);
 	}, []);
-
-	const testUsersDb = useCallback(async () => {
-		await window.api.db.testUsersDb();
-		getNumberOfUsers();
-	}, [getNumberOfUsers]);
-
-	useEffect(() => {
-		getNumberOfUsers();
-	}, [getNumberOfUsers]);
 
 	return (
 		<div>
 			<h1>Hello World</h1>
-			<p>Number of Users: {numberOfUsers}</p>
+			<h1>Number of Taxes: {taxes.length}</h1>
 
-			<button type="button" onClick={testUsersDb}>
-				Test Users DB
+			<button type="button" onClick={createTax}>
+				Create Tax
 			</button>
-			<button type="button" onClick={getNumberOfUsers}>
-				Get Number of Users
-			</button>
+
+			<ul>
+				{taxes.map((tax) => (
+					<li key={tax.taxId}>
+						{tax.name} - {tax.rate}
+					</li>
+				))}
+			</ul>
 		</div>
 	);
 }
