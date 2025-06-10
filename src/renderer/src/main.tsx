@@ -1,6 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router";
+import "./tailwind.css";
 
 const rootEle = document.getElementById("root");
 if (!rootEle) {
@@ -10,7 +11,7 @@ if (!rootEle) {
 function Home() {
 	return (
 		<div>
-			<h1>Hello World</h1>
+			<h1 className="text-3xl font-bold underline">Hello World</h1>
 		</div>
 	);
 }
