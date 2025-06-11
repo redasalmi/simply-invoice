@@ -1,13 +1,19 @@
 import type { ElectronAPI } from "@electron-toolkit/preload";
-import type { taxesTable } from "../db/schema";
+import type { InsertTax, SelectTax } from "../db/schema";
+import type { ResultSet } from "@libsql/client";
 
 declare global {
 	interface Window {
 		electron: ElectronAPI;
 		api: {
 			db: {
-				createTax: (tax: typeof taxesTable.$inferInsert) => Promise<void>;
-				getAllTaxes: () => Promise<(typeof taxesTable.$inferSelect)[]>;
+				getTaxes: (cursor?: string, pageSize?: number) => Promise<SelectTax[]>;
+				getTaxesCount: () => Promise<
+					{
+						count: number;
+					}[]
+				>;
+				createTax: (tax: InsertTax) => Promise<ResultSet>;
 			};
 		};
 	}

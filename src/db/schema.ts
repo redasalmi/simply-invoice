@@ -156,3 +156,6 @@ export const invoiceServicesTable = sqliteTable("invoice_services_table", {
 		.references(() => taxesTable.taxId),
 	...timestamps,
 });
+
+export type SelectTax = typeof taxesTable.$inferSelect;
+export type InsertTax = typeof taxesTable.$inferInsert;

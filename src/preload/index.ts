@@ -1,15 +1,18 @@
 import { electronAPI } from "@electron-toolkit/preload";
 import { contextBridge, ipcRenderer } from "electron";
-import type { taxesTable } from "../db/schema";
+import type { InsertTax } from "../db/schema";
 
 // Custom APIs for renderer
 const api = {
 	db: {
-		createTax: (tax: typeof taxesTable.$inferInsert) => {
-			return ipcRenderer.invoke("create-tax", tax);
+		getTaxes: (cursor?: string, pageSize?: number) => {
+			return ipcRenderer.invoke("get-taxes", cursor, pageSize);
 		},
-		getAllTaxes: () => {
-			return ipcRenderer.invoke("get-all-taxes");
+		getTaxesCount: () => {
+			return ipcRenderer.invoke("get-taxes-count");
+		},
+		createTax: (tax: InsertTax) => {
+			return ipcRenderer.invoke("create-tax", tax);
 		},
 	},
 };

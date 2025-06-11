@@ -2,9 +2,9 @@ import { join } from "node:path";
 import { electronApp, is, optimizer } from "@electron-toolkit/utils";
 import { app, BrowserWindow, ipcMain, shell } from "electron";
 import icon from "../../resources/icon.png?asset";
-import { db } from "../db/config";
 import { migrateDb } from "../db/migrate";
-import { taxesTable } from "../db/schema";
+import type { InsertTax } from "../db/schema";
+import { createTax, getTaxes, getTaxesCount } from "./services/taxes";
 
 function createWindow() {
 	// Create the browser window.
@@ -58,12 +58,16 @@ app.whenReady().then(async () => {
 		optimizer.watchWindowShortcuts(window);
 	});
 
-	ipcMain.handle("create-tax", (_, tax: typeof taxesTable.$inferInsert) => {
-		return db.insert(taxesTable).values(tax);
+	ipcMain.handle("get-taxes", (_, cursor?: string, pageSize?: number) => {
+		return getTaxes(cursor, pageSize);
 	});
 
-	ipcMain.handle("get-all-taxes", () => {
-		return db.select().from(taxesTable);
+	ipcMain.handle("get-taxes-count", () => {
+		return getTaxesCount();
+	});
+
+	ipcMain.handle("create-tax", (_, tax: InsertTax) => {
+		return createTax(tax);
 	});
 
 	createWindow();
