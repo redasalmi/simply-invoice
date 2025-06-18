@@ -1,6 +1,6 @@
+import { db } from "@db/config";
+import { type InsertTax, taxesTable } from "@db/schema";
 import { asc, count, gt } from "drizzle-orm";
-import { db } from "../../db/config";
-import { type InsertTax, taxesTable } from "../../db/schema";
 
 export function getTaxes(cursor?: string, pageSize = 10) {
 	return db

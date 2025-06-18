@@ -5,6 +5,12 @@ import { defineConfig, externalizeDepsPlugin } from "electron-vite";
 
 export default defineConfig({
 	main: {
+		resolve: {
+			alias: {
+				"@db": resolve("src/db"),
+				"@resources": resolve("resources"),
+			},
+		},
 		plugins: [externalizeDepsPlugin()],
 	},
 	preload: {
@@ -13,7 +19,9 @@ export default defineConfig({
 	renderer: {
 		resolve: {
 			alias: {
+				"@db": resolve("src/db"),
 				"@renderer": resolve("src/renderer/src"),
+				"@resources": resolve("resources"),
 			},
 		},
 		plugins: [react(), tailwindcss()],

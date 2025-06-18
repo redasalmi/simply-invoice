@@ -1,9 +1,9 @@
 import { join } from "node:path";
+import { migrateDb } from "@db/migrate";
+import type { InsertTax } from "@db/schema";
 import { electronApp, is, optimizer } from "@electron-toolkit/utils";
+import icon from "@resources/icon.png?asset";
 import { app, BrowserWindow, ipcMain, shell } from "electron";
-import icon from "../../resources/icon.png?asset";
-import { migrateDb } from "../db/migrate";
-import type { InsertTax } from "../db/schema";
 import { createTax, getTaxes, getTaxesCount } from "./services/taxes";
 
 function createWindow() {
@@ -40,6 +40,11 @@ function createWindow() {
 	if (is.dev) {
 		mainWindow.webContents.openDevTools({ mode: "right" });
 	}
+}
+
+// TODO: remove this once I have a proper manner to handle it
+if (process.platform === "linux") {
+	app.commandLine.appendSwitch("gtk-version", "3");
 }
 
 // This method will be called when Electron has finished

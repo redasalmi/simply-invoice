@@ -1,5 +1,5 @@
+import { cn } from "@renderer/utils/cn";
 import { Link, type LinkProps } from "react-router";
-import { cn } from "../utils/cn";
 
 export function CreateLink({ className, ...props }: LinkProps) {
 	return (

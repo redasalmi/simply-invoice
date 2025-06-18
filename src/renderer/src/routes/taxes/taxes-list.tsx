@@ -1,6 +1,4 @@
-import { EyeIcon, PencilIcon, TrashIcon } from "lucide-react";
-import { Link, Outlet, useLoaderData } from "react-router";
-import { CreateLink } from "../../components/CreateLink";
+import { CreateLink } from "@renderer/components/CreateLink";
 import {
 	Table,
 	TableBody,
@@ -8,13 +6,15 @@ import {
 	TableHead,
 	TableHeader,
 	TableRow,
-} from "../../components/ui/table";
+} from "@renderer/components/ui/table";
+import { EyeIcon, PencilIcon, TrashIcon } from "lucide-react";
+import { Link, Outlet, useLoaderData } from "react-router";
 // import { Pagination } from '~/components/Pagination';
 // import { getPaginationParams, itemsPerPage } from '~/lib/pagination';
 // import type { Route } from './+types/taxes-list';
 
 export async function taxesLoader() {
-	const taxes = await window.api.db.getTaxes();
+	const taxes = await window.api.db.taxes.get();
 	console.log({ taxes });
 
 	// const { cursor, paginationType } = getPaginationParams(request.url);

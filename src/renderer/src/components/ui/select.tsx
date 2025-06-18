@@ -1,7 +1,7 @@
 import { Field, Label, Select as UISelect } from "@headlessui/react";
+import { cn } from "@renderer/utils/cn";
 import { ChevronDownIcon } from "lucide-react";
 import { useId } from "react";
-import { cn } from "../../utils/cn";
 
 type SelectItem<T extends string> = Record<T, string> & { name: string };
 
