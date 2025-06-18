@@ -1,10 +1,5 @@
 import { EyeIcon, PencilIcon, TrashIcon } from "lucide-react";
-import {
-	Link,
-	type LoaderFunctionArgs,
-	Outlet,
-	useLoaderData,
-} from "react-router";
+import { Link, Outlet, useLoaderData } from "react-router";
 import { CreateLink } from "../../components/CreateLink";
 import {
 	Table,
@@ -18,7 +13,7 @@ import {
 // import { getPaginationParams, itemsPerPage } from '~/lib/pagination';
 // import type { Route } from './+types/taxes-list';
 
-export async function taxesLoader({ request }: LoaderFunctionArgs) {
+export async function taxesLoader() {
 	const taxes = await window.api.db.getTaxes();
 	console.log({ taxes });
 
