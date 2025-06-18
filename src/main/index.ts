@@ -1,9 +1,9 @@
 import { join } from "node:path";
 import { migrateDb } from "@db/migrate";
-import type { InsertTax } from "@db/schema";
 import { electronApp, is, optimizer } from "@electron-toolkit/utils";
 import { createTax, getTaxes, getTaxesCount } from "@main/services/taxes";
 import icon from "@resources/icon.png?asset";
+import type { InsertTax, PaginationType } from "@types";
 import { app, BrowserWindow, ipcMain, shell } from "electron";
 
 function createWindow() {
@@ -63,9 +63,12 @@ app.whenReady().then(async () => {
 		optimizer.watchWindowShortcuts(window);
 	});
 
-	ipcMain.handle("get-taxes", (_, cursor?: string, pageSize?: number) => {
-		return getTaxes(cursor, pageSize);
-	});
+	ipcMain.handle(
+		"get-taxes",
+		(_, cursor: string | null, paginationType: PaginationType | null) => {
+			return getTaxes(cursor, paginationType);
+		},
+	);
 
 	ipcMain.handle("get-taxes-count", () => {
 		return getTaxesCount();

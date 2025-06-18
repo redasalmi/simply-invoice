@@ -4,7 +4,8 @@
     "electron.vite.config.*",
     "src/main/**/*",
     "src/preload/**/*",
-    "src/db/**/*"
+    "src/db/**/*",
+    "src/types.ts"
   ],
   "compilerOptions": {
     "composite": true,
@@ -14,7 +15,8 @@
     "paths": {
       "@db/*": ["src/db/*"],
       "@resources/*": ["resources/*"],
-      "@main/*": ["src/main/*"]
+      "@main/*": ["src/main/*"],
+      "@types": ["src/types.ts"]
     }
   }
 }

@@ -7,30 +7,28 @@ import {
 	TableHeader,
 	TableRow,
 } from "@renderer/components/ui/table";
+import { getPaginationParams } from "@renderer/utils/getPaginationParams";
 import { EyeIcon, PencilIcon, TrashIcon } from "lucide-react";
-import { Link, Outlet, useLoaderData } from "react-router";
+import {
+	Link,
+	type LoaderFunctionArgs,
+	Outlet,
+	useLoaderData,
+} from "react-router";
 // import { Pagination } from '~/components/Pagination';
 // import { getPaginationParams, itemsPerPage } from '~/lib/pagination';
 // import type { Route } from './+types/taxes-list';
 
-export async function taxesLoader() {
-	const taxes = await window.api.db.taxes.get();
-	console.log({ taxes });
-
-	// const { cursor, paginationType } = getPaginationParams(request.url);
+export async function taxesLoader({ request }: LoaderFunctionArgs) {
+	const { cursor, paginationType } = getPaginationParams(request.url);
 
 	return {
-		// taxes: await getTaxes(cursor, paginationType),
-		taxes: {
-			total: 0,
-			items: [],
-		},
+		taxes: await window.api.db.taxes.get(cursor, paginationType),
 	};
 }
 
 export function TaxesListRoute() {
 	const { taxes } = useLoaderData<typeof taxesLoader>();
-	console.log({ taxes });
 
 	return (
 		<>
