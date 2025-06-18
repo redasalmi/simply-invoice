@@ -1,7 +1,7 @@
+import { RootRoute } from "@renderer/root";
+import { HomeRoute } from "@renderer/routes/home";
+import { TaxesListRoute, taxesLoader } from "@renderer/routes/taxes/taxes-list";
 import { createBrowserRouter } from "react-router";
-import { RootRoute } from "./root";
-import { HomeRoute } from "./routes/home";
-import { TaxesListRoute, taxesLoader } from "./routes/taxes/taxes-list";
 
 export const router = createBrowserRouter([
 	{

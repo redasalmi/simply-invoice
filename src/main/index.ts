@@ -2,9 +2,9 @@ import { join } from "node:path";
 import { migrateDb } from "@db/migrate";
 import type { InsertTax } from "@db/schema";
 import { electronApp, is, optimizer } from "@electron-toolkit/utils";
+import { createTax, getTaxes, getTaxesCount } from "@main/services/taxes";
 import icon from "@resources/icon.png?asset";
 import { app, BrowserWindow, ipcMain, shell } from "electron";
-import { createTax, getTaxes, getTaxesCount } from "./services/taxes";
 
 function createWindow() {
 	// Create the browser window.

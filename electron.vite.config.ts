@@ -9,6 +9,7 @@ export default defineConfig({
 			alias: {
 				"@db": resolve("src/db"),
 				"@resources": resolve("resources"),
+				"@main": resolve("src/main"),
 			},
 		},
 		plugins: [externalizeDepsPlugin()],

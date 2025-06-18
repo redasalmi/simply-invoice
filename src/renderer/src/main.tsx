@@ -1,8 +1,8 @@
+import { router } from "@renderer/routes";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { RouterProvider } from "react-router";
-import { router } from "./routes";
-import "./tailwind.css";
+import "@renderer/tailwind.css";
 
 const rootEle = document.getElementById("root");
 if (!rootEle) {

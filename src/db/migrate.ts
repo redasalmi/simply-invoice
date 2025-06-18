@@ -1,7 +1,7 @@
 import path from "node:path";
+import { db } from "@db/config";
 import { migrate } from "drizzle-orm/libsql/migrator";
 import { app } from "electron";
-import { db } from "./config";
 
 const isDev = process.env.NODE_ENV === "development";
 
