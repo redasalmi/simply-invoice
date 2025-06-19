@@ -9,35 +9,37 @@ async function getTaxesCount() {
 }
 
 async function getPreviousTaxes(cursor: string | null) {
-	return db
+	const result = await db
 		.select()
 		.from(taxesTable)
-		.where(cursor ? lt(taxesTable.taxId, cursor) : undefined)
-		.limit(itemsPerPage)
-		.orderBy(desc(taxesTable.taxId));
+		.where(cursor ? gt(taxesTable.taxId, cursor) : undefined)
+		.orderBy(asc(taxesTable.taxId))
+		.limit(itemsPerPage);
+
+	return result.reverse();
 }
 
-async function getPreviousTaxesCount(cursor: string | null) {
+async function getPreviousTaxesCount(cursor: string) {
 	return db
 		.select({ count: count() })
 		.from(taxesTable)
-		.where(cursor ? lt(taxesTable.taxId, cursor) : undefined);
+		.where(gt(taxesTable.taxId, cursor));
 }
 
 async function getNextTaxes(cursor: string | null) {
 	return db
 		.select()
 		.from(taxesTable)
-		.where(cursor ? gt(taxesTable.taxId, cursor) : undefined)
-		.limit(itemsPerPage)
-		.orderBy(asc(taxesTable.taxId));
+		.where(cursor ? lt(taxesTable.taxId, cursor) : undefined)
+		.orderBy(desc(taxesTable.taxId))
+		.limit(itemsPerPage);
 }
 
-async function getNextTaxesCount(cursor: string | null) {
+async function getNextTaxesCount(cursor: string) {
 	return db
 		.select({ count: count() })
 		.from(taxesTable)
-		.where(cursor ? gt(taxesTable.taxId, cursor) : undefined);
+		.where(lt(taxesTable.taxId, cursor));
 }
 
 export async function getTaxes(

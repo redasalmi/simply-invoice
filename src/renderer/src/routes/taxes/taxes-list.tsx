@@ -1,4 +1,5 @@
 import { CreateLink } from "@renderer/components/CreateLink";
+import { Pagination } from "@renderer/components/Pagination";
 import {
 	Table,
 	TableBody,
@@ -15,9 +16,6 @@ import {
 	Outlet,
 	useLoaderData,
 } from "react-router";
-// import { Pagination } from '~/components/Pagination';
-// import { getPaginationParams, itemsPerPage } from '~/lib/pagination';
-// import type { Route } from './+types/taxes-list';
 
 export async function taxesLoader({ request }: LoaderFunctionArgs) {
 	const { cursor, paginationType } = getPaginationParams(request.url);
@@ -76,9 +74,10 @@ export function TaxesListRoute() {
 									))}
 								</TableBody>
 							</Table>
-							{/* {taxes.total > itemsPerPage ? (
+							{/* TODO: remove this once I have a proper manner to handle it */}
+							{taxes.total > 10 ? (
 								<Pagination baseUrl="/taxes" pageInfo={taxes.pageInfo} />
-							) : null} */}
+							) : null}
 						</>
 					) : (
 						<p>No Tax found.</p>

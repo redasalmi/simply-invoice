@@ -12,9 +12,6 @@ const api = {
 			get: (cursor: string | null, paginationType: PaginationType | null) => {
 				return ipcRenderer.invoke("get-taxes", cursor, paginationType);
 			},
-			count: () => {
-				return ipcRenderer.invoke("get-taxes-count");
-			},
 		},
 	},
 };

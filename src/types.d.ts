@@ -1,5 +1,5 @@
 import type { taxesTable } from "./db/schema";
-import type { paginationTypes } from "./main/utils/pagination";
+import type { paginationTypes } from "./renderer/src/utils/getPaginationParams";
 
 export type PaginationType = keyof typeof paginationTypes;
 

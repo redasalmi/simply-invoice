@@ -18,11 +18,6 @@ declare global {
 						cursor: string | null,
 						paginationType: PaginationType | null,
 					) => Promise<PaginatedResult<SelectTax>>;
-					count: () => Promise<
-						{
-							count: number;
-						}[]
-					>;
 				};
 			};
 		};

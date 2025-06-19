@@ -1,7 +1,7 @@
 import { join } from "node:path";
 import { migrateDb } from "@db/migrate";
 import { electronApp, is, optimizer } from "@electron-toolkit/utils";
-import { createTax, getTaxes, getTaxesCount } from "@main/services/taxes";
+import { createTax, getTaxes } from "@main/services/taxes";
 import icon from "@resources/icon.png?asset";
 import type { InsertTax, PaginationType } from "@types";
 import { app, BrowserWindow, ipcMain, shell } from "electron";
@@ -69,10 +69,6 @@ app.whenReady().then(async () => {
 			return getTaxes(cursor, paginationType);
 		},
 	);
-
-	ipcMain.handle("get-taxes-count", () => {
-		return getTaxesCount();
-	});
 
 	ipcMain.handle("create-tax", (_, tax: InsertTax) => {
 		return createTax(tax);
