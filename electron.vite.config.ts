@@ -1,6 +1,6 @@
 import { resolve } from "node:path";
 import tailwindcss from "@tailwindcss/vite";
-import react from "@vitejs/plugin-react-oxc";
+import react from "@vitejs/plugin-react";
 import { defineConfig, externalizeDepsPlugin } from "electron-vite";
 
 export default defineConfig({
@@ -12,7 +12,9 @@ export default defineConfig({
 				"@main": resolve("src/main"),
 			},
 		},
-		plugins: [externalizeDepsPlugin()],
+		plugins: [
+			externalizeDepsPlugin({ include: ["electron-devtools-installer"] }),
+		],
 	},
 	preload: {
 		plugins: [externalizeDepsPlugin()],
@@ -25,6 +27,13 @@ export default defineConfig({
 				"@resources": resolve("resources"),
 			},
 		},
-		plugins: [react(), tailwindcss()],
+		plugins: [
+			react({
+				babel: {
+					plugins: [["babel-plugin-react-compiler", {}]],
+				},
+			}),
+			tailwindcss(),
+		],
 	},
 });

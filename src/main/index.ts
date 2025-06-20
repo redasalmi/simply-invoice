@@ -7,6 +7,10 @@ import { processAction } from "@main/utils/processAction";
 import icon from "@resources/icon.png?asset";
 import type { InsertTax, PaginationType } from "@types";
 import { app, BrowserWindow, ipcMain, shell } from "electron";
+import {
+	installExtension,
+	REACT_DEVELOPER_TOOLS,
+} from "electron-devtools-installer";
 
 function createWindow() {
 	// Create the browser window.
@@ -54,6 +58,15 @@ if (process.platform === "linux") {
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(async () => {
 	await migrateDb();
+
+	if (is.dev) {
+		try {
+			const extension = await installExtension(REACT_DEVELOPER_TOOLS);
+			console.log(`Added Extension:  ${extension.name}`);
+		} catch (err) {
+			console.error("An error occurred: ", err);
+		}
+	}
 
 	// Set app user model id for windows
 	electronApp.setAppUserModelId("com.electron");
