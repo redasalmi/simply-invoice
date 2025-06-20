@@ -1,7 +1,9 @@
 import { join } from "node:path";
 import { migrateDb } from "@db/migrate";
+import { taxInsertSchema } from "@db/validation";
 import { electronApp, is, optimizer } from "@electron-toolkit/utils";
 import { createTax, getTaxes } from "@main/services/taxes";
+import { processAction } from "@main/utils/processAction";
 import icon from "@resources/icon.png?asset";
 import type { InsertTax, PaginationType } from "@types";
 import { app, BrowserWindow, ipcMain, shell } from "electron";
@@ -71,7 +73,7 @@ app.whenReady().then(async () => {
 	);
 
 	ipcMain.handle("create-tax", (_, tax: InsertTax) => {
-		return createTax(tax);
+		return processAction(tax, taxInsertSchema, createTax);
 	});
 
 	createWindow();

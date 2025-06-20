@@ -8,6 +8,20 @@ async function getTaxesCount() {
 	return db.select({ count: count() }).from(taxesTable);
 }
 
+async function getPreviousTaxesCount(cursor: string) {
+	return db
+		.select({ count: count() })
+		.from(taxesTable)
+		.where(gt(taxesTable.taxId, cursor));
+}
+
+async function getNextTaxesCount(cursor: string) {
+	return db
+		.select({ count: count() })
+		.from(taxesTable)
+		.where(lt(taxesTable.taxId, cursor));
+}
+
 async function getPreviousTaxes(cursor: string | null) {
 	const result = await db
 		.select()
@@ -19,13 +33,6 @@ async function getPreviousTaxes(cursor: string | null) {
 	return result.reverse();
 }
 
-async function getPreviousTaxesCount(cursor: string) {
-	return db
-		.select({ count: count() })
-		.from(taxesTable)
-		.where(gt(taxesTable.taxId, cursor));
-}
-
 async function getNextTaxes(cursor: string | null) {
 	return db
 		.select()
@@ -33,13 +40,6 @@ async function getNextTaxes(cursor: string | null) {
 		.where(cursor ? lt(taxesTable.taxId, cursor) : undefined)
 		.orderBy(desc(taxesTable.taxId))
 		.limit(itemsPerPage);
-}
-
-async function getNextTaxesCount(cursor: string) {
-	return db
-		.select({ count: count() })
-		.from(taxesTable)
-		.where(lt(taxesTable.taxId, cursor));
 }
 
 export async function getTaxes(
