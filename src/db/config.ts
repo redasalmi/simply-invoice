@@ -1,6 +1,7 @@
 import path from "node:path";
 import { drizzle } from "drizzle-orm/libsql";
 import { app } from "electron";
+import * as schema from "./schema";
 
 const isDev = process.env.NODE_ENV === "development";
 
@@ -10,4 +11,4 @@ const dbFile = isDev
 	? "file:local.db"
 	: `file:${path.join(app.getPath("exe"), "..", "local.db")}`;
 
-export const db = drizzle(dbFile);
+export const db = drizzle(dbFile, { schema });

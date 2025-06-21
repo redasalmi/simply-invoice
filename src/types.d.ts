@@ -18,3 +18,7 @@ export interface PaginatedResult<T> {
 
 export type SelectTax = typeof taxesTable.$inferSelect;
 export type InsertTax = typeof taxesTable.$inferInsert;
+
+export interface UpdateTax extends InsertTax {
+	taxId: string;
+}

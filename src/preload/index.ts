@@ -1,5 +1,5 @@
 import { electronAPI } from "@electron-toolkit/preload";
-import type { InsertTax, PaginationType } from "@types";
+import type { InsertTax, PaginationType, UpdateTax } from "@types";
 import { contextBridge, ipcRenderer } from "electron";
 
 // Custom APIs for renderer
@@ -11,6 +11,12 @@ const api = {
 			},
 			get: (cursor: string | null, paginationType: PaginationType | null) => {
 				return ipcRenderer.invoke("get-taxes", cursor, paginationType);
+			},
+			getOne: (taxId: string) => {
+				return ipcRenderer.invoke("get-tax", taxId);
+			},
+			update: (tax: UpdateTax) => {
+				return ipcRenderer.invoke("update-tax", tax);
 			},
 		},
 	},

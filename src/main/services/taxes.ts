@@ -1,8 +1,13 @@
 import { db } from "@db/config";
 import { taxesTable } from "@db/schema";
 import { emptyResult, itemsPerPage } from "@main/utils/pagination";
-import type { InsertTax, PaginatedResult, PaginationType } from "@types";
-import { asc, count, desc, gt, lt } from "drizzle-orm";
+import type {
+	InsertTax,
+	PaginatedResult,
+	PaginationType,
+	UpdateTax,
+} from "@types";
+import { asc, count, desc, eq, gt, lt } from "drizzle-orm";
 
 async function getTaxesCount() {
 	return db.select({ count: count() }).from(taxesTable);
@@ -23,23 +28,19 @@ async function getNextTaxesCount(cursor: string) {
 }
 
 async function getPreviousTaxes(cursor: string | null) {
-	const result = await db
-		.select()
-		.from(taxesTable)
-		.where(cursor ? gt(taxesTable.taxId, cursor) : undefined)
-		.orderBy(asc(taxesTable.taxId))
-		.limit(itemsPerPage);
-
-	return result.reverse();
+	return db.query.taxesTable.findMany({
+		where: cursor ? gt(taxesTable.taxId, cursor) : undefined,
+		orderBy: [asc(taxesTable.taxId)],
+		limit: itemsPerPage,
+	});
 }
 
 async function getNextTaxes(cursor: string | null) {
-	return db
-		.select()
-		.from(taxesTable)
-		.where(cursor ? lt(taxesTable.taxId, cursor) : undefined)
-		.orderBy(desc(taxesTable.taxId))
-		.limit(itemsPerPage);
+	return db.query.taxesTable.findMany({
+		where: cursor ? lt(taxesTable.taxId, cursor) : undefined,
+		orderBy: [desc(taxesTable.taxId)],
+		limit: itemsPerPage,
+	});
 }
 
 export async function getTaxes(
@@ -77,6 +78,14 @@ export async function getTaxes(
 	};
 }
 
+export async function getTax(taxId: string) {
+	return db.query.taxesTable.findFirst({ where: eq(taxesTable.taxId, taxId) });
+}
+
 export async function createTax(tax: InsertTax) {
 	return db.insert(taxesTable).values(tax);
+}
+
+export async function updateTax(tax: UpdateTax) {
+	return db.update(taxesTable).set(tax).where(eq(taxesTable.taxId, tax.taxId));
 }

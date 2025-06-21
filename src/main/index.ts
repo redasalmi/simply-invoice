@@ -1,11 +1,11 @@
 import { join } from "node:path";
 import { migrateDb } from "@db/migrate";
-import { taxInsertSchema } from "@db/validation";
+import { taxInsertSchema, taxUpdateSchema } from "@db/validation";
 import { electronApp, is, optimizer } from "@electron-toolkit/utils";
-import { createTax, getTaxes } from "@main/services/taxes";
+import { createTax, getTax, getTaxes, updateTax } from "@main/services/taxes";
 import { processAction } from "@main/utils/processAction";
 import icon from "@resources/icon.png?asset";
-import type { InsertTax, PaginationType } from "@types";
+import type { InsertTax, PaginationType, UpdateTax } from "@types";
 import { app, BrowserWindow, ipcMain, shell } from "electron";
 import {
 	installExtension,
@@ -85,8 +85,16 @@ app.whenReady().then(async () => {
 		},
 	);
 
+	ipcMain.handle("get-tax", (_, taxId: string) => {
+		return getTax(taxId);
+	});
+
 	ipcMain.handle("create-tax", (_, tax: InsertTax) => {
 		return processAction(tax, taxInsertSchema, createTax);
+	});
+
+	ipcMain.handle("update-tax", (_, tax: UpdateTax) => {
+		return processAction(tax, taxUpdateSchema, updateTax);
 	});
 
 	createWindow();

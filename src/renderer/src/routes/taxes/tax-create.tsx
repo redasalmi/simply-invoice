@@ -51,8 +51,8 @@ export function TaxCreateRoute() {
 					<FormField.ErrorMessage />
 				</FormField>
 
-				<Button type="submit" disabled={isSubmitting || isLoading}>
-					{isSubmitting ? "Saving Tax..." : "Save Tax"}
+				<Button type="submit" disabled={isSubmitting}>
+					{isLoading ? "Saving Tax..." : "Save Tax"}
 				</Button>
 			</Form>
 		</section>

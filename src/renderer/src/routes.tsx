@@ -6,6 +6,11 @@ import {
 } from "@renderer/routes/taxes/tax-create";
 import { TaxesListRoute, taxesLoader } from "@renderer/routes/taxes/taxes-list";
 import { createBrowserRouter } from "react-router";
+import {
+	TaxUpdateRoute,
+	taxUpdateAction,
+	taxUpdateLoader,
+} from "./routes/taxes/tax-update";
 
 export const router = createBrowserRouter([
 	{
@@ -27,6 +32,12 @@ export const router = createBrowserRouter([
 						path: "create",
 						action: taxCreateAction,
 						Component: TaxCreateRoute,
+					},
+					{
+						path: "update/:id",
+						loader: taxUpdateLoader,
+						action: taxUpdateAction,
+						Component: TaxUpdateRoute,
 					},
 				],
 			},

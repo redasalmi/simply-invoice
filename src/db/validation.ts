@@ -12,3 +12,15 @@ export const taxInsertSchema = createInsertSchema(taxesTable, {
 		v.minValue(0, "Rate must be greater than 0"),
 	),
 });
+
+export const taxUpdateSchema = createInsertSchema(taxesTable, {
+	taxId: v.pipe(v.string(), v.nonEmpty("Tax ID is required"), v.ulid()),
+	name: (schema) => v.pipe(schema, v.nonEmpty("Name is required")),
+	rate: v.pipe(
+		v.string(),
+		v.nonEmpty("Rate is required"),
+		v.decimal("Rate must be a number"),
+		v.transform(Number),
+		v.minValue(0, "Rate must be greater than 0"),
+	),
+});
