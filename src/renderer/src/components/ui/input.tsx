@@ -1,12 +1,14 @@
 import { cn } from "@renderer/utils/cn";
 
-export function Input({
-	className,
-	...props
-}: React.ComponentPropsWithRef<"input">) {
+export interface InputProps extends React.ComponentPropsWithRef<"input"> {}
+
+export function Input({ className, ...props }: InputProps) {
 	return (
 		<input
-			className={cn("border-2 border-gray-300 rounded-md p-2", className)}
+			className={cn(
+				"border-2 border-gray-300 rounded-md p-2 aria-invalid:border-red-900",
+				className,
+			)}
 			{...props}
 		/>
 	);

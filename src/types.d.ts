@@ -11,7 +11,7 @@ export interface PageInfo {
 }
 
 export interface PaginatedResult<T> {
-	items: T[];
+	items: Array<T>;
 	total: number;
 	pageInfo: PageInfo;
 }

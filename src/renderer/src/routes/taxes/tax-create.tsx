@@ -33,34 +33,22 @@ export function TaxCreateRoute() {
 	return (
 		<section>
 			<Form method="post" className="flex flex-col gap-4">
-				<FormField>
+				<FormField errors={actionData?.errors?.nested?.name}>
 					<FormField.Label>Name</FormField.Label>
 					<FormField.Input type="text" name="name" />
-					{actionData?.errors?.nested?.name?.length ? (
-						<FormField.ErrorMessage>
-							{actionData.errors.nested.name[0]}
-						</FormField.ErrorMessage>
-					) : null}
+					<FormField.ErrorMessage />
 				</FormField>
 
-				<FormField>
+				<FormField errors={actionData?.errors?.nested?.description}>
 					<FormField.Label>Description</FormField.Label>
 					<FormField.Input type="text" name="description" />
-					{actionData?.errors?.nested?.description?.length ? (
-						<FormField.ErrorMessage>
-							{actionData.errors.nested.description[0]}
-						</FormField.ErrorMessage>
-					) : null}
+					<FormField.ErrorMessage />
 				</FormField>
 
-				<FormField>
+				<FormField errors={actionData?.errors?.nested?.rate}>
 					<FormField.Label>Rate (%)</FormField.Label>
 					<FormField.NumberInput name="rate" />
-					{actionData?.errors?.nested?.rate?.length ? (
-						<FormField.ErrorMessage>
-							{actionData.errors.nested.rate[0]}
-						</FormField.ErrorMessage>
-					) : null}
+					<FormField.ErrorMessage />
 				</FormField>
 
 				<Button type="submit" disabled={isSubmitting || isLoading}>
