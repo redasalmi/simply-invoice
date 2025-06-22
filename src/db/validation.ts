@@ -24,3 +24,9 @@ export const taxUpdateSchema = createInsertSchema(taxesTable, {
 		v.minValue(0, "Rate must be greater than 0"),
 	),
 });
+
+export const taxDeleteSchema = v.pipe(
+	v.string(),
+	v.nonEmpty("Tax ID is required"),
+	v.ulid(),
+);

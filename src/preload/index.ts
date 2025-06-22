@@ -18,6 +18,9 @@ const api = {
 			update: (tax: UpdateTax) => {
 				return ipcRenderer.invoke("update-tax", tax);
 			},
+			delete: (taxId: string) => {
+				return ipcRenderer.invoke("delete-tax", taxId);
+			},
 		},
 	},
 };

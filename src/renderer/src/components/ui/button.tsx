@@ -11,7 +11,7 @@ export const buttonVariants = {
 	icon: "cursor-pointer inline-flex items-center rounded-full border border-blue-700 p-2 text-center text-sm font-medium text-blue-700 hover:bg-blue-700 hover:text-white focus:ring-4 focus:ring-blue-300 focus:outline-none",
 };
 
-interface ButtonProps extends React.ComponentPropsWithRef<"button"> {
+export interface ButtonProps extends React.ComponentPropsWithRef<"button"> {
 	variant?: keyof typeof buttonVariants;
 }
 

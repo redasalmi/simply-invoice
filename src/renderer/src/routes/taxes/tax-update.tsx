@@ -14,7 +14,7 @@ import {
 import invariant from "tiny-invariant";
 
 export async function taxUpdateLoader({ params }: LoaderFunctionArgs) {
-	const taxId = params.id;
+	const taxId = params.taxId;
 	invariant(taxId, "Tax ID is required");
 
 	return {

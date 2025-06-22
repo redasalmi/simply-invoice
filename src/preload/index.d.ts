@@ -1,5 +1,10 @@
-import type { taxInsertSchema, taxUpdateSchema } from "@db/validation";
+import type {
+	taxDeleteSchema,
+	taxInsertSchema,
+	taxUpdateSchema,
+} from "@db/validation";
 import type { ElectronAPI } from "@electron-toolkit/preload";
+import type { ResultSet } from "@libsql/client";
 import type {
 	InsertTax,
 	PaginatedResult,
@@ -18,7 +23,7 @@ declare global {
 					create: (
 						tax: InsertTax,
 					) => Promise<
-						SelectTax | { errors: v.FlatErrors<typeof taxInsertSchema> }
+						ResultSet | { errors: v.FlatErrors<typeof taxInsertSchema> }
 					>;
 					get: (
 						cursor: string | null,
@@ -29,6 +34,11 @@ declare global {
 						tax: UpdateTax,
 					) => Promise<
 						SelectTax | { errors: v.FlatErrors<typeof taxUpdateSchema> }
+					>;
+					delete: (
+						taxId: string,
+					) => Promise<
+						ResultSet | { errors: v.FlatErrors<typeof taxDeleteSchema> }
 					>;
 				};
 			};

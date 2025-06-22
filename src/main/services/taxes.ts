@@ -28,11 +28,13 @@ async function getNextTaxesCount(cursor: string) {
 }
 
 async function getPreviousTaxes(cursor: string | null) {
-	return db.query.taxesTable.findMany({
+	const result = await db.query.taxesTable.findMany({
 		where: cursor ? gt(taxesTable.taxId, cursor) : undefined,
 		orderBy: [asc(taxesTable.taxId)],
 		limit: itemsPerPage,
 	});
+
+	return result.reverse();
 }
 
 async function getNextTaxes(cursor: string | null) {
@@ -88,4 +90,8 @@ export async function createTax(tax: InsertTax) {
 
 export async function updateTax(tax: UpdateTax) {
 	return db.update(taxesTable).set(tax).where(eq(taxesTable.taxId, tax.taxId));
+}
+
+export async function deleteTax(taxId: string) {
+	return db.delete(taxesTable).where(eq(taxesTable.taxId, taxId));
 }

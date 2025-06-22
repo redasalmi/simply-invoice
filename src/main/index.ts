@@ -1,8 +1,18 @@
 import { join } from "node:path";
 import { migrateDb } from "@db/migrate";
-import { taxInsertSchema, taxUpdateSchema } from "@db/validation";
+import {
+	taxDeleteSchema,
+	taxInsertSchema,
+	taxUpdateSchema,
+} from "@db/validation";
 import { electronApp, is, optimizer } from "@electron-toolkit/utils";
-import { createTax, getTax, getTaxes, updateTax } from "@main/services/taxes";
+import {
+	createTax,
+	deleteTax,
+	getTax,
+	getTaxes,
+	updateTax,
+} from "@main/services/taxes";
 import { processAction } from "@main/utils/processAction";
 import icon from "@resources/icon.png?asset";
 import type { InsertTax, PaginationType, UpdateTax } from "@types";
@@ -95,6 +105,10 @@ app.whenReady().then(async () => {
 
 	ipcMain.handle("update-tax", (_, tax: UpdateTax) => {
 		return processAction(tax, taxUpdateSchema, updateTax);
+	});
+
+	ipcMain.handle("delete-tax", (_, taxId: string) => {
+		return processAction(taxId, taxDeleteSchema, deleteTax);
 	});
 
 	createWindow();
