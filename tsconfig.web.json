@@ -16,7 +16,8 @@
       "@renderer/*": ["src/renderer/src/*"],
       "@db/*": ["src/db/*"],
       "@resources/*": ["resources/*"],
-      "@types": ["src/types.d.ts"]
+      "@types": ["src/types.d.ts"],
+      "@main/*": ["src/main/*"]
     }
   }
 }

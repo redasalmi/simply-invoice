@@ -18,7 +18,7 @@ export async function taxUpdateLoader({ params }: LoaderFunctionArgs) {
 	invariant(taxId, "Tax ID is required");
 
 	return {
-		tax: await window.api.db.taxes.getOne(taxId),
+		tax: await window.api.db.taxes.getById(taxId),
 	};
 }
 

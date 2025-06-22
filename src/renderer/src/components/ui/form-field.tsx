@@ -11,12 +11,14 @@ import {
 import { cn } from "@renderer/utils/cn";
 import { createContext, useContext, useId } from "react";
 
-const FormFieldContext = createContext<{
+interface FormFieldContextInterface {
 	inputId: string;
 	errorId: string;
 	errors?: Array<string>;
 	hasErrors: boolean;
-} | null>(null);
+}
+
+const FormFieldContext = createContext<FormFieldContextInterface | null>(null);
 
 function useFormField() {
 	const context = useContext(FormFieldContext);
@@ -27,10 +29,10 @@ function useFormField() {
 	return context;
 }
 
-function FormFieldLabel(props: LabelProps) {
+function FormFieldLabel(props: Omit<LabelProps, "htmlFor">) {
 	const { inputId } = useFormField();
 
-	return <Label {...props} htmlFor={inputId} />;
+	return <Label htmlFor={inputId} {...props} />;
 }
 
 function FormFieldInput(
@@ -40,10 +42,10 @@ function FormFieldInput(
 
 	return (
 		<Input
-			{...props}
 			id={inputId}
 			aria-invalid={hasErrors}
 			aria-describedby={hasErrors ? errorId : undefined}
+			{...props}
 		/>
 	);
 }
@@ -55,10 +57,10 @@ function FormFieldNumberInput(
 
 	return (
 		<NumberInput
-			{...props}
 			id={inputId}
 			aria-invalid={hasErrors}
 			aria-describedby={hasErrors ? errorId : undefined}
+			{...props}
 		/>
 	);
 }
@@ -70,7 +72,7 @@ function FormFieldErrorMessage(props: Omit<ErrorMessageProps, "id">) {
 	}
 
 	return (
-		<ErrorMessage {...props} id={errorId}>
+		<ErrorMessage id={errorId} {...props}>
 			{errors.map((error) => (
 				<span className="block" key={`${error.replace(/\s/g, "-")}-${errorId}`}>
 					{error}

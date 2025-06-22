@@ -6,9 +6,9 @@ export interface ErrorMessageProps
 export function ErrorMessage({ className, ...props }: ErrorMessageProps) {
 	return (
 		<p
-			{...props}
 			className={cn("text-sm font-medium text-red-900", className)}
 			data-invalid
+			{...props}
 		/>
 	);
 }

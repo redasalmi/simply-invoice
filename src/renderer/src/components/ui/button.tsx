@@ -1,7 +1,7 @@
 import { cn } from "@renderer/utils/cn";
 import type * as React from "react";
 
-export const buttonVariants = {
+const buttonVariants = {
 	default:
 		"cursor-pointer rounded-lg bg-blue-700 py-2.5 px-5 text-sm font-medium text-white hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 focus:outline-none disabled:bg-gray-500 disabled:cursor-not-allowed",
 	alternative:

@@ -67,7 +67,8 @@ function DialogCloseButton({ onClick }: DialogCloseButtonProps) {
 	);
 }
 
-interface DialogCancelButtonProps extends Omit<ButtonProps, "onClick"> {
+interface DialogCancelButtonProps
+	extends Omit<ButtonProps, "onClick" | "variant"> {
 	onClick?: (ref: React.RefObject<HTMLDialogElement | null>) => void;
 }
 
@@ -84,11 +85,13 @@ function DialogCancelButton({ onClick, ...props }: DialogCancelButtonProps) {
 		dialogRef.current?.close();
 	};
 
-	return <Button {...props} variant="alternative" onClick={handleClick} />;
+	return <Button variant="alternative" onClick={handleClick} {...props} />;
 }
 
-function DialogActionButton(props: ButtonProps) {
-	return <Button {...props} variant="danger" />;
+interface DialogActionButtonProps extends Omit<ButtonProps, "variant"> {}
+
+function DialogActionButton(props: DialogActionButtonProps) {
+	return <Button variant="danger" {...props} />;
 }
 
 interface DialogProps

@@ -12,7 +12,7 @@ const api = {
 			get: (cursor: string | null, paginationType: PaginationType | null) => {
 				return ipcRenderer.invoke("get-taxes", cursor, paginationType);
 			},
-			getOne: (taxId: string) => {
+			getById: (taxId: string) => {
 				return ipcRenderer.invoke("get-tax", taxId);
 			},
 			update: (tax: UpdateTax) => {

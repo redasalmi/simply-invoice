@@ -5,7 +5,14 @@ import { useState } from "react";
 export interface NumberInputProps
 	extends Omit<
 		React.ComponentPropsWithRef<"input">,
-		"type" | "inputMode" | "autoComplete" | "autoCorrect" | "spellCheck"
+		| "type"
+		| "inputMode"
+		| "autoComplete"
+		| "autoCorrect"
+		| "spellCheck"
+		| "id"
+		| "value"
+		| "onInput"
 	> {
 	id: string;
 }
@@ -64,7 +71,6 @@ export function NumberInput({
 				<Minus />
 			</button>
 			<input
-				{...props}
 				id={id}
 				value={value}
 				type="text"
@@ -77,6 +83,7 @@ export function NumberInput({
 					className,
 				)}
 				onInput={onInput}
+				{...props}
 			/>
 			<button
 				type="button"

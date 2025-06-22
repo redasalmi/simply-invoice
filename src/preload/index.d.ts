@@ -4,12 +4,14 @@ import type {
 	taxUpdateSchema,
 } from "@db/validation";
 import type { ElectronAPI } from "@electron-toolkit/preload";
-import type { ResultSet } from "@libsql/client";
 import type {
 	InsertTax,
-	PaginatedResult,
 	PaginationType,
-	SelectTax,
+	TaxCreateResult,
+	TaxDeleteResult,
+	TaxesGetResult,
+	TaxGetResult,
+	TaxUpdateResult,
 	UpdateTax,
 } from "@types";
 import type * as v from "valibot";
@@ -22,24 +24,24 @@ declare global {
 				taxes: {
 					create: (
 						tax: InsertTax,
-					) => Promise<
-						ResultSet | { errors: v.FlatErrors<typeof taxInsertSchema> }
-					>;
+					) =>
+						| TaxCreateResult
+						| { errors: v.FlatErrors<typeof taxInsertSchema> };
 					get: (
 						cursor: string | null,
 						paginationType: PaginationType | null,
-					) => Promise<PaginatedResult<SelectTax>>;
-					getOne: (taxId: string) => Promise<SelectTax | undefined>;
+					) => TaxesGetResult;
+					getById: (taxId: string) => TaxGetResult;
 					update: (
 						tax: UpdateTax,
-					) => Promise<
-						SelectTax | { errors: v.FlatErrors<typeof taxUpdateSchema> }
-					>;
+					) =>
+						| TaxUpdateResult
+						| { errors: v.FlatErrors<typeof taxUpdateSchema> };
 					delete: (
 						taxId: string,
-					) => Promise<
-						ResultSet | { errors: v.FlatErrors<typeof taxDeleteSchema> }
-					>;
+					) =>
+						| TaxDeleteResult
+						| { errors: v.FlatErrors<typeof taxDeleteSchema> };
 				};
 			};
 		};
