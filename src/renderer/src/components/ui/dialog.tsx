@@ -31,9 +31,9 @@ function DialogTitle({
 function DialogDescription({
 	className,
 	...props
-}: React.ComponentPropsWithRef<"p">) {
+}: React.ComponentPropsWithRef<"div">) {
 	return (
-		<p
+		<div
 			className={cn(
 				"text-mauve-11 mt-[10px] mb-5 text-[15px] leading-normal",
 				className,
@@ -44,10 +44,11 @@ function DialogDescription({
 }
 
 interface DialogCloseButtonProps {
+	autoFocus?: boolean;
 	onClick?: (ref: React.RefObject<HTMLDialogElement | null>) => void;
 }
 
-function DialogCloseButton({ onClick }: DialogCloseButtonProps) {
+function DialogCloseButton({ autoFocus, onClick }: DialogCloseButtonProps) {
 	const { dialogRef } = useDialog();
 
 	const handleClick = () => {
@@ -61,7 +62,12 @@ function DialogCloseButton({ onClick }: DialogCloseButtonProps) {
 	};
 
 	return (
-		<Button variant="icon" onClick={handleClick}>
+		<Button
+			variant="icon"
+			className="absolute top-2 right-2 size-8"
+			autoFocus={autoFocus}
+			onClick={handleClick}
+		>
 			<XIcon className="h-4 w-4" />
 		</Button>
 	);
@@ -95,10 +101,45 @@ function DialogActionButton(props: DialogActionButtonProps) {
 }
 
 interface DialogProps
-	extends Omit<React.ComponentPropsWithRef<"dialog">, "ref"> {}
+	extends Omit<React.ComponentPropsWithRef<"dialog">, "ref"> {
+	closeDialog?: (ref: React.RefObject<HTMLDialogElement | null>) => void;
+}
 
-export function Dialog({ className, children, ...props }: DialogProps) {
+export function Dialog({
+	className,
+	children,
+	closeDialog,
+	...props
+}: DialogProps) {
 	const dialogRef = useRef<HTMLDialogElement>(null);
+
+	const handleKeyDown = (event: React.KeyboardEvent<HTMLDialogElement>) => {
+		if (event.key !== "Escape") {
+			return;
+		}
+
+		if (closeDialog) {
+			closeDialog(dialogRef);
+
+			return;
+		}
+
+		dialogRef.current?.close();
+	};
+
+	const handleClickOutside = (event: React.MouseEvent<HTMLDialogElement>) => {
+		if (event.target !== event.currentTarget) {
+			return;
+		}
+
+		if (closeDialog) {
+			closeDialog(dialogRef);
+
+			return;
+		}
+
+		dialogRef.current?.close();
+	};
 
 	return (
 		<dialog
@@ -107,10 +148,12 @@ export function Dialog({ className, children, ...props }: DialogProps) {
 				"bg-transparent backdrop-brightness-50 fixed inset-0 z-50 size-full flex items-center justify-center",
 				className,
 			)}
+			onKeyDown={handleKeyDown}
+			onClick={handleClickOutside}
 			{...props}
 		>
 			<DialogContext.Provider value={{ dialogRef }}>
-				<div className="bg-white p-4 rounded-lg">{children}</div>
+				<div className="bg-white p-8 rounded-lg relative">{children}</div>
 			</DialogContext.Provider>
 		</dialog>
 	);

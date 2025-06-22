@@ -11,6 +11,7 @@ import {
 	taxDeleteAction,
 	taxDeleteLoader,
 } from "./routes/taxes/tax-delete";
+import { TaxDetailRoute, taxDetailLoader } from "./routes/taxes/tax-detail";
 import {
 	TaxUpdateRoute,
 	taxUpdateAction,
@@ -30,6 +31,11 @@ export const router = createBrowserRouter([
 				loader: taxesLoader,
 				Component: TaxesListRoute,
 				children: [
+					{
+						path: "detail/:taxId",
+						loader: taxDetailLoader,
+						Component: TaxDetailRoute,
+					},
 					{
 						path: "delete/:taxId",
 						loader: taxDeleteLoader,
