@@ -1,4 +1,4 @@
-import { cn } from "@renderer/utils/cn";
+import { cn } from "~/renderer/utils/cn";
 
 export interface LabelProps extends React.ComponentPropsWithRef<"label"> {}
 

@@ -1,5 +1,5 @@
-import { cn } from "@renderer/utils/cn";
 import type * as React from "react";
+import { cn } from "~/renderer/utils/cn";
 
 export function Table({
 	className,

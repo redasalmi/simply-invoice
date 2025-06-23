@@ -1,6 +1,3 @@
-import { Button } from "@renderer/components/ui/button";
-import { FormField } from "@renderer/components/ui/form-field";
-import type { UpdateTaxInput } from "@types";
 import {
 	type ActionFunctionArgs,
 	Form,
@@ -12,6 +9,9 @@ import {
 	useNavigation,
 } from "react-router";
 import invariant from "tiny-invariant";
+import { Button } from "~/renderer/components/ui/button";
+import { FormField } from "~/renderer/components/ui/form-field";
+import type { UpdateTaxInput } from "~/types";
 
 export async function taxUpdateLoader({ params }: LoaderFunctionArgs) {
 	const taxId = params.taxId;

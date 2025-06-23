@@ -7,9 +7,9 @@ export default defineConfig({
 	main: {
 		resolve: {
 			alias: {
-				"@db": resolve("src/db"),
-				"@resources": resolve("resources"),
-				"@main": resolve("src/main"),
+				"~/db": resolve("src/db"),
+				"~/resources": resolve("resources"),
+				"~/main": resolve("src/main"),
 			},
 		},
 		plugins: [
@@ -22,9 +22,9 @@ export default defineConfig({
 	renderer: {
 		resolve: {
 			alias: {
-				"@db": resolve("src/db"),
-				"@renderer": resolve("src/renderer/src"),
-				"@resources": resolve("resources"),
+				"~/db": resolve("src/db"),
+				"~/renderer": resolve("src/renderer/src"),
+				"~/resources": resolve("resources"),
 			},
 		},
 		plugins: [

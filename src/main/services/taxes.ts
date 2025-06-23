@@ -1,14 +1,14 @@
-import { db } from "@db/config";
-import { taxesTable } from "@db/schema";
-import { emptyResult, itemsPerPage } from "@main/utils/pagination";
+import { asc, count, desc, eq, gt, lt } from "drizzle-orm";
+import { db } from "~/db/config";
+import { taxesTable } from "~/db/schema";
+import { emptyResult, itemsPerPage } from "~/main/utils/pagination";
 import type {
 	CreateTaxInput,
 	PaginatedResult,
 	PaginationType,
 	Tax,
 	UpdateTaxInput,
-} from "@types";
-import { asc, count, desc, eq, gt, lt } from "drizzle-orm";
+} from "~/types";
 
 async function getTaxesCount() {
 	return db.select({ count: count() }).from(taxesTable);

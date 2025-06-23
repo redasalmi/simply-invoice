@@ -1,6 +1,6 @@
-import { cn } from "@renderer/utils/cn";
 import { Minus, Plus } from "lucide-react";
 import { useState } from "react";
+import { cn } from "~/renderer/utils/cn";
 
 export interface NumberInputProps
 	extends Omit<

@@ -1,6 +1,3 @@
-import { Button } from "@renderer/components/ui/button";
-import { FormField } from "@renderer/components/ui/form-field";
-import type { CreateTaxInput } from "@types";
 import {
 	type ActionFunctionArgs,
 	Form,
@@ -8,6 +5,9 @@ import {
 	useActionData,
 	useNavigation,
 } from "react-router";
+import { Button } from "~/renderer/components/ui/button";
+import { FormField } from "~/renderer/components/ui/form-field";
+import type { CreateTaxInput } from "~/types";
 
 export async function taxCreateAction({ request }: ActionFunctionArgs) {
 	const formData = await request.formData();

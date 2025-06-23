@@ -1,10 +1,3 @@
-import { Dialog } from "@renderer/components/ui/dialog";
-import {
-	Table,
-	TableBody,
-	TableCell,
-	TableRow,
-} from "@renderer/components/ui/table";
 import {
 	Link,
 	type LoaderFunctionArgs,
@@ -12,6 +5,13 @@ import {
 	useNavigate,
 } from "react-router";
 import invariant from "tiny-invariant";
+import { Dialog } from "~/renderer/components/ui/dialog";
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableRow,
+} from "~/renderer/components/ui/table";
 
 export async function taxDetailLoader({ params }: LoaderFunctionArgs) {
 	const taxId = params.taxId;

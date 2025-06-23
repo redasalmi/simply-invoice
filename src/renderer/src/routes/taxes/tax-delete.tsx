@@ -1,4 +1,3 @@
-import { Dialog } from "@renderer/components/ui/dialog";
 import {
 	type ActionFunctionArgs,
 	Form,
@@ -11,6 +10,7 @@ import {
 	useParams,
 } from "react-router";
 import invariant from "tiny-invariant";
+import { Dialog } from "~/renderer/components/ui/dialog";
 
 export async function taxDeleteLoader({ params }: LoaderFunctionArgs) {
 	const taxId = params.taxId;

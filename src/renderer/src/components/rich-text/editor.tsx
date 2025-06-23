@@ -5,15 +5,15 @@ import {
 	PortableTextEditable,
 } from "@portabletext/editor";
 import { EventListenerPlugin } from "@portabletext/editor/plugins";
+import { useState } from "react";
 import {
 	renderAnnotation,
 	renderDecorator,
 	renderStyle,
-} from "@renderer/components/rich-text/renderers";
-import { schemaDefinition } from "@renderer/components/rich-text/schema";
-import { Toolbar } from "@renderer/components/rich-text/toolbar";
-import { useState } from "react";
-import "@renderer/components/rich-text/editor.css";
+} from "~/renderer/components/rich-text/renderers";
+import { schemaDefinition } from "~/renderer/components/rich-text/schema";
+import { Toolbar } from "~/renderer/components/rich-text/toolbar";
+import "~/renderer/components/rich-text/editor.css";
 
 interface RichTextEditorProps {
 	name: string;

@@ -1,4 +1,4 @@
-import type { PaginationType } from "@types";
+import type { PaginationType } from "~/types";
 
 export const paginationTypes = {
 	previous: "previous",

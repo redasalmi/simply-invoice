@@ -1,27 +1,27 @@
 import { join } from "node:path";
-import { migrateDb } from "@db/migrate";
+import { electronApp, is, optimizer } from "@electron-toolkit/utils";
+import { app, BrowserWindow, ipcMain, shell } from "electron";
+import {
+	installExtension,
+	REACT_DEVELOPER_TOOLS,
+} from "electron-devtools-installer";
+import { migrateDb } from "~/db/migrate";
 import {
 	taxCreateSchema,
 	taxDeleteSchema,
 	taxUpdateSchema,
-} from "@db/validation";
-import { electronApp, is, optimizer } from "@electron-toolkit/utils";
-import { getCompanies } from "@main/services/companies";
+} from "~/db/validation";
+import { getCompanies } from "~/main/services/companies";
 import {
 	createTax,
 	deleteTax,
 	getTax,
 	getTaxes,
 	updateTax,
-} from "@main/services/taxes";
-import { processAction } from "@main/utils/processAction";
-import icon from "@resources/icon.png?asset";
-import type { CreateTaxInput, PaginationType, UpdateTaxInput } from "@types";
-import { app, BrowserWindow, ipcMain, shell } from "electron";
-import {
-	installExtension,
-	REACT_DEVELOPER_TOOLS,
-} from "electron-devtools-installer";
+} from "~/main/services/taxes";
+import { processAction } from "~/main/utils/processAction";
+import icon from "~/resources/icon.png?asset";
+import type { CreateTaxInput, PaginationType, UpdateTaxInput } from "~/types";
 
 function createWindow() {
 	// Create the browser window.

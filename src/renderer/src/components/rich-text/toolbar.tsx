@@ -8,9 +8,9 @@ import {
 import {
 	type SchemaDefinition,
 	schemaDefinition,
-} from "@renderer/components/rich-text/schema";
-import { Button } from "@renderer/components/ui/button";
-import { cn } from "@renderer/utils/cn";
+} from "~/renderer/components/rich-text/schema";
+import { Button } from "~/renderer/components/ui/button";
+import { cn } from "~/renderer/utils/cn";
 
 interface ToolbarButtonProps extends SchemaDefinition {
 	active: boolean;

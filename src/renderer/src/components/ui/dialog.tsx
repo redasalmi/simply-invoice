@@ -1,7 +1,7 @@
-import { Button, type ButtonProps } from "@renderer/components/ui/button";
-import { cn } from "@renderer/utils/cn";
 import { XIcon } from "lucide-react";
 import { createContext, useContext, useRef } from "react";
+import { Button, type ButtonProps } from "~/renderer/components/ui/button";
+import { cn } from "~/renderer/utils/cn";
 
 const DialogContext = createContext<{
 	dialogRef: React.RefObject<HTMLDialogElement | null>;

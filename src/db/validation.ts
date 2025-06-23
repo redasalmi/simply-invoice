@@ -1,6 +1,6 @@
-import { taxesTable } from "@db/schema";
 import { createInsertSchema } from "drizzle-valibot";
 import * as v from "valibot";
+import { taxesTable } from "~/db/schema";
 
 export const taxCreateSchema = createInsertSchema(taxesTable, {
 	name: (schema) => v.pipe(schema, v.nonEmpty("Name is required")),

@@ -13,10 +13,10 @@
     "types": ["electron-vite/node"],
     "baseUrl": ".",
     "paths": {
-      "@db/*": ["src/db/*"],
-      "@resources/*": ["resources/*"],
-      "@main/*": ["src/main/*"],
-      "@types": ["src/types.d.ts"]
+      "~/db/*": ["src/db/*"],
+      "~/resources/*": ["resources/*"],
+      "~/main/*": ["src/main/*"],
+      "~/types": ["src/types.d.ts"]
     }
   }
 }

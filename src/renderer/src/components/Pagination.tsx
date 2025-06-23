@@ -1,11 +1,11 @@
-import { Button } from "@renderer/components/ui/button";
+import { Form, useNavigation } from "react-router";
+import { Button } from "~/renderer/components/ui/button";
 import {
 	cursorParam,
 	paginationTypeParam,
 	paginationTypes,
-} from "@renderer/utils/getPaginationParams";
-import type { PageInfo } from "@types";
-import { Form, useNavigation } from "react-router";
+} from "~/renderer/utils/getPaginationParams";
+import type { PageInfo } from "~/types";
 
 interface PaginationProps {
 	baseUrl: string;

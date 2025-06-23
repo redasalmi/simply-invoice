@@ -1,4 +1,4 @@
-import { cn } from "@renderer/utils/cn";
+import { cn } from "~/renderer/utils/cn";
 
 export interface ErrorMessageProps
 	extends Omit<React.ComponentPropsWithRef<"p">, "data-invalid"> {}

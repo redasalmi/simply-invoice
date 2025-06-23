@@ -1,6 +1,6 @@
 import { electronAPI } from "@electron-toolkit/preload";
-import type { CreateTaxInput, PaginationType, UpdateTaxInput } from "@types";
 import { contextBridge, ipcRenderer } from "electron";
+import type { CreateTaxInput, PaginationType, UpdateTaxInput } from "~/types";
 
 // Custom APIs for renderer
 const api = {

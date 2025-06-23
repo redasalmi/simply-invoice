@@ -1,7 +1,7 @@
 import path from "node:path";
 import { drizzle } from "drizzle-orm/libsql";
 import { app } from "electron";
-import * as schema from "./schema";
+import * as schema from "~/db/schema";
 
 const isDev = process.env.NODE_ENV === "development";
 

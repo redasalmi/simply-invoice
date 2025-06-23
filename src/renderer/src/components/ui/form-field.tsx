@@ -1,15 +1,15 @@
+import { createContext, useContext, useId } from "react";
 import {
 	ErrorMessage,
 	type ErrorMessageProps,
-} from "@renderer/components/ui/error-message";
-import { Input, type InputProps } from "@renderer/components/ui/input";
-import { Label, type LabelProps } from "@renderer/components/ui/label";
+} from "~/renderer/components/ui/error-message";
+import { Input, type InputProps } from "~/renderer/components/ui/input";
+import { Label, type LabelProps } from "~/renderer/components/ui/label";
 import {
 	NumberInput,
 	type NumberInputProps,
-} from "@renderer/components/ui/number-input";
-import { cn } from "@renderer/utils/cn";
-import { createContext, useContext, useId } from "react";
+} from "~/renderer/components/ui/number-input";
+import { cn } from "~/renderer/utils/cn";
 
 interface FormFieldContextInterface {
 	inputId: string;

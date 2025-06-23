@@ -1,14 +1,3 @@
-import { CreateLink } from "@renderer/components/CreateLink";
-import { Pagination } from "@renderer/components/Pagination";
-import {
-	Table,
-	TableBody,
-	TableCell,
-	TableHead,
-	TableHeader,
-	TableRow,
-} from "@renderer/components/ui/table";
-import { getPaginationParams } from "@renderer/utils/getPaginationParams";
 import { EyeIcon, PencilIcon, TrashIcon } from "lucide-react";
 import {
 	Link,
@@ -16,6 +5,17 @@ import {
 	Outlet,
 	useLoaderData,
 } from "react-router";
+import { CreateLink } from "~/renderer/components/CreateLink";
+import { Pagination } from "~/renderer/components/Pagination";
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow,
+} from "~/renderer/components/ui/table";
+import { getPaginationParams } from "~/renderer/utils/getPaginationParams";
 
 export async function companiesListLoader({ request }: LoaderFunctionArgs) {
 	const { cursor, paginationType } = getPaginationParams(request.url);

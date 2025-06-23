@@ -1,29 +1,32 @@
-import { RootRoute } from "@renderer/root";
-import { HomeRoute } from "@renderer/routes/home";
-import {
-	TaxCreateRoute,
-	taxCreateAction,
-} from "@renderer/routes/taxes/tax-create";
-import {
-	TaxesListRoute,
-	taxesListLoader,
-} from "@renderer/routes/taxes/taxes-list";
 import { createBrowserRouter } from "react-router";
+import { RootRoute } from "~/renderer/root";
 import {
 	CompaniesListRoute,
 	companiesListLoader,
-} from "./routes/companies/companies-list";
+} from "~/renderer/routes/companies/companies-list";
+import { HomeRoute } from "~/renderer/routes/home";
+import {
+	TaxCreateRoute,
+	taxCreateAction,
+} from "~/renderer/routes/taxes/tax-create";
 import {
 	TaxDeleteRoute,
 	taxDeleteAction,
 	taxDeleteLoader,
-} from "./routes/taxes/tax-delete";
-import { TaxDetailRoute, taxDetailLoader } from "./routes/taxes/tax-detail";
+} from "~/renderer/routes/taxes/tax-delete";
+import {
+	TaxDetailRoute,
+	taxDetailLoader,
+} from "~/renderer/routes/taxes/tax-detail";
 import {
 	TaxUpdateRoute,
 	taxUpdateAction,
 	taxUpdateLoader,
-} from "./routes/taxes/tax-update";
+} from "~/renderer/routes/taxes/tax-update";
+import {
+	TaxesListRoute,
+	taxesListLoader,
+} from "~/renderer/routes/taxes/taxes-list";
 
 export const router = createBrowserRouter([
 	{

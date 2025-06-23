@@ -7,9 +7,9 @@ import {
 	Label,
 	Combobox as UICombobox,
 } from "@headlessui/react";
-import { cn } from "@renderer/utils/cn";
 import { CheckIcon, ChevronDownIcon } from "lucide-react";
 import { useId, useState } from "react";
+import { cn } from "~/renderer/utils/cn";
 
 export type ComboboxItem<T> = T & {
 	name: string;

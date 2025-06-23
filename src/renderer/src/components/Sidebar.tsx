@@ -1,5 +1,5 @@
-import { cn } from "@renderer/utils/cn";
 import { Link, NavLink } from "react-router";
+import { cn } from "~/renderer/utils/cn";
 
 interface SideBarLinkProps {
 	to: string;
