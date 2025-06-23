@@ -1,3 +1,4 @@
+import type { PortableTextBlock } from "@portabletext/editor";
 import { relations, sql } from "drizzle-orm";
 import { check, index, real, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { ulid } from "ulid";
@@ -37,7 +38,9 @@ export const companiesTable = sqliteTable(
 			.$defaultFn(() => ulid()),
 		name: text("name").notNull(),
 		email: text("email").notNull(),
-		additionalInformation: text("additional_information", { mode: "json" }),
+		additionalInformation: text("additional_information", {
+			mode: "json",
+		}).$type<Array<PortableTextBlock>>(),
 		addressId: text("address_id", { length: 26 })
 			.notNull()
 			.references(() => addressesTable.addressId, { onDelete: "cascade" }),
