@@ -1,0 +1,108 @@
+import { db } from "@db/config";
+import { companiesTable } from "@db/schema";
+import { emptyResult, itemsPerPage } from "@main/utils/pagination";
+import type {
+	Company,
+	CreateCompanyInput,
+	PaginatedResult,
+	PaginationType,
+	UpdateCompanyInput,
+} from "@types";
+import { asc, count, desc, eq, gt, lt } from "drizzle-orm";
+
+async function getCompaniesCount() {
+	return db.select({ count: count() }).from(companiesTable);
+}
+
+async function getPreviousCompaniesCount(cursor: string) {
+	return db
+		.select({ count: count() })
+		.from(companiesTable)
+		.where(gt(companiesTable.companyId, cursor));
+}
+
+async function getNextCompaniesCount(cursor: string) {
+	return db
+		.select({ count: count() })
+		.from(companiesTable)
+		.where(lt(companiesTable.companyId, cursor));
+}
+
+async function getPreviousCompanies(cursor: string | null) {
+	const result = await db.query.companiesTable.findMany({
+		where: cursor ? gt(companiesTable.companyId, cursor) : undefined,
+		orderBy: [asc(companiesTable.companyId)],
+		limit: itemsPerPage,
+	});
+
+	return result.reverse();
+}
+
+async function getNextCompanies(cursor: string | null) {
+	return db.query.companiesTable.findMany({
+		where: cursor ? lt(companiesTable.companyId, cursor) : undefined,
+		orderBy: [desc(companiesTable.companyId)],
+		limit: itemsPerPage,
+	});
+}
+
+export async function getCompanies(
+	cursor: string | null,
+	paginationType: PaginationType | null,
+) {
+	const [companiesData, companiesTotal] = await Promise.all([
+		paginationType === "previous"
+			? getPreviousCompanies(cursor)
+			: getNextCompanies(cursor),
+		getCompaniesCount(),
+	]);
+
+	if (!companiesData.length) {
+		return emptyResult as PaginatedResult<Company>;
+	}
+
+	const startCursor = companiesData[0].companyId;
+	const endCursor = companiesData[companiesData.length - 1].companyId;
+
+	const [previousCompaniesCount, nextCompaniesCount] = await Promise.all([
+		getPreviousCompaniesCount(startCursor),
+		getNextCompaniesCount(endCursor),
+	]);
+
+	return {
+		items: companiesData,
+		total: companiesTotal[0].count,
+		pageInfo: {
+			endCursor,
+			hasNextPage: Boolean(nextCompaniesCount[0].count),
+			hasPreviousPage: Boolean(previousCompaniesCount[0].count),
+			startCursor,
+		},
+	};
+}
+
+export async function getCompany(companyId: string) {
+	return db.query.companiesTable.findFirst({
+		where: eq(companiesTable.companyId, companyId),
+		with: {
+			address: true,
+		},
+	});
+}
+
+export async function createCompany(company: CreateCompanyInput) {
+	return db.insert(companiesTable).values(company);
+}
+
+export async function updateCompany(company: UpdateCompanyInput) {
+	return db
+		.update(companiesTable)
+		.set(company)
+		.where(eq(companiesTable.companyId, company.companyId));
+}
+
+export async function deleteCompany(companyId: string) {
+	return db
+		.delete(companiesTable)
+		.where(eq(companiesTable.companyId, companyId));
+}

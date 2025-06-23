@@ -5,6 +5,11 @@ import { contextBridge, ipcRenderer } from "electron";
 // Custom APIs for renderer
 const api = {
 	db: {
+		companies: {
+			get: (cursor: string | null, paginationType: PaginationType | null) => {
+				return ipcRenderer.invoke("get-companies", cursor, paginationType);
+			},
+		},
 		taxes: {
 			create: (tax: CreateTaxInput) => {
 				return ipcRenderer.invoke("create-tax", tax);

@@ -1,4 +1,4 @@
-import { sql } from "drizzle-orm";
+import { relations, sql } from "drizzle-orm";
 import { check, index, real, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { ulid } from "ulid";
 
@@ -48,6 +48,13 @@ export const companiesTable = sqliteTable(
 		index("company_email_index").on(table.email),
 	],
 );
+
+export const companiesRelations = relations(companiesTable, ({ one }) => ({
+	address: one(addressesTable, {
+		fields: [companiesTable.addressId],
+		references: [addressesTable.addressId],
+	}),
+}));
 
 export const customersTable = sqliteTable(
 	"customers_table",

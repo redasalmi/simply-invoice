@@ -6,6 +6,7 @@ import {
 	taxUpdateSchema,
 } from "@db/validation";
 import { electronApp, is, optimizer } from "@electron-toolkit/utils";
+import { getCompanies } from "@main/services/companies";
 import {
 	createTax,
 	deleteTax,
@@ -87,6 +88,13 @@ app.whenReady().then(async () => {
 	app.on("browser-window-created", (_, window) => {
 		optimizer.watchWindowShortcuts(window);
 	});
+
+	ipcMain.handle(
+		"get-companies",
+		(_, cursor: string | null, paginationType: PaginationType | null) => {
+			return getCompanies(cursor, paginationType);
+		},
+	);
 
 	ipcMain.handle(
 		"get-taxes",

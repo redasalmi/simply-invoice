@@ -4,8 +4,15 @@ import {
 	TaxCreateRoute,
 	taxCreateAction,
 } from "@renderer/routes/taxes/tax-create";
-import { TaxesListRoute, taxesLoader } from "@renderer/routes/taxes/taxes-list";
+import {
+	TaxesListRoute,
+	taxesListLoader,
+} from "@renderer/routes/taxes/taxes-list";
 import { createBrowserRouter } from "react-router";
+import {
+	CompaniesListRoute,
+	companiesListLoader,
+} from "./routes/companies/companies-list";
 import {
 	TaxDeleteRoute,
 	taxDeleteAction,
@@ -27,8 +34,13 @@ export const router = createBrowserRouter([
 				Component: HomeRoute,
 			},
 			{
+				path: "/companies",
+				loader: companiesListLoader,
+				Component: CompaniesListRoute,
+			},
+			{
 				path: "/taxes",
-				loader: taxesLoader,
+				loader: taxesListLoader,
 				Component: TaxesListRoute,
 				children: [
 					{

@@ -5,6 +5,7 @@ import type {
 } from "@db/validation";
 import type { ElectronAPI } from "@electron-toolkit/preload";
 import type {
+	CompaniesGetResult,
 	CreateTaxInput,
 	PaginationType,
 	TaxCreateResult,
@@ -21,6 +22,12 @@ declare global {
 		electron: ElectronAPI;
 		api: {
 			db: {
+				companies: {
+					get: (
+						cursor: string | null,
+						paginationType: PaginationType | null,
+					) => CompaniesGetResult;
+				};
 				taxes: {
 					create: (
 						tax: CreateTaxInput,
