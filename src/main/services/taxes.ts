@@ -2,10 +2,11 @@ import { db } from "@db/config";
 import { taxesTable } from "@db/schema";
 import { emptyResult, itemsPerPage } from "@main/utils/pagination";
 import type {
-	InsertTax,
+	CreateTaxInput,
 	PaginatedResult,
 	PaginationType,
-	UpdateTax,
+	Tax,
+	UpdateTaxInput,
 } from "@types";
 import { asc, count, desc, eq, gt, lt } from "drizzle-orm";
 
@@ -57,7 +58,7 @@ export async function getTaxes(
 	]);
 
 	if (!taxesData.length) {
-		return emptyResult as PaginatedResult<InsertTax>;
+		return emptyResult as PaginatedResult<Tax>;
 	}
 
 	const startCursor = taxesData[0].taxId;
@@ -84,11 +85,11 @@ export async function getTax(taxId: string) {
 	return db.query.taxesTable.findFirst({ where: eq(taxesTable.taxId, taxId) });
 }
 
-export async function createTax(tax: InsertTax) {
+export async function createTax(tax: CreateTaxInput) {
 	return db.insert(taxesTable).values(tax);
 }
 
-export async function updateTax(tax: UpdateTax) {
+export async function updateTax(tax: UpdateTaxInput) {
 	return db.update(taxesTable).set(tax).where(eq(taxesTable.taxId, tax.taxId));
 }
 

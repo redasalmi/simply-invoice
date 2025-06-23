@@ -1,18 +1,18 @@
 import type {
+	taxCreateSchema,
 	taxDeleteSchema,
-	taxInsertSchema,
 	taxUpdateSchema,
 } from "@db/validation";
 import type { ElectronAPI } from "@electron-toolkit/preload";
 import type {
-	InsertTax,
+	CreateTaxInput,
 	PaginationType,
 	TaxCreateResult,
 	TaxDeleteResult,
 	TaxesGetResult,
 	TaxGetResult,
 	TaxUpdateResult,
-	UpdateTax,
+	UpdateTaxInput,
 } from "@types";
 import type * as v from "valibot";
 
@@ -23,17 +23,17 @@ declare global {
 			db: {
 				taxes: {
 					create: (
-						tax: InsertTax,
+						tax: CreateTaxInput,
 					) =>
 						| TaxCreateResult
-						| { errors: v.FlatErrors<typeof taxInsertSchema> };
+						| { errors: v.FlatErrors<typeof taxCreateSchema> };
 					get: (
 						cursor: string | null,
 						paginationType: PaginationType | null,
 					) => TaxesGetResult;
 					getById: (taxId: string) => TaxGetResult;
 					update: (
-						tax: UpdateTax,
+						tax: UpdateTaxInput,
 					) =>
 						| TaxUpdateResult
 						| { errors: v.FlatErrors<typeof taxUpdateSchema> };

@@ -1,6 +1,6 @@
 import { Button } from "@renderer/components/ui/button";
 import { FormField } from "@renderer/components/ui/form-field";
-import type { InsertTax } from "@types";
+import type { CreateTaxInput } from "@types";
 import {
 	type ActionFunctionArgs,
 	Form,
@@ -11,7 +11,7 @@ import {
 
 export async function taxCreateAction({ request }: ActionFunctionArgs) {
 	const formData = await request.formData();
-	const tax = Object.fromEntries(formData) as unknown as InsertTax;
+	const tax = Object.fromEntries(formData) as unknown as CreateTaxInput;
 	const result = await window.api.db.taxes.create(tax);
 
 	if ("errors" in result) {

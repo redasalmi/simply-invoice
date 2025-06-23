@@ -1,8 +1,8 @@
 import { join } from "node:path";
 import { migrateDb } from "@db/migrate";
 import {
+	taxCreateSchema,
 	taxDeleteSchema,
-	taxInsertSchema,
 	taxUpdateSchema,
 } from "@db/validation";
 import { electronApp, is, optimizer } from "@electron-toolkit/utils";
@@ -15,7 +15,7 @@ import {
 } from "@main/services/taxes";
 import { processAction } from "@main/utils/processAction";
 import icon from "@resources/icon.png?asset";
-import type { InsertTax, PaginationType, UpdateTax } from "@types";
+import type { CreateTaxInput, PaginationType, UpdateTaxInput } from "@types";
 import { app, BrowserWindow, ipcMain, shell } from "electron";
 import {
 	installExtension,
@@ -99,11 +99,11 @@ app.whenReady().then(async () => {
 		return getTax(taxId);
 	});
 
-	ipcMain.handle("create-tax", (_, tax: InsertTax) => {
-		return processAction(tax, taxInsertSchema, createTax);
+	ipcMain.handle("create-tax", (_, tax: CreateTaxInput) => {
+		return processAction(tax, taxCreateSchema, createTax);
 	});
 
-	ipcMain.handle("update-tax", (_, tax: UpdateTax) => {
+	ipcMain.handle("update-tax", (_, tax: UpdateTaxInput) => {
 		return processAction(tax, taxUpdateSchema, updateTax);
 	});
 

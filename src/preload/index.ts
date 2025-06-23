@@ -1,12 +1,12 @@
 import { electronAPI } from "@electron-toolkit/preload";
-import type { InsertTax, PaginationType, UpdateTax } from "@types";
+import type { CreateTaxInput, PaginationType, UpdateTaxInput } from "@types";
 import { contextBridge, ipcRenderer } from "electron";
 
 // Custom APIs for renderer
 const api = {
 	db: {
 		taxes: {
-			create: (tax: InsertTax) => {
+			create: (tax: CreateTaxInput) => {
 				return ipcRenderer.invoke("create-tax", tax);
 			},
 			get: (cursor: string | null, paginationType: PaginationType | null) => {
@@ -15,7 +15,7 @@ const api = {
 			getById: (taxId: string) => {
 				return ipcRenderer.invoke("get-tax", taxId);
 			},
-			update: (tax: UpdateTax) => {
+			update: (tax: UpdateTaxInput) => {
 				return ipcRenderer.invoke("update-tax", tax);
 			},
 			delete: (taxId: string) => {

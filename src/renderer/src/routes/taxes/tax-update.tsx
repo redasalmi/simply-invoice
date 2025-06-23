@@ -1,6 +1,6 @@
 import { Button } from "@renderer/components/ui/button";
 import { FormField } from "@renderer/components/ui/form-field";
-import type { UpdateTax } from "@types";
+import type { UpdateTaxInput } from "@types";
 import {
 	type ActionFunctionArgs,
 	Form,
@@ -24,7 +24,7 @@ export async function taxUpdateLoader({ params }: LoaderFunctionArgs) {
 
 export async function taxUpdateAction({ request }: ActionFunctionArgs) {
 	const formData = await request.formData();
-	const tax = Object.fromEntries(formData) as unknown as UpdateTax;
+	const tax = Object.fromEntries(formData) as unknown as UpdateTaxInput;
 	const result = await window.api.db.taxes.update(tax);
 
 	if ("errors" in result) {
