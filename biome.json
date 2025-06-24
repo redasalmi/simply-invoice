@@ -27,6 +27,16 @@
 				"useNumberNamespace": "error",
 				"noInferrableTypes": "error",
 				"noUselessElse": "error"
+			},
+			"nursery": {
+				"useSortedClasses": {
+					"fix": "safe",
+					"level": "error",
+					"options": {
+						"attributes": ["className"],
+						"functions": ["cn"]
+					}
+				}
 			}
 		}
 	},
@@ -39,7 +49,9 @@
 		"enabled": true,
 		"actions": {
 			"source": {
-				"organizeImports": "on"
+				"organizeImports": "on",
+				"useSortedProperties": "on",
+				"useSortedAttributes": "on"
 			}
 		}
 	}

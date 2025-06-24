@@ -23,8 +23,8 @@ export function Button({
 }: ButtonProps) {
 	return (
 		<button
-			type={type}
 			className={cn(buttonVariants[variant], className)}
+			type={type}
 			{...props}
 		/>
 	);

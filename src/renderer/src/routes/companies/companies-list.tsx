@@ -52,20 +52,20 @@ export function CompaniesListRoute() {
 											<TableCell>{email}</TableCell>
 											<TableCell className="flex items-center gap-4">
 												<Link
-													to={`/companies/detail/${companyId}`}
 													aria-label={`view ${name} company details`}
+													to={`/companies/detail/${companyId}`}
 												>
 													<EyeIcon />
 												</Link>
 												<Link
-													to={`/companies/update/${companyId}`}
 													aria-label={`update ${name} company`}
+													to={`/companies/update/${companyId}`}
 												>
 													<PencilIcon />
 												</Link>
 												<Link
-													to={`/companies/delete/${companyId}/`}
 													aria-label={`delete ${name} company`}
+													to={`/companies/delete/${companyId}/`}
 												>
 													<TrashIcon />
 												</Link>

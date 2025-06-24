@@ -1,18 +1,18 @@
 import type { companiesTable, taxesTable } from "./db/schema";
 import type {
+	createCompany,
+	deleteCompany,
+	getCompanies,
+	getCompany,
+	updateCompany,
+} from "./main/services/companies";
+import type {
 	createTax,
 	deleteTax,
 	getTax,
 	getTaxes,
 	updateTax,
 } from "./main/services/taxes";
-import type {
-	getCompany,
-	getCompanies,
-	createCompany,
-	updateCompany,
-	deleteCompany,
-} from "./main/services/companies";
 import type { paginationTypes } from "./renderer/src/utils/getPaginationParams";
 
 export type PaginationType = keyof typeof paginationTypes;

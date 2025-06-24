@@ -31,7 +31,7 @@ export function TaxDetailRoute() {
 	};
 
 	return (
-		<Dialog open closeDialog={closeDialog}>
+		<Dialog closeDialog={closeDialog} open>
 			<Dialog.CloseButton autoFocus onClick={closeDialog} />
 
 			{!tax ? (
@@ -41,9 +41,9 @@ export function TaxDetailRoute() {
 						<p>
 							Sorry, but no tax with this ID was found! Please click{" "}
 							<Link
-								to="/taxes"
 								aria-label="taxes list"
 								className="hover:underline"
+								to="/taxes"
 							>
 								Here
 							</Link>

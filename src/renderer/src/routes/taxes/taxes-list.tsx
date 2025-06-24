@@ -52,20 +52,20 @@ export function TaxesListRoute() {
 											<TableCell>{rate}</TableCell>
 											<TableCell className="flex items-center gap-4">
 												<Link
-													to={`/taxes/detail/${taxId}`}
 													aria-label={`view ${name} tax details`}
+													to={`/taxes/detail/${taxId}`}
 												>
 													<EyeIcon />
 												</Link>
 												<Link
-													to={`/taxes/update/${taxId}`}
 													aria-label={`update ${name} tax`}
+													to={`/taxes/update/${taxId}`}
 												>
 													<PencilIcon />
 												</Link>
 												<Link
-													to={`/taxes/delete/${taxId}`}
 													aria-label={`delete ${name} tax`}
+													to={`/taxes/delete/${taxId}`}
 												>
 													<TrashIcon />
 												</Link>

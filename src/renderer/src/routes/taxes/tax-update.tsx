@@ -51,9 +51,9 @@ export function TaxUpdateRoute() {
 					<p className="m-12">
 						Sorry, but no tax with this ID was found! Please click{" "}
 						<Link
-							to="/taxes"
 							aria-label="taxes list"
 							className="hover:underline"
+							to="/taxes"
 						>
 							Here
 						</Link>{" "}
@@ -66,28 +66,28 @@ export function TaxUpdateRoute() {
 
 	return (
 		<section>
-			<Form method="post" className="flex flex-col gap-4">
-				<input type="hidden" name="taxId" value={tax.taxId} />
+			<Form className="flex flex-col gap-4" method="post">
+				<input name="taxId" type="hidden" value={tax.taxId} />
 
 				<FormField errors={actionData?.errors?.nested?.name}>
 					<FormField.Label>Name</FormField.Label>
-					<FormField.Input type="text" name="name" defaultValue={tax.name} />
+					<FormField.Input defaultValue={tax.name} name="name" type="text" />
 					<FormField.ErrorMessage />
 				</FormField>
 
 				<FormField errors={actionData?.errors?.nested?.description}>
 					<FormField.Label>Description</FormField.Label>
 					<FormField.Input
-						type="text"
-						name="description"
 						defaultValue={tax.description ?? ""}
+						name="description"
+						type="text"
 					/>
 					<FormField.ErrorMessage />
 				</FormField>
 
 				<FormField errors={actionData?.errors?.nested?.rate}>
 					<FormField.Label>Rate (%)</FormField.Label>
-					<FormField.NumberInput name="rate" defaultValue={tax.rate} />
+					<FormField.NumberInput defaultValue={tax.rate} name="rate" />
 					<FormField.ErrorMessage />
 				</FormField>
 

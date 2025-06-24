@@ -41,22 +41,22 @@ export function Select<T extends string>({
 
 	return (
 		<Field className={className}>
-			<Label className="mb-1 block text-sm font-medium text-gray-900">
+			<Label className="mb-1 block font-medium text-gray-900 text-sm">
 				{label}
 			</Label>
 			<div className="relative">
 				<UISelect
-					name={name}
-					defaultValue={defaultValue}
 					aria-description={descriptionId}
 					aria-invalid={hasError || undefined}
-					data-invalid={hasError || undefined}
 					className={cn(
-						"block w-full appearance-none rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500",
-						"focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25",
+						"block w-full appearance-none rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 text-sm focus:border-blue-500 focus:ring-blue-500",
+						"data-[focus]:-outline-offset-2 focus:outline-none data-[focus]:outline-2 data-[focus]:outline-white/25",
 						"*:text-black",
-						'data-[invalid]:bg-red-50 data-[invalid]:text-red-900 data-[invalid]:placeholder-red-700 data-[invalid]:focus:border-red-500 data-[invalid]:focus:ring-red-500 data-[invalid="true"]:border-red-500',
+						'data-[invalid="true"]:border-red-500 data-[invalid]:bg-red-50 data-[invalid]:text-red-900 data-[invalid]:placeholder-red-700 data-[invalid]:focus:border-red-500 data-[invalid]:focus:ring-red-500',
 					)}
+					data-invalid={hasError || undefined}
+					defaultValue={defaultValue}
+					name={name}
 					onChange={handleOnChange}
 				>
 					{items.map((item) => (
@@ -72,7 +72,7 @@ export function Select<T extends string>({
 			</div>
 
 			{errorMessage ? (
-				<p data-invalid id={descriptionId} className="font-medium text-red-900">
+				<p className="font-medium text-red-900" data-invalid id={descriptionId}>
 					{errorMessage}
 				</p>
 			) : null}

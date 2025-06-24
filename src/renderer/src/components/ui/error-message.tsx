@@ -6,7 +6,7 @@ export interface ErrorMessageProps
 export function ErrorMessage({ className, ...props }: ErrorMessageProps) {
 	return (
 		<p
-			className={cn("text-sm font-medium text-red-900", className)}
+			className={cn("font-medium text-red-900 text-sm", className)}
 			data-invalid
 			{...props}
 		/>

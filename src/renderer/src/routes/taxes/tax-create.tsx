@@ -32,16 +32,16 @@ export function TaxCreateRoute() {
 
 	return (
 		<section>
-			<Form method="post" className="flex flex-col gap-4">
+			<Form className="flex flex-col gap-4" method="post">
 				<FormField errors={actionData?.errors?.nested?.name}>
 					<FormField.Label>Name</FormField.Label>
-					<FormField.Input type="text" name="name" />
+					<FormField.Input name="name" type="text" />
 					<FormField.ErrorMessage />
 				</FormField>
 
 				<FormField errors={actionData?.errors?.nested?.description}>
 					<FormField.Label>Description</FormField.Label>
-					<FormField.Input type="text" name="description" />
+					<FormField.Input name="description" type="text" />
 					<FormField.ErrorMessage />
 				</FormField>
 
@@ -51,7 +51,7 @@ export function TaxCreateRoute() {
 					<FormField.ErrorMessage />
 				</FormField>
 
-				<Button type="submit" disabled={isSubmitting}>
+				<Button disabled={isSubmitting} type="submit">
 					{isLoading ? "Saving Tax..." : "Save Tax"}
 				</Button>
 			</Form>

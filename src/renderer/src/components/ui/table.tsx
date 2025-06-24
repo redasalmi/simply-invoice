@@ -35,7 +35,7 @@ export function TableRow({
 }: React.ComponentPropsWithRef<"tr">) {
 	return (
 		<tr
-			className={cn("border-b-[1px] border-gray-300", className)}
+			className={cn("border-gray-300 border-b-[1px]", className)}
 			{...props}
 		/>
 	);

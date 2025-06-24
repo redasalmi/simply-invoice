@@ -1,4 +1,10 @@
 import type { ElectronAPI } from "@electron-toolkit/preload";
+import type * as v from "valibot";
+import type {
+	taxCreateSchema,
+	taxDeleteSchema,
+	taxUpdateSchema,
+} from "~/db/validation";
 import type {
 	CompaniesGetResult,
 	CreateTaxInput,
@@ -10,12 +16,6 @@ import type {
 	TaxUpdateResult,
 	UpdateTaxInput,
 } from "~/types";
-import type * as v from "valibot";
-import type {
-	taxCreateSchema,
-	taxDeleteSchema,
-	taxUpdateSchema,
-} from "~/db/validation";
 
 declare global {
 	interface Window {

@@ -18,28 +18,28 @@ export function Pagination({ baseUrl, pageInfo }: PaginationProps) {
 
 	return (
 		<div className="mt-8 flex items-center justify-end gap-4">
-			<Form method="get" action={baseUrl}>
-				<input type="hidden" name={cursorParam} value={pageInfo.startCursor} />
+			<Form action={baseUrl} method="get">
+				<input name={cursorParam} type="hidden" value={pageInfo.startCursor} />
 				<input
-					type="hidden"
 					name={paginationTypeParam}
+					type="hidden"
 					value={paginationTypes.previous}
 				/>
 				<Button
-					type="submit"
 					disabled={isSubmitting || !pageInfo.hasPreviousPage}
+					type="submit"
 				>
 					Previous
 				</Button>
 			</Form>
-			<Form method="get" action={baseUrl}>
-				<input type="hidden" name={cursorParam} value={pageInfo.endCursor} />
+			<Form action={baseUrl} method="get">
+				<input name={cursorParam} type="hidden" value={pageInfo.endCursor} />
 				<input
-					type="hidden"
 					name={paginationTypeParam}
+					type="hidden"
 					value={paginationTypes.next}
 				/>
-				<Button type="submit" disabled={isSubmitting || !pageInfo.hasNextPage}>
+				<Button disabled={isSubmitting || !pageInfo.hasNextPage} type="submit">
 					Next
 				</Button>
 			</Form>

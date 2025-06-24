@@ -58,43 +58,43 @@ export function NumberInput({
 	return (
 		<div className="flex items-center">
 			<button
-				type="button"
-				tabIndex={-1}
-				aria-label="Decrease"
 				aria-controls={id}
+				aria-label="Decrease"
 				className={cn(
-					"flex size-10 items-center justify-center rounded-tl-md rounded-bl-md border border-gray-200 bg-gray-50 bg-clip-padding text-gray-900 select-none hover:bg-gray-100 active:bg-gray-100",
+					"flex size-10 select-none items-center justify-center rounded-tl-md rounded-bl-md border border-gray-200 bg-gray-50 bg-clip-padding text-gray-900 hover:bg-gray-100 active:bg-gray-100",
 					isInvalid && "border-red-900",
 				)}
 				onClick={() => onClick("minus")}
+				tabIndex={-1}
+				type="button"
 			>
 				<Minus />
 			</button>
 			<input
-				id={id}
-				value={value}
-				type="text"
-				inputMode="numeric"
 				autoComplete="off"
 				autoCorrect="off"
-				spellCheck={false}
 				className={cn(
-					"peer h-10 w-24 border-t border-b border-gray-200 text-center text-base text-gray-900 tabular-nums focus:z-1 focus:outline-2 focus:-outline-offset-1 focus:outline-blue-800 aria-invalid:border-red-900",
+					"peer focus:-outline-offset-1 h-10 w-24 border-gray-200 border-t border-b text-center text-base text-gray-900 tabular-nums focus:z-1 focus:outline-2 focus:outline-blue-800 aria-invalid:border-red-900",
 					className,
 				)}
+				id={id}
+				inputMode="numeric"
 				onInput={onInput}
+				spellCheck={false}
+				type="text"
+				value={value}
 				{...props}
 			/>
 			<button
-				type="button"
-				tabIndex={-1}
-				aria-label="Increase"
 				aria-controls={id}
+				aria-label="Increase"
 				className={cn(
-					"flex size-10 items-center justify-center rounded-tr-md rounded-br-md border border-gray-200 bg-gray-50 bg-clip-padding text-gray-900 select-none hover:bg-gray-100 active:bg-gray-100",
+					"flex size-10 select-none items-center justify-center rounded-tr-md rounded-br-md border border-gray-200 bg-gray-50 bg-clip-padding text-gray-900 hover:bg-gray-100 active:bg-gray-100",
 					isInvalid && "border-red-900",
 				)}
 				onClick={() => onClick("plus")}
+				tabIndex={-1}
+				type="button"
 			>
 				<Plus />
 			</button>

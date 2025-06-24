@@ -51,7 +51,7 @@ export function TaxDeleteRoute() {
 
 	if (!tax) {
 		return (
-			<Dialog open role="alertdialog" closeDialog={closeAlert}>
+			<Dialog closeDialog={closeAlert} open role="alertdialog">
 				<Dialog.Title>No Tax Found!</Dialog.Title>
 				<Dialog.Description>
 					Sorry but no tax with this ID: {params.taxId} was found. Click the
@@ -66,7 +66,7 @@ export function TaxDeleteRoute() {
 
 	if (actionData?.errors) {
 		return (
-			<Dialog open role="alertdialog" closeDialog={closeAlert}>
+			<Dialog closeDialog={closeAlert} open role="alertdialog">
 				<Dialog.Title>Error Deleting Tax!</Dialog.Title>
 				<Dialog.Description>
 					An error happened while deleting your tax, please try again later.
@@ -79,7 +79,7 @@ export function TaxDeleteRoute() {
 	}
 
 	return (
-		<Dialog open role="alertdialog" closeDialog={closeAlert}>
+		<Dialog closeDialog={closeAlert} open role="alertdialog">
 			<Dialog.Title>Are you absolutely sure?</Dialog.Title>
 			<Dialog.Description>
 				This action cannot be undone. This will permanently delete the{" "}
@@ -90,7 +90,7 @@ export function TaxDeleteRoute() {
 					Cancel
 				</Dialog.CancelButton>
 				<Form method="POST">
-					<Dialog.ActionButton type="submit" disabled={isSubmitting}>
+					<Dialog.ActionButton disabled={isSubmitting} type="submit">
 						{isLoading ? "...Deleting" : "Delete"}
 					</Dialog.ActionButton>
 				</Form>

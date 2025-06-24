@@ -42,9 +42,9 @@ function FormFieldInput(
 
 	return (
 		<Input
-			id={inputId}
-			aria-invalid={hasErrors}
 			aria-describedby={hasErrors ? errorId : undefined}
+			aria-invalid={hasErrors}
+			id={inputId}
 			{...props}
 		/>
 	);
@@ -57,9 +57,9 @@ function FormFieldNumberInput(
 
 	return (
 		<NumberInput
-			id={inputId}
-			aria-invalid={hasErrors}
 			aria-describedby={hasErrors ? errorId : undefined}
+			aria-invalid={hasErrors}
+			id={inputId}
 			{...props}
 		/>
 	);

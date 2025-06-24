@@ -19,22 +19,22 @@ export interface SchemaDefinition extends BaseDefinition {
 
 export const schemaDefinition = defineSchema({
 	decorators: [
-		{ name: "strong", icon: () => <BoldIcon width={16} height={16} /> },
-		{ name: "em", icon: () => <ItalicIcon width={16} height={16} /> },
-		{ name: "underline", icon: () => <UnderlineIcon width={16} height={16} /> },
+		{ name: "strong", icon: () => <BoldIcon height={16} width={16} /> },
+		{ name: "em", icon: () => <ItalicIcon height={16} width={16} /> },
+		{ name: "underline", icon: () => <UnderlineIcon height={16} width={16} /> },
 	],
 	annotations: [
-		{ name: "link", icon: () => <LinkIcon width={16} height={16} /> },
+		{ name: "link", icon: () => <LinkIcon height={16} width={16} /> },
 	],
 	styles: [
-		{ name: "normal", icon: () => <TypeIcon width={16} height={16} /> },
-		{ name: "h1", icon: () => <Heading1Icon width={16} height={16} /> },
-		{ name: "h2", icon: () => <Heading2Icon width={16} height={16} /> },
-		{ name: "h3", icon: () => <Heading3Icon width={16} height={16} /> },
-		{ name: "blockquote", icon: () => <QuoteIcon width={16} height={16} /> },
+		{ name: "normal", icon: () => <TypeIcon height={16} width={16} /> },
+		{ name: "h1", icon: () => <Heading1Icon height={16} width={16} /> },
+		{ name: "h2", icon: () => <Heading2Icon height={16} width={16} /> },
+		{ name: "h3", icon: () => <Heading3Icon height={16} width={16} /> },
+		{ name: "blockquote", icon: () => <QuoteIcon height={16} width={16} /> },
 	],
 	lists: [
-		{ name: "bullet", icon: () => <ListIcon width={16} height={16} /> },
-		{ name: "number", icon: () => <ListOrderedIcon width={16} height={16} /> },
+		{ name: "bullet", icon: () => <ListIcon height={16} width={16} /> },
+		{ name: "number", icon: () => <ListOrderedIcon height={16} width={16} /> },
 	],
 });

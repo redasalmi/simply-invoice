@@ -22,7 +22,7 @@ function DialogTitle({
 }: React.ComponentPropsWithRef<"h2">) {
 	return (
 		<h2
-			className={cn("text-mauve-12 m-0 text-[17px] font-medium", className)}
+			className={cn("m-0 font-medium text-[17px] text-mauve-12", className)}
 			{...props}
 		/>
 	);
@@ -35,7 +35,7 @@ function DialogDescription({
 	return (
 		<div
 			className={cn(
-				"text-mauve-11 mt-[10px] mb-5 text-[15px] leading-normal",
+				"mt-[10px] mb-5 text-[15px] text-mauve-11 leading-normal",
 				className,
 			)}
 			{...props}
@@ -63,10 +63,10 @@ function DialogCloseButton({ autoFocus, onClick }: DialogCloseButtonProps) {
 
 	return (
 		<Button
-			variant="icon"
-			className="absolute top-2 right-2 size-8"
 			autoFocus={autoFocus}
+			className="absolute top-2 right-2 size-8"
 			onClick={handleClick}
+			variant="icon"
 		>
 			<XIcon className="h-4 w-4" />
 		</Button>
@@ -91,7 +91,7 @@ function DialogCancelButton({ onClick, ...props }: DialogCancelButtonProps) {
 		dialogRef.current?.close();
 	};
 
-	return <Button variant="alternative" onClick={handleClick} {...props} />;
+	return <Button onClick={handleClick} variant="alternative" {...props} />;
 }
 
 interface DialogActionButtonProps extends Omit<ButtonProps, "variant"> {}
@@ -143,17 +143,17 @@ export function Dialog({
 
 	return (
 		<dialog
-			ref={dialogRef}
 			className={cn(
-				"bg-transparent backdrop-brightness-50 fixed inset-0 z-50 size-full flex items-center justify-center",
+				"fixed inset-0 z-50 flex size-full items-center justify-center bg-transparent backdrop-brightness-50",
 				className,
 			)}
-			onKeyDown={handleKeyDown}
 			onClick={handleClickOutside}
+			onKeyDown={handleKeyDown}
+			ref={dialogRef}
 			{...props}
 		>
 			<DialogContext.Provider value={{ dialogRef }}>
-				<div className="bg-white p-8 rounded-lg relative">{children}</div>
+				<div className="relative rounded-lg bg-white p-8">{children}</div>
 			</DialogContext.Provider>
 		</dialog>
 	);

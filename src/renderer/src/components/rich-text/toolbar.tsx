@@ -22,11 +22,11 @@ function ToolbarButton({ name, icon, active, onClick }: ToolbarButtonProps) {
 
 	return (
 		<Button
+			aria-label={name}
 			className={cn(
 				"flex size-9 items-center justify-center p-0",
 				active && "bg-gray-500",
 			)}
-			aria-label={name}
 			onClick={() => {
 				onClick();
 				editor.send({ type: "focus" });

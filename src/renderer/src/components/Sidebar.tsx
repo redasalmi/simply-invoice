@@ -9,10 +9,10 @@ interface SideBarLinkProps {
 function NavItem({ to, children }: SideBarLinkProps) {
 	return (
 		<NavLink
-			to={to}
 			className={({ isActive }) =>
 				cn("hover:underline", isActive && "underline")
 			}
+			to={to}
 		>
 			{children}
 		</NavLink>
@@ -21,7 +21,7 @@ function NavItem({ to, children }: SideBarLinkProps) {
 
 export function Sidebar() {
 	return (
-		<nav className="flex h-lvh flex-col gap-8 border-r-2 border-gray-200 p-6 font-bold text-nowrap">
+		<nav className="flex h-lvh flex-col gap-8 text-nowrap border-gray-200 border-r-2 p-6 font-bold">
 			<Link className="py-10 hover:underline" to="/">
 				Simply Invoice
 			</Link>

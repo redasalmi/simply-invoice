@@ -1,10 +1,10 @@
-[role='textbox'] {
+[role="textbox"] {
 	counter-reset: list-level-1 list-level-2 list-level-3 list-level-4
 		list-level-5 list-level-6 list-level-7 list-level-8 list-level-9
 		list-level-10;
 }
 
-[role='textbox'] > :not(.pt-list-item-number) {
+[role="textbox"] > :not(.pt-list-item-number) {
 	counter-set: list-level-1 list-level-2 list-level-3 list-level-4 list-level-5
 		list-level-6 list-level-7 list-level-8 list-level-9 list-level-10;
 }
@@ -16,10 +16,10 @@
 	position: absolute;
 }
 .pt-list-item-bullet:before {
-	content: '●';
+	content: "●";
 }
 .pt-list-item-number:before {
-	content: counter(list-level-1) '.';
+	content: counter(list-level-1) ".";
 }
 
 .pt-list-item-level-1 {
@@ -38,10 +38,10 @@
 	left: 8px;
 }
 .pt-list-item-number.pt-list-item-level-2:before {
-	content: counter(list-level-2) '.';
+	content: counter(list-level-2) ".";
 }
 .pt-list-item-bullet.pt-list-item-level-2:before {
-	content: '○';
+	content: "○";
 }
 
 .pt-list-item-level-3 {
@@ -52,10 +52,10 @@
 	left: 16px;
 }
 .pt-list-item-number.pt-list-item-level-3:before {
-	content: counter(list-level-3) '.';
+	content: counter(list-level-3) ".";
 }
 .pt-list-item-bullet.pt-list-item-level-3:before {
-	content: '■';
+	content: "■";
 }
 
 .pt-list-item-level-4 {
@@ -66,7 +66,7 @@
 	left: 24px;
 }
 .pt-list-item-number.pt-list-item-level-4:before {
-	content: counter(list-level-4) '.';
+	content: counter(list-level-4) ".";
 }
 
 .pt-list-item-level-5 {
@@ -77,10 +77,10 @@
 	left: 30px;
 }
 .pt-list-item-number.pt-list-item-level-5:before {
-	content: counter(list-level-5) '.';
+	content: counter(list-level-5) ".";
 }
 .pt-list-item-bullet.pt-list-item-level-5:before {
-	content: '○';
+	content: "○";
 }
 
 .pt-list-item-level-6 {
@@ -91,10 +91,10 @@
 	left: 36px;
 }
 .pt-list-item-number.pt-list-item-level-6:before {
-	content: counter(list-level-6) '.';
+	content: counter(list-level-6) ".";
 }
 .pt-list-item-bullet.pt-list-item-level-6:before {
-	content: '■';
+	content: "■";
 }
 
 .pt-list-item-level-7 {
@@ -105,7 +105,7 @@
 	left: 44px;
 }
 .pt-list-item-number.pt-list-item-level-7:before {
-	content: counter(list-level-7) '.';
+	content: counter(list-level-7) ".";
 }
 
 .pt-list-item-level-8 {
@@ -116,10 +116,10 @@
 	left: 52px;
 }
 .pt-list-item-number.pt-list-item-level-8:before {
-	content: counter(list-level-8) '.';
+	content: counter(list-level-8) ".";
 }
 .pt-list-item-bullet.pt-list-item-level-8:before {
-	content: '○';
+	content: "○";
 }
 
 .pt-list-item-level-9 {
@@ -130,10 +130,10 @@
 	left: 60px;
 }
 .pt-list-item-number.pt-list-item-level-9:before {
-	content: counter(list-level-9) '.';
+	content: counter(list-level-9) ".";
 }
 .pt-list-item-bullet.pt-list-item-level-9:before {
-	content: '■';
+	content: "■";
 }
 
 .pt-list-item-level-10 {
@@ -144,5 +144,5 @@
 	left: 68px;
 }
 .pt-list-item-number.pt-list-item-level-10:before {
-	content: counter(list-level-10) '.';
+	content: counter(list-level-10) ".";
 }

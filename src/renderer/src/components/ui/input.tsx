@@ -6,7 +6,7 @@ export function Input({ className, ...props }: InputProps) {
 	return (
 		<input
 			className={cn(
-				"border-2 border-gray-300 rounded-md p-2 aria-invalid:border-red-900",
+				"rounded-md border-2 border-gray-300 p-2 aria-invalid:border-red-900",
 				className,
 			)}
 			{...props}

@@ -38,16 +38,16 @@ export function RichTextEditor({ name, initialValue }: RichTextEditorProps) {
 				}}
 			>
 				{value ? (
-					<input type="hidden" name={name} value={JSON.stringify(value)} />
+					<input name={name} type="hidden" value={JSON.stringify(value)} />
 				) : null}
 
 				<EventListenerPlugin on={handleEditorEvent} />
 				<Toolbar />
 				<PortableTextEditable
-					className="my-2 min-h-32 rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
-					renderStyle={renderStyle}
-					renderDecorator={renderDecorator}
+					className="my-2 min-h-32 rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 text-sm focus:border-blue-500 focus:ring-blue-500"
 					renderAnnotation={renderAnnotation}
+					renderDecorator={renderDecorator}
+					renderStyle={renderStyle}
 				/>
 			</EditorProvider>
 		</>
