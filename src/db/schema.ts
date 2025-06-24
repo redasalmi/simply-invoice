@@ -16,10 +16,10 @@ export const addressesTable = sqliteTable(
 			.$defaultFn(() => ulid()),
 		address1: text("address1").notNull(),
 		address2: text("address2"),
-		city: text("city"),
+		city: text("city").notNull(),
 		country: text("country").notNull(),
 		province: text("province"),
-		zip: text("zip"),
+		zip: text("zip").notNull(),
 		...timestamps,
 	},
 	(table) => [

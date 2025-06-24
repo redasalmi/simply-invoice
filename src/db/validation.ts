@@ -1,6 +1,35 @@
 import { createInsertSchema } from "drizzle-valibot";
 import * as v from "valibot";
-import { taxesTable } from "~/db/schema";
+import { addressesTable, companiesTable, taxesTable } from "~/db/schema";
+
+export const addressCreateSchema = createInsertSchema(addressesTable, {
+	address1: (schema) => v.pipe(schema, v.nonEmpty("Address 1 is required")),
+	city: (schema) => v.pipe(schema, v.nonEmpty("City is required")),
+	country: (schema) => v.pipe(schema, v.nonEmpty("Country is required")),
+	zip: (schema) => v.pipe(schema, v.nonEmpty("Zip is required")),
+});
+
+export const addressUpdateSchema = v.object({
+	...addressCreateSchema.entries,
+	addressId: v.pipe(v.string(), v.nonEmpty("Address ID is required"), v.ulid()),
+});
+
+export const companyCreateWithAddressSchema = createInsertSchema(
+	companiesTable,
+	{
+		name: (schema) => v.pipe(schema, v.nonEmpty("Name is required")),
+		email: (schema) =>
+			v.pipe(
+				schema,
+				v.nonEmpty("Email is required"),
+				v.email("Invalid email address"),
+			),
+		addressId: (schema) =>
+			v.optional(
+				v.pipe(schema, v.nonEmpty("Address ID is required"), v.ulid()),
+			),
+	},
+);
 
 export const taxCreateSchema = createInsertSchema(taxesTable, {
 	name: (schema) => v.pipe(schema, v.nonEmpty("Name is required")),

@@ -1,12 +1,17 @@
 import type { ElectronAPI } from "@electron-toolkit/preload";
 import type * as v from "valibot";
 import type {
+	addressCreateSchema,
+	companyCreateWithAddressSchema,
 	taxCreateSchema,
 	taxDeleteSchema,
 	taxUpdateSchema,
 } from "~/db/validation";
 import type {
 	CompaniesGetResult,
+	CompanyCreateWithAddressResult,
+	CreateAddressInput,
+	CreateCompanyWithAddressInput,
 	CreateTaxInput,
 	PaginationType,
 	TaxCreateResult,
@@ -23,6 +28,17 @@ declare global {
 		api: {
 			db: {
 				companies: {
+					createWithAddress: (
+						company: CreateCompanyWithAddressInput,
+						address: CreateAddressInput,
+					) =>
+						| CompanyCreateWithAddressResult
+						| {
+								errors: {
+									company: v.FlatErrors<typeof companyCreateWithAddressSchema>;
+									address: v.FlatErrors<typeof addressCreateSchema>;
+								};
+						  };
 					get: (
 						cursor: string | null,
 						paginationType: PaginationType | null,

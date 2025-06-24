@@ -1,11 +1,27 @@
 import { electronAPI } from "@electron-toolkit/preload";
 import { contextBridge, ipcRenderer } from "electron";
-import type { CreateTaxInput, PaginationType, UpdateTaxInput } from "~/types";
+import type {
+	CreateAddressInput,
+	CreateCompanyWithAddressInput,
+	CreateTaxInput,
+	PaginationType,
+	UpdateTaxInput,
+} from "~/types";
 
 // Custom APIs for renderer
 const api = {
 	db: {
 		companies: {
+			createWithAddress: (
+				company: CreateCompanyWithAddressInput,
+				address: CreateAddressInput,
+			) => {
+				return ipcRenderer.invoke(
+					"create-company-with-address",
+					company,
+					address,
+				);
+			},
 			get: (cursor: string | null, paginationType: PaginationType | null) => {
 				return ipcRenderer.invoke("get-companies", cursor, paginationType);
 			},

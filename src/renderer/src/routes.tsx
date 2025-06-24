@@ -4,6 +4,10 @@ import {
 	CompaniesListRoute,
 	companiesListLoader,
 } from "~/renderer/routes/companies/companies-list";
+import {
+	CompanyCreateRoute,
+	companyCreateAction,
+} from "~/renderer/routes/companies/company-create";
 import { HomeRoute } from "~/renderer/routes/home";
 import {
 	TaxCreateRoute,
@@ -40,6 +44,11 @@ export const router = createBrowserRouter([
 				path: "/companies",
 				loader: companiesListLoader,
 				Component: CompaniesListRoute,
+			},
+			{
+				path: "/companies/create",
+				action: companyCreateAction,
+				Component: CompanyCreateRoute,
 			},
 			{
 				path: "/taxes",

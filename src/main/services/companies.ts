@@ -1,10 +1,11 @@
 import { asc, count, desc, eq, gt, lt } from "drizzle-orm";
 import { db } from "~/db/config";
-import { companiesTable } from "~/db/schema";
+import { addressesTable, companiesTable } from "~/db/schema";
 import { emptyResult, itemsPerPage } from "~/main/utils/pagination";
 import type {
 	Company,
-	CreateCompanyInput,
+	CreateAddressInput,
+	CreateCompanyWithAddressInput,
 	PaginatedResult,
 	PaginationType,
 	UpdateCompanyInput,
@@ -90,8 +91,30 @@ export async function getCompany(companyId: string) {
 	});
 }
 
-export async function createCompany(company: CreateCompanyInput) {
-	return db.insert(companiesTable).values(company);
+export async function createCompanyWithAddress(
+	company: CreateCompanyWithAddressInput,
+	address: CreateAddressInput,
+) {
+	return db.transaction(async (tx) => {
+		const [{ addressId }] = await tx
+			.insert(addressesTable)
+			.values(address)
+			.returning({ addressId: addressesTable.addressId });
+
+		if (!addressId) {
+			throw new Error("Failed to create address");
+		}
+
+		const [{ companyId }] = await tx
+			.insert(companiesTable)
+			.values({ ...company, addressId })
+			.returning({ companyId: companiesTable.companyId });
+
+		return {
+			companyId,
+			addressId,
+		};
+	});
 }
 
 export async function updateCompany(company: UpdateCompanyInput) {

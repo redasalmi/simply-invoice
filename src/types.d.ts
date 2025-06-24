@@ -1,6 +1,7 @@
-import type { companiesTable, taxesTable } from "./db/schema";
+import type { addressesTable, companiesTable, taxesTable } from "./db/schema";
 import type {
 	createCompany,
+	createCompanyWithAddress,
 	deleteCompany,
 	getCompanies,
 	getCompany,
@@ -30,13 +31,25 @@ export interface PaginatedResult<T> {
 	pageInfo: PageInfo;
 }
 
+export type Address = typeof addressesTable.$inferSelect;
+export type CreateAddressInput = typeof addressesTable.$inferInsert;
+export interface UpdateAddressInput extends CreateAddressInput {
+	addressId: string;
+}
+
 export type Company = typeof companiesTable.$inferSelect;
 export type CreateCompanyInput = typeof companiesTable.$inferInsert;
+export type CreateCompanyWithAddressInput = Omit<
+	CreateCompanyInput,
+	"addressId"
+>;
 export interface UpdateCompanyInput extends CreateCompanyInput {
 	companyId: string;
 }
 
-export type CompanyCreateResult = ReturnType<typeof createCompany>;
+export type CompanyCreateWithAddressResult = ReturnType<
+	typeof createCompanyWithAddress
+>;
 export type CompanyUpdateResult = ReturnType<typeof updateCompany>;
 export type CompanyDeleteResult = ReturnType<typeof deleteCompany>;
 export type CompanyGetResult = ReturnType<typeof getCompany>;

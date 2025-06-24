@@ -5,13 +5,19 @@ import {
 	installExtension,
 	REACT_DEVELOPER_TOOLS,
 } from "electron-devtools-installer";
+import * as v from "valibot";
 import { migrateDb } from "~/db/migrate";
 import {
+	addressCreateSchema,
+	companyCreateWithAddressSchema,
 	taxCreateSchema,
 	taxDeleteSchema,
 	taxUpdateSchema,
 } from "~/db/validation";
-import { getCompanies } from "~/main/services/companies";
+import {
+	createCompanyWithAddress,
+	getCompanies,
+} from "~/main/services/companies";
 import {
 	createTax,
 	deleteTax,
@@ -19,9 +25,14 @@ import {
 	getTaxes,
 	updateTax,
 } from "~/main/services/taxes";
-import { processAction } from "~/main/utils/processAction";
 import icon from "~/resources/icon.png?asset";
-import type { CreateTaxInput, PaginationType, UpdateTaxInput } from "~/types";
+import type {
+	CreateAddressInput,
+	CreateCompanyWithAddressInput,
+	CreateTaxInput,
+	PaginationType,
+	UpdateTaxInput,
+} from "~/types";
 
 function createWindow() {
 	// Create the browser window.
@@ -97,6 +108,49 @@ app.whenReady().then(async () => {
 	);
 
 	ipcMain.handle(
+		"create-company-with-address",
+		(
+			_,
+			company: CreateCompanyWithAddressInput,
+			address: CreateAddressInput,
+		) => {
+			let companyErrors: v.FlatErrors<typeof companyCreateWithAddressSchema> =
+				{};
+			let addressErrors: v.FlatErrors<typeof addressCreateSchema> = {};
+
+			const parsedCompany = v.safeParse(
+				companyCreateWithAddressSchema,
+				company,
+			);
+			if (!parsedCompany.success) {
+				companyErrors = v.flatten(parsedCompany.issues);
+			}
+
+			const parsedAddress = v.safeParse(addressCreateSchema, address);
+			if (!parsedAddress.success) {
+				addressErrors = v.flatten(parsedAddress.issues);
+			}
+
+			if (
+				Object.keys(companyErrors).length ||
+				Object.keys(addressErrors).length
+			) {
+				return {
+					errors: {
+						company: companyErrors,
+						address: addressErrors,
+					},
+				};
+			}
+
+			return createCompanyWithAddress(
+				parsedCompany.output as CreateCompanyWithAddressInput,
+				parsedAddress.output as CreateAddressInput,
+			);
+		},
+	);
+
+	ipcMain.handle(
 		"get-taxes",
 		(_, cursor: string | null, paginationType: PaginationType | null) => {
 			return getTaxes(cursor, paginationType);
@@ -108,15 +162,36 @@ app.whenReady().then(async () => {
 	});
 
 	ipcMain.handle("create-tax", (_, tax: CreateTaxInput) => {
-		return processAction(tax, taxCreateSchema, createTax);
+		const parsedData = v.safeParse(taxCreateSchema, tax);
+		if (!parsedData.success) {
+			return {
+				errors: v.flatten(parsedData.issues),
+			};
+		}
+
+		return createTax(parsedData.output);
 	});
 
 	ipcMain.handle("update-tax", (_, tax: UpdateTaxInput) => {
-		return processAction(tax, taxUpdateSchema, updateTax);
+		const parsedData = v.safeParse(taxUpdateSchema, tax);
+		if (!parsedData.success) {
+			return {
+				errors: v.flatten(parsedData.issues),
+			};
+		}
+
+		return updateTax(parsedData.output);
 	});
 
 	ipcMain.handle("delete-tax", (_, taxId: string) => {
-		return processAction(taxId, taxDeleteSchema, deleteTax);
+		const parsedData = v.safeParse(taxDeleteSchema, taxId);
+		if (!parsedData.success) {
+			return {
+				errors: v.flatten(parsedData.issues),
+			};
+		}
+
+		return deleteTax(parsedData.output);
 	});
 
 	createWindow();
