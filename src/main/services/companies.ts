@@ -8,7 +8,8 @@ import type {
 	CreateCompanyWithAddressInput,
 	PaginatedResult,
 	PaginationType,
-	UpdateCompanyInput,
+	UpdateAddressInput,
+	UpdateCompanyWithAddressInput,
 } from "~/types";
 
 async function getCompaniesCount() {
@@ -117,11 +118,32 @@ export async function createCompanyWithAddress(
 	});
 }
 
-export async function updateCompany(company: UpdateCompanyInput) {
-	return db
-		.update(companiesTable)
-		.set(company)
-		.where(eq(companiesTable.companyId, company.companyId));
+export async function updateCompanyWithAddress(
+	company: UpdateCompanyWithAddressInput,
+	address: UpdateAddressInput,
+) {
+	return db.transaction(async (tx) => {
+		const [{ addressId }] = await tx
+			.update(addressesTable)
+			.set(address)
+			.where(eq(addressesTable.addressId, address.addressId))
+			.returning({ addressId: addressesTable.addressId });
+
+		if (!addressId) {
+			throw new Error("Failed to update address");
+		}
+
+		const [{ companyId }] = await tx
+			.update(companiesTable)
+			.set(company)
+			.where(eq(companiesTable.companyId, company.companyId))
+			.returning({ companyId: companiesTable.companyId });
+
+		return {
+			companyId,
+			addressId,
+		};
+	});
 }
 
 export async function deleteCompany(companyId: string) {

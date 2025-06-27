@@ -17,11 +17,11 @@ import "~/renderer/components/rich-text/editor.css";
 
 interface RichTextEditorProps {
 	name: string;
-	initialValue?: Array<PortableTextBlock>;
+	defaultValue?: Array<PortableTextBlock>;
 }
 
-export function RichTextEditor({ name, initialValue }: RichTextEditorProps) {
-	const [value, setValue] = useState(initialValue);
+export function RichTextEditor({ name, defaultValue }: RichTextEditorProps) {
+	const [value, setValue] = useState(defaultValue);
 
 	const handleEditorEvent = (event: EditorEmittedEvent) => {
 		if (event.type === "mutation") {

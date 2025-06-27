@@ -14,9 +14,8 @@ export const addressUpdateSchema = v.object({
 	addressId: v.pipe(v.string(), v.nonEmpty("Address ID is required"), v.ulid()),
 });
 
-export const companyCreateWithAddressSchema = createInsertSchema(
-	companiesTable,
-	{
+export const companyCreateWithAddressSchema = v.omit(
+	createInsertSchema(companiesTable, {
 		name: (schema) => v.pipe(schema, v.nonEmpty("Name is required")),
 		email: (schema) =>
 			v.pipe(
@@ -24,12 +23,14 @@ export const companyCreateWithAddressSchema = createInsertSchema(
 				v.nonEmpty("Email is required"),
 				v.email("Invalid email address"),
 			),
-		addressId: (schema) =>
-			v.optional(
-				v.pipe(schema, v.nonEmpty("Address ID is required"), v.ulid()),
-			),
-	},
+	}),
+	["addressId"],
 );
+
+export const companyUpdateWithAddressSchema = v.object({
+	...companyCreateWithAddressSchema.entries,
+	companyId: v.pipe(v.string(), v.nonEmpty("Company ID is required"), v.ulid()),
+});
 
 export const taxCreateSchema = createInsertSchema(taxesTable, {
 	name: (schema) => v.pipe(schema, v.nonEmpty("Name is required")),

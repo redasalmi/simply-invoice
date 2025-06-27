@@ -1,12 +1,44 @@
 import type { PortableTextBlock } from "@portabletext/editor";
 import { relations, sql } from "drizzle-orm";
-import { check, index, real, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import {
+	check,
+	customType,
+	index,
+	real,
+	sqliteTable,
+	text,
+} from "drizzle-orm/sqlite-core";
 import { ulid } from "ulid";
 
 const timestamps = {
 	createdAt: text("created_at").notNull().default(sql`(current_timestamp)`),
 	updatedAt: text("updated_at").$onUpdateFn(() => sql`(current_timestamp)`),
 };
+
+const customJson = <T>(name: string) =>
+	customType<{ data: T | null; driverData: string | null }>({
+		dataType() {
+			return "text";
+		},
+		toDriver(value: T | null): string | null {
+			if (!value) {
+				return null;
+			}
+
+			return JSON.stringify(value);
+		},
+		fromDriver(value: string | null): T | null {
+			if (!value) {
+				return null;
+			}
+
+			try {
+				return JSON.parse(value);
+			} catch {
+				return null;
+			}
+		},
+	})(name);
 
 export const addressesTable = sqliteTable(
 	"addresses_table",
@@ -38,9 +70,9 @@ export const companiesTable = sqliteTable(
 			.$defaultFn(() => ulid()),
 		name: text("name").notNull(),
 		email: text("email").notNull(),
-		additionalInformation: text("additional_information", {
-			mode: "json",
-		}).$type<Array<PortableTextBlock>>(),
+		additionalInformation: customJson<Array<PortableTextBlock>>(
+			"additional_information",
+		),
 		addressId: text("address_id", { length: 26 })
 			.notNull()
 			.references(() => addressesTable.addressId, { onDelete: "cascade" }),
@@ -67,7 +99,9 @@ export const customersTable = sqliteTable(
 			.$defaultFn(() => ulid()),
 		name: text("name").notNull(),
 		email: text("email").notNull(),
-		additionalInformation: text("additional_information", { mode: "json" }),
+		additionalInformation: customJson<Array<PortableTextBlock>>(
+			"additional_information",
+		),
 		addressId: text("address_id", { length: 26 })
 			.notNull()
 			.references(() => addressesTable.addressId, { onDelete: "cascade" }),

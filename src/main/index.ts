@@ -9,7 +9,9 @@ import * as v from "valibot";
 import { migrateDb } from "~/db/migrate";
 import {
 	addressCreateSchema,
+	addressUpdateSchema,
 	companyCreateWithAddressSchema,
+	companyUpdateWithAddressSchema,
 	taxCreateSchema,
 	taxDeleteSchema,
 	taxUpdateSchema,
@@ -17,6 +19,8 @@ import {
 import {
 	createCompanyWithAddress,
 	getCompanies,
+	getCompany,
+	updateCompanyWithAddress,
 } from "~/main/services/companies";
 import {
 	createTax,
@@ -31,6 +35,8 @@ import type {
 	CreateCompanyWithAddressInput,
 	CreateTaxInput,
 	PaginationType,
+	UpdateAddressInput,
+	UpdateCompanyWithAddressInput,
 	UpdateTaxInput,
 } from "~/types";
 
@@ -107,6 +113,10 @@ app.whenReady().then(async () => {
 		},
 	);
 
+	ipcMain.handle("get-company", (_, companyId: string) => {
+		return getCompany(companyId);
+	});
+
 	ipcMain.handle(
 		"create-company-with-address",
 		(
@@ -114,9 +124,10 @@ app.whenReady().then(async () => {
 			company: CreateCompanyWithAddressInput,
 			address: CreateAddressInput,
 		) => {
-			let companyErrors: v.FlatErrors<typeof companyCreateWithAddressSchema> =
-				{};
-			let addressErrors: v.FlatErrors<typeof addressCreateSchema> = {};
+			let companyErrors: v.FlatErrors<
+				typeof companyCreateWithAddressSchema
+			> | null = null;
+			let addressErrors: v.FlatErrors<typeof addressCreateSchema> | null = null;
 
 			const parsedCompany = v.safeParse(
 				companyCreateWithAddressSchema,
@@ -131,10 +142,7 @@ app.whenReady().then(async () => {
 				addressErrors = v.flatten(parsedAddress.issues);
 			}
 
-			if (
-				Object.keys(companyErrors).length ||
-				Object.keys(addressErrors).length
-			) {
+			if (companyErrors || addressErrors) {
 				return {
 					errors: {
 						company: companyErrors,
@@ -146,6 +154,47 @@ app.whenReady().then(async () => {
 			return createCompanyWithAddress(
 				parsedCompany.output as CreateCompanyWithAddressInput,
 				parsedAddress.output as CreateAddressInput,
+			);
+		},
+	);
+
+	ipcMain.handle(
+		"update-company-with-address",
+		(
+			_,
+			company: UpdateCompanyWithAddressInput,
+			address: UpdateAddressInput,
+		) => {
+			let companyErrors: v.FlatErrors<
+				typeof companyUpdateWithAddressSchema
+			> | null = null;
+			let addressErrors: v.FlatErrors<typeof addressUpdateSchema> | null = null;
+
+			const parsedCompany = v.safeParse(
+				companyUpdateWithAddressSchema,
+				company,
+			);
+			if (!parsedCompany.success) {
+				companyErrors = v.flatten(parsedCompany.issues);
+			}
+
+			const parsedAddress = v.safeParse(addressUpdateSchema, address);
+			if (!parsedAddress.success) {
+				addressErrors = v.flatten(parsedAddress.issues);
+			}
+
+			if (companyErrors || addressErrors) {
+				return {
+					errors: {
+						company: companyErrors,
+						address: addressErrors,
+					},
+				};
+			}
+
+			return updateCompanyWithAddress(
+				parsedCompany.output as UpdateCompanyWithAddressInput,
+				parsedAddress.output as UpdateAddressInput,
 			);
 		},
 	);

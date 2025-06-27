@@ -31,6 +31,11 @@ import {
 	TaxesListRoute,
 	taxesListLoader,
 } from "~/renderer/routes/taxes/taxes-list";
+import {
+	CompanyUpdateRoute,
+	companyUpdateAction,
+	companyUpdateLoader,
+} from "./routes/companies/company-update";
 
 export const router = createBrowserRouter([
 	{
@@ -49,6 +54,12 @@ export const router = createBrowserRouter([
 				path: "/companies/create",
 				action: companyCreateAction,
 				Component: CompanyCreateRoute,
+			},
+			{
+				path: "/companies/update/:companyId",
+				loader: companyUpdateLoader,
+				action: companyUpdateAction,
+				Component: CompanyUpdateRoute,
 			},
 			{
 				path: "/taxes",

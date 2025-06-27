@@ -1,26 +1,7 @@
 import type { ElectronAPI } from "@electron-toolkit/preload";
 import type * as v from "valibot";
-import type {
-	addressCreateSchema,
-	companyCreateWithAddressSchema,
-	taxCreateSchema,
-	taxDeleteSchema,
-	taxUpdateSchema,
-} from "~/db/validation";
-import type {
-	CompaniesGetResult,
-	CompanyCreateWithAddressResult,
-	CreateAddressInput,
-	CreateCompanyWithAddressInput,
-	CreateTaxInput,
-	PaginationType,
-	TaxCreateResult,
-	TaxDeleteResult,
-	TaxesGetResult,
-	TaxGetResult,
-	TaxUpdateResult,
-	UpdateTaxInput,
-} from "~/types";
+import type * as Validation from "~/db/validation";
+import type * as Types from "~/types";
 
 declare global {
 	interface Window {
@@ -29,42 +10,58 @@ declare global {
 			db: {
 				companies: {
 					createWithAddress: (
-						company: CreateCompanyWithAddressInput,
-						address: CreateAddressInput,
+						company: Types.CreateCompanyWithAddressInput,
+						address: Types.CreateAddressInput,
 					) =>
-						| CompanyCreateWithAddressResult
+						| Types.CompanyCreateWithAddressResult
 						| {
 								errors: {
-									company: v.FlatErrors<typeof companyCreateWithAddressSchema>;
-									address: v.FlatErrors<typeof addressCreateSchema>;
+									company: v.FlatErrors<
+										typeof Validation.companyCreateWithAddressSchema
+									>;
+									address: v.FlatErrors<typeof Validation.addressCreateSchema>;
+								};
+						  };
+					updateWithAddress: (
+						company: Types.UpdateCompanyWithAddressInput,
+						address: Types.UpdateAddressInput,
+					) =>
+						| Types.CompanyUpdateWithAddressResult
+						| {
+								errors: {
+									company: v.FlatErrors<
+										typeof Validation.companyUpdateWithAddressSchema
+									>;
+									address: v.FlatErrors<typeof Validation.addressUpdateSchema>;
 								};
 						  };
 					get: (
 						cursor: string | null,
-						paginationType: PaginationType | null,
-					) => CompaniesGetResult;
+						paginationType: Types.PaginationType | null,
+					) => Types.CompaniesGetResult;
+					getById: (companyId: string) => Types.CompanyGetResult;
 				};
 				taxes: {
 					create: (
-						tax: CreateTaxInput,
+						tax: Types.CreateTaxInput,
 					) =>
-						| TaxCreateResult
-						| { errors: v.FlatErrors<typeof taxCreateSchema> };
+						| Types.TaxCreateResult
+						| { errors: v.FlatErrors<typeof Validation.taxCreateSchema> };
 					get: (
 						cursor: string | null,
-						paginationType: PaginationType | null,
-					) => TaxesGetResult;
-					getById: (taxId: string) => TaxGetResult;
+						paginationType: Types.PaginationType | null,
+					) => Types.TaxesGetResult;
+					getById: (taxId: string) => Types.TaxGetResult;
 					update: (
-						tax: UpdateTaxInput,
+						tax: Types.UpdateTaxInput,
 					) =>
-						| TaxUpdateResult
-						| { errors: v.FlatErrors<typeof taxUpdateSchema> };
+						| Types.TaxUpdateResult
+						| { errors: v.FlatErrors<typeof Validation.taxUpdateSchema> };
 					delete: (
 						taxId: string,
 					) =>
-						| TaxDeleteResult
-						| { errors: v.FlatErrors<typeof taxDeleteSchema> };
+						| Types.TaxDeleteResult
+						| { errors: v.FlatErrors<typeof Validation.taxDeleteSchema> };
 				};
 			};
 		};

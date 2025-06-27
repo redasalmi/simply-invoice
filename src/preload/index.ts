@@ -5,6 +5,8 @@ import type {
 	CreateCompanyWithAddressInput,
 	CreateTaxInput,
 	PaginationType,
+	UpdateAddressInput,
+	UpdateCompanyWithAddressInput,
 	UpdateTaxInput,
 } from "~/types";
 
@@ -22,8 +24,21 @@ const api = {
 					address,
 				);
 			},
+			updateWithAddress: (
+				company: UpdateCompanyWithAddressInput,
+				address: UpdateAddressInput,
+			) => {
+				return ipcRenderer.invoke(
+					"update-company-with-address",
+					company,
+					address,
+				);
+			},
 			get: (cursor: string | null, paginationType: PaginationType | null) => {
 				return ipcRenderer.invoke("get-companies", cursor, paginationType);
+			},
+			getById: (companyId: string) => {
+				return ipcRenderer.invoke("get-company", companyId);
 			},
 		},
 		taxes: {

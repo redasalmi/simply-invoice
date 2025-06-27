@@ -1,11 +1,10 @@
 import type { addressesTable, companiesTable, taxesTable } from "./db/schema";
 import type {
-	createCompany,
 	createCompanyWithAddress,
 	deleteCompany,
 	getCompanies,
 	getCompany,
-	updateCompany,
+	updateCompanyWithAddress,
 } from "./main/services/companies";
 import type {
 	createTax,
@@ -43,14 +42,17 @@ export type CreateCompanyWithAddressInput = Omit<
 	CreateCompanyInput,
 	"addressId"
 >;
-export interface UpdateCompanyInput extends CreateCompanyInput {
+export interface UpdateCompanyWithAddressInput
+	extends CreateCompanyWithAddressInput {
 	companyId: string;
 }
 
 export type CompanyCreateWithAddressResult = ReturnType<
 	typeof createCompanyWithAddress
 >;
-export type CompanyUpdateResult = ReturnType<typeof updateCompany>;
+export type CompanyUpdateWithAddressResult = ReturnType<
+	typeof updateCompanyWithAddress
+>;
 export type CompanyDeleteResult = ReturnType<typeof deleteCompany>;
 export type CompanyGetResult = ReturnType<typeof getCompany>;
 export type CompaniesGetResult = ReturnType<typeof getCompanies>;
