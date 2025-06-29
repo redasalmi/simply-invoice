@@ -40,6 +40,11 @@ declare global {
 						paginationType: Types.PaginationType | null,
 					) => Types.CompaniesGetResult;
 					getById: (companyId: string) => Types.CompanyGetResult;
+					delete: (
+						companyId: string,
+					) =>
+						| Types.CompanyDeleteResult
+						| { errors: v.FlatErrors<typeof Validation.companyDeleteSchema> };
 				};
 				taxes: {
 					create: (

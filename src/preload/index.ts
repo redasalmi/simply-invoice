@@ -40,6 +40,9 @@ const api = {
 			getById: (companyId: string) => {
 				return ipcRenderer.invoke("get-company", companyId);
 			},
+			delete: (companyId: string) => {
+				return ipcRenderer.invoke("delete-company", companyId);
+			},
 		},
 		taxes: {
 			create: (tax: CreateTaxInput) => {

@@ -32,6 +32,12 @@ export const companyUpdateWithAddressSchema = v.object({
 	companyId: v.pipe(v.string(), v.nonEmpty("Company ID is required"), v.ulid()),
 });
 
+export const companyDeleteSchema = v.pipe(
+	v.string(),
+	v.nonEmpty("Company ID is required"),
+	v.ulid(),
+);
+
 export const taxCreateSchema = createInsertSchema(taxesTable, {
 	name: (schema) => v.pipe(schema, v.nonEmpty("Name is required")),
 	rate: v.pipe(

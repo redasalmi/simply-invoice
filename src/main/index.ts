@@ -11,6 +11,7 @@ import {
 	addressCreateSchema,
 	addressUpdateSchema,
 	companyCreateWithAddressSchema,
+	companyDeleteSchema,
 	companyUpdateWithAddressSchema,
 	taxCreateSchema,
 	taxDeleteSchema,
@@ -18,6 +19,7 @@ import {
 } from "~/db/validation";
 import {
 	createCompanyWithAddress,
+	deleteCompany,
 	getCompanies,
 	getCompany,
 	updateCompanyWithAddress,
@@ -198,6 +200,17 @@ app.whenReady().then(async () => {
 			);
 		},
 	);
+
+	ipcMain.handle("delete-company", (_, companyId: string) => {
+		const parsedData = v.safeParse(companyDeleteSchema, companyId);
+		if (!parsedData.success) {
+			return {
+				errors: v.flatten(parsedData.issues),
+			};
+		}
+
+		return deleteCompany(parsedData.output);
+	});
 
 	ipcMain.handle(
 		"get-taxes",

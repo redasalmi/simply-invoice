@@ -12,19 +12,19 @@ import {
 import invariant from "tiny-invariant";
 import { Dialog } from "~/renderer/components/ui/dialog";
 
-export async function taxDeleteLoader({ params }: LoaderFunctionArgs) {
-	const taxId = params.taxId;
-	invariant(taxId, "Tax ID is required");
+export async function companyDeleteLoader({ params }: LoaderFunctionArgs) {
+	const companyId = params.companyId;
+	invariant(companyId, "Company ID is required");
 
 	return {
-		tax: await window.api.db.taxes.getById(taxId),
+		company: await window.api.db.companies.getById(companyId),
 	};
 }
 
-export async function taxDeleteAction({ params }: ActionFunctionArgs) {
-	const taxId = params.taxId;
-	invariant(taxId, "Tax ID is required");
-	const result = await window.api.db.taxes.delete(taxId);
+export async function companyDeleteAction({ params }: ActionFunctionArgs) {
+	const companyId = params.companyId;
+	invariant(companyId, "Company ID is required");
+	const result = await window.api.db.companies.delete(companyId);
 
 	if ("errors" in result) {
 		return {
@@ -32,30 +32,30 @@ export async function taxDeleteAction({ params }: ActionFunctionArgs) {
 		};
 	}
 
-	return redirect("/taxes");
+	return redirect("/companies");
 }
 
-export function TaxDeleteRoute() {
+export function CompanyDeleteRoute() {
 	const navigate = useNavigate();
 	const params = useParams();
-	const { tax } = useLoaderData<typeof taxDeleteLoader>();
-	const actionData = useActionData<typeof taxDeleteAction>();
+	const { company } = useLoaderData<typeof companyDeleteLoader>();
+	const actionData = useActionData<typeof companyDeleteAction>();
 
 	const navigation = useNavigation();
 	const isLoading = navigation.state !== "idle";
 	const isSubmitting = navigation.state === "submitting";
 
 	const closeAlert = () => {
-		navigate("/taxes");
+		navigate("/companies");
 	};
 
-	if (!tax) {
+	if (!company) {
 		return (
 			<Dialog closeDialog={closeAlert} open role="alertdialog">
-				<Dialog.Title>No Tax Found!</Dialog.Title>
+				<Dialog.Title>No Company Found!</Dialog.Title>
 				<Dialog.Description>
-					Sorry but no tax with the ID: {params.taxId} was not found. Click the
-					continue button to navigate back to your taxes list.
+					Sorry but no company with the ID: {params.companyId} was not found.
+					Click the continue button to navigate back to your companies list.
 				</Dialog.Description>
 				<Dialog.ActionButton autoFocus onClick={closeAlert}>
 					Continue
@@ -67,9 +67,9 @@ export function TaxDeleteRoute() {
 	if (actionData?.errors) {
 		return (
 			<Dialog closeDialog={closeAlert} open role="alertdialog">
-				<Dialog.Title>Error Deleting Tax!</Dialog.Title>
+				<Dialog.Title>Error Deleting Company!</Dialog.Title>
 				<Dialog.Description>
-					An error happened while deleting your tax, please try again later.
+					An error happened while deleting your company, please try again later.
 				</Dialog.Description>
 				<Dialog.ActionButton autoFocus onClick={closeAlert}>
 					Continue
@@ -83,7 +83,7 @@ export function TaxDeleteRoute() {
 			<Dialog.Title>Are you absolutely sure?</Dialog.Title>
 			<Dialog.Description>
 				This action cannot be undone. This will permanently delete the{" "}
-				{tax.name} tax.
+				{company.name} company.
 			</Dialog.Description>
 			<div className="flex justify-end gap-2">
 				<Dialog.CancelButton autoFocus onClick={closeAlert}>
