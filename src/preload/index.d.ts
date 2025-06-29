@@ -46,6 +46,44 @@ declare global {
 						| Types.CompanyDeleteResult
 						| { errors: v.FlatErrors<typeof Validation.companyDeleteSchema> };
 				};
+				customers: {
+					createWithAddress: (
+						customer: Types.CreateCustomerWithAddressInput,
+						address: Types.CreateAddressInput,
+					) =>
+						| Types.CustomerCreateWithAddressResult
+						| {
+								errors: {
+									customer: v.FlatErrors<
+										typeof Validation.customerCreateWithAddressSchema
+									>;
+									address: v.FlatErrors<typeof Validation.addressCreateSchema>;
+								};
+						  };
+					updateWithAddress: (
+						customer: Types.UpdateCustomerWithAddressInput,
+						address: Types.UpdateAddressInput,
+					) =>
+						| Types.CustomerUpdateWithAddressResult
+						| {
+								errors: {
+									customer: v.FlatErrors<
+										typeof Validation.customerUpdateWithAddressSchema
+									>;
+									address: v.FlatErrors<typeof Validation.addressUpdateSchema>;
+								};
+						  };
+					get: (
+						cursor: string | null,
+						paginationType: Types.PaginationType | null,
+					) => Types.CustomersGetResult;
+					getById: (customerId: string) => Types.CustomerGetResult;
+					delete: (
+						customerId: string,
+					) =>
+						| Types.CustomerDeleteResult
+						| { errors: v.FlatErrors<typeof Validation.customerDeleteSchema> };
+				};
 				taxes: {
 					create: (
 						tax: Types.CreateTaxInput,

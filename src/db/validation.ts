@@ -1,6 +1,11 @@
 import { createInsertSchema } from "drizzle-valibot";
 import * as v from "valibot";
-import { addressesTable, companiesTable, taxesTable } from "~/db/schema";
+import {
+	addressesTable,
+	companiesTable,
+	customersTable,
+	taxesTable,
+} from "~/db/schema";
 
 export const addressCreateSchema = createInsertSchema(addressesTable, {
 	address1: (schema) => v.pipe(schema, v.nonEmpty("Address 1 is required")),
@@ -35,6 +40,34 @@ export const companyUpdateWithAddressSchema = v.object({
 export const companyDeleteSchema = v.pipe(
 	v.string(),
 	v.nonEmpty("Company ID is required"),
+	v.ulid(),
+);
+
+export const customerCreateWithAddressSchema = v.omit(
+	createInsertSchema(customersTable, {
+		name: (schema) => v.pipe(schema, v.nonEmpty("Name is required")),
+		email: (schema) =>
+			v.pipe(
+				schema,
+				v.nonEmpty("Email is required"),
+				v.email("Invalid email address"),
+			),
+	}),
+	["addressId"],
+);
+
+export const customerUpdateWithAddressSchema = v.object({
+	...customerCreateWithAddressSchema.entries,
+	customerId: v.pipe(
+		v.string(),
+		v.nonEmpty("Customer ID is required"),
+		v.ulid(),
+	),
+});
+
+export const customerDeleteSchema = v.pipe(
+	v.string(),
+	v.nonEmpty("Customer ID is required"),
 	v.ulid(),
 );
 

@@ -113,6 +113,13 @@ export const customersTable = sqliteTable(
 	],
 );
 
+export const customersRelations = relations(customersTable, ({ one }) => ({
+	address: one(addressesTable, {
+		fields: [customersTable.addressId],
+		references: [addressesTable.addressId],
+	}),
+}));
+
 export const servicesTable = sqliteTable(
 	"services_table",
 	{

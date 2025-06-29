@@ -3,10 +3,12 @@ import { contextBridge, ipcRenderer } from "electron";
 import type {
 	CreateAddressInput,
 	CreateCompanyWithAddressInput,
+	CreateCustomerWithAddressInput,
 	CreateTaxInput,
 	PaginationType,
 	UpdateAddressInput,
 	UpdateCompanyWithAddressInput,
+	UpdateCustomerWithAddressInput,
 	UpdateTaxInput,
 } from "~/types";
 
@@ -42,6 +44,37 @@ const api = {
 			},
 			delete: (companyId: string) => {
 				return ipcRenderer.invoke("delete-company", companyId);
+			},
+		},
+		customers: {
+			createWithAddress: (
+				customer: CreateCustomerWithAddressInput,
+				address: CreateAddressInput,
+			) => {
+				return ipcRenderer.invoke(
+					"create-customer-with-address",
+					customer,
+					address,
+				);
+			},
+			updateWithAddress: (
+				customer: UpdateCustomerWithAddressInput,
+				address: UpdateAddressInput,
+			) => {
+				return ipcRenderer.invoke(
+					"update-customer-with-address",
+					customer,
+					address,
+				);
+			},
+			get: (cursor: string | null, paginationType: PaginationType | null) => {
+				return ipcRenderer.invoke("get-customers", cursor, paginationType);
+			},
+			getById: (customerId: string) => {
+				return ipcRenderer.invoke("get-customer", customerId);
+			},
+			delete: (customerId: string) => {
+				return ipcRenderer.invoke("delete-customer", customerId);
 			},
 		},
 		taxes: {

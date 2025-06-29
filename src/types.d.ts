@@ -1,4 +1,9 @@
-import type { addressesTable, companiesTable, taxesTable } from "./db/schema";
+import type {
+	addressesTable,
+	companiesTable,
+	customersTable,
+	taxesTable,
+} from "./db/schema";
 import type {
 	createCompanyWithAddress,
 	deleteCompany,
@@ -6,6 +11,13 @@ import type {
 	getCompany,
 	updateCompanyWithAddress,
 } from "./main/services/companies";
+import type {
+	createCustomerWithAddress,
+	deleteCustomer,
+	getCustomer,
+	getCustomers,
+	updateCustomerWithAddress,
+} from "./main/services/customers";
 import type {
 	createTax,
 	deleteTax,
@@ -15,6 +27,7 @@ import type {
 } from "./main/services/taxes";
 import type { paginationTypes } from "./renderer/src/utils/getPaginationParams";
 
+// pagination types
 export type PaginationType = keyof typeof paginationTypes;
 
 export interface PageInfo {
@@ -30,12 +43,14 @@ export interface PaginatedResult<T> {
 	pageInfo: PageInfo;
 }
 
+// address types
 export type Address = typeof addressesTable.$inferSelect;
 export type CreateAddressInput = typeof addressesTable.$inferInsert;
 export interface UpdateAddressInput extends CreateAddressInput {
 	addressId: string;
 }
 
+// company types
 export type Company = typeof companiesTable.$inferSelect;
 export type CreateCompanyInput = typeof companiesTable.$inferInsert;
 export type CreateCompanyWithAddressInput = Omit<
@@ -57,6 +72,29 @@ export type CompanyDeleteResult = ReturnType<typeof deleteCompany>;
 export type CompanyGetResult = ReturnType<typeof getCompany>;
 export type CompaniesGetResult = ReturnType<typeof getCompanies>;
 
+// customer types
+export type Customer = typeof customersTable.$inferSelect;
+export type CreateCustomerInput = typeof customersTable.$inferInsert;
+export type CreateCustomerWithAddressInput = Omit<
+	CreateCustomerInput,
+	"addressId"
+>;
+export interface UpdateCustomerWithAddressInput
+	extends CreateCustomerWithAddressInput {
+	customerId: string;
+}
+
+export type CustomerCreateWithAddressResult = ReturnType<
+	typeof createCustomerWithAddress
+>;
+export type CustomerUpdateWithAddressResult = ReturnType<
+	typeof updateCustomerWithAddress
+>;
+export type CustomerDeleteResult = ReturnType<typeof deleteCustomer>;
+export type CustomerGetResult = ReturnType<typeof getCustomer>;
+export type CustomersGetResult = ReturnType<typeof getCustomers>;
+
+// tax types
 export type Tax = typeof taxesTable.$inferSelect;
 export type CreateTaxInput = typeof taxesTable.$inferInsert;
 export interface UpdateTaxInput extends CreateTaxInput {
