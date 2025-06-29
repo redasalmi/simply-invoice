@@ -1,6 +1,16 @@
 import type { RouteObject } from "react-router";
-import { CustomerDetailRoute, customerDetailLoader } from "./customer-detail";
-import { CustomersListRoute, customersListLoader } from "./customers-list";
+import {
+	CustomerCreateRoute,
+	customerCreateAction,
+} from "~/renderer/routes/customers/customer-create";
+import {
+	CustomerDetailRoute,
+	customerDetailLoader,
+} from "~/renderer/routes/customers/customer-detail";
+import {
+	CustomersListRoute,
+	customersListLoader,
+} from "~/renderer/routes/customers/customers-list";
 
 export const customersRoutes: RouteObject[] = [
 	{
@@ -14,5 +24,10 @@ export const customersRoutes: RouteObject[] = [
 				Component: CustomerDetailRoute,
 			},
 		],
+	},
+	{
+		path: "/customers/create",
+		action: customerCreateAction,
+		Component: CustomerCreateRoute,
 	},
 ];

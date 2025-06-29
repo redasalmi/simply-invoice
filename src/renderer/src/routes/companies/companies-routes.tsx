@@ -3,18 +3,24 @@ import {
 	CompaniesListRoute,
 	companiesListLoader,
 } from "~/renderer/routes/companies/companies-list";
-import { CompanyCreateRoute, companyCreateAction } from "./company-create";
+import {
+	CompanyCreateRoute,
+	companyCreateAction,
+} from "~/renderer/routes/companies/company-create";
 import {
 	CompanyDeleteRoute,
 	companyDeleteAction,
 	companyDeleteLoader,
-} from "./company-delete";
-import { CompanyDetailRoute, companyDetailLoader } from "./company-detail";
+} from "~/renderer/routes/companies/company-delete";
+import {
+	CompanyDetailRoute,
+	companyDetailLoader,
+} from "~/renderer/routes/companies/company-detail";
 import {
 	CompanyUpdateRoute,
 	companyUpdateAction,
 	companyUpdateLoader,
-} from "./company-update";
+} from "~/renderer/routes/companies/company-update";
 
 export const companiesRoutes: RouteObject[] = [
 	{
