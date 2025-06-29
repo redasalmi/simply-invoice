@@ -10,55 +10,55 @@ import { Pagination } from "~/renderer/components/Pagination";
 import { Table } from "~/renderer/components/ui/table";
 import { getPaginationParams } from "~/renderer/utils/getPaginationParams";
 
-export async function taxesListLoader({ request }: LoaderFunctionArgs) {
+export async function customersListLoader({ request }: LoaderFunctionArgs) {
 	const { cursor, paginationType } = getPaginationParams(request.url);
 
 	return {
-		taxes: await window.api.db.taxes.get(cursor, paginationType),
+		customers: await window.api.db.customers.get(cursor, paginationType),
 	};
 }
 
-export function TaxesListRoute() {
-	const { taxes } = useLoaderData<typeof taxesListLoader>();
+export function CustomersListRoute() {
+	const { customers } = useLoaderData<typeof customersListLoader>();
 
 	return (
 		<>
 			<section>
 				<div className="flex items-center justify-between">
-					{taxes.total ? <p>Total taxes: {taxes.total}</p> : null}
-					<CreateLink to="/taxes/create">Create Tax</CreateLink>
+					{customers.total ? <p>Total customers: {customers.total}</p> : null}
+					<CreateLink to="/customers/create">Create Customer</CreateLink>
 				</div>
 				<div className="mt-6">
-					{taxes && taxes.items.length > 0 ? (
+					{customers && customers.items.length > 0 ? (
 						<>
 							<Table>
 								<Table.Header>
 									<Table.Row>
 										<Table.Head>Name</Table.Head>
-										<Table.Head>Rate (%)</Table.Head>
+										<Table.Head>Email</Table.Head>
 									</Table.Row>
 								</Table.Header>
 								<Table.Body>
-									{taxes.items.map(({ taxId, name, rate }) => (
-										<Table.Row key={taxId}>
+									{customers.items.map(({ customerId, email, name }) => (
+										<Table.Row key={customerId}>
 											<Table.Cell>{name}</Table.Cell>
-											<Table.Cell>{rate}</Table.Cell>
+											<Table.Cell>{email}</Table.Cell>
 											<Table.Cell className="flex items-center gap-4">
 												<Link
-													aria-label={`view ${name} tax details`}
-													to={`/taxes/detail/${taxId}`}
+													aria-label={`view ${name} customer details`}
+													to={`/customers/detail/${customerId}`}
 												>
 													<EyeIcon />
 												</Link>
 												<Link
-													aria-label={`update ${name} tax`}
-													to={`/taxes/update/${taxId}`}
+													aria-label={`edit ${name} customer details`}
+													to={`/customers/update/${customerId}`}
 												>
 													<PencilIcon />
 												</Link>
 												<Link
-													aria-label={`delete ${name} tax`}
-													to={`/taxes/delete/${taxId}`}
+													aria-label={`delete ${name} customer`}
+													to={`/customers/delete/${customerId}`}
 												>
 													<TrashIcon />
 												</Link>
@@ -67,13 +67,16 @@ export function TaxesListRoute() {
 									))}
 								</Table.Body>
 							</Table>
-							{/* TODO: remove this once I have a proper manner to handle it */}
-							{taxes.total > 10 ? (
-								<Pagination baseUrl="/taxes" pageInfo={taxes.pageInfo} />
+							{/* TODO: remove this once we have a proper pagination */}
+							{customers.total > 10 ? (
+								<Pagination
+									baseUrl="/customers"
+									pageInfo={customers.pageInfo}
+								/>
 							) : null}
 						</>
 					) : (
-						<p>No Tax found.</p>
+						<p>No customers found.</p>
 					)}
 				</div>
 			</section>

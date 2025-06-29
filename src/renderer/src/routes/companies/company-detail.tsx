@@ -6,12 +6,7 @@ import {
 } from "react-router";
 import invariant from "tiny-invariant";
 import { Dialog } from "~/renderer/components/ui/dialog";
-import {
-	Table,
-	TableBody,
-	TableCell,
-	TableRow,
-} from "~/renderer/components/ui/table";
+import { Table } from "~/renderer/components/ui/table";
 
 export async function companyDetailLoader({ params }: LoaderFunctionArgs) {
 	const companyId = params.companyId;
@@ -55,40 +50,40 @@ export function CompanyDetailRoute() {
 					<Dialog.Title>Company details</Dialog.Title>
 					<Dialog.Description>
 						<Table>
-							<TableBody>
-								<TableRow>
-									<TableCell>Name:</TableCell>
-									<TableCell>{company.name}</TableCell>
-								</TableRow>
-								<TableRow>
-									<TableCell>Email:</TableCell>
-									<TableCell>{company.email}</TableCell>
-								</TableRow>
-								<TableRow>
-									<TableCell>Address 1:</TableCell>
-									<TableCell>{company.address.address1}</TableCell>
-								</TableRow>
-								<TableRow>
-									<TableCell>Address 2:</TableCell>
-									<TableCell>{company.address.address2}</TableCell>
-								</TableRow>
-								<TableRow>
-									<TableCell>City:</TableCell>
-									<TableCell>{company.address.city}</TableCell>
-								</TableRow>
-								<TableRow>
-									<TableCell>Country:</TableCell>
-									<TableCell>{company.address.country}</TableCell>
-								</TableRow>
-								<TableRow>
-									<TableCell>Province:</TableCell>
-									<TableCell>{company.address.province}</TableCell>
-								</TableRow>
-								<TableRow>
-									<TableCell>Zip:</TableCell>
-									<TableCell>{company.address.zip}</TableCell>
-								</TableRow>
-							</TableBody>
+							<Table.Body>
+								<Table.Row>
+									<Table.Cell>Name:</Table.Cell>
+									<Table.Cell>{company.name}</Table.Cell>
+								</Table.Row>
+								<Table.Row>
+									<Table.Cell>Email:</Table.Cell>
+									<Table.Cell>{company.email}</Table.Cell>
+								</Table.Row>
+								<Table.Row>
+									<Table.Cell>Address 1:</Table.Cell>
+									<Table.Cell>{company.address.address1}</Table.Cell>
+								</Table.Row>
+								<Table.Row>
+									<Table.Cell>Address 2:</Table.Cell>
+									<Table.Cell>{company.address.address2}</Table.Cell>
+								</Table.Row>
+								<Table.Row>
+									<Table.Cell>City:</Table.Cell>
+									<Table.Cell>{company.address.city}</Table.Cell>
+								</Table.Row>
+								<Table.Row>
+									<Table.Cell>Country:</Table.Cell>
+									<Table.Cell>{company.address.country}</Table.Cell>
+								</Table.Row>
+								<Table.Row>
+									<Table.Cell>Province:</Table.Cell>
+									<Table.Cell>{company.address.province}</Table.Cell>
+								</Table.Row>
+								<Table.Row>
+									<Table.Cell>Zip:</Table.Cell>
+									<Table.Cell>{company.address.zip}</Table.Cell>
+								</Table.Row>
+							</Table.Body>
 						</Table>
 					</Dialog.Description>
 				</>

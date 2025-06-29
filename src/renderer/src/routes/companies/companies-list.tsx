@@ -7,14 +7,7 @@ import {
 } from "react-router";
 import { CreateLink } from "~/renderer/components/CreateLink";
 import { Pagination } from "~/renderer/components/Pagination";
-import {
-	Table,
-	TableBody,
-	TableCell,
-	TableHead,
-	TableHeader,
-	TableRow,
-} from "~/renderer/components/ui/table";
+import { Table } from "~/renderer/components/ui/table";
 import { getPaginationParams } from "~/renderer/utils/getPaginationParams";
 
 export async function companiesListLoader({ request }: LoaderFunctionArgs) {
@@ -39,18 +32,18 @@ export function CompaniesListRoute() {
 					{companies && companies.items.length > 0 ? (
 						<>
 							<Table>
-								<TableHeader>
-									<TableRow>
-										<TableHead>Name</TableHead>
-										<TableHead>Email</TableHead>
-									</TableRow>
-								</TableHeader>
-								<TableBody>
+								<Table.Header>
+									<Table.Row>
+										<Table.Head>Name</Table.Head>
+										<Table.Head>Email</Table.Head>
+									</Table.Row>
+								</Table.Header>
+								<Table.Body>
 									{companies.items.map(({ companyId, email, name }) => (
-										<TableRow key={companyId}>
-											<TableCell>{name}</TableCell>
-											<TableCell>{email}</TableCell>
-											<TableCell className="flex items-center gap-4">
+										<Table.Row key={companyId}>
+											<Table.Cell>{name}</Table.Cell>
+											<Table.Cell>{email}</Table.Cell>
+											<Table.Cell className="flex items-center gap-4">
 												<Link
 													aria-label={`view ${name} company details`}
 													to={`/companies/detail/${companyId}`}
@@ -69,10 +62,10 @@ export function CompaniesListRoute() {
 												>
 													<TrashIcon />
 												</Link>
-											</TableCell>
-										</TableRow>
+											</Table.Cell>
+										</Table.Row>
 									))}
-								</TableBody>
+								</Table.Body>
 							</Table>
 							{/* TODO: remove this once we have a proper pagination */}
 							{companies.total > 10 ? (

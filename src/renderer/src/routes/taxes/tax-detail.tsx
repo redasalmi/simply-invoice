@@ -6,12 +6,7 @@ import {
 } from "react-router";
 import invariant from "tiny-invariant";
 import { Dialog } from "~/renderer/components/ui/dialog";
-import {
-	Table,
-	TableBody,
-	TableCell,
-	TableRow,
-} from "~/renderer/components/ui/table";
+import { Table } from "~/renderer/components/ui/table";
 
 export async function taxDetailLoader({ params }: LoaderFunctionArgs) {
 	const taxId = params.taxId;
@@ -55,16 +50,16 @@ export function TaxDetailRoute() {
 					<Dialog.Title>Tax details</Dialog.Title>
 					<Dialog.Description>
 						<Table>
-							<TableBody>
-								<TableRow>
-									<TableCell>Name:</TableCell>
-									<TableCell>{tax.name}</TableCell>
-								</TableRow>
-								<TableRow>
-									<TableCell>Rate:</TableCell>
-									<TableCell>{tax.rate}%</TableCell>
-								</TableRow>
-							</TableBody>
+							<Table.Body>
+								<Table.Row>
+									<Table.Cell>Name:</Table.Cell>
+									<Table.Cell>{tax.name}</Table.Cell>
+								</Table.Row>
+								<Table.Row>
+									<Table.Cell>Rate:</Table.Cell>
+									<Table.Cell>{tax.rate}%</Table.Cell>
+								</Table.Row>
+							</Table.Body>
 						</Table>
 					</Dialog.Description>
 				</>
