@@ -1,6 +1,13 @@
 import { asc, count, desc, eq, gt, lt } from "drizzle-orm";
+import { ipcMain } from "electron";
+import * as v from "valibot";
 import { db } from "~/db/config";
 import { taxesTable } from "~/db/schema";
+import {
+	taxCreateSchema,
+	taxDeleteSchema,
+	taxUpdateSchema,
+} from "~/db/validation";
 import { emptyResult, itemsPerPage } from "~/main/utils/pagination";
 import type {
 	CreateTaxInput,
@@ -95,4 +102,50 @@ export async function updateTax(tax: UpdateTaxInput) {
 
 export async function deleteTax(taxId: string) {
 	return db.delete(taxesTable).where(eq(taxesTable.taxId, taxId));
+}
+
+export async function registerTaxesIcpHandlers() {
+	ipcMain.handle(
+		"get-taxes",
+		(_, cursor: string | null, paginationType: PaginationType | null) => {
+			return getTaxes(cursor, paginationType);
+		},
+	);
+
+	ipcMain.handle("get-tax", (_, taxId: string) => {
+		return getTax(taxId);
+	});
+
+	ipcMain.handle("create-tax", (_, tax: CreateTaxInput) => {
+		const parsedData = v.safeParse(taxCreateSchema, tax);
+		if (!parsedData.success) {
+			return {
+				errors: v.flatten(parsedData.issues),
+			};
+		}
+
+		return createTax(parsedData.output);
+	});
+
+	ipcMain.handle("update-tax", (_, tax: UpdateTaxInput) => {
+		const parsedData = v.safeParse(taxUpdateSchema, tax);
+		if (!parsedData.success) {
+			return {
+				errors: v.flatten(parsedData.issues),
+			};
+		}
+
+		return updateTax(parsedData.output);
+	});
+
+	ipcMain.handle("delete-tax", (_, taxId: string) => {
+		const parsedData = v.safeParse(taxDeleteSchema, taxId);
+		if (!parsedData.success) {
+			return {
+				errors: v.flatten(parsedData.issues),
+			};
+		}
+
+		return deleteTax(parsedData.output);
+	});
 }

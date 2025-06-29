@@ -1,6 +1,15 @@
 import { asc, count, desc, eq, gt, lt } from "drizzle-orm";
+import { ipcMain } from "electron";
+import * as v from "valibot";
 import { db } from "~/db/config";
 import { addressesTable, companiesTable } from "~/db/schema";
+import {
+	addressCreateSchema,
+	addressUpdateSchema,
+	companyCreateWithAddressSchema,
+	companyDeleteSchema,
+	companyUpdateWithAddressSchema,
+} from "~/db/validation";
 import { emptyResult, itemsPerPage } from "~/main/utils/pagination";
 import type {
 	Company,
@@ -150,4 +159,110 @@ export async function deleteCompany(companyId: string) {
 	return db
 		.delete(companiesTable)
 		.where(eq(companiesTable.companyId, companyId));
+}
+
+export async function registerCompaniesIcpHandlers() {
+	ipcMain.handle(
+		"get-companies",
+		(_, cursor: string | null, paginationType: PaginationType | null) => {
+			return getCompanies(cursor, paginationType);
+		},
+	);
+
+	ipcMain.handle("get-company", (_, companyId: string) => {
+		return getCompany(companyId);
+	});
+
+	ipcMain.handle(
+		"create-company-with-address",
+		(
+			_,
+			company: CreateCompanyWithAddressInput,
+			address: CreateAddressInput,
+		) => {
+			let companyErrors: v.FlatErrors<
+				typeof companyCreateWithAddressSchema
+			> | null = null;
+			let addressErrors: v.FlatErrors<typeof addressCreateSchema> | null = null;
+
+			const parsedCompany = v.safeParse(
+				companyCreateWithAddressSchema,
+				company,
+			);
+			if (!parsedCompany.success) {
+				companyErrors = v.flatten(parsedCompany.issues);
+			}
+
+			const parsedAddress = v.safeParse(addressCreateSchema, address);
+			if (!parsedAddress.success) {
+				addressErrors = v.flatten(parsedAddress.issues);
+			}
+
+			if (companyErrors || addressErrors) {
+				return {
+					errors: {
+						company: companyErrors,
+						address: addressErrors,
+					},
+				};
+			}
+
+			return createCompanyWithAddress(
+				parsedCompany.output as CreateCompanyWithAddressInput,
+				parsedAddress.output as CreateAddressInput,
+			);
+		},
+	);
+
+	ipcMain.handle(
+		"update-company-with-address",
+		(
+			_,
+			company: UpdateCompanyWithAddressInput,
+			address: UpdateAddressInput,
+		) => {
+			let companyErrors: v.FlatErrors<
+				typeof companyUpdateWithAddressSchema
+			> | null = null;
+			let addressErrors: v.FlatErrors<typeof addressUpdateSchema> | null = null;
+
+			const parsedCompany = v.safeParse(
+				companyUpdateWithAddressSchema,
+				company,
+			);
+			if (!parsedCompany.success) {
+				companyErrors = v.flatten(parsedCompany.issues);
+			}
+
+			const parsedAddress = v.safeParse(addressUpdateSchema, address);
+			if (!parsedAddress.success) {
+				addressErrors = v.flatten(parsedAddress.issues);
+			}
+
+			if (companyErrors || addressErrors) {
+				return {
+					errors: {
+						company: companyErrors,
+						address: addressErrors,
+					},
+				};
+			}
+
+			return updateCompanyWithAddress(
+				parsedCompany.output as UpdateCompanyWithAddressInput,
+				parsedAddress.output as UpdateAddressInput,
+			);
+		},
+	);
+
+	ipcMain.handle("delete-company", (_, companyId: string) => {
+		const parsedData = v.safeParse(companyDeleteSchema, companyId);
+		if (!parsedData.success) {
+			return {
+				errors: v.flatten(parsedData.issues),
+			};
+		}
+
+		return deleteCompany(parsedData.output);
+	});
 }

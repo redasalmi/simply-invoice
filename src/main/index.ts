@@ -1,46 +1,14 @@
 import { join } from "node:path";
 import { electronApp, is, optimizer } from "@electron-toolkit/utils";
-import { app, BrowserWindow, ipcMain, shell } from "electron";
+import { app, BrowserWindow, shell } from "electron";
 import {
 	installExtension,
 	REACT_DEVELOPER_TOOLS,
 } from "electron-devtools-installer";
-import * as v from "valibot";
 import { migrateDb } from "~/db/migrate";
-import {
-	addressCreateSchema,
-	addressUpdateSchema,
-	companyCreateWithAddressSchema,
-	companyDeleteSchema,
-	companyUpdateWithAddressSchema,
-	taxCreateSchema,
-	taxDeleteSchema,
-	taxUpdateSchema,
-} from "~/db/validation";
-import {
-	createCompanyWithAddress,
-	deleteCompany,
-	getCompanies,
-	getCompany,
-	updateCompanyWithAddress,
-} from "~/main/services/companies";
-import {
-	createTax,
-	deleteTax,
-	getTax,
-	getTaxes,
-	updateTax,
-} from "~/main/services/taxes";
+import { registerCompaniesIcpHandlers } from "~/main/services/companies";
+import { registerTaxesIcpHandlers } from "~/main/services/taxes";
 import icon from "~/resources/icon.png?asset";
-import type {
-	CreateAddressInput,
-	CreateCompanyWithAddressInput,
-	CreateTaxInput,
-	PaginationType,
-	UpdateAddressInput,
-	UpdateCompanyWithAddressInput,
-	UpdateTaxInput,
-} from "~/types";
 
 function createWindow() {
 	// Create the browser window.
@@ -108,154 +76,8 @@ app.whenReady().then(async () => {
 		optimizer.watchWindowShortcuts(window);
 	});
 
-	ipcMain.handle(
-		"get-companies",
-		(_, cursor: string | null, paginationType: PaginationType | null) => {
-			return getCompanies(cursor, paginationType);
-		},
-	);
-
-	ipcMain.handle("get-company", (_, companyId: string) => {
-		return getCompany(companyId);
-	});
-
-	ipcMain.handle(
-		"create-company-with-address",
-		(
-			_,
-			company: CreateCompanyWithAddressInput,
-			address: CreateAddressInput,
-		) => {
-			let companyErrors: v.FlatErrors<
-				typeof companyCreateWithAddressSchema
-			> | null = null;
-			let addressErrors: v.FlatErrors<typeof addressCreateSchema> | null = null;
-
-			const parsedCompany = v.safeParse(
-				companyCreateWithAddressSchema,
-				company,
-			);
-			if (!parsedCompany.success) {
-				companyErrors = v.flatten(parsedCompany.issues);
-			}
-
-			const parsedAddress = v.safeParse(addressCreateSchema, address);
-			if (!parsedAddress.success) {
-				addressErrors = v.flatten(parsedAddress.issues);
-			}
-
-			if (companyErrors || addressErrors) {
-				return {
-					errors: {
-						company: companyErrors,
-						address: addressErrors,
-					},
-				};
-			}
-
-			return createCompanyWithAddress(
-				parsedCompany.output as CreateCompanyWithAddressInput,
-				parsedAddress.output as CreateAddressInput,
-			);
-		},
-	);
-
-	ipcMain.handle(
-		"update-company-with-address",
-		(
-			_,
-			company: UpdateCompanyWithAddressInput,
-			address: UpdateAddressInput,
-		) => {
-			let companyErrors: v.FlatErrors<
-				typeof companyUpdateWithAddressSchema
-			> | null = null;
-			let addressErrors: v.FlatErrors<typeof addressUpdateSchema> | null = null;
-
-			const parsedCompany = v.safeParse(
-				companyUpdateWithAddressSchema,
-				company,
-			);
-			if (!parsedCompany.success) {
-				companyErrors = v.flatten(parsedCompany.issues);
-			}
-
-			const parsedAddress = v.safeParse(addressUpdateSchema, address);
-			if (!parsedAddress.success) {
-				addressErrors = v.flatten(parsedAddress.issues);
-			}
-
-			if (companyErrors || addressErrors) {
-				return {
-					errors: {
-						company: companyErrors,
-						address: addressErrors,
-					},
-				};
-			}
-
-			return updateCompanyWithAddress(
-				parsedCompany.output as UpdateCompanyWithAddressInput,
-				parsedAddress.output as UpdateAddressInput,
-			);
-		},
-	);
-
-	ipcMain.handle("delete-company", (_, companyId: string) => {
-		const parsedData = v.safeParse(companyDeleteSchema, companyId);
-		if (!parsedData.success) {
-			return {
-				errors: v.flatten(parsedData.issues),
-			};
-		}
-
-		return deleteCompany(parsedData.output);
-	});
-
-	ipcMain.handle(
-		"get-taxes",
-		(_, cursor: string | null, paginationType: PaginationType | null) => {
-			return getTaxes(cursor, paginationType);
-		},
-	);
-
-	ipcMain.handle("get-tax", (_, taxId: string) => {
-		return getTax(taxId);
-	});
-
-	ipcMain.handle("create-tax", (_, tax: CreateTaxInput) => {
-		const parsedData = v.safeParse(taxCreateSchema, tax);
-		if (!parsedData.success) {
-			return {
-				errors: v.flatten(parsedData.issues),
-			};
-		}
-
-		return createTax(parsedData.output);
-	});
-
-	ipcMain.handle("update-tax", (_, tax: UpdateTaxInput) => {
-		const parsedData = v.safeParse(taxUpdateSchema, tax);
-		if (!parsedData.success) {
-			return {
-				errors: v.flatten(parsedData.issues),
-			};
-		}
-
-		return updateTax(parsedData.output);
-	});
-
-	ipcMain.handle("delete-tax", (_, taxId: string) => {
-		const parsedData = v.safeParse(taxDeleteSchema, taxId);
-		if (!parsedData.success) {
-			return {
-				errors: v.flatten(parsedData.issues),
-			};
-		}
-
-		return deleteTax(parsedData.output);
-	});
-
+	registerCompaniesIcpHandlers();
+	registerTaxesIcpHandlers();
 	createWindow();
 
 	app.on("activate", async () => {
