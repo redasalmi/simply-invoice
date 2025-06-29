@@ -4,6 +4,11 @@ import {
 	customerCreateAction,
 } from "~/renderer/routes/customers/customer-create";
 import {
+	CustomerDeleteRoute,
+	customerDeleteAction,
+	customerDeleteLoader,
+} from "~/renderer/routes/customers/customer-delete";
+import {
 	CustomerDetailRoute,
 	customerDetailLoader,
 } from "~/renderer/routes/customers/customer-detail";
@@ -22,6 +27,12 @@ export const customersRoutes: RouteObject[] = [
 				path: "detail/:customerId",
 				loader: customerDetailLoader,
 				Component: CustomerDetailRoute,
+			},
+			{
+				path: "delete/:customerId",
+				loader: customerDeleteLoader,
+				action: customerDeleteAction,
+				Component: CustomerDeleteRoute,
 			},
 		],
 	},
