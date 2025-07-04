@@ -1,6 +1,4 @@
 import type { ElectronAPI } from "@electron-toolkit/preload";
-import type * as v from "valibot";
-import type * as Validation from "~/db/validation";
 import type * as Types from "~/types";
 
 declare global {
@@ -16,10 +14,8 @@ declare global {
 						| Types.CompanyCreateWithAddressResult
 						| {
 								errors: {
-									company: v.FlatErrors<
-										typeof Validation.companyCreateWithAddressSchema
-									>;
-									address: v.FlatErrors<typeof Validation.addressCreateSchema>;
+									company: Types.CompanyCreateWithAddressFlatErrors;
+									address: Types.AddressCreateFlatErrors;
 								};
 						  };
 					updateWithAddress: (
@@ -29,10 +25,8 @@ declare global {
 						| Types.CompanyUpdateWithAddressResult
 						| {
 								errors: {
-									company: v.FlatErrors<
-										typeof Validation.companyUpdateWithAddressSchema
-									>;
-									address: v.FlatErrors<typeof Validation.addressUpdateSchema>;
+									company: Types.CompanyUpdateWithAddressFlatErrors;
+									address: Types.AddressUpdateFlatErrors;
 								};
 						  };
 					get: (
@@ -44,7 +38,7 @@ declare global {
 						companyId: string,
 					) =>
 						| Types.CompanyDeleteResult
-						| { errors: v.FlatErrors<typeof Validation.companyDeleteSchema> };
+						| { errors: Types.CompanyDeleteFlatErrors };
 				};
 				customers: {
 					createWithAddress: (
@@ -54,10 +48,8 @@ declare global {
 						| Types.CustomerCreateWithAddressResult
 						| {
 								errors: {
-									customer: v.FlatErrors<
-										typeof Validation.customerCreateWithAddressSchema
-									>;
-									address: v.FlatErrors<typeof Validation.addressCreateSchema>;
+									customer: Types.CustomerCreateWithAddressFlatErrors;
+									address: Types.AddressCreateFlatErrors;
 								};
 						  };
 					updateWithAddress: (
@@ -67,10 +59,8 @@ declare global {
 						| Types.CustomerUpdateWithAddressResult
 						| {
 								errors: {
-									customer: v.FlatErrors<
-										typeof Validation.customerUpdateWithAddressSchema
-									>;
-									address: v.FlatErrors<typeof Validation.addressUpdateSchema>;
+									customer: Types.CustomerUpdateWithAddressFlatErrors;
+									address: Types.AddressUpdateFlatErrors;
 								};
 						  };
 					get: (
@@ -82,14 +72,12 @@ declare global {
 						customerId: string,
 					) =>
 						| Types.CustomerDeleteResult
-						| { errors: v.FlatErrors<typeof Validation.customerDeleteSchema> };
+						| { errors: Types.CustomerDeleteFlatErrors };
 				};
 				taxes: {
 					create: (
 						tax: Types.CreateTaxInput,
-					) =>
-						| Types.TaxCreateResult
-						| { errors: v.FlatErrors<typeof Validation.taxCreateSchema> };
+					) => Types.TaxCreateResult | { errors: Types.TaxCreateFlatErrors };
 					get: (
 						cursor: string | null,
 						paginationType: Types.PaginationType | null,
@@ -97,14 +85,10 @@ declare global {
 					getById: (taxId: string) => Types.TaxGetResult;
 					update: (
 						tax: Types.UpdateTaxInput,
-					) =>
-						| Types.TaxUpdateResult
-						| { errors: v.FlatErrors<typeof Validation.taxUpdateSchema> };
+					) => Types.TaxUpdateResult | { errors: Types.TaxUpdateFlatErrors };
 					delete: (
 						taxId: string,
-					) =>
-						| Types.TaxDeleteResult
-						| { errors: v.FlatErrors<typeof Validation.taxDeleteSchema> };
+					) => Types.TaxDeleteResult | { errors: Types.TaxDeleteFlatErrors };
 				};
 			};
 		};

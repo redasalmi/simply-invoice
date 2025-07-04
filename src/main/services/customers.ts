@@ -12,9 +12,13 @@ import {
 } from "~/db/validation";
 import { emptyResult, itemsPerPage } from "~/main/utils/pagination";
 import type {
+	AddressCreateFlatErrors,
+	AddressUpdateFlatErrors,
 	CreateAddressInput,
 	CreateCustomerWithAddressInput,
 	Customer,
+	CustomerCreateWithAddressFlatErrors,
+	CustomerUpdateWithAddressFlatErrors,
 	PaginatedResult,
 	PaginationType,
 	UpdateAddressInput,
@@ -180,10 +184,8 @@ export async function registerCustomersIcpHandles() {
 			customer: CreateCustomerWithAddressInput,
 			address: CreateAddressInput,
 		) => {
-			let customerErrors: v.FlatErrors<
-				typeof customerCreateWithAddressSchema
-			> | null = null;
-			let addressErrors: v.FlatErrors<typeof addressCreateSchema> | null = null;
+			let customerErrors: CustomerCreateWithAddressFlatErrors | null = null;
+			let addressErrors: AddressCreateFlatErrors | null = null;
 
 			const parsedCustomer = v.safeParse(
 				customerCreateWithAddressSchema,
@@ -221,10 +223,8 @@ export async function registerCustomersIcpHandles() {
 			customer: UpdateCustomerWithAddressInput,
 			address: UpdateAddressInput,
 		) => {
-			let customerErrors: v.FlatErrors<
-				typeof customerUpdateWithAddressSchema
-			> | null = null;
-			let addressErrors: v.FlatErrors<typeof addressUpdateSchema> | null = null;
+			let customerErrors: CustomerUpdateWithAddressFlatErrors | null = null;
+			let addressErrors: AddressUpdateFlatErrors | null = null;
 
 			const parsedCustomer = v.safeParse(
 				customerUpdateWithAddressSchema,

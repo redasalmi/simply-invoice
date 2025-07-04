@@ -1,9 +1,11 @@
+import type * as v from "valibot";
 import type {
 	addressesTable,
 	companiesTable,
 	customersTable,
 	taxesTable,
 } from "./db/schema";
+import type * as Validation from "./db/validation";
 import type {
 	createCompanyWithAddress,
 	deleteCompany,
@@ -49,6 +51,12 @@ export type CreateAddressInput = typeof addressesTable.$inferInsert;
 export interface UpdateAddressInput extends CreateAddressInput {
 	addressId: string;
 }
+export type AddressCreateFlatErrors = v.FlatErrors<
+	typeof Validation.addressCreateSchema
+>;
+export type AddressUpdateFlatErrors = v.FlatErrors<
+	typeof Validation.addressUpdateSchema
+>;
 
 // company types
 export type Company = typeof companiesTable.$inferSelect;
@@ -72,6 +80,16 @@ export type CompanyDeleteResult = ReturnType<typeof deleteCompany>;
 export type CompanyGetResult = ReturnType<typeof getCompany>;
 export type CompaniesGetResult = ReturnType<typeof getCompanies>;
 
+export type CompanyCreateWithAddressFlatErrors = v.FlatErrors<
+	typeof Validation.companyCreateWithAddressSchema
+>;
+export type CompanyUpdateWithAddressFlatErrors = v.FlatErrors<
+	typeof Validation.companyUpdateWithAddressSchema
+>;
+export type CompanyDeleteFlatErrors = v.FlatErrors<
+	typeof Validation.companyDeleteSchema
+>;
+
 // customer types
 export type Customer = typeof customersTable.$inferSelect;
 export type CreateCustomerInput = typeof customersTable.$inferInsert;
@@ -94,6 +112,16 @@ export type CustomerDeleteResult = ReturnType<typeof deleteCustomer>;
 export type CustomerGetResult = ReturnType<typeof getCustomer>;
 export type CustomersGetResult = ReturnType<typeof getCustomers>;
 
+export type CustomerCreateWithAddressFlatErrors = v.FlatErrors<
+	typeof Validation.customerCreateWithAddressSchema
+>;
+export type CustomerUpdateWithAddressFlatErrors = v.FlatErrors<
+	typeof Validation.customerUpdateWithAddressSchema
+>;
+export type CustomerDeleteFlatErrors = v.FlatErrors<
+	typeof Validation.customerDeleteSchema
+>;
+
 // tax types
 export type Tax = typeof taxesTable.$inferSelect;
 export type CreateTaxInput = typeof taxesTable.$inferInsert;
@@ -106,3 +134,13 @@ export type TaxUpdateResult = ReturnType<typeof updateTax>;
 export type TaxDeleteResult = ReturnType<typeof deleteTax>;
 export type TaxGetResult = ReturnType<typeof getTax>;
 export type TaxesGetResult = ReturnType<typeof getTaxes>;
+
+export type TaxCreateFlatErrors = v.FlatErrors<
+	typeof Validation.taxCreateSchema
+>;
+export type TaxUpdateFlatErrors = v.FlatErrors<
+	typeof Validation.taxUpdateSchema
+>;
+export type TaxDeleteFlatErrors = v.FlatErrors<
+	typeof Validation.taxDeleteSchema
+>;

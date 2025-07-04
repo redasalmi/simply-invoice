@@ -12,7 +12,11 @@ import {
 } from "~/db/validation";
 import { emptyResult, itemsPerPage } from "~/main/utils/pagination";
 import type {
+	AddressCreateFlatErrors,
+	AddressUpdateFlatErrors,
 	Company,
+	CompanyCreateWithAddressFlatErrors,
+	CompanyUpdateWithAddressFlatErrors,
 	CreateAddressInput,
 	CreateCompanyWithAddressInput,
 	PaginatedResult,
@@ -180,10 +184,8 @@ export async function registerCompaniesIcpHandlers() {
 			company: CreateCompanyWithAddressInput,
 			address: CreateAddressInput,
 		) => {
-			let companyErrors: v.FlatErrors<
-				typeof companyCreateWithAddressSchema
-			> | null = null;
-			let addressErrors: v.FlatErrors<typeof addressCreateSchema> | null = null;
+			let companyErrors: CompanyCreateWithAddressFlatErrors | null = null;
+			let addressErrors: AddressCreateFlatErrors | null = null;
 
 			const parsedCompany = v.safeParse(
 				companyCreateWithAddressSchema,
@@ -221,10 +223,8 @@ export async function registerCompaniesIcpHandlers() {
 			company: UpdateCompanyWithAddressInput,
 			address: UpdateAddressInput,
 		) => {
-			let companyErrors: v.FlatErrors<
-				typeof companyUpdateWithAddressSchema
-			> | null = null;
-			let addressErrors: v.FlatErrors<typeof addressUpdateSchema> | null = null;
+			let companyErrors: CompanyUpdateWithAddressFlatErrors | null = null;
+			let addressErrors: AddressUpdateFlatErrors | null = null;
 
 			const parsedCompany = v.safeParse(
 				companyUpdateWithAddressSchema,

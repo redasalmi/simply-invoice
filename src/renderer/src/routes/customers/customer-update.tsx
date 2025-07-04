@@ -9,6 +9,7 @@ import {
 	useNavigation,
 } from "react-router";
 import invariant from "tiny-invariant";
+import { AddressForm } from "~/renderer/components/AddressForm";
 import { RichTextEditor } from "~/renderer/components/rich-text/editor";
 import { Button } from "~/renderer/components/ui/button";
 import { FormField } from "~/renderer/components/ui/form-field";
@@ -93,11 +94,6 @@ export function CustomerUpdateRoute() {
 					type="hidden"
 					value={customer.customerId}
 				/>
-				<input
-					name="address.addressId"
-					type="hidden"
-					value={customer.addressId}
-				/>
 
 				<FormField errors={actionData?.errors?.customer?.nested?.name}>
 					<FormField.Label>Name</FormField.Label>
@@ -121,66 +117,10 @@ export function CustomerUpdateRoute() {
 
 				<div className="flex flex-col gap-4">
 					<h3 className="text-2xl">Address</h3>
-
-					<FormField errors={actionData?.errors?.address?.nested?.address1}>
-						<FormField.Label>Address 1</FormField.Label>
-						<FormField.Input
-							defaultValue={customer.address.address1}
-							name="address.address1"
-							type="text"
-						/>
-						<FormField.ErrorMessage />
-					</FormField>
-
-					<FormField errors={actionData?.errors?.address?.nested?.address2}>
-						<FormField.Label>Address 2</FormField.Label>
-						<FormField.Input
-							defaultValue={customer.address.address2 ?? ""}
-							name="address.address2"
-							type="text"
-						/>
-						<FormField.ErrorMessage />
-					</FormField>
-
-					<FormField errors={actionData?.errors?.address?.nested?.city}>
-						<FormField.Label>City</FormField.Label>
-						<FormField.Input
-							defaultValue={customer.address.city}
-							name="address.city"
-							type="text"
-						/>
-						<FormField.ErrorMessage />
-					</FormField>
-
-					<FormField errors={actionData?.errors?.address?.nested?.country}>
-						<FormField.Label>Country</FormField.Label>
-						<FormField.Input
-							defaultValue={customer.address.country}
-							name="address.country"
-							type="text"
-						/>
-						<FormField.ErrorMessage />
-					</FormField>
-
-					<FormField errors={actionData?.errors?.address?.nested?.province}>
-						<FormField.Label>Province</FormField.Label>
-						<FormField.Input
-							defaultValue={customer.address.province ?? ""}
-							name="address.province"
-							type="text"
-						/>
-						<FormField.ErrorMessage />
-					</FormField>
-
-					<FormField errors={actionData?.errors?.address?.nested?.zip}>
-						<FormField.Label>Zip</FormField.Label>
-						<FormField.Input
-							defaultValue={customer.address.zip}
-							name="address.zip"
-							type="text"
-						/>
-						<FormField.ErrorMessage />
-					</FormField>
+					<AddressForm
+						address={customer.address}
+						errors={actionData?.errors?.address}
+					/>
 				</div>
 
 				<div>

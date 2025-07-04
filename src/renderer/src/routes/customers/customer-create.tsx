@@ -5,6 +5,7 @@ import {
 	useActionData,
 	useNavigation,
 } from "react-router";
+import { AddressForm } from "~/renderer/components/AddressForm";
 import { RichTextEditor } from "~/renderer/components/rich-text/editor";
 import { Button } from "~/renderer/components/ui/button";
 import { FormField } from "~/renderer/components/ui/form-field";
@@ -72,42 +73,7 @@ export function CustomerCreateRoute() {
 
 				<div className="flex flex-col gap-4">
 					<h3 className="text-2xl">Address</h3>
-
-					<FormField errors={actionData?.errors?.address?.nested?.address1}>
-						<FormField.Label>Address 1</FormField.Label>
-						<FormField.Input name="address.address1" type="text" />
-						<FormField.ErrorMessage />
-					</FormField>
-
-					<FormField errors={actionData?.errors?.address?.nested?.address2}>
-						<FormField.Label>Address 2</FormField.Label>
-						<FormField.Input name="address.address2" type="text" />
-						<FormField.ErrorMessage />
-					</FormField>
-
-					<FormField errors={actionData?.errors?.address?.nested?.city}>
-						<FormField.Label>City</FormField.Label>
-						<FormField.Input name="address.city" type="text" />
-						<FormField.ErrorMessage />
-					</FormField>
-
-					<FormField errors={actionData?.errors?.address?.nested?.country}>
-						<FormField.Label>Country</FormField.Label>
-						<FormField.Input name="address.country" type="text" />
-						<FormField.ErrorMessage />
-					</FormField>
-
-					<FormField errors={actionData?.errors?.address?.nested?.province}>
-						<FormField.Label>Province</FormField.Label>
-						<FormField.Input name="address.province" type="text" />
-						<FormField.ErrorMessage />
-					</FormField>
-
-					<FormField errors={actionData?.errors?.address?.nested?.zip}>
-						<FormField.Label>Zip</FormField.Label>
-						<FormField.Input name="address.zip" type="text" />
-						<FormField.ErrorMessage />
-					</FormField>
+					<AddressForm errors={actionData?.errors?.address} />
 
 					<div>
 						<div>
