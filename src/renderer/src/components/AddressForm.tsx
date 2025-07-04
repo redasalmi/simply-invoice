@@ -13,11 +13,13 @@ interface AddressFormProps {
 export function AddressForm({ address, errors }: AddressFormProps) {
 	return (
 		<>
-			<input
-				name="address.addressId"
-				type="hidden"
-				value={address?.addressId}
-			/>
+			{address?.addressId ? (
+				<input
+					name="address.addressId"
+					type="hidden"
+					value={address.addressId}
+				/>
+			) : null}
 
 			<FormField errors={errors?.nested?.address1}>
 				<FormField.Label>Address 1</FormField.Label>
