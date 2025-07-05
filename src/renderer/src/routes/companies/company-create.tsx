@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import {
 	type ActionFunctionArgs,
 	Form,
@@ -9,6 +10,7 @@ import { AddressFormFields } from "~/renderer/components/AddressFormFields";
 import { RichTextEditor } from "~/renderer/components/rich-text/editor";
 import { Button } from "~/renderer/components/ui/button";
 import { FormField } from "~/renderer/components/ui/form-field";
+import { useFormActionErrorFocus } from "~/renderer/hooks/useFormActionErrorFocus";
 import type {
 	CreateAddressInput,
 	CreateCompanyWithAddressInput,
@@ -50,7 +52,9 @@ export async function companyCreateAction({ request }: ActionFunctionArgs) {
 }
 
 export function CompanyCreateRoute() {
+	const formRef = useRef<HTMLFormElement>(null);
 	const actionData = useActionData<typeof companyCreateAction>();
+	useFormActionErrorFocus(formRef, actionData);
 
 	const navigation = useNavigation();
 	const isLoading = navigation.state !== "idle";
@@ -58,7 +62,7 @@ export function CompanyCreateRoute() {
 
 	return (
 		<section>
-			<Form className="flex flex-col gap-4" method="post">
+			<Form className="flex flex-col gap-4" method="post" ref={formRef}>
 				<FormField errors={actionData?.errors?.company?.nested?.name}>
 					<FormField.Label>Name</FormField.Label>
 					<FormField.Input name="company.name" type="text" />

@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import {
 	type ActionFunctionArgs,
 	Form,
@@ -11,6 +12,7 @@ import {
 import invariant from "tiny-invariant";
 import { Button } from "~/renderer/components/ui/button";
 import { FormField } from "~/renderer/components/ui/form-field";
+import { useFormActionErrorFocus } from "~/renderer/hooks/useFormActionErrorFocus";
 import type { UpdateTaxInput } from "~/types";
 
 export async function taxUpdateLoader({ params }: LoaderFunctionArgs) {
@@ -37,8 +39,10 @@ export async function taxUpdateAction({ request }: ActionFunctionArgs) {
 }
 
 export function TaxUpdateRoute() {
+	const formRef = useRef<HTMLFormElement>(null);
 	const { tax } = useLoaderData<typeof taxUpdateLoader>();
 	const actionData = useActionData<typeof taxUpdateAction>();
+	useFormActionErrorFocus(formRef, actionData);
 
 	const navigation = useNavigation();
 	const isLoading = navigation.state !== "idle";
@@ -66,7 +70,7 @@ export function TaxUpdateRoute() {
 
 	return (
 		<section>
-			<Form className="flex flex-col gap-4" method="post">
+			<Form className="flex flex-col gap-4" method="post" ref={formRef}>
 				<input name="taxId" type="hidden" value={tax.taxId} />
 
 				<FormField errors={actionData?.errors?.nested?.name}>

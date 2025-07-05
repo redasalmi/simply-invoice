@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import {
 	type ActionFunctionArgs,
 	Form,
@@ -7,6 +8,7 @@ import {
 } from "react-router";
 import { Button } from "~/renderer/components/ui/button";
 import { FormField } from "~/renderer/components/ui/form-field";
+import { useFormActionErrorFocus } from "~/renderer/hooks/useFormActionErrorFocus";
 import type { CreateServiceInput } from "~/types";
 
 export async function serviceCreateAction({ request }: ActionFunctionArgs) {
@@ -24,7 +26,9 @@ export async function serviceCreateAction({ request }: ActionFunctionArgs) {
 }
 
 export function ServiceCreateRoute() {
+	const formRef = useRef<HTMLFormElement>(null);
 	const actionData = useActionData<typeof serviceCreateAction>();
+	useFormActionErrorFocus(formRef, actionData);
 
 	const navigation = useNavigation();
 	const isLoading = navigation.state !== "idle";
@@ -32,7 +36,7 @@ export function ServiceCreateRoute() {
 
 	return (
 		<section>
-			<Form className="flex flex-col gap-4" method="post">
+			<Form className="flex flex-col gap-4" method="post" ref={formRef}>
 				<FormField errors={actionData?.errors?.nested?.name}>
 					<FormField.Label>Name</FormField.Label>
 					<FormField.Input name="name" type="text" />

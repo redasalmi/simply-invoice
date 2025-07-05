@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import {
 	type ActionFunctionArgs,
 	Form,
@@ -13,6 +14,7 @@ import { AddressFormFields } from "~/renderer/components/AddressFormFields";
 import { RichTextEditor } from "~/renderer/components/rich-text/editor";
 import { Button } from "~/renderer/components/ui/button";
 import { FormField } from "~/renderer/components/ui/form-field";
+import { useFormActionErrorFocus } from "~/renderer/hooks/useFormActionErrorFocus";
 import type {
 	UpdateAddressInput,
 	UpdateCustomerWithAddressInput,
@@ -65,8 +67,10 @@ export async function customerUpdateAction({ request }: ActionFunctionArgs) {
 }
 
 export function CustomerUpdateRoute() {
+	const formRef = useRef<HTMLFormElement>(null);
 	const { customer } = useLoaderData<typeof customerUpdateLoader>();
 	const actionData = useActionData<typeof customerUpdateAction>();
+	useFormActionErrorFocus(formRef, actionData);
 
 	const navigation = useNavigation();
 	const isLoading = navigation.state !== "idle";
@@ -88,7 +92,7 @@ export function CustomerUpdateRoute() {
 
 	return (
 		<section>
-			<Form className="flex flex-col gap-4" method="post">
+			<Form className="flex flex-col gap-4" method="post" ref={formRef}>
 				<input
 					name="customer.customerId"
 					type="hidden"

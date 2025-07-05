@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import {
 	type ActionFunctionArgs,
 	Form,
@@ -7,6 +8,7 @@ import {
 } from "react-router";
 import { Button } from "~/renderer/components/ui/button";
 import { FormField } from "~/renderer/components/ui/form-field";
+import { useFormActionErrorFocus } from "~/renderer/hooks/useFormActionErrorFocus";
 import type { CreateTaxInput } from "~/types";
 
 export async function taxCreateAction({ request }: ActionFunctionArgs) {
@@ -24,7 +26,9 @@ export async function taxCreateAction({ request }: ActionFunctionArgs) {
 }
 
 export function TaxCreateRoute() {
+	const formRef = useRef<HTMLFormElement>(null);
 	const actionData = useActionData<typeof taxCreateAction>();
+	useFormActionErrorFocus(formRef, actionData);
 
 	const navigation = useNavigation();
 	const isLoading = navigation.state !== "idle";
@@ -32,7 +36,7 @@ export function TaxCreateRoute() {
 
 	return (
 		<section>
-			<Form className="flex flex-col gap-4" method="post">
+			<Form className="flex flex-col gap-4" method="post" ref={formRef}>
 				<FormField errors={actionData?.errors?.nested?.name}>
 					<FormField.Label>Name</FormField.Label>
 					<FormField.Input name="name" type="text" />
