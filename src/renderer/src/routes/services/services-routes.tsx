@@ -4,6 +4,10 @@ import {
 	serviceCreateAction,
 } from "~/renderer/routes/services/service-create";
 import {
+	ServiceDetailRoute,
+	serviceDetailLoader,
+} from "~/renderer/routes/services/service-detail";
+import {
 	ServiceUpdateRoute,
 	serviceUpdateAction,
 	serviceUpdateLoader,
@@ -18,6 +22,13 @@ export const servicesRoutes: RouteObject[] = [
 		path: "/services",
 		loader: servicesListLoader,
 		Component: ServicesListRoute,
+		children: [
+			{
+				path: "detail/:serviceId",
+				loader: serviceDetailLoader,
+				Component: ServiceDetailRoute,
+			},
+		],
 	},
 	{
 		path: "/services/create",
