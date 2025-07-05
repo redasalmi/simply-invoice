@@ -4,6 +4,11 @@ import {
 	serviceCreateAction,
 } from "~/renderer/routes/services/service-create";
 import {
+	ServiceDeleteRoute,
+	serviceDeleteAction,
+	serviceDeleteLoader,
+} from "~/renderer/routes/services/service-delete";
+import {
 	ServiceDetailRoute,
 	serviceDetailLoader,
 } from "~/renderer/routes/services/service-detail";
@@ -27,6 +32,12 @@ export const servicesRoutes: RouteObject[] = [
 				path: "detail/:serviceId",
 				loader: serviceDetailLoader,
 				Component: ServiceDetailRoute,
+			},
+			{
+				path: "delete/:serviceId",
+				loader: serviceDeleteLoader,
+				action: serviceDeleteAction,
+				Component: ServiceDeleteRoute,
 			},
 		],
 	},
