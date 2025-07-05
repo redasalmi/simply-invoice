@@ -4,11 +4,13 @@ import type {
 	CreateAddressInput,
 	CreateCompanyWithAddressInput,
 	CreateCustomerWithAddressInput,
+	CreateServiceInput,
 	CreateTaxInput,
 	PaginationType,
 	UpdateAddressInput,
 	UpdateCompanyWithAddressInput,
 	UpdateCustomerWithAddressInput,
+	UpdateServiceInput,
 	UpdateTaxInput,
 } from "~/types";
 
@@ -75,6 +77,23 @@ const api = {
 			},
 			delete: (customerId: string) => {
 				return ipcRenderer.invoke("delete-customer", customerId);
+			},
+		},
+		services: {
+			create: (service: CreateServiceInput) => {
+				return ipcRenderer.invoke("create-service", service);
+			},
+			get: (cursor: string | null, paginationType: PaginationType | null) => {
+				return ipcRenderer.invoke("get-services", cursor, paginationType);
+			},
+			getById: (serviceId: string) => {
+				return ipcRenderer.invoke("get-service", serviceId);
+			},
+			update: (service: UpdateServiceInput) => {
+				return ipcRenderer.invoke("update-service", service);
+			},
+			delete: (serviceId: string) => {
+				return ipcRenderer.invoke("delete-service", serviceId);
 			},
 		},
 		taxes: {

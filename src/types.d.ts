@@ -28,6 +28,13 @@ import type {
 	updateTax,
 } from "./main/services/taxes";
 import type { paginationTypes } from "./renderer/src/utils/getPaginationParams";
+import {
+	createService,
+	deleteService,
+	getService,
+	getServices,
+	updateService,
+} from "./main/services/services";
 
 // pagination types
 export type PaginationType = keyof typeof paginationTypes;
@@ -120,6 +127,29 @@ export type CustomerUpdateWithAddressFlatErrors = v.FlatErrors<
 >;
 export type CustomerDeleteFlatErrors = v.FlatErrors<
 	typeof Validation.customerDeleteSchema
+>;
+
+// service types
+export type Service = typeof servicesTable.$inferSelect;
+export type CreateServiceInput = typeof servicesTable.$inferInsert;
+export interface UpdateServiceInput extends CreateServiceInput {
+	serviceId: string;
+}
+
+export type ServiceCreateResult = ReturnType<typeof createService>;
+export type ServiceUpdateResult = ReturnType<typeof updateService>;
+export type ServiceDeleteResult = ReturnType<typeof deleteService>;
+export type ServiceGetResult = ReturnType<typeof getService>;
+export type ServicesGetResult = ReturnType<typeof getServices>;
+
+export type ServiceCreateFlatErrors = v.FlatErrors<
+	typeof Validation.serviceCreateSchema
+>;
+export type ServiceUpdateFlatErrors = v.FlatErrors<
+	typeof Validation.serviceUpdateSchema
+>;
+export type ServiceDeleteFlatErrors = v.FlatErrors<
+	typeof Validation.serviceDeleteSchema
 >;
 
 // tax types

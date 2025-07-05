@@ -4,9 +4,11 @@ import {
 	addressesTable,
 	companiesTable,
 	customersTable,
+	servicesTable,
 	taxesTable,
 } from "~/db/schema";
 
+// address schemas
 export const addressCreateSchema = createInsertSchema(addressesTable, {
 	address1: (schema) => v.pipe(schema, v.nonEmpty("Address 1 is required")),
 	city: (schema) => v.pipe(schema, v.nonEmpty("City is required")),
@@ -19,6 +21,7 @@ export const addressUpdateSchema = v.object({
 	addressId: v.pipe(v.string(), v.nonEmpty("Address ID is required"), v.ulid()),
 });
 
+// company schemas
 export const companyCreateWithAddressSchema = v.omit(
 	createInsertSchema(companiesTable, {
 		name: (schema) => v.pipe(schema, v.nonEmpty("Name is required")),
@@ -43,6 +46,7 @@ export const companyDeleteSchema = v.pipe(
 	v.ulid(),
 );
 
+// customer schemas
 export const customerCreateWithAddressSchema = v.omit(
 	createInsertSchema(customersTable, {
 		name: (schema) => v.pipe(schema, v.nonEmpty("Name is required")),
@@ -71,6 +75,30 @@ export const customerDeleteSchema = v.pipe(
 	v.ulid(),
 );
 
+// service schemas
+export const serviceCreateSchema = createInsertSchema(servicesTable, {
+	name: (schema) => v.pipe(schema, v.nonEmpty("Name is required")),
+	rate: v.pipe(
+		v.string(),
+		v.nonEmpty("Rate is required"),
+		v.decimal("Rate must be a number"),
+		v.transform(Number),
+		v.minValue(0, "Rate must be greater than 0"),
+	),
+});
+
+export const serviceUpdateSchema = v.object({
+	...serviceCreateSchema.entries,
+	serviceId: v.pipe(v.string(), v.nonEmpty("Service ID is required"), v.ulid()),
+});
+
+export const serviceDeleteSchema = v.pipe(
+	v.string(),
+	v.nonEmpty("Service ID is required"),
+	v.ulid(),
+);
+
+// tax schemas
 export const taxCreateSchema = createInsertSchema(taxesTable, {
 	name: (schema) => v.pipe(schema, v.nonEmpty("Name is required")),
 	rate: v.pipe(

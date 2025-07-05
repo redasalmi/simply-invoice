@@ -74,6 +74,28 @@ declare global {
 						| Types.CustomerDeleteResult
 						| { errors: Types.CustomerDeleteFlatErrors };
 				};
+				services: {
+					create: (
+						service: Types.CreateServiceInput,
+					) =>
+						| Types.ServiceCreateResult
+						| { errors: Types.ServiceCreateFlatErrors };
+					get: (
+						cursor: string | null,
+						paginationType: Types.PaginationType | null,
+					) => Types.ServicesGetResult;
+					getById: (serviceId: string) => Types.ServiceGetResult;
+					update: (
+						service: Types.UpdateServiceInput,
+					) =>
+						| Types.ServiceUpdateResult
+						| { errors: Types.ServiceUpdateFlatErrors };
+					delete: (
+						serviceId: string,
+					) =>
+						| Types.ServiceDeleteResult
+						| { errors: Types.ServiceDeleteFlatErrors };
+				};
 				taxes: {
 					create: (
 						tax: Types.CreateTaxInput,

@@ -8,6 +8,7 @@ import {
 import { migrateDb } from "~/db/migrate";
 import { registerCompaniesIcpHandlers } from "~/main/services/companies";
 import { registerCustomersIcpHandles } from "~/main/services/customers";
+import { registerServicesIcpHandlers } from "~/main/services/services";
 import { registerTaxesIcpHandlers } from "~/main/services/taxes";
 import icon from "~/resources/icon.png?asset";
 
@@ -79,6 +80,7 @@ app.whenReady().then(async () => {
 
 	registerCompaniesIcpHandlers();
 	registerCustomersIcpHandles();
+	registerServicesIcpHandlers();
 	registerTaxesIcpHandlers();
 	createWindow();
 
