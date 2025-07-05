@@ -5,7 +5,7 @@ import {
 	useActionData,
 	useNavigation,
 } from "react-router";
-import { AddressForm } from "~/renderer/components/AddressForm";
+import { AddressFormFields } from "~/renderer/components/AddressFormFields";
 import { RichTextEditor } from "~/renderer/components/rich-text/editor";
 import { Button } from "~/renderer/components/ui/button";
 import { FormField } from "~/renderer/components/ui/form-field";
@@ -22,7 +22,7 @@ export async function customerCreateAction({ request }: ActionFunctionArgs) {
 		name: data["customer.name"],
 		email: data["customer.email"],
 		additionalInformation: data["customer.additionalInformation"]
-			? JSON.parse(data["customer.additionalInformation"] as string)
+			? JSON.parse(data["customer.additionalInformation"].toString())
 			: undefined,
 	} as unknown as CreateCustomerWithAddressInput;
 
@@ -73,7 +73,10 @@ export function CustomerCreateRoute() {
 
 				<div className="flex flex-col gap-4">
 					<h3 className="text-2xl">Address</h3>
-					<AddressForm errors={actionData?.errors?.address} />
+					<AddressFormFields
+						className="flex flex-col gap-4"
+						errors={actionData?.errors?.address}
+					/>
 
 					<div>
 						<div>

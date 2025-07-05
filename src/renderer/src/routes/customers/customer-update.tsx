@@ -9,7 +9,7 @@ import {
 	useNavigation,
 } from "react-router";
 import invariant from "tiny-invariant";
-import { AddressForm } from "~/renderer/components/AddressForm";
+import { AddressFormFields } from "~/renderer/components/AddressFormFields";
 import { RichTextEditor } from "~/renderer/components/rich-text/editor";
 import { Button } from "~/renderer/components/ui/button";
 import { FormField } from "~/renderer/components/ui/form-field";
@@ -117,8 +117,9 @@ export function CustomerUpdateRoute() {
 
 				<div className="flex flex-col gap-4">
 					<h3 className="text-2xl">Address</h3>
-					<AddressForm
+					<AddressFormFields
 						address={customer.address}
+						className="flex flex-col gap-4"
 						errors={actionData?.errors?.address}
 					/>
 				</div>

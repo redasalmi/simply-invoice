@@ -1,18 +1,23 @@
+import { FormField } from "~/renderer/components/ui/form-field";
 import type {
 	Address,
 	AddressCreateFlatErrors,
 	AddressUpdateFlatErrors,
 } from "~/types";
-import { FormField } from "./ui/form-field";
 
-interface AddressFormProps {
+interface AddressFormFieldsProps
+	extends Omit<React.ComponentPropsWithRef<"div">, "children"> {
 	address?: Address;
 	errors?: AddressUpdateFlatErrors | AddressCreateFlatErrors;
 }
 
-export function AddressForm({ address, errors }: AddressFormProps) {
+export function AddressFormFields({
+	address,
+	errors,
+	...props
+}: AddressFormFieldsProps) {
 	return (
-		<>
+		<div {...props}>
 			{address?.addressId ? (
 				<input
 					name="address.addressId"
@@ -80,6 +85,6 @@ export function AddressForm({ address, errors }: AddressFormProps) {
 				/>
 				<FormField.ErrorMessage />
 			</FormField>
-		</>
+		</div>
 	);
 }
