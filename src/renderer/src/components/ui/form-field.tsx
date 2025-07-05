@@ -1,4 +1,4 @@
-import { createContext, useContext, useId } from "react";
+import { createContext, use, useId } from "react";
 import {
 	ErrorMessage,
 	type ErrorMessageProps,
@@ -21,7 +21,7 @@ interface FormFieldContextInterface {
 const FormFieldContext = createContext<FormFieldContextInterface | null>(null);
 
 function useFormField() {
-	const context = useContext(FormFieldContext);
+	const context = use(FormFieldContext);
 	if (!context) {
 		throw new Error("useFormField must be used within a FormField");
 	}

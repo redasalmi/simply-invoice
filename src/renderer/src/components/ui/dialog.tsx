@@ -1,5 +1,5 @@
 import { XIcon } from "lucide-react";
-import { createContext, useContext, useRef } from "react";
+import { createContext, use, useRef } from "react";
 import { Button, type ButtonProps } from "~/renderer/components/ui/button";
 import { cn } from "~/renderer/utils/cn";
 
@@ -8,7 +8,7 @@ const DialogContext = createContext<{
 } | null>(null);
 
 function useDialog() {
-	const context = useContext(DialogContext);
+	const context = use(DialogContext);
 	if (!context) {
 		throw new Error("useDialog must be used within a Dialog");
 	}
