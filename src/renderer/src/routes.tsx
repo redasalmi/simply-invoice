@@ -3,6 +3,7 @@ import { RootRoute } from "~/renderer/root";
 import { companiesRoutes } from "~/renderer/routes/companies/companies-routes";
 import { customersRoutes } from "~/renderer/routes/customers/customers-routes";
 import { HomeRoute } from "~/renderer/routes/home";
+import { servicesRoutes } from "~/renderer/routes/services/services-routes";
 import { taxesRoutes } from "~/renderer/routes/taxes/taxes-routes";
 
 export const router = createBrowserRouter([
@@ -15,6 +16,7 @@ export const router = createBrowserRouter([
 			},
 			...companiesRoutes,
 			...customersRoutes,
+			...servicesRoutes,
 			...taxesRoutes,
 		],
 	},
