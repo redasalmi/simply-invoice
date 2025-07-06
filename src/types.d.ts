@@ -4,6 +4,7 @@ import type {
 	companiesTable,
 	customersTable,
 	taxesTable,
+	userSettingsTable,
 } from "./db/schema";
 import type * as Validation from "./db/validation";
 import type {
@@ -34,6 +35,10 @@ import type {
 	getTaxes,
 	updateTax,
 } from "./main/services/taxes";
+import type {
+	getUserSettings,
+	updateUserSetting,
+} from "./main/services/user-settings";
 import type { paginationTypes } from "./renderer/src/utils/getPaginationParams";
 
 // pagination types
@@ -173,4 +178,15 @@ export type TaxUpdateFlatErrors = v.FlatErrors<
 >;
 export type TaxDeleteFlatErrors = v.FlatErrors<
 	typeof Validation.taxDeleteSchema
+>;
+
+// user settings types
+export type UserSetting = typeof userSettingsTable.$inferSelect;
+export type UpdateUserSettingInput = typeof userSettingsTable.$inferInsert;
+
+export type UserSettingsGetResult = ReturnType<typeof getUserSettings>;
+export type UserSettingsUpdateResult = ReturnType<typeof updateUserSetting>;
+
+export type UserSettingsUpdateFlatErrors = v.FlatErrors<
+	typeof Validation.userSettingUpdateSchema
 >;

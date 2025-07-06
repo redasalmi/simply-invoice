@@ -242,3 +242,41 @@ export const invoiceServicesTable = sqliteTable("invoice_services_table", {
 		.references(() => taxesTable.taxId),
 	...timestamps,
 });
+
+export const userSettingsTable = sqliteTable(
+	"user_settings_table",
+	{
+		settingId: text("setting_id", { length: 26 })
+			.primaryKey()
+			.$defaultFn(() => ulid()),
+		settingKey: text("setting_key", {
+			enum: [
+				"companies-table-items-per-page",
+				"customers-table-items-per-page",
+				"services-table-items-per-page",
+				"taxes-table-items-per-page",
+				"invoices-table-items-per-page",
+			],
+		})
+			.notNull()
+			.unique(),
+		settingValue: text("setting_value").notNull(),
+		settingType: text("setting_type", {
+			enum: ["number", "string", "boolean", "json"],
+		})
+			.notNull()
+			.default("string"),
+		...timestamps,
+	},
+	(table) => [
+		check(
+			"setting_key_check",
+			sql`setting_key IN ('companies-table-items-per-page', 'customers-table-items-per-page', 'services-table-items-per-page', 'taxes-table-items-per-page', 'invoices-table-items-per-page')`,
+		),
+		check(
+			"setting_type_check",
+			sql`setting_type IN ('number', 'string', 'boolean', 'json')`,
+		),
+		index("setting_key_index").on(table.settingKey),
+	],
+);

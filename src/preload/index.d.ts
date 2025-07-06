@@ -112,6 +112,14 @@ declare global {
 						taxId: string,
 					) => Types.TaxDeleteResult | { errors: Types.TaxDeleteFlatErrors };
 				};
+				userSettings: {
+					get: () => Types.UserSettingsGetResult;
+					update: (
+						userSetting: Types.UpdateUserSettingInput,
+					) =>
+						| Types.UserSettingsUpdateResult
+						| { errors: Types.UserSettingsUpdateFlatErrors };
+				};
 			};
 		};
 	}

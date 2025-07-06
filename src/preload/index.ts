@@ -12,6 +12,7 @@ import type {
 	UpdateCustomerWithAddressInput,
 	UpdateServiceInput,
 	UpdateTaxInput,
+	UpdateUserSettingInput,
 } from "~/types";
 
 // Custom APIs for renderer
@@ -111,6 +112,14 @@ const api = {
 			},
 			delete: (taxId: string) => {
 				return ipcRenderer.invoke("delete-tax", taxId);
+			},
+		},
+		userSettings: {
+			get: () => {
+				return ipcRenderer.invoke("get-user-settings");
+			},
+			update: (userSetting: UpdateUserSettingInput) => {
+				return ipcRenderer.invoke("update-user-setting", userSetting);
 			},
 		},
 	},

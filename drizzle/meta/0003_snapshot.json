@@ -1,0 +1,904 @@
+{
+  "version": "6",
+  "dialect": "sqlite",
+  "id": "77e4e730-846e-4720-acf1-a4eed4a42fc1",
+  "prevId": "969dd5f9-8157-4f72-927b-0dda13085e81",
+  "tables": {
+    "addresses_table": {
+      "name": "addresses_table",
+      "columns": {
+        "address_id": {
+          "name": "address_id",
+          "type": "text(26)",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "address1": {
+          "name": "address1",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "address2": {
+          "name": "address2",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "city": {
+          "name": "city",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "country": {
+          "name": "country",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "province": {
+          "name": "province",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "zip": {
+          "name": "zip",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(current_timestamp)"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "address_city_index": {
+          "name": "address_city_index",
+          "columns": [
+            "city"
+          ],
+          "isUnique": false
+        },
+        "address_country_index": {
+          "name": "address_country_index",
+          "columns": [
+            "country"
+          ],
+          "isUnique": false
+        },
+        "address_province_index": {
+          "name": "address_province_index",
+          "columns": [
+            "province"
+          ],
+          "isUnique": false
+        },
+        "address_zip_index": {
+          "name": "address_zip_index",
+          "columns": [
+            "zip"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "companies_table": {
+      "name": "companies_table",
+      "columns": {
+        "company_id": {
+          "name": "company_id",
+          "type": "text(26)",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "email": {
+          "name": "email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "phone": {
+          "name": "phone",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "tax_id": {
+          "name": "tax_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "status": {
+          "name": "status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'active'"
+        },
+        "additional_information": {
+          "name": "additional_information",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "address_id": {
+          "name": "address_id",
+          "type": "text(26)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(current_timestamp)"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "company_name_index": {
+          "name": "company_name_index",
+          "columns": [
+            "name"
+          ],
+          "isUnique": false
+        },
+        "company_email_index": {
+          "name": "company_email_index",
+          "columns": [
+            "email"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "companies_table_address_id_addresses_table_address_id_fk": {
+          "name": "companies_table_address_id_addresses_table_address_id_fk",
+          "tableFrom": "companies_table",
+          "tableTo": "addresses_table",
+          "columnsFrom": [
+            "address_id"
+          ],
+          "columnsTo": [
+            "address_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "company_status_check": {
+          "name": "company_status_check",
+          "value": "status IN ('active', 'inactive')"
+        }
+      }
+    },
+    "customers_table": {
+      "name": "customers_table",
+      "columns": {
+        "customer_id": {
+          "name": "customer_id",
+          "type": "text(26)",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "email": {
+          "name": "email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "phone": {
+          "name": "phone",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "tax_id": {
+          "name": "tax_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "status": {
+          "name": "status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'active'"
+        },
+        "additional_information": {
+          "name": "additional_information",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "address_id": {
+          "name": "address_id",
+          "type": "text(26)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(current_timestamp)"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "customer_name_index": {
+          "name": "customer_name_index",
+          "columns": [
+            "name"
+          ],
+          "isUnique": false
+        },
+        "customer_email_index": {
+          "name": "customer_email_index",
+          "columns": [
+            "email"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "customers_table_address_id_addresses_table_address_id_fk": {
+          "name": "customers_table_address_id_addresses_table_address_id_fk",
+          "tableFrom": "customers_table",
+          "tableTo": "addresses_table",
+          "columnsFrom": [
+            "address_id"
+          ],
+          "columnsTo": [
+            "address_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "customer_status_check": {
+          "name": "customer_status_check",
+          "value": "status IN ('active', 'inactive')"
+        }
+      }
+    },
+    "invoice_services_table": {
+      "name": "invoice_services_table",
+      "columns": {
+        "invoice_service_id": {
+          "name": "invoice_service_id",
+          "type": "text(26)",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "invoice_id": {
+          "name": "invoice_id",
+          "type": "text(26)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "service_id": {
+          "name": "service_id",
+          "type": "text(26)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "quantity": {
+          "name": "quantity",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "tax_id": {
+          "name": "tax_id",
+          "type": "text(26)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(current_timestamp)"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "invoice_services_table_invoice_id_invoices_table_invoice_id_fk": {
+          "name": "invoice_services_table_invoice_id_invoices_table_invoice_id_fk",
+          "tableFrom": "invoice_services_table",
+          "tableTo": "invoices_table",
+          "columnsFrom": [
+            "invoice_id"
+          ],
+          "columnsTo": [
+            "invoice_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "invoice_services_table_service_id_services_table_service_id_fk": {
+          "name": "invoice_services_table_service_id_services_table_service_id_fk",
+          "tableFrom": "invoice_services_table",
+          "tableTo": "services_table",
+          "columnsFrom": [
+            "service_id"
+          ],
+          "columnsTo": [
+            "service_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "invoice_services_table_tax_id_taxes_table_tax_id_fk": {
+          "name": "invoice_services_table_tax_id_taxes_table_tax_id_fk",
+          "tableFrom": "invoice_services_table",
+          "tableTo": "taxes_table",
+          "columnsFrom": [
+            "tax_id"
+          ],
+          "columnsTo": [
+            "tax_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "invoices_table": {
+      "name": "invoices_table",
+      "columns": {
+        "invoice_id": {
+          "name": "invoice_id",
+          "type": "text(26)",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "identifier": {
+          "name": "identifier",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "identifier_type": {
+          "name": "identifier_type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "locale": {
+          "name": "locale",
+          "type": "text(4)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "country_code": {
+          "name": "country_code",
+          "type": "text(2)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "date": {
+          "name": "date",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "due_date": {
+          "name": "due_date",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "company_id": {
+          "name": "company_id",
+          "type": "text(26)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "customer_id": {
+          "name": "customer_id",
+          "type": "text(26)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "subtotal_amount": {
+          "name": "subtotal_amount",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "total_amount": {
+          "name": "total_amount",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "status": {
+          "name": "status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'draft'"
+        },
+        "note": {
+          "name": "note",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(current_timestamp)"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "invoices_table_identifier_unique": {
+          "name": "invoices_table_identifier_unique",
+          "columns": [
+            "identifier"
+          ],
+          "isUnique": true
+        },
+        "invoice_identifier_type_index": {
+          "name": "invoice_identifier_type_index",
+          "columns": [
+            "identifier_type"
+          ],
+          "isUnique": false
+        },
+        "invoice_locale_index": {
+          "name": "invoice_locale_index",
+          "columns": [
+            "locale"
+          ],
+          "isUnique": false
+        },
+        "invoice_country_code_index": {
+          "name": "invoice_country_code_index",
+          "columns": [
+            "country_code"
+          ],
+          "isUnique": false
+        },
+        "invoice_date_index": {
+          "name": "invoice_date_index",
+          "columns": [
+            "date"
+          ],
+          "isUnique": false
+        },
+        "invoice_subtotal_amount_index": {
+          "name": "invoice_subtotal_amount_index",
+          "columns": [
+            "subtotal_amount"
+          ],
+          "isUnique": false
+        },
+        "invoice_total_amount_index": {
+          "name": "invoice_total_amount_index",
+          "columns": [
+            "total_amount"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "invoices_table_company_id_companies_table_company_id_fk": {
+          "name": "invoices_table_company_id_companies_table_company_id_fk",
+          "tableFrom": "invoices_table",
+          "tableTo": "companies_table",
+          "columnsFrom": [
+            "company_id"
+          ],
+          "columnsTo": [
+            "company_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "invoices_table_customer_id_customers_table_customer_id_fk": {
+          "name": "invoices_table_customer_id_customers_table_customer_id_fk",
+          "tableFrom": "invoices_table",
+          "tableTo": "customers_table",
+          "columnsFrom": [
+            "customer_id"
+          ],
+          "columnsTo": [
+            "customer_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "identifier_type_check": {
+          "name": "identifier_type_check",
+          "value": "identifier_type IN ('incremental', 'random', 'manual')"
+        },
+        "invoice_status_check": {
+          "name": "invoice_status_check",
+          "value": "status IN ('draft', 'sent', 'paid', 'overdue', 'cancelled')"
+        }
+      }
+    },
+    "services_table": {
+      "name": "services_table",
+      "columns": {
+        "service_id": {
+          "name": "service_id",
+          "type": "text(26)",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "rate": {
+          "name": "rate",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "status": {
+          "name": "status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'active'"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(current_timestamp)"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "service_name_index": {
+          "name": "service_name_index",
+          "columns": [
+            "name"
+          ],
+          "isUnique": false
+        },
+        "service_rate_index": {
+          "name": "service_rate_index",
+          "columns": [
+            "rate"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "service_status_check": {
+          "name": "service_status_check",
+          "value": "status IN ('active', 'inactive')"
+        }
+      }
+    },
+    "taxes_table": {
+      "name": "taxes_table",
+      "columns": {
+        "tax_id": {
+          "name": "tax_id",
+          "type": "text(26)",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "rate": {
+          "name": "rate",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "status": {
+          "name": "status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'active'"
+        },
+        "type": {
+          "name": "type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'percentage'"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(current_timestamp)"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "tax_name_index": {
+          "name": "tax_name_index",
+          "columns": [
+            "name"
+          ],
+          "isUnique": false
+        },
+        "tax_rate_index": {
+          "name": "tax_rate_index",
+          "columns": [
+            "rate"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "tax_status_check": {
+          "name": "tax_status_check",
+          "value": "status IN ('active', 'inactive')"
+        },
+        "tax_type_check": {
+          "name": "tax_type_check",
+          "value": "type IN ('percentage', 'fixed_amount')"
+        }
+      }
+    },
+    "user_settings_table": {
+      "name": "user_settings_table",
+      "columns": {
+        "setting_id": {
+          "name": "setting_id",
+          "type": "text(26)",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "setting_key": {
+          "name": "setting_key",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "setting_value": {
+          "name": "setting_value",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "setting_type": {
+          "name": "setting_type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'string'"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(current_timestamp)"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "user_settings_table_setting_key_unique": {
+          "name": "user_settings_table_setting_key_unique",
+          "columns": [
+            "setting_key"
+          ],
+          "isUnique": true
+        },
+        "setting_key_index": {
+          "name": "setting_key_index",
+          "columns": [
+            "setting_key"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "setting_type_check": {
+          "name": "setting_type_check",
+          "value": "setting_type IN ('number', 'string', 'boolean', 'json')"
+        }
+      }
+    }
+  },
+  "views": {},
+  "enums": {},
+  "_meta": {
+    "schemas": {},
+    "tables": {},
+    "columns": {}
+  },
+  "internal": {
+    "indexes": {}
+  }
+}

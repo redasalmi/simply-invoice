@@ -10,6 +10,10 @@ import { registerCompaniesIcpHandlers } from "~/main/services/companies";
 import { registerCustomersIcpHandles } from "~/main/services/customers";
 import { registerServicesIcpHandlers } from "~/main/services/services";
 import { registerTaxesIcpHandlers } from "~/main/services/taxes";
+import {
+	createDefaultUserSettings,
+	registerUserSettingsIcpHandlers,
+} from "~/main/services/user-settings";
 import icon from "~/resources/icon.png?asset";
 
 function createWindow() {
@@ -78,10 +82,12 @@ app.whenReady().then(async () => {
 		optimizer.watchWindowShortcuts(window);
 	});
 
+	createDefaultUserSettings();
 	registerCompaniesIcpHandlers();
 	registerCustomersIcpHandles();
 	registerServicesIcpHandlers();
 	registerTaxesIcpHandlers();
+	registerUserSettingsIcpHandlers();
 	createWindow();
 
 	app.on("activate", async () => {

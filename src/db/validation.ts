@@ -6,6 +6,7 @@ import {
 	customersTable,
 	servicesTable,
 	taxesTable,
+	userSettingsTable,
 } from "~/db/schema";
 
 // address schemas
@@ -120,3 +121,12 @@ export const taxDeleteSchema = v.pipe(
 	v.nonEmpty("Tax ID is required"),
 	v.ulid(),
 );
+
+// user settings schemas
+export const userSettingUpdateSchema = createInsertSchema(userSettingsTable, {
+	settingKey: (schema) => v.pipe(schema, v.nonEmpty("Setting key is required")),
+	settingValue: (schema) =>
+		v.pipe(schema, v.nonEmpty("Setting value is required")),
+	settingType: (schema) =>
+		v.pipe(schema, v.nonEmpty("Setting type is required")),
+});
