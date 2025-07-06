@@ -15,6 +15,13 @@
       "when": 1750982650561,
       "tag": "0001_clean_blackheart",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1751814647418,
+      "tag": "0002_flat_flatman",
+      "breakpoints": true
     }
   ]
 }

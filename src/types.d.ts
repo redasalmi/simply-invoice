@@ -21,6 +21,13 @@ import type {
 	updateCustomerWithAddress,
 } from "./main/services/customers";
 import type {
+	createService,
+	deleteService,
+	getService,
+	getServices,
+	updateService,
+} from "./main/services/services";
+import type {
 	createTax,
 	deleteTax,
 	getTax,
@@ -28,13 +35,6 @@ import type {
 	updateTax,
 } from "./main/services/taxes";
 import type { paginationTypes } from "./renderer/src/utils/getPaginationParams";
-import {
-	createService,
-	deleteService,
-	getService,
-	getServices,
-	updateService,
-} from "./main/services/services";
 
 // pagination types
 export type PaginationType = keyof typeof paginationTypes;

@@ -70,6 +70,11 @@ export const companiesTable = sqliteTable(
 			.$defaultFn(() => ulid()),
 		name: text("name").notNull(),
 		email: text("email").notNull(),
+		phone: text("phone"),
+		taxId: text("tax_id"),
+		status: text("status", { enum: ["active", "inactive"] })
+			.notNull()
+			.default("active"),
 		additionalInformation: customJson<Array<PortableTextBlock>>(
 			"additional_information",
 		),
@@ -79,6 +84,7 @@ export const companiesTable = sqliteTable(
 		...timestamps,
 	},
 	(table) => [
+		check("company_status_check", sql`status IN ('active', 'inactive')`),
 		index("company_name_index").on(table.name),
 		index("company_email_index").on(table.email),
 	],
@@ -99,6 +105,11 @@ export const customersTable = sqliteTable(
 			.$defaultFn(() => ulid()),
 		name: text("name").notNull(),
 		email: text("email").notNull(),
+		phone: text("phone"),
+		taxId: text("tax_id"),
+		status: text("status", { enum: ["active", "inactive"] })
+			.notNull()
+			.default("active"),
 		additionalInformation: customJson<Array<PortableTextBlock>>(
 			"additional_information",
 		),
@@ -108,6 +119,7 @@ export const customersTable = sqliteTable(
 		...timestamps,
 	},
 	(table) => [
+		check("customer_status_check", sql`status IN ('active', 'inactive')`),
 		index("customer_name_index").on(table.name),
 		index("customer_email_index").on(table.email),
 	],
@@ -129,9 +141,13 @@ export const servicesTable = sqliteTable(
 		name: text("name").notNull(),
 		description: text("description"),
 		rate: real("rate").notNull(),
+		status: text("status", { enum: ["active", "inactive"] })
+			.notNull()
+			.default("active"),
 		...timestamps,
 	},
 	(table) => [
+		check("service_status_check", sql`status IN ('active', 'inactive')`),
 		index("service_name_index").on(table.name),
 		index("service_rate_index").on(table.rate),
 	],
@@ -146,9 +162,17 @@ export const taxesTable = sqliteTable(
 		name: text("name").notNull(),
 		description: text("description"),
 		rate: real("rate").notNull(),
+		status: text("status", { enum: ["active", "inactive"] })
+			.notNull()
+			.default("active"),
+		type: text("type", { enum: ["percentage", "fixed_amount"] })
+			.notNull()
+			.default("percentage"),
 		...timestamps,
 	},
 	(table) => [
+		check("tax_status_check", sql`status IN ('active', 'inactive')`),
+		check("tax_type_check", sql`type IN ('percentage', 'fixed_amount')`),
 		index("tax_name_index").on(table.name),
 		index("tax_rate_index").on(table.rate),
 	],
@@ -161,7 +185,9 @@ export const invoicesTable = sqliteTable(
 			.primaryKey()
 			.$defaultFn(() => ulid()),
 		identifier: text("identifier").notNull().unique(),
-		identifierType: text("identifier_type").notNull(),
+		identifierType: text("identifier_type", {
+			enum: ["incremental", "random", "manual"],
+		}).notNull(),
 		locale: text("locale", { length: 4 }).notNull(),
 		countryCode: text("country_code", { length: 2 }).notNull(),
 		date: text("date").notNull(),
@@ -174,6 +200,11 @@ export const invoicesTable = sqliteTable(
 			.references(() => customersTable.customerId),
 		subtotalAmount: real("subtotal_amount").notNull(),
 		totalAmount: real("total_amount").notNull(),
+		status: text("status", {
+			enum: ["draft", "sent", "paid", "overdue", "cancelled"],
+		})
+			.notNull()
+			.default("draft"),
 		note: text("note", { mode: "json" }),
 		...timestamps,
 	},
@@ -181,6 +212,10 @@ export const invoicesTable = sqliteTable(
 		check(
 			"identifier_type_check",
 			sql`identifier_type IN ('incremental', 'random', 'manual')`,
+		),
+		check(
+			"invoice_status_check",
+			sql`status IN ('draft', 'sent', 'paid', 'overdue', 'cancelled')`,
 		),
 		index("invoice_identifier_type_index").on(table.identifierType),
 		index("invoice_locale_index").on(table.locale),
