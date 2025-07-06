@@ -52,11 +52,6 @@ function createWindow() {
 	}
 }
 
-// TODO: remove this once I have a proper manner to handle it
-if (process.platform === "linux") {
-	app.commandLine.appendSwitch("gtk-version", "3");
-}
-
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.

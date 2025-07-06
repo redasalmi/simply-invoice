@@ -10,7 +10,7 @@ import {
 	companyDeleteSchema,
 	companyUpdateWithAddressSchema,
 } from "~/db/validation";
-import { emptyResult, itemsPerPage } from "~/main/utils/pagination";
+import { emptyResult } from "~/main/utils/pagination";
 import type {
 	AddressCreateFlatErrors,
 	AddressUpdateFlatErrors,
@@ -43,7 +43,10 @@ async function getNextCompaniesCount(cursor: string) {
 		.where(lt(companiesTable.companyId, cursor));
 }
 
-async function getPreviousCompanies(cursor: string | null) {
+async function getPreviousCompanies(
+	cursor: string | null,
+	itemsPerPage: number,
+) {
 	const result = await db.query.companiesTable.findMany({
 		where: cursor ? gt(companiesTable.companyId, cursor) : undefined,
 		orderBy: [asc(companiesTable.companyId)],
@@ -53,7 +56,7 @@ async function getPreviousCompanies(cursor: string | null) {
 	return result.reverse();
 }
 
-async function getNextCompanies(cursor: string | null) {
+async function getNextCompanies(cursor: string | null, itemsPerPage: number) {
 	return db.query.companiesTable.findMany({
 		where: cursor ? lt(companiesTable.companyId, cursor) : undefined,
 		orderBy: [desc(companiesTable.companyId)],
@@ -64,16 +67,17 @@ async function getNextCompanies(cursor: string | null) {
 export async function getCompanies(
 	cursor: string | null,
 	paginationType: PaginationType | null,
-) {
+	itemsPerPage: number,
+): Promise<PaginatedResult<Company>> {
 	const [companiesData, companiesTotal] = await Promise.all([
 		paginationType === "previous"
-			? getPreviousCompanies(cursor)
-			: getNextCompanies(cursor),
+			? getPreviousCompanies(cursor, itemsPerPage)
+			: getNextCompanies(cursor, itemsPerPage),
 		getCompaniesCount(),
 	]);
 
 	if (!companiesData.length) {
-		return emptyResult as PaginatedResult<Company>;
+		return emptyResult<Company>(itemsPerPage);
 	}
 
 	const startCursor = companiesData[0].companyId;
@@ -86,6 +90,7 @@ export async function getCompanies(
 
 	return {
 		items: companiesData,
+		itemsPerPage,
 		total: companiesTotal[0].count,
 		pageInfo: {
 			endCursor,
@@ -168,8 +173,13 @@ export async function deleteCompany(companyId: string) {
 export async function registerCompaniesIcpHandlers() {
 	ipcMain.handle(
 		"get-companies",
-		(_, cursor: string | null, paginationType: PaginationType | null) => {
-			return getCompanies(cursor, paginationType);
+		(
+			_,
+			cursor: string | null,
+			paginationType: PaginationType | null,
+			itemsPerPage: number,
+		) => {
+			return getCompanies(cursor, paginationType, itemsPerPage);
 		},
 	);
 

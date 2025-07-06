@@ -8,13 +8,21 @@ import {
 import { CreateLink } from "~/renderer/components/CreateLink";
 import { Pagination } from "~/renderer/components/Pagination";
 import { Table } from "~/renderer/components/ui/table";
+import { userSettingsContext } from "~/renderer/routes";
 import { getPaginationParams } from "~/renderer/utils/getPaginationParams";
 
-export async function taxesListLoader({ request }: LoaderFunctionArgs) {
-	const { cursor, paginationType } = getPaginationParams(request.url);
+export async function taxesListLoader({
+	request,
+	context,
+}: LoaderFunctionArgs) {
+	const userSettings = context.get(userSettingsContext);
+	const { cursor, paginationType, itemsPerPage } = getPaginationParams(
+		request.url,
+		userSettings?.get("taxes-table-items-per-page"),
+	);
 
 	return {
-		taxes: await window.api.db.taxes.get(cursor, paginationType),
+		taxes: await window.api.db.taxes.get(cursor, paginationType, itemsPerPage),
 	};
 }
 
@@ -67,8 +75,7 @@ export function TaxesListRoute() {
 									))}
 								</Table.Body>
 							</Table>
-							{/* TODO: remove this once I have a proper manner to handle it */}
-							{taxes.total > 10 ? (
+							{taxes.total > taxes.itemsPerPage ? (
 								<Pagination baseUrl="/taxes" pageInfo={taxes.pageInfo} />
 							) : null}
 						</>

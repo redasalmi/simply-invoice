@@ -10,7 +10,7 @@ import {
 	customerDeleteSchema,
 	customerUpdateWithAddressSchema,
 } from "~/db/validation";
-import { emptyResult, itemsPerPage } from "~/main/utils/pagination";
+import { emptyResult } from "~/main/utils/pagination";
 import type {
 	AddressCreateFlatErrors,
 	AddressUpdateFlatErrors,
@@ -43,7 +43,10 @@ async function getNextCustomersCount(cursor: string) {
 		.where(lt(customersTable.customerId, cursor));
 }
 
-async function getPreviousCustomers(cursor: string | null) {
+async function getPreviousCustomers(
+	cursor: string | null,
+	itemsPerPage: number,
+) {
 	const result = await db.query.customersTable.findMany({
 		where: cursor ? gt(customersTable.customerId, cursor) : undefined,
 		orderBy: [asc(customersTable.customerId)],
@@ -53,7 +56,7 @@ async function getPreviousCustomers(cursor: string | null) {
 	return result.reverse();
 }
 
-async function getNextCustomers(cursor: string | null) {
+async function getNextCustomers(cursor: string | null, itemsPerPage: number) {
 	return db.query.customersTable.findMany({
 		where: cursor ? lt(customersTable.customerId, cursor) : undefined,
 		orderBy: [desc(customersTable.customerId)],
@@ -64,16 +67,17 @@ async function getNextCustomers(cursor: string | null) {
 export async function getCustomers(
 	cursor: string | null,
 	paginationType: PaginationType | null,
-) {
+	itemsPerPage: number,
+): Promise<PaginatedResult<Customer>> {
 	const [customersData, customersTotal] = await Promise.all([
 		paginationType === "previous"
-			? getPreviousCustomers(cursor)
-			: getNextCustomers(cursor),
+			? getPreviousCustomers(cursor, itemsPerPage)
+			: getNextCustomers(cursor, itemsPerPage),
 		getCustomersCount(),
 	]);
 
 	if (!customersData.length) {
-		return emptyResult as PaginatedResult<Customer>;
+		return emptyResult<Customer>(itemsPerPage);
 	}
 
 	const startCursor = customersData[0].customerId;
@@ -86,6 +90,7 @@ export async function getCustomers(
 
 	return {
 		items: customersData,
+		itemsPerPage,
 		total: customersTotal[0].count,
 		pageInfo: {
 			endCursor,
@@ -168,8 +173,13 @@ export async function deleteCustomer(customerId: string) {
 export async function registerCustomersIcpHandles() {
 	ipcMain.handle(
 		"get-customers",
-		(_, cursor: string | null, paginationType: PaginationType | null) => {
-			return getCustomers(cursor, paginationType);
+		(
+			_,
+			cursor: string | null,
+			paginationType: PaginationType | null,
+			itemsPerPage: number,
+		) => {
+			return getCustomers(cursor, paginationType, itemsPerPage);
 		},
 	);
 

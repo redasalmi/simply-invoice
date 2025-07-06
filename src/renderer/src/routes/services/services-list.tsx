@@ -8,13 +8,25 @@ import {
 import { CreateLink } from "~/renderer/components/CreateLink";
 import { Pagination } from "~/renderer/components/Pagination";
 import { Table } from "~/renderer/components/ui/table";
+import { userSettingsContext } from "~/renderer/routes";
 import { getPaginationParams } from "~/renderer/utils/getPaginationParams";
 
-export async function servicesListLoader({ request }: LoaderFunctionArgs) {
-	const { cursor, paginationType } = getPaginationParams(request.url);
+export async function servicesListLoader({
+	request,
+	context,
+}: LoaderFunctionArgs) {
+	const userSettings = context.get(userSettingsContext);
+	const { cursor, paginationType, itemsPerPage } = getPaginationParams(
+		request.url,
+		userSettings?.get("services-table-items-per-page"),
+	);
 
 	return {
-		services: await window.api.db.services.get(cursor, paginationType),
+		services: await window.api.db.services.get(
+			cursor,
+			paginationType,
+			itemsPerPage,
+		),
 	};
 }
 
@@ -67,8 +79,7 @@ export function ServicesListRoute() {
 									))}
 								</Table.Body>
 							</Table>
-							{/* TODO: remove this once I have a proper manner to handle it */}
-							{services.total > 10 ? (
+							{services.total > services.itemsPerPage ? (
 								<Pagination baseUrl="/services" pageInfo={services.pageInfo} />
 							) : null}
 						</>

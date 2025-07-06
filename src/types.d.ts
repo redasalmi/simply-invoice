@@ -53,6 +53,7 @@ export interface PageInfo {
 
 export interface PaginatedResult<T> {
 	items: Array<T>;
+	itemsPerPage: number;
 	total: number;
 	pageInfo: PageInfo;
 }

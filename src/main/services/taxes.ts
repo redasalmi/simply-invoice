@@ -8,7 +8,7 @@ import {
 	taxDeleteSchema,
 	taxUpdateSchema,
 } from "~/db/validation";
-import { emptyResult, itemsPerPage } from "~/main/utils/pagination";
+import { emptyResult } from "~/main/utils/pagination";
 import type {
 	CreateTaxInput,
 	PaginatedResult,
@@ -35,7 +35,7 @@ async function getNextTaxesCount(cursor: string) {
 		.where(lt(taxesTable.taxId, cursor));
 }
 
-async function getPreviousTaxes(cursor: string | null) {
+async function getPreviousTaxes(cursor: string | null, itemsPerPage: number) {
 	const result = await db.query.taxesTable.findMany({
 		where: cursor ? gt(taxesTable.taxId, cursor) : undefined,
 		orderBy: [asc(taxesTable.taxId)],
@@ -45,7 +45,7 @@ async function getPreviousTaxes(cursor: string | null) {
 	return result.reverse();
 }
 
-async function getNextTaxes(cursor: string | null) {
+async function getNextTaxes(cursor: string | null, itemsPerPage: number) {
 	return db.query.taxesTable.findMany({
 		where: cursor ? lt(taxesTable.taxId, cursor) : undefined,
 		orderBy: [desc(taxesTable.taxId)],
@@ -56,16 +56,17 @@ async function getNextTaxes(cursor: string | null) {
 export async function getTaxes(
 	cursor: string | null,
 	paginationType: PaginationType | null,
-) {
+	itemsPerPage: number,
+): Promise<PaginatedResult<Tax>> {
 	const [taxesData, taxesTotal] = await Promise.all([
 		paginationType === "previous"
-			? getPreviousTaxes(cursor)
-			: getNextTaxes(cursor),
+			? getPreviousTaxes(cursor, itemsPerPage)
+			: getNextTaxes(cursor, itemsPerPage),
 		getTaxesCount(),
 	]);
 
 	if (!taxesData.length) {
-		return emptyResult as PaginatedResult<Tax>;
+		return emptyResult<Tax>(itemsPerPage);
 	}
 
 	const startCursor = taxesData[0].taxId;
@@ -78,6 +79,7 @@ export async function getTaxes(
 
 	return {
 		items: taxesData,
+		itemsPerPage,
 		total: taxesTotal[0].count,
 		pageInfo: {
 			endCursor,
@@ -107,8 +109,13 @@ export async function deleteTax(taxId: string) {
 export async function registerTaxesIcpHandlers() {
 	ipcMain.handle(
 		"get-taxes",
-		(_, cursor: string | null, paginationType: PaginationType | null) => {
-			return getTaxes(cursor, paginationType);
+		(
+			_,
+			cursor: string | null,
+			paginationType: PaginationType | null,
+			itemsPerPage: number,
+		) => {
+			return getTaxes(cursor, paginationType, itemsPerPage);
 		},
 	);
 

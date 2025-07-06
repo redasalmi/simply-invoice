@@ -32,6 +32,7 @@ declare global {
 					get: (
 						cursor: string | null,
 						paginationType: Types.PaginationType | null,
+						itemsPerPage: number,
 					) => Types.CompaniesGetResult;
 					getById: (companyId: string) => Types.CompanyGetResult;
 					delete: (
@@ -66,6 +67,7 @@ declare global {
 					get: (
 						cursor: string | null,
 						paginationType: Types.PaginationType | null,
+						itemsPerPage: number,
 					) => Types.CustomersGetResult;
 					getById: (customerId: string) => Types.CustomerGetResult;
 					delete: (
@@ -83,6 +85,7 @@ declare global {
 					get: (
 						cursor: string | null,
 						paginationType: Types.PaginationType | null,
+						itemsPerPage: number,
 					) => Types.ServicesGetResult;
 					getById: (serviceId: string) => Types.ServiceGetResult;
 					update: (
@@ -103,6 +106,7 @@ declare global {
 					get: (
 						cursor: string | null,
 						paginationType: Types.PaginationType | null,
+						itemsPerPage: number,
 					) => Types.TaxesGetResult;
 					getById: (taxId: string) => Types.TaxGetResult;
 					update: (

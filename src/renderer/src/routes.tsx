@@ -49,6 +49,9 @@ export const router = createBrowserRouter(
 
 declare module "react-router" {
 	interface LoaderFunctionArgs {
-		context: Map<unstable_RouterContext, Map<string, UserSetting>>;
+		context: Map<
+			unstable_RouterContext,
+			Map<UserSetting["settingKey"], UserSetting>
+		>;
 	}
 }

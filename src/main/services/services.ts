@@ -8,7 +8,7 @@ import {
 	serviceDeleteSchema,
 	serviceUpdateSchema,
 } from "~/db/validation";
-import { emptyResult, itemsPerPage } from "~/main/utils/pagination";
+import { emptyResult } from "~/main/utils/pagination";
 import type {
 	CreateServiceInput,
 	PaginatedResult,
@@ -35,7 +35,10 @@ async function getNextServicesCount(cursor: string) {
 		.where(lt(servicesTable.serviceId, cursor));
 }
 
-async function getPreviousServices(cursor: string | null) {
+async function getPreviousServices(
+	cursor: string | null,
+	itemsPerPage: number,
+) {
 	const result = await db.query.servicesTable.findMany({
 		where: cursor ? gt(servicesTable.serviceId, cursor) : undefined,
 		orderBy: [asc(servicesTable.serviceId)],
@@ -45,7 +48,7 @@ async function getPreviousServices(cursor: string | null) {
 	return result.reverse();
 }
 
-async function getNextServices(cursor: string | null) {
+async function getNextServices(cursor: string | null, itemsPerPage: number) {
 	return db.query.servicesTable.findMany({
 		where: cursor ? lt(servicesTable.serviceId, cursor) : undefined,
 		orderBy: [desc(servicesTable.serviceId)],
@@ -56,16 +59,17 @@ async function getNextServices(cursor: string | null) {
 export async function getServices(
 	cursor: string | null,
 	paginationType: PaginationType | null,
-) {
+	itemsPerPage: number,
+): Promise<PaginatedResult<Service>> {
 	const [servicesData, servicesTotal] = await Promise.all([
 		paginationType === "previous"
-			? getPreviousServices(cursor)
-			: getNextServices(cursor),
+			? getPreviousServices(cursor, itemsPerPage)
+			: getNextServices(cursor, itemsPerPage),
 		getServicesCount(),
 	]);
 
 	if (!servicesData.length) {
-		return emptyResult as PaginatedResult<Service>;
+		return emptyResult<Service>(itemsPerPage);
 	}
 
 	const startCursor = servicesData[0].serviceId;
@@ -78,6 +82,7 @@ export async function getServices(
 
 	return {
 		items: servicesData,
+		itemsPerPage,
 		total: servicesTotal[0].count,
 		pageInfo: {
 			startCursor,
@@ -112,8 +117,13 @@ export async function deleteService(serviceId: string) {
 export async function registerServicesIcpHandlers() {
 	ipcMain.handle(
 		"get-services",
-		(_, cursor: string | null, paginationType: PaginationType | null) => {
-			return getServices(cursor, paginationType);
+		(
+			_,
+			cursor: string | null,
+			paginationType: PaginationType | null,
+			itemsPerPage: number,
+		) => {
+			return getServices(cursor, paginationType, itemsPerPage);
 		},
 	);
 

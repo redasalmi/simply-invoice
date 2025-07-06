@@ -1,7 +1,6 @@
-import { StrictMode, Suspense } from "react";
+import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { Await, RouterProvider } from "react-router";
-import { UserSettingsProvider } from "~/renderer/components/UserSettings";
+import { RouterProvider } from "react-router";
 import { router } from "~/renderer/routes";
 import "~/renderer/tailwind.css";
 
@@ -12,17 +11,6 @@ if (!rootEle) {
 
 createRoot(rootEle).render(
 	<StrictMode>
-		<Suspense fallback={<div />}>
-			<Await
-				errorElement={<div>Could not load user settings 😬</div>}
-				resolve={window.api.db.userSettings.get()}
-			>
-				{(userSettings) => (
-					<UserSettingsProvider userSettings={userSettings}>
-						<RouterProvider router={router} />
-					</UserSettingsProvider>
-				)}
-			</Await>
-		</Suspense>
+		<RouterProvider router={router} />
 	</StrictMode>,
 );

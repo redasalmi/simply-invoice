@@ -39,8 +39,17 @@ const api = {
 					address,
 				);
 			},
-			get: (cursor: string | null, paginationType: PaginationType | null) => {
-				return ipcRenderer.invoke("get-companies", cursor, paginationType);
+			get: (
+				cursor: string | null,
+				paginationType: PaginationType | null,
+				itemsPerPage: number,
+			) => {
+				return ipcRenderer.invoke(
+					"get-companies",
+					cursor,
+					paginationType,
+					itemsPerPage,
+				);
 			},
 			getById: (companyId: string) => {
 				return ipcRenderer.invoke("get-company", companyId);
@@ -70,8 +79,17 @@ const api = {
 					address,
 				);
 			},
-			get: (cursor: string | null, paginationType: PaginationType | null) => {
-				return ipcRenderer.invoke("get-customers", cursor, paginationType);
+			get: (
+				cursor: string | null,
+				paginationType: PaginationType | null,
+				itemsPerPage: number,
+			) => {
+				return ipcRenderer.invoke(
+					"get-customers",
+					cursor,
+					paginationType,
+					itemsPerPage,
+				);
 			},
 			getById: (customerId: string) => {
 				return ipcRenderer.invoke("get-customer", customerId);
@@ -84,8 +102,17 @@ const api = {
 			create: (service: CreateServiceInput) => {
 				return ipcRenderer.invoke("create-service", service);
 			},
-			get: (cursor: string | null, paginationType: PaginationType | null) => {
-				return ipcRenderer.invoke("get-services", cursor, paginationType);
+			get: (
+				cursor: string | null,
+				paginationType: PaginationType | null,
+				itemsPerPage: number,
+			) => {
+				return ipcRenderer.invoke(
+					"get-services",
+					cursor,
+					paginationType,
+					itemsPerPage,
+				);
 			},
 			getById: (serviceId: string) => {
 				return ipcRenderer.invoke("get-service", serviceId);
@@ -101,8 +128,17 @@ const api = {
 			create: (tax: CreateTaxInput) => {
 				return ipcRenderer.invoke("create-tax", tax);
 			},
-			get: (cursor: string | null, paginationType: PaginationType | null) => {
-				return ipcRenderer.invoke("get-taxes", cursor, paginationType);
+			get: (
+				cursor: string | null,
+				paginationType: PaginationType | null,
+				itemsPerPage: number,
+			) => {
+				return ipcRenderer.invoke(
+					"get-taxes",
+					cursor,
+					paginationType,
+					itemsPerPage,
+				);
 			},
 			getById: (taxId: string) => {
 				return ipcRenderer.invoke("get-tax", taxId);
