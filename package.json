@@ -25,7 +25,7 @@
 		"@electron-toolkit/utils": "^4.0.0",
 		"@headlessui/react": "^2.2.4",
 		"@libsql/client": "^0.15.9",
-		"@portabletext/editor": "^1.56.0",
+		"@portabletext/editor": "^1.57.1",
 		"@tailwindcss/vite": "^4.1.11",
 		"babel-plugin-react-compiler": "^19.1.0-rc.2",
 		"clsx": "^2.1.1",
@@ -43,9 +43,9 @@
 		"valibot": "^1.1.0"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "2.0.6",
+		"@biomejs/biome": "2.1.1",
 		"@electron-toolkit/tsconfig": "^1.0.1",
-		"@types/node": "^24.0.10",
+		"@types/node": "^24.0.11",
 		"@types/react": "^19.1.8",
 		"@types/react-dom": "^19.1.6",
 		"@vitejs/plugin-react": "^4.6.0",
@@ -55,7 +55,7 @@
 		"electron-devtools-installer": "^4.0.0",
 		"electron-vite": "^4.0.0",
 		"typescript": "^5.8.3",
-		"vite": "npm:rolldown-vite@^7.0.5"
+		"vite": "npm:rolldown-vite@^7.0.6"
 	},
 	"build": {
 		"extraResources": [
