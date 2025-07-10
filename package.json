@@ -29,6 +29,7 @@
 		"@tailwindcss/vite": "^4.1.11",
 		"babel-plugin-react-compiler": "^19.1.0-rc.2",
 		"clsx": "^2.1.1",
+		"downshift": "^9.0.9",
 		"drizzle-orm": "^0.44.2",
 		"drizzle-valibot": "^0.4.2",
 		"electron-updater": "^6.6.2",

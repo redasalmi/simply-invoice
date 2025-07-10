@@ -22,7 +22,7 @@ import {
 	companyUpdateLoader,
 } from "~/renderer/routes/companies/company-update";
 
-export const companiesRoutes: RouteObject[] = [
+export const companiesRoutes: Array<RouteObject> = [
 	{
 		path: "/companies",
 		loader: companiesListLoader,

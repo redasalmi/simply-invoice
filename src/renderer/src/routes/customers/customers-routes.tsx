@@ -22,7 +22,7 @@ import {
 	customersListLoader,
 } from "~/renderer/routes/customers/customers-list";
 
-export const customersRoutes: RouteObject[] = [
+export const customersRoutes: Array<RouteObject> = [
 	{
 		path: "/customers",
 		loader: customersListLoader,

@@ -22,7 +22,7 @@ import {
 	servicesListLoader,
 } from "~/renderer/routes/services/services-list";
 
-export const servicesRoutes: RouteObject[] = [
+export const servicesRoutes: Array<RouteObject> = [
 	{
 		path: "/services",
 		loader: servicesListLoader,

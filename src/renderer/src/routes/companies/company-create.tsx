@@ -10,7 +10,9 @@ import { AddressFormFields } from "~/renderer/components/AddressFormFields";
 import { RichTextEditor } from "~/renderer/components/rich-text/editor";
 import { Button } from "~/renderer/components/ui/button";
 import { FormField } from "~/renderer/components/ui/form-field";
+import { Select } from "~/renderer/components/ui/select";
 import { useFormActionErrorFocus } from "~/renderer/hooks/useFormActionErrorFocus";
+import { statusOptions } from "~/renderer/utils/constants";
 import type {
 	CreateAddressInput,
 	CreateCompanyWithAddressInput,
@@ -23,6 +25,9 @@ export async function companyCreateAction({ request }: ActionFunctionArgs) {
 	const company = {
 		name: data["company.name"],
 		email: data["company.email"],
+		phone: data["company.phone"],
+		taxId: data["company.taxId"],
+		status: data["company.status"],
 		additionalInformation: data["company.additionalInformation"]
 			? JSON.parse(data["company.additionalInformation"].toString())
 			: undefined,
@@ -74,6 +79,26 @@ export function CompanyCreateRoute() {
 					<FormField.Input name="company.email" type="text" />
 					<FormField.ErrorMessage />
 				</FormField>
+
+				<FormField errors={actionData?.errors?.company?.nested?.phone}>
+					<FormField.Label>Phone</FormField.Label>
+					<FormField.Input name="company.phone" type="text" />
+					<FormField.ErrorMessage />
+				</FormField>
+
+				<FormField errors={actionData?.errors?.company?.nested?.taxId}>
+					<FormField.Label>Tax ID</FormField.Label>
+					<FormField.Input name="company.taxId" type="text" />
+					<FormField.ErrorMessage />
+				</FormField>
+
+				<Select
+					defaultSelectedItem={statusOptions[0]}
+					errors={actionData?.errors?.company?.nested?.status}
+					items={statusOptions}
+					label="Status"
+					name="company.status"
+				/>
 
 				<div className="flex flex-col gap-4">
 					<h3 className="text-2xl">Address</h3>

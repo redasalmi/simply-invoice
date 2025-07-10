@@ -22,7 +22,7 @@ import {
 	taxesListLoader,
 } from "~/renderer/routes/taxes/taxes-list";
 
-export const taxesRoutes: RouteObject[] = [
+export const taxesRoutes: Array<RouteObject> = [
 	{
 		path: "/taxes",
 		loader: taxesListLoader,
