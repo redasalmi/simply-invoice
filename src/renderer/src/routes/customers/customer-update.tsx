@@ -14,7 +14,9 @@ import { AddressFormFields } from "~/renderer/components/AddressFormFields";
 import { RichTextEditor } from "~/renderer/components/rich-text/editor";
 import { Button } from "~/renderer/components/ui/button";
 import { FormField } from "~/renderer/components/ui/form-field";
+import { Select } from "~/renderer/components/ui/select";
 import { useFormActionErrorFocus } from "~/renderer/hooks/useFormActionErrorFocus";
+import { statusOptions } from "~/renderer/utils/constants";
 import type {
 	UpdateAddressInput,
 	UpdateCustomerWithAddressInput,
@@ -37,6 +39,9 @@ export async function customerUpdateAction({ request }: ActionFunctionArgs) {
 		customerId: data["customer.customerId"],
 		name: data["customer.name"],
 		email: data["customer.email"],
+		phone: data["customer.phone"],
+		taxId: data["customer.taxId"],
+		status: data["customer.status"],
 		additionalInformation: data["customer.additionalInformation"]
 			? JSON.parse(data["customer.additionalInformation"].toString())
 			: undefined,
@@ -118,6 +123,36 @@ export function CustomerUpdateRoute() {
 					/>
 					<FormField.ErrorMessage />
 				</FormField>
+
+				<FormField errors={actionData?.errors?.customer?.nested?.phone}>
+					<FormField.Label>Phone</FormField.Label>
+					<FormField.Input
+						defaultValue={customer.phone ?? ""}
+						name="customer.phone"
+						type="text"
+					/>
+					<FormField.ErrorMessage />
+				</FormField>
+
+				<FormField errors={actionData?.errors?.customer?.nested?.taxId}>
+					<FormField.Label>Tax ID</FormField.Label>
+					<FormField.Input
+						defaultValue={customer.taxId ?? ""}
+						name="customer.taxId"
+						type="text"
+					/>
+					<FormField.ErrorMessage />
+				</FormField>
+
+				<Select
+					defaultSelectedItem={statusOptions.find(
+						(option) => option.value === customer.status,
+					)}
+					errors={actionData?.errors?.customer?.nested?.status}
+					items={statusOptions}
+					label="Status"
+					name="customer.status"
+				/>
 
 				<div className="flex flex-col gap-4">
 					<h3 className="text-2xl">Address</h3>

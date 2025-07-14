@@ -25,7 +25,7 @@
 		"@electron-toolkit/utils": "^4.0.0",
 		"@headlessui/react": "^2.2.4",
 		"@libsql/client": "^0.15.9",
-		"@portabletext/editor": "^1.57.5",
+		"@portabletext/editor": "^1.58.0",
 		"@tailwindcss/vite": "^4.1.11",
 		"babel-plugin-react-compiler": "^19.1.0-rc.2",
 		"clsx": "^2.1.1",
@@ -56,7 +56,7 @@
 		"electron-devtools-installer": "^4.0.0",
 		"electron-vite": "^4.0.0",
 		"typescript": "^5.8.3",
-		"vite": "npm:rolldown-vite@^7.0.8"
+		"vite": "npm:rolldown-vite@^7.0.9"
 	},
 	"build": {
 		"extraResources": [
