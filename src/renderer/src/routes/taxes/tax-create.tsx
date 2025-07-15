@@ -8,7 +8,9 @@ import {
 } from "react-router";
 import { Button } from "~/renderer/components/ui/button";
 import { FormField } from "~/renderer/components/ui/form-field";
+import { Select } from "~/renderer/components/ui/select";
 import { useFormActionErrorFocus } from "~/renderer/hooks/useFormActionErrorFocus";
+import { statusOptions } from "~/renderer/utils/constants";
 import type { CreateTaxInput } from "~/types";
 
 export async function taxCreateAction({ request }: ActionFunctionArgs) {
@@ -54,6 +56,14 @@ export function TaxCreateRoute() {
 					<FormField.NumberInput name="rate" />
 					<FormField.ErrorMessage />
 				</FormField>
+
+				<Select
+					defaultSelectedItem={statusOptions[0]}
+					errors={actionData?.errors?.nested?.status}
+					items={statusOptions}
+					label="Status"
+					name="status"
+				/>
 
 				<Button disabled={isSubmitting} type="submit">
 					{isLoading ? "Saving Tax..." : "Save Tax"}

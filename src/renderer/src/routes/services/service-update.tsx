@@ -12,7 +12,9 @@ import {
 import invariant from "tiny-invariant";
 import { Button } from "~/renderer/components/ui/button";
 import { FormField } from "~/renderer/components/ui/form-field";
+import { Select } from "~/renderer/components/ui/select";
 import { useFormActionErrorFocus } from "~/renderer/hooks/useFormActionErrorFocus";
+import { statusOptions } from "~/renderer/utils/constants";
 import type { UpdateServiceInput } from "~/types";
 
 export async function serviceUpdateLoader({ params }: LoaderFunctionArgs) {
@@ -98,6 +100,16 @@ export function ServiceUpdateRoute() {
 					<FormField.NumberInput defaultValue={service.rate} name="rate" />
 					<FormField.ErrorMessage />
 				</FormField>
+
+				<Select
+					defaultSelectedItem={statusOptions.find(
+						(option) => option.value === service.status,
+					)}
+					errors={actionData?.errors?.nested?.status}
+					items={statusOptions}
+					label="Status"
+					name="status"
+				/>
 
 				<Button disabled={isSubmitting} type="submit">
 					{isLoading ? "Updating Service..." : "Update Service"}
