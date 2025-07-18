@@ -13,7 +13,7 @@ import invariant from "tiny-invariant";
 import { AddressFormFields } from "~/renderer/components/AddressFormFields";
 import { RichTextEditor } from "~/renderer/components/rich-text/editor";
 import { Button } from "~/renderer/components/ui/button";
-import { FormField } from "~/renderer/components/ui/form-field";
+import * as FormField from "~/renderer/components/ui/form-field";
 import { Select } from "~/renderer/components/ui/select";
 import { useFormActionErrorFocus } from "~/renderer/hooks/useFormActionErrorFocus";
 import { statusOptions } from "~/renderer/utils/constants";
@@ -104,7 +104,7 @@ export function CompanyUpdateRoute() {
 					value={company.companyId}
 				/>
 
-				<FormField errors={actionData?.errors?.company?.nested?.name}>
+				<FormField.Root errors={actionData?.errors?.company?.nested?.name}>
 					<FormField.Label>Name</FormField.Label>
 					<FormField.Input
 						defaultValue={company.name}
@@ -112,9 +112,9 @@ export function CompanyUpdateRoute() {
 						type="text"
 					/>
 					<FormField.ErrorMessage />
-				</FormField>
+				</FormField.Root>
 
-				<FormField errors={actionData?.errors?.company?.nested?.email}>
+				<FormField.Root errors={actionData?.errors?.company?.nested?.email}>
 					<FormField.Label>Email</FormField.Label>
 					<FormField.Input
 						defaultValue={company.email}
@@ -122,9 +122,9 @@ export function CompanyUpdateRoute() {
 						type="text"
 					/>
 					<FormField.ErrorMessage />
-				</FormField>
+				</FormField.Root>
 
-				<FormField errors={actionData?.errors?.company?.nested?.phone}>
+				<FormField.Root errors={actionData?.errors?.company?.nested?.phone}>
 					<FormField.Label>Phone</FormField.Label>
 					<FormField.Input
 						defaultValue={company.phone ?? ""}
@@ -132,9 +132,9 @@ export function CompanyUpdateRoute() {
 						type="text"
 					/>
 					<FormField.ErrorMessage />
-				</FormField>
+				</FormField.Root>
 
-				<FormField errors={actionData?.errors?.company?.nested?.taxId}>
+				<FormField.Root errors={actionData?.errors?.company?.nested?.taxId}>
 					<FormField.Label>Tax ID</FormField.Label>
 					<FormField.Input
 						defaultValue={company.taxId ?? ""}
@@ -142,7 +142,7 @@ export function CompanyUpdateRoute() {
 						type="text"
 					/>
 					<FormField.ErrorMessage />
-				</FormField>
+				</FormField.Root>
 
 				<Select
 					defaultSelectedItem={statusOptions.find(

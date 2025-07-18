@@ -10,7 +10,7 @@ import {
 	useParams,
 } from "react-router";
 import invariant from "tiny-invariant";
-import { Dialog } from "~/renderer/components/ui/dialog";
+import * as Dialog from "~/renderer/components/ui/dialog";
 
 export async function serviceDeleteLoader({ params }: LoaderFunctionArgs) {
 	const serviceId = params.serviceId;
@@ -51,7 +51,7 @@ export function ServiceDeleteRoute() {
 
 	if (!service) {
 		return (
-			<Dialog closeDialog={closeAlert} open role="alertdialog">
+			<Dialog.Root closeDialog={closeAlert} open role="alertdialog">
 				<Dialog.Title>No service found!</Dialog.Title>
 				<Dialog.Description>
 					Sorry, but no service with the ID: {params.serviceId} was found. Click
@@ -60,13 +60,13 @@ export function ServiceDeleteRoute() {
 				<Dialog.ActionButton autoFocus onClick={closeAlert}>
 					Continue
 				</Dialog.ActionButton>
-			</Dialog>
+			</Dialog.Root>
 		);
 	}
 
 	if (actionData?.errors) {
 		return (
-			<Dialog closeDialog={closeAlert} open role="alertdialog">
+			<Dialog.Root closeDialog={closeAlert} open role="alertdialog">
 				<Dialog.Title>Error Deleting Service!</Dialog.Title>
 				<Dialog.Description>
 					An error happened while deleting your service, please try again later.
@@ -74,12 +74,12 @@ export function ServiceDeleteRoute() {
 				<Dialog.ActionButton autoFocus onClick={closeAlert}>
 					Continue
 				</Dialog.ActionButton>
-			</Dialog>
+			</Dialog.Root>
 		);
 	}
 
 	return (
-		<Dialog closeDialog={closeAlert} open>
+		<Dialog.Root closeDialog={closeAlert} open>
 			<Dialog.Title>Are you absolutely sure?</Dialog.Title>
 			<Dialog.Description>
 				This action cannot be undone. This will permanently delete the{" "}
@@ -95,6 +95,6 @@ export function ServiceDeleteRoute() {
 					</Dialog.ActionButton>
 				</Form>
 			</div>
-		</Dialog>
+		</Dialog.Root>
 	);
 }

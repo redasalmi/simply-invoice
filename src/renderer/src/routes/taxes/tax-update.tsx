@@ -11,7 +11,7 @@ import {
 } from "react-router";
 import invariant from "tiny-invariant";
 import { Button } from "~/renderer/components/ui/button";
-import { FormField } from "~/renderer/components/ui/form-field";
+import * as FormField from "~/renderer/components/ui/form-field";
 import { Select } from "~/renderer/components/ui/select";
 import { useFormActionErrorFocus } from "~/renderer/hooks/useFormActionErrorFocus";
 import { statusOptions } from "~/renderer/utils/constants";
@@ -75,13 +75,13 @@ export function TaxUpdateRoute() {
 			<Form className="flex flex-col gap-4" method="post" ref={formRef}>
 				<input name="taxId" type="hidden" value={tax.taxId} />
 
-				<FormField errors={actionData?.errors?.nested?.name}>
+				<FormField.Root errors={actionData?.errors?.nested?.name}>
 					<FormField.Label>Name</FormField.Label>
 					<FormField.Input defaultValue={tax.name} name="name" type="text" />
 					<FormField.ErrorMessage />
-				</FormField>
+				</FormField.Root>
 
-				<FormField errors={actionData?.errors?.nested?.description}>
+				<FormField.Root errors={actionData?.errors?.nested?.description}>
 					<FormField.Label>Description</FormField.Label>
 					<FormField.Input
 						defaultValue={tax.description ?? ""}
@@ -89,13 +89,13 @@ export function TaxUpdateRoute() {
 						type="text"
 					/>
 					<FormField.ErrorMessage />
-				</FormField>
+				</FormField.Root>
 
-				<FormField errors={actionData?.errors?.nested?.rate}>
+				<FormField.Root errors={actionData?.errors?.nested?.rate}>
 					<FormField.Label>Rate (%)</FormField.Label>
 					<FormField.NumberInput defaultValue={tax.rate} name="rate" />
 					<FormField.ErrorMessage />
-				</FormField>
+				</FormField.Root>
 
 				<Select
 					defaultSelectedItem={statusOptions.find(

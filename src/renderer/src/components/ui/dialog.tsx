@@ -16,7 +16,7 @@ function useDialog() {
 	return context;
 }
 
-function DialogTitle({
+export function Title({
 	className,
 	...props
 }: React.ComponentPropsWithRef<"h2">) {
@@ -28,7 +28,7 @@ function DialogTitle({
 	);
 }
 
-function DialogDescription({
+export function Description({
 	className,
 	...props
 }: React.ComponentPropsWithRef<"div">) {
@@ -43,12 +43,12 @@ function DialogDescription({
 	);
 }
 
-interface DialogCloseButtonProps {
+interface CloseButtonProps {
 	autoFocus?: boolean;
 	onClick?: (ref: React.RefObject<HTMLDialogElement | null>) => void;
 }
 
-function DialogCloseButton({ autoFocus, onClick }: DialogCloseButtonProps) {
+export function CloseButton({ autoFocus, onClick }: CloseButtonProps) {
 	const { dialogRef } = useDialog();
 
 	const handleClick = () => {
@@ -73,12 +73,11 @@ function DialogCloseButton({ autoFocus, onClick }: DialogCloseButtonProps) {
 	);
 }
 
-interface DialogCancelButtonProps
-	extends Omit<ButtonProps, "onClick" | "variant"> {
+interface CancelButtonProps extends Omit<ButtonProps, "onClick" | "variant"> {
 	onClick?: (ref: React.RefObject<HTMLDialogElement | null>) => void;
 }
 
-function DialogCancelButton({ onClick, ...props }: DialogCancelButtonProps) {
+export function CancelButton({ onClick, ...props }: CancelButtonProps) {
 	const { dialogRef } = useDialog();
 
 	const handleClick = () => {
@@ -94,23 +93,22 @@ function DialogCancelButton({ onClick, ...props }: DialogCancelButtonProps) {
 	return <Button onClick={handleClick} variant="alternative" {...props} />;
 }
 
-interface DialogActionButtonProps extends Omit<ButtonProps, "variant"> {}
+interface ActionButtonProps extends Omit<ButtonProps, "variant"> {}
 
-function DialogActionButton(props: DialogActionButtonProps) {
+export function ActionButton(props: ActionButtonProps) {
 	return <Button variant="danger" {...props} />;
 }
 
-interface DialogProps
-	extends Omit<React.ComponentPropsWithRef<"dialog">, "ref"> {
+interface RootProps extends Omit<React.ComponentPropsWithRef<"dialog">, "ref"> {
 	closeDialog?: (ref: React.RefObject<HTMLDialogElement | null>) => void;
 }
 
-export function Dialog({
+export function Root({
 	className,
 	children,
 	closeDialog,
 	...props
-}: DialogProps) {
+}: RootProps) {
 	const dialogRef = useRef<HTMLDialogElement>(null);
 
 	const handleKeyDown = (event: React.KeyboardEvent<HTMLDialogElement>) => {
@@ -158,9 +156,3 @@ export function Dialog({
 		</dialog>
 	);
 }
-
-Dialog.Title = DialogTitle;
-Dialog.Description = DialogDescription;
-Dialog.CloseButton = DialogCloseButton;
-Dialog.CancelButton = DialogCancelButton;
-Dialog.ActionButton = DialogActionButton;

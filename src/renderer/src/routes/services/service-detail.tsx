@@ -5,8 +5,8 @@ import {
 	useNavigate,
 } from "react-router";
 import invariant from "tiny-invariant";
-import { Dialog } from "~/renderer/components/ui/dialog";
-import { Table } from "~/renderer/components/ui/table";
+import * as Dialog from "~/renderer/components/ui/dialog";
+import * as Table from "~/renderer/components/ui/table";
 
 export async function serviceDetailLoader({ params }: LoaderFunctionArgs) {
 	const serviceId = params.serviceId;
@@ -26,7 +26,7 @@ export function ServiceDetailRoute() {
 	};
 
 	return (
-		<Dialog closeDialog={closeDialog} open>
+		<Dialog.Root closeDialog={closeDialog} open>
 			<Dialog.CloseButton autoFocus onClick={closeDialog} />
 
 			{!service ? (
@@ -49,7 +49,7 @@ export function ServiceDetailRoute() {
 				<>
 					<Dialog.Title>Service details</Dialog.Title>
 					<Dialog.Description>
-						<Table>
+						<Table.Root>
 							<Table.Body>
 								<Table.Row>
 									<Table.Cell>Name:</Table.Cell>
@@ -60,10 +60,10 @@ export function ServiceDetailRoute() {
 									<Table.Cell>{service.rate}%</Table.Cell>
 								</Table.Row>
 							</Table.Body>
-						</Table>
+						</Table.Root>
 					</Dialog.Description>
 				</>
 			)}
-		</Dialog>
+		</Dialog.Root>
 	);
 }

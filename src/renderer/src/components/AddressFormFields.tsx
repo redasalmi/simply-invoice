@@ -1,4 +1,4 @@
-import { FormField } from "~/renderer/components/ui/form-field";
+import * as FormField from "~/renderer/components/ui/form-field";
 import type {
 	Address,
 	AddressCreateFlatErrors,
@@ -26,7 +26,7 @@ export function AddressFormFields({
 				/>
 			) : null}
 
-			<FormField errors={errors?.nested?.address1}>
+			<FormField.Root errors={errors?.nested?.address1}>
 				<FormField.Label>Address 1</FormField.Label>
 				<FormField.Input
 					defaultValue={address?.address1}
@@ -34,9 +34,9 @@ export function AddressFormFields({
 					type="text"
 				/>
 				<FormField.ErrorMessage />
-			</FormField>
+			</FormField.Root>
 
-			<FormField errors={errors?.nested?.address2}>
+			<FormField.Root errors={errors?.nested?.address2}>
 				<FormField.Label>Address 2</FormField.Label>
 				<FormField.Input
 					defaultValue={address?.address2 ?? ""}
@@ -44,9 +44,9 @@ export function AddressFormFields({
 					type="text"
 				/>
 				<FormField.ErrorMessage />
-			</FormField>
+			</FormField.Root>
 
-			<FormField errors={errors?.nested?.city}>
+			<FormField.Root errors={errors?.nested?.city}>
 				<FormField.Label>City</FormField.Label>
 				<FormField.Input
 					defaultValue={address?.city}
@@ -54,9 +54,9 @@ export function AddressFormFields({
 					type="text"
 				/>
 				<FormField.ErrorMessage />
-			</FormField>
+			</FormField.Root>
 
-			<FormField errors={errors?.nested?.country}>
+			<FormField.Root errors={errors?.nested?.country}>
 				<FormField.Label>Country</FormField.Label>
 				<FormField.Input
 					defaultValue={address?.country}
@@ -64,9 +64,9 @@ export function AddressFormFields({
 					type="text"
 				/>
 				<FormField.ErrorMessage />
-			</FormField>
+			</FormField.Root>
 
-			<FormField errors={errors?.nested?.province}>
+			<FormField.Root errors={errors?.nested?.province}>
 				<FormField.Label>Province</FormField.Label>
 				<FormField.Input
 					defaultValue={address?.province ?? ""}
@@ -74,9 +74,9 @@ export function AddressFormFields({
 					type="text"
 				/>
 				<FormField.ErrorMessage />
-			</FormField>
+			</FormField.Root>
 
-			<FormField errors={errors?.nested?.zip}>
+			<FormField.Root errors={errors?.nested?.zip}>
 				<FormField.Label>Zip</FormField.Label>
 				<FormField.Input
 					defaultValue={address?.zip}
@@ -84,7 +84,7 @@ export function AddressFormFields({
 					type="text"
 				/>
 				<FormField.ErrorMessage />
-			</FormField>
+			</FormField.Root>
 		</div>
 	);
 }

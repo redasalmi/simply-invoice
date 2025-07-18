@@ -5,8 +5,8 @@ import {
 	useNavigate,
 } from "react-router";
 import invariant from "tiny-invariant";
-import { Dialog } from "~/renderer/components/ui/dialog";
-import { Table } from "~/renderer/components/ui/table";
+import * as Dialog from "~/renderer/components/ui/dialog";
+import * as Table from "~/renderer/components/ui/table";
 
 export async function customerDetailLoader({ params }: LoaderFunctionArgs) {
 	const customerId = params.customerId;
@@ -26,7 +26,7 @@ export function CustomerDetailRoute() {
 	};
 
 	return (
-		<Dialog closeDialog={closeDialog} open>
+		<Dialog.Root closeDialog={closeDialog} open>
 			<Dialog.CloseButton autoFocus onClick={closeDialog} />
 
 			{!customer ? (
@@ -49,7 +49,7 @@ export function CustomerDetailRoute() {
 				<>
 					<Dialog.Title>Customer details</Dialog.Title>
 					<Dialog.Description>
-						<Table>
+						<Table.Root>
 							<Table.Body>
 								<Table.Row>
 									<Table.Cell>Name:</Table.Cell>
@@ -84,10 +84,10 @@ export function CustomerDetailRoute() {
 									<Table.Cell>{customer.address.zip}</Table.Cell>
 								</Table.Row>
 							</Table.Body>
-						</Table>
+						</Table.Root>
 					</Dialog.Description>
 				</>
 			)}
-		</Dialog>
+		</Dialog.Root>
 	);
 }

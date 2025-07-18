@@ -10,7 +10,7 @@ import {
 	useParams,
 } from "react-router";
 import invariant from "tiny-invariant";
-import { Dialog } from "~/renderer/components/ui/dialog";
+import * as Dialog from "~/renderer/components/ui/dialog";
 
 export async function customerDeleteLoader({ params }: LoaderFunctionArgs) {
 	const customerId = params.customerId;
@@ -51,7 +51,7 @@ export function CustomerDeleteRoute() {
 
 	if (!customer) {
 		return (
-			<Dialog closeDialog={closeAlert} open role="alertdialog">
+			<Dialog.Root closeDialog={closeAlert} open role="alertdialog">
 				<Dialog.Title>No Customer Found!</Dialog.Title>
 				<Dialog.Description>
 					Sorry but no customer with the ID: {params.customerId} was not found.
@@ -60,13 +60,13 @@ export function CustomerDeleteRoute() {
 				<Dialog.ActionButton autoFocus onClick={closeAlert}>
 					Continue
 				</Dialog.ActionButton>
-			</Dialog>
+			</Dialog.Root>
 		);
 	}
 
 	if (actionData?.errors) {
 		return (
-			<Dialog closeDialog={closeAlert} open role="alertdialog">
+			<Dialog.Root closeDialog={closeAlert} open role="alertdialog">
 				<Dialog.Title>Error Deleting Customer!</Dialog.Title>
 				<Dialog.Description>
 					An error happened while deleting your customer, please try again
@@ -75,12 +75,12 @@ export function CustomerDeleteRoute() {
 				<Dialog.ActionButton autoFocus onClick={closeAlert}>
 					Continue
 				</Dialog.ActionButton>
-			</Dialog>
+			</Dialog.Root>
 		);
 	}
 
 	return (
-		<Dialog closeDialog={closeAlert} open role="alertdialog">
+		<Dialog.Root closeDialog={closeAlert} open role="alertdialog">
 			<Dialog.Title>Are you absolutely sure?</Dialog.Title>
 			<Dialog.Description>
 				This action cannot be undone. This will permanently delete the{" "}
@@ -96,6 +96,6 @@ export function CustomerDeleteRoute() {
 					</Dialog.ActionButton>
 				</Form>
 			</div>
-		</Dialog>
+		</Dialog.Root>
 	);
 }

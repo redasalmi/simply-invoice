@@ -7,7 +7,7 @@ import {
 } from "react-router";
 import { CreateLink } from "~/renderer/components/CreateLink";
 import { Pagination } from "~/renderer/components/Pagination";
-import { Table } from "~/renderer/components/ui/table";
+import * as Table from "~/renderer/components/ui/table";
 import { userSettingsContext } from "~/renderer/routes";
 import { getPaginationParams } from "~/renderer/utils/getPaginationParams";
 
@@ -43,7 +43,7 @@ export function CustomersListRoute() {
 				<div className="mt-6">
 					{customers && customers.items.length > 0 ? (
 						<>
-							<Table>
+							<Table.Root>
 								<Table.Header>
 									<Table.Row>
 										<Table.Head>Name</Table.Head>
@@ -78,7 +78,7 @@ export function CustomersListRoute() {
 										</Table.Row>
 									))}
 								</Table.Body>
-							</Table>
+							</Table.Root>
 							{customers.total > customers.itemsPerPage ? (
 								<Pagination
 									baseUrl="/customers"

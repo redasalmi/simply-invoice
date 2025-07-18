@@ -9,7 +9,7 @@ import {
 import { AddressFormFields } from "~/renderer/components/AddressFormFields";
 import { RichTextEditor } from "~/renderer/components/rich-text/editor";
 import { Button } from "~/renderer/components/ui/button";
-import { FormField } from "~/renderer/components/ui/form-field";
+import * as FormField from "~/renderer/components/ui/form-field";
 import { Select } from "~/renderer/components/ui/select";
 import { useFormActionErrorFocus } from "~/renderer/hooks/useFormActionErrorFocus";
 import { statusOptions } from "~/renderer/utils/constants";
@@ -68,29 +68,29 @@ export function CustomerCreateRoute() {
 	return (
 		<section>
 			<Form className="flex flex-col gap-4" method="post" ref={formRef}>
-				<FormField errors={actionData?.errors?.customer?.nested?.name}>
+				<FormField.Root errors={actionData?.errors?.customer?.nested?.name}>
 					<FormField.Label>Name</FormField.Label>
 					<FormField.Input name="customer.name" type="text" />
 					<FormField.ErrorMessage />
-				</FormField>
+				</FormField.Root>
 
-				<FormField errors={actionData?.errors?.customer?.nested?.email}>
+				<FormField.Root errors={actionData?.errors?.customer?.nested?.email}>
 					<FormField.Label>Email</FormField.Label>
 					<FormField.Input name="customer.email" type="text" />
 					<FormField.ErrorMessage />
-				</FormField>
+				</FormField.Root>
 
-				<FormField errors={actionData?.errors?.customer?.nested?.phone}>
+				<FormField.Root errors={actionData?.errors?.customer?.nested?.phone}>
 					<FormField.Label>Phone</FormField.Label>
 					<FormField.Input name="customer.phone" type="text" />
 					<FormField.ErrorMessage />
-				</FormField>
+				</FormField.Root>
 
-				<FormField errors={actionData?.errors?.customer?.nested?.taxId}>
+				<FormField.Root errors={actionData?.errors?.customer?.nested?.taxId}>
 					<FormField.Label>Tax ID</FormField.Label>
 					<FormField.Input name="customer.taxId" type="text" />
 					<FormField.ErrorMessage />
-				</FormField>
+				</FormField.Root>
 
 				<Select
 					defaultSelectedItem={statusOptions[0]}
