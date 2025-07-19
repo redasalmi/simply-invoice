@@ -8,7 +8,7 @@ import {
 	sqliteTable,
 	text,
 } from "drizzle-orm/sqlite-core";
-import { ulid } from "ulid";
+import { v7 as uuidv7 } from "uuid";
 
 const timestamps = {
 	createdAt: text("created_at").notNull().default(sql`(current_timestamp)`),
@@ -43,9 +43,9 @@ const customJson = <T>(name: string) =>
 export const addressesTable = sqliteTable(
 	"addresses_table",
 	{
-		addressId: text("address_id", { length: 26 })
+		addressId: text("address_id", { length: 36 })
 			.primaryKey()
-			.$defaultFn(() => ulid()),
+			.$defaultFn(() => uuidv7()),
 		address1: text("address1").notNull(),
 		address2: text("address2"),
 		city: text("city").notNull(),
@@ -65,9 +65,9 @@ export const addressesTable = sqliteTable(
 export const companiesTable = sqliteTable(
 	"companies_table",
 	{
-		companyId: text("company_id", { length: 26 })
+		companyId: text("company_id", { length: 36 })
 			.primaryKey()
-			.$defaultFn(() => ulid()),
+			.$defaultFn(() => uuidv7()),
 		name: text("name").notNull(),
 		email: text("email").notNull(),
 		phone: text("phone"),
@@ -78,7 +78,7 @@ export const companiesTable = sqliteTable(
 		additionalInformation: customJson<Array<PortableTextBlock>>(
 			"additional_information",
 		),
-		addressId: text("address_id", { length: 26 })
+		addressId: text("address_id", { length: 36 })
 			.notNull()
 			.references(() => addressesTable.addressId, { onDelete: "cascade" }),
 		...timestamps,
@@ -100,9 +100,9 @@ export const companiesRelations = relations(companiesTable, ({ one }) => ({
 export const customersTable = sqliteTable(
 	"customers_table",
 	{
-		customerId: text("customer_id", { length: 26 })
+		customerId: text("customer_id", { length: 36 })
 			.primaryKey()
-			.$defaultFn(() => ulid()),
+			.$defaultFn(() => uuidv7()),
 		name: text("name").notNull(),
 		email: text("email").notNull(),
 		phone: text("phone"),
@@ -113,7 +113,7 @@ export const customersTable = sqliteTable(
 		additionalInformation: customJson<Array<PortableTextBlock>>(
 			"additional_information",
 		),
-		addressId: text("address_id", { length: 26 })
+		addressId: text("address_id", { length: 36 })
 			.notNull()
 			.references(() => addressesTable.addressId, { onDelete: "cascade" }),
 		...timestamps,
@@ -135,9 +135,9 @@ export const customersRelations = relations(customersTable, ({ one }) => ({
 export const servicesTable = sqliteTable(
 	"services_table",
 	{
-		serviceId: text("service_id", { length: 26 })
+		serviceId: text("service_id", { length: 36 })
 			.primaryKey()
-			.$defaultFn(() => ulid()),
+			.$defaultFn(() => uuidv7()),
 		name: text("name").notNull(),
 		description: text("description"),
 		rate: real("rate").notNull(),
@@ -156,9 +156,9 @@ export const servicesTable = sqliteTable(
 export const taxesTable = sqliteTable(
 	"taxes_table",
 	{
-		taxId: text("tax_id", { length: 26 })
+		taxId: text("tax_id", { length: 36 })
 			.primaryKey()
-			.$defaultFn(() => ulid()),
+			.$defaultFn(() => uuidv7()),
 		name: text("name").notNull(),
 		description: text("description"),
 		rate: real("rate").notNull(),
@@ -181,9 +181,9 @@ export const taxesTable = sqliteTable(
 export const invoicesTable = sqliteTable(
 	"invoices_table",
 	{
-		invoiceId: text("invoice_id", { length: 26 })
+		invoiceId: text("invoice_id", { length: 36 })
 			.primaryKey()
-			.$defaultFn(() => ulid()),
+			.$defaultFn(() => uuidv7()),
 		identifier: text("identifier").notNull().unique(),
 		identifierType: text("identifier_type", {
 			enum: ["incremental", "random", "manual"],
@@ -192,10 +192,10 @@ export const invoicesTable = sqliteTable(
 		countryCode: text("country_code", { length: 2 }).notNull(),
 		date: text("date").notNull(),
 		dueDate: text("due_date"),
-		companyId: text("company_id", { length: 26 })
+		companyId: text("company_id", { length: 36 })
 			.notNull()
 			.references(() => companiesTable.companyId),
-		customerId: text("customer_id", { length: 26 })
+		customerId: text("customer_id", { length: 36 })
 			.notNull()
 			.references(() => customersTable.customerId),
 		subtotalAmount: real("subtotal_amount").notNull(),
@@ -227,17 +227,17 @@ export const invoicesTable = sqliteTable(
 );
 
 export const invoiceServicesTable = sqliteTable("invoice_services_table", {
-	invoiceServiceId: text("invoice_service_id", { length: 26 })
+	invoiceServiceId: text("invoice_service_id", { length: 36 })
 		.primaryKey()
-		.$defaultFn(() => ulid()),
-	invoiceId: text("invoice_id", { length: 26 })
+		.$defaultFn(() => uuidv7()),
+	invoiceId: text("invoice_id", { length: 36 })
 		.notNull()
 		.references(() => invoicesTable.invoiceId, { onDelete: "cascade" }),
-	serviceId: text("service_id", { length: 26 })
+	serviceId: text("service_id", { length: 36 })
 		.notNull()
 		.references(() => servicesTable.serviceId),
 	quantity: real("quantity").notNull(),
-	taxId: text("tax_id", { length: 26 })
+	taxId: text("tax_id", { length: 36 })
 		.notNull()
 		.references(() => taxesTable.taxId),
 	...timestamps,
@@ -246,9 +246,9 @@ export const invoiceServicesTable = sqliteTable("invoice_services_table", {
 export const userSettingsTable = sqliteTable(
 	"user_settings_table",
 	{
-		settingId: text("setting_id", { length: 26 })
+		settingId: text("setting_id", { length: 36 })
 			.primaryKey()
-			.$defaultFn(() => ulid()),
+			.$defaultFn(() => uuidv7()),
 		settingKey: text("setting_key", {
 			enum: [
 				"companies-table-items-per-page",

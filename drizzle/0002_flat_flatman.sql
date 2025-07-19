@@ -14,7 +14,7 @@ CREATE TABLE `__new_companies_table` (
 	CONSTRAINT "company_status_check" CHECK(status IN ('active', 'inactive'))
 );
 --> statement-breakpoint
-INSERT INTO `__new_companies_table`("company_id", "name", "email", "phone", "tax_id", "status", "additional_information", "address_id", "created_at", "updated_at") SELECT "company_id", "name", "email", "phone", "tax_id", "status", "additional_information", "address_id", "created_at", "updated_at" FROM `companies_table`;--> statement-breakpoint
+INSERT INTO `__new_companies_table`("company_id", "name", "email", "phone", "tax_id", "status", "additional_information", "address_id", "created_at", "updated_at") SELECT "company_id", "name", "email", null, null, null, "additional_information", "address_id", "created_at", "updated_at" FROM `companies_table`;--> statement-breakpoint
 DROP TABLE `companies_table`;--> statement-breakpoint
 ALTER TABLE `__new_companies_table` RENAME TO `companies_table`;--> statement-breakpoint
 PRAGMA foreign_keys=ON;--> statement-breakpoint
@@ -35,7 +35,7 @@ CREATE TABLE `__new_customers_table` (
 	CONSTRAINT "customer_status_check" CHECK(status IN ('active', 'inactive'))
 );
 --> statement-breakpoint
-INSERT INTO `__new_customers_table`("customer_id", "name", "email", "phone", "tax_id", "status", "additional_information", "address_id", "created_at", "updated_at") SELECT "customer_id", "name", "email", "phone", "tax_id", "status", "additional_information", "address_id", "created_at", "updated_at" FROM `customers_table`;--> statement-breakpoint
+INSERT INTO `__new_customers_table`("customer_id", "name", "email", "phone", "tax_id", "status", "additional_information", "address_id", "created_at", "updated_at") SELECT "customer_id", "name", "email", null, null, null, "additional_information", "address_id", "created_at", "updated_at" FROM `customers_table`;--> statement-breakpoint
 DROP TABLE `customers_table`;--> statement-breakpoint
 ALTER TABLE `__new_customers_table` RENAME TO `customers_table`;--> statement-breakpoint
 CREATE INDEX `customer_name_index` ON `customers_table` (`name`);--> statement-breakpoint
@@ -62,7 +62,7 @@ CREATE TABLE `__new_invoices_table` (
 	CONSTRAINT "invoice_status_check" CHECK(status IN ('draft', 'sent', 'paid', 'overdue', 'cancelled'))
 );
 --> statement-breakpoint
-INSERT INTO `__new_invoices_table`("invoice_id", "identifier", "identifier_type", "locale", "country_code", "date", "due_date", "company_id", "customer_id", "subtotal_amount", "total_amount", "status", "note", "created_at", "updated_at") SELECT "invoice_id", "identifier", "identifier_type", "locale", "country_code", "date", "due_date", "company_id", "customer_id", "subtotal_amount", "total_amount", "status", "note", "created_at", "updated_at" FROM `invoices_table`;--> statement-breakpoint
+INSERT INTO `__new_invoices_table`("invoice_id", "identifier", "identifier_type", "locale", "country_code", "date", "due_date", "company_id", "customer_id", "subtotal_amount", "total_amount", "status", "note", "created_at", "updated_at") SELECT "invoice_id", "identifier", "identifier_type", "locale", "country_code", "date", "due_date", "company_id", "customer_id", "subtotal_amount", "total_amount", null, "note", "created_at", "updated_at" FROM `invoices_table`;--> statement-breakpoint
 DROP TABLE `invoices_table`;--> statement-breakpoint
 ALTER TABLE `__new_invoices_table` RENAME TO `invoices_table`;--> statement-breakpoint
 CREATE UNIQUE INDEX `invoices_table_identifier_unique` ON `invoices_table` (`identifier`);--> statement-breakpoint
@@ -83,7 +83,7 @@ CREATE TABLE `__new_services_table` (
 	CONSTRAINT "service_status_check" CHECK(status IN ('active', 'inactive'))
 );
 --> statement-breakpoint
-INSERT INTO `__new_services_table`("service_id", "name", "description", "rate", "status", "created_at", "updated_at") SELECT "service_id", "name", "description", "rate", "status", "created_at", "updated_at" FROM `services_table`;--> statement-breakpoint
+INSERT INTO `__new_services_table`("service_id", "name", "description", "rate", "status", "created_at", "updated_at") SELECT "service_id", "name", "description", "rate", null, "created_at", "updated_at" FROM `services_table`;--> statement-breakpoint
 DROP TABLE `services_table`;--> statement-breakpoint
 ALTER TABLE `__new_services_table` RENAME TO `services_table`;--> statement-breakpoint
 CREATE INDEX `service_name_index` ON `services_table` (`name`);--> statement-breakpoint
@@ -101,7 +101,7 @@ CREATE TABLE `__new_taxes_table` (
 	CONSTRAINT "tax_type_check" CHECK(type IN ('percentage', 'fixed_amount'))
 );
 --> statement-breakpoint
-INSERT INTO `__new_taxes_table`("tax_id", "name", "description", "rate", "status", "type", "created_at", "updated_at") SELECT "tax_id", "name", "description", "rate", "status", "type", "created_at", "updated_at" FROM `taxes_table`;--> statement-breakpoint
+INSERT INTO `__new_taxes_table`("tax_id", "name", "description", "rate", "status", "type", "created_at", "updated_at") SELECT "tax_id", "name", "description", "rate", null, null, "created_at", "updated_at" FROM `taxes_table`;--> statement-breakpoint
 DROP TABLE `taxes_table`;--> statement-breakpoint
 ALTER TABLE `__new_taxes_table` RENAME TO `taxes_table`;--> statement-breakpoint
 CREATE INDEX `tax_name_index` ON `taxes_table` (`name`);--> statement-breakpoint

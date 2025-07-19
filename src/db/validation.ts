@@ -19,7 +19,7 @@ export const addressCreateSchema = createInsertSchema(addressesTable, {
 
 export const addressUpdateSchema = v.object({
 	...addressCreateSchema.entries,
-	addressId: v.pipe(v.string(), v.nonEmpty("Address ID is required"), v.ulid()),
+	addressId: v.pipe(v.string(), v.nonEmpty("Address ID is required"), v.uuid()),
 });
 
 // company schemas
@@ -38,13 +38,13 @@ export const companyCreateWithAddressSchema = v.omit(
 
 export const companyUpdateWithAddressSchema = v.object({
 	...companyCreateWithAddressSchema.entries,
-	companyId: v.pipe(v.string(), v.nonEmpty("Company ID is required"), v.ulid()),
+	companyId: v.pipe(v.string(), v.nonEmpty("Company ID is required"), v.uuid()),
 });
 
 export const companyDeleteSchema = v.pipe(
 	v.string(),
 	v.nonEmpty("Company ID is required"),
-	v.ulid(),
+	v.uuid(),
 );
 
 // customer schemas
@@ -66,14 +66,14 @@ export const customerUpdateWithAddressSchema = v.object({
 	customerId: v.pipe(
 		v.string(),
 		v.nonEmpty("Customer ID is required"),
-		v.ulid(),
+		v.uuid(),
 	),
 });
 
 export const customerDeleteSchema = v.pipe(
 	v.string(),
 	v.nonEmpty("Customer ID is required"),
-	v.ulid(),
+	v.uuid(),
 );
 
 // service schemas
@@ -90,13 +90,13 @@ export const serviceCreateSchema = createInsertSchema(servicesTable, {
 
 export const serviceUpdateSchema = v.object({
 	...serviceCreateSchema.entries,
-	serviceId: v.pipe(v.string(), v.nonEmpty("Service ID is required"), v.ulid()),
+	serviceId: v.pipe(v.string(), v.nonEmpty("Service ID is required"), v.uuid()),
 });
 
 export const serviceDeleteSchema = v.pipe(
 	v.string(),
 	v.nonEmpty("Service ID is required"),
-	v.ulid(),
+	v.uuid(),
 );
 
 // tax schemas
@@ -113,13 +113,13 @@ export const taxCreateSchema = createInsertSchema(taxesTable, {
 
 export const taxUpdateSchema = v.object({
 	...taxCreateSchema.entries,
-	taxId: v.pipe(v.string(), v.nonEmpty("Tax ID is required"), v.ulid()),
+	taxId: v.pipe(v.string(), v.nonEmpty("Tax ID is required"), v.uuid()),
 });
 
 export const taxDeleteSchema = v.pipe(
 	v.string(),
 	v.nonEmpty("Tax ID is required"),
-	v.ulid(),
+	v.uuid(),
 );
 
 // user settings schemas

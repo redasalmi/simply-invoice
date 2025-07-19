@@ -57,6 +57,7 @@ function createWindow() {
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(async () => {
 	await migrateDb();
+	await createDefaultUserSettings();
 
 	if (is.dev) {
 		try {
@@ -77,7 +78,6 @@ app.whenReady().then(async () => {
 		optimizer.watchWindowShortcuts(window);
 	});
 
-	createDefaultUserSettings();
 	registerCompaniesIcpHandlers();
 	registerCustomersIcpHandles();
 	registerServicesIcpHandlers();
