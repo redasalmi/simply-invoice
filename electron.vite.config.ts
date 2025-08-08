@@ -2,6 +2,7 @@ import { resolve } from "node:path";
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
 import { defineConfig, externalizeDepsPlugin } from "electron-vite";
+import babel from "vite-plugin-babel";
 
 export default defineConfig({
 	main: {
@@ -20,6 +21,11 @@ export default defineConfig({
 		plugins: [externalizeDepsPlugin()],
 	},
 	renderer: {
+		build: {
+			rollupOptions: {
+				input: resolve("src/renderer/index.html"),
+			},
+		},
 		resolve: {
 			alias: {
 				"~/db": resolve("src/db"),
@@ -28,8 +34,11 @@ export default defineConfig({
 			},
 		},
 		plugins: [
-			react({
-				babel: {
+			react(),
+			babel({
+				filter: /\.[jt]sx?$/,
+				babelConfig: {
+					presets: ["@babel/preset-typescript"],
 					plugins: [["babel-plugin-react-compiler", {}]],
 				},
 			}),

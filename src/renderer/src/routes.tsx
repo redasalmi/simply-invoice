@@ -2,6 +2,7 @@ import {
 	createBrowserRouter,
 	unstable_createContext,
 	type unstable_RouterContext,
+	unstable_RouterContextProvider,
 } from "react-router";
 import { RootRoute } from "~/renderer/root";
 import { companiesRoutes } from "~/renderer/routes/companies/companies-routes";
@@ -12,7 +13,7 @@ import { taxesRoutes } from "~/renderer/routes/taxes/taxes-routes";
 import type { UserSetting } from "~/types";
 
 export const userSettingsContext =
-	unstable_createContext<Map<string, UserSetting>>();
+	unstable_createContext<Map<UserSetting["settingKey"], UserSetting>>();
 
 export const router = createBrowserRouter(
 	[
@@ -32,7 +33,7 @@ export const router = createBrowserRouter(
 	],
 	{
 		unstable_getContext: async () => {
-			const map = new Map<unstable_RouterContext, Map<string, UserSetting>>();
+			const context = new unstable_RouterContextProvider();
 			const userSettings = await window.api.db.userSettings.get();
 			const userSettingsMap = new Map(
 				userSettings.map((userSetting) => [
@@ -40,9 +41,9 @@ export const router = createBrowserRouter(
 					userSetting,
 				]),
 			);
-			map.set(userSettingsContext, userSettingsMap);
+			context.set(userSettingsContext, userSettingsMap);
 
-			return map;
+			return context;
 		},
 	},
 );
