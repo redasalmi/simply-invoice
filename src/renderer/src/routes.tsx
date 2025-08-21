@@ -4,6 +4,7 @@ import {
 	type unstable_RouterContext,
 	unstable_RouterContextProvider,
 } from "react-router";
+import { Loading } from "~/renderer/loading";
 import { RootRoute } from "~/renderer/root";
 import { companiesRoutes } from "~/renderer/routes/companies/companies-routes";
 import { customersRoutes } from "~/renderer/routes/customers/customers-routes";
@@ -19,6 +20,7 @@ export const router = createBrowserRouter(
 	[
 		{
 			Component: RootRoute,
+			HydrateFallback: Loading,
 			children: [
 				{
 					index: true,
