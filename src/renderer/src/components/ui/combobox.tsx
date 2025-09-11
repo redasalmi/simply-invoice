@@ -1,162 +1,145 @@
 import {
-	ComboboxButton,
-	ComboboxInput,
-	ComboboxOption,
-	ComboboxOptions,
-	Field,
-	Label,
-	Combobox as UICombobox,
-} from "@headlessui/react";
-import { CheckIcon, ChevronDownIcon } from "lucide-react";
-import { useId, useState } from "react";
-import { cn } from "~/renderer/utils/cn";
+  ComboboxButton,
+  ComboboxInput,
+  ComboboxOption,
+  ComboboxOptions,
+  Field,
+  Label,
+  Combobox as UICombobox,
+} from '@headlessui/react'
+import { CheckIcon, ChevronDownIcon } from 'lucide-react'
+import { useId, useState } from 'react'
+import { cn } from '~/renderer/utils/cn'
 
 export type ComboboxItem<T> = T & {
-	name: string;
-};
+  name: string
+}
 
 interface ComboboxProps<T> {
-	name: string;
-	label: string;
-	hideLabel?: boolean;
-	defaultValue?: string;
-	placeholder?: string;
-	className?: string;
-	itemIdKey: keyof T;
-	items: Array<ComboboxItem<T>>;
-	renderItemName?: (item: T) => string;
-	errorMessage?: string;
-	onChange?: (value: ComboboxItem<T> | null) => void;
+  name: string
+  label: string
+  hideLabel?: boolean
+  defaultValue?: string
+  placeholder?: string
+  className?: string
+  itemIdKey: keyof T
+  items: Array<ComboboxItem<T>>
+  renderItemName?: (item: T) => string
+  errorMessage?: string
+  onChange?: (value: ComboboxItem<T> | null) => void
 }
 
 function isComboboxItem<T>(x: unknown): x is ComboboxItem<T> {
-	return Boolean(
-		typeof x === "object" && x && "name" in x && typeof x.name === "string",
-	);
+  return Boolean(typeof x === 'object' && x && 'name' in x && typeof x.name === 'string')
 }
 
 export function Combobox<T>({
-	name,
-	label,
-	hideLabel,
-	defaultValue,
-	placeholder,
-	className,
-	itemIdKey,
-	items,
-	renderItemName,
-	errorMessage,
-	onChange,
+  name,
+  label,
+  hideLabel,
+  defaultValue,
+  placeholder,
+  className,
+  itemIdKey,
+  items,
+  renderItemName,
+  errorMessage,
+  onChange,
 }: ComboboxProps<T>) {
-	const descriptionId = useId();
-	const [query, setQuery] = useState("");
-	const [selectedItem, setSelectedItem] = useState<ComboboxItem<T> | null>(
-		() => {
-			if (!defaultValue) {
-				return null;
-			}
+  const descriptionId = useId()
+  const [query, setQuery] = useState('')
+  const [selectedItem, setSelectedItem] = useState<ComboboxItem<T> | null>(() => {
+    if (!defaultValue) {
+      return null
+    }
 
-			return items.find((item) => item[itemIdKey] === defaultValue) || null;
-		},
-	);
+    return items.find((item) => item[itemIdKey] === defaultValue) || null
+  })
 
-	const hasError = Boolean(errorMessage?.length);
+  const hasError = Boolean(errorMessage?.length)
 
-	const filteredItems =
-		query === ""
-			? items
-			: items.filter((item) => {
-					return item.name.toLowerCase().includes(query.toLowerCase());
-				});
+  const filteredItems =
+    query === ''
+      ? items
+      : items.filter((item) => {
+          return item.name.toLowerCase().includes(query.toLowerCase())
+        })
 
-	const handleOnChange = (value: ComboboxItem<T> | null) => {
-		setSelectedItem(value);
+  const handleOnChange = (value: ComboboxItem<T> | null) => {
+    setSelectedItem(value)
 
-		if (onChange) {
-			onChange(value);
-		}
-	};
+    if (onChange) {
+      onChange(value)
+    }
+  }
 
-	const displayValue = (item: ComboboxItem<T> | unknown) => {
-		if (!item || !isComboboxItem(item)) {
-			return "";
-		}
+  const displayValue = (item: ComboboxItem<T> | unknown) => {
+    if (!item || !isComboboxItem(item)) {
+      return ''
+    }
 
-		return renderItemName ? renderItemName(item as ComboboxItem<T>) : item.name;
-	};
+    return renderItemName ? renderItemName(item as ComboboxItem<T>) : item.name
+  }
 
-	return (
-		<Field className={className}>
-			<input
-				name={name}
-				type="hidden"
-				value={(selectedItem?.[itemIdKey] as string | undefined) || ""}
-			/>
+  return (
+    <Field className={className}>
+      <input
+        name={name}
+        type="hidden"
+        value={(selectedItem?.[itemIdKey] as string | undefined) || ''}
+      />
 
-			<Label
-				className={cn(
-					"mb-1 block font-medium text-gray-900 text-sm",
-					hideLabel && "sr-only",
-				)}
-			>
-				{label}
-			</Label>
-			<UICombobox
-				onChange={handleOnChange}
-				onClose={() => setQuery("")}
-				value={selectedItem}
-			>
-				<div className="relative">
-					<ComboboxInput
-						aria-describedby={descriptionId}
-						aria-invalid={hasError || undefined}
-						className={cn(
-							"block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 text-sm focus:border-blue-500 focus:ring-blue-500",
-							'data-[invalid="true"]:border-red-500 data-[invalid]:bg-red-50 data-[invalid]:text-red-900 data-[invalid]:placeholder-red-700 data-[invalid]:focus:border-red-500 data-[invalid]:focus:ring-red-500',
-						)}
-						data-invalid={hasError || undefined}
-						displayValue={displayValue}
-						onChange={(event) => setQuery(event.target.value)}
-						placeholder={placeholder}
-					/>
+      <Label className={cn('mb-1 block font-medium text-gray-900 text-sm', hideLabel && 'sr-only')}>
+        {label}
+      </Label>
+      <UICombobox onChange={handleOnChange} onClose={() => setQuery('')} value={selectedItem}>
+        <div className="relative">
+          <ComboboxInput
+            aria-describedby={descriptionId}
+            aria-invalid={hasError || undefined}
+            className={cn(
+              'block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 text-sm focus:border-blue-500 focus:ring-blue-500',
+              'data-[invalid="true"]:border-red-500 data-[invalid]:bg-red-50 data-[invalid]:text-red-900 data-[invalid]:placeholder-red-700 data-[invalid]:focus:border-red-500 data-[invalid]:focus:ring-red-500'
+            )}
+            data-invalid={hasError || undefined}
+            displayValue={displayValue}
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder={placeholder}
+          />
 
-					<ComboboxButton className="group absolute inset-y-0 right-0 cursor-pointer px-2.5">
-						<ChevronDownIcon className="size-4 fill-white/60 group-data-[hover]:fill-white" />
-					</ComboboxButton>
-				</div>
+          <ComboboxButton className="group absolute inset-y-0 right-0 cursor-pointer px-2.5">
+            <ChevronDownIcon className="size-4 fill-white/60 group-data-[hover]:fill-white" />
+          </ComboboxButton>
+        </div>
 
-				{errorMessage ? (
-					<p
-						className="font-medium text-red-900"
-						data-invalid
-						id={descriptionId}
-					>
-						{errorMessage}
-					</p>
-				) : null}
+        {errorMessage ? (
+          <p className="font-medium text-red-900" data-invalid id={descriptionId}>
+            {errorMessage}
+          </p>
+        ) : null}
 
-				<ComboboxOptions
-					anchor="bottom"
-					className={cn(
-						"w-[var(--input-width)] rounded-xl border border-white/5 bg-gray-50 p-1 [--anchor-gap:var(--spacing-1)] empty:invisible",
-						"transition duration-100 ease-in data-[leave]:data-[closed]:opacity-0",
-					)}
-					transition
-				>
-					{filteredItems.map((item) => (
-						<ComboboxOption
-							className="group flex cursor-default select-none items-center gap-2 rounded-lg px-3 py-1.5 data-[focus]:bg-white/10"
-							key={item[itemIdKey] as string}
-							value={item}
-						>
-							<CheckIcon className="invisible size-4 text-gray-900 group-data-[selected]:visible" />
-							<div className="text-gray-900 text-sm/6">
-								{renderItemName ? renderItemName(item) : item.name}
-							</div>
-						</ComboboxOption>
-					))}
-				</ComboboxOptions>
-			</UICombobox>
-		</Field>
-	);
+        <ComboboxOptions
+          anchor="bottom"
+          className={cn(
+            'w-[var(--input-width)] rounded-xl border border-white/5 bg-gray-50 p-1 [--anchor-gap:var(--spacing-1)] empty:invisible',
+            'transition duration-100 ease-in data-[leave]:data-[closed]:opacity-0'
+          )}
+          transition
+        >
+          {filteredItems.map((item) => (
+            <ComboboxOption
+              className="group flex cursor-default select-none items-center gap-2 rounded-lg px-3 py-1.5 data-[focus]:bg-white/10"
+              key={item[itemIdKey] as string}
+              value={item}
+            >
+              <CheckIcon className="invisible size-4 text-gray-900 group-data-[selected]:visible" />
+              <div className="text-gray-900 text-sm/6">
+                {renderItemName ? renderItemName(item) : item.name}
+              </div>
+            </ComboboxOption>
+          ))}
+        </ComboboxOptions>
+      </UICombobox>
+    </Field>
+  )
 }

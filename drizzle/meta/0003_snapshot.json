@@ -75,30 +75,22 @@
       "indexes": {
         "address_city_index": {
           "name": "address_city_index",
-          "columns": [
-            "city"
-          ],
+          "columns": ["city"],
           "isUnique": false
         },
         "address_country_index": {
           "name": "address_country_index",
-          "columns": [
-            "country"
-          ],
+          "columns": ["country"],
           "isUnique": false
         },
         "address_province_index": {
           "name": "address_province_index",
-          "columns": [
-            "province"
-          ],
+          "columns": ["province"],
           "isUnique": false
         },
         "address_zip_index": {
           "name": "address_zip_index",
-          "columns": [
-            "zip"
-          ],
+          "columns": ["zip"],
           "isUnique": false
         }
       },
@@ -186,16 +178,12 @@
       "indexes": {
         "company_name_index": {
           "name": "company_name_index",
-          "columns": [
-            "name"
-          ],
+          "columns": ["name"],
           "isUnique": false
         },
         "company_email_index": {
           "name": "company_email_index",
-          "columns": [
-            "email"
-          ],
+          "columns": ["email"],
           "isUnique": false
         }
       },
@@ -204,12 +192,8 @@
           "name": "companies_table_address_id_addresses_table_address_id_fk",
           "tableFrom": "companies_table",
           "tableTo": "addresses_table",
-          "columnsFrom": [
-            "address_id"
-          ],
-          "columnsTo": [
-            "address_id"
-          ],
+          "columnsFrom": ["address_id"],
+          "columnsTo": ["address_id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -302,16 +286,12 @@
       "indexes": {
         "customer_name_index": {
           "name": "customer_name_index",
-          "columns": [
-            "name"
-          ],
+          "columns": ["name"],
           "isUnique": false
         },
         "customer_email_index": {
           "name": "customer_email_index",
-          "columns": [
-            "email"
-          ],
+          "columns": ["email"],
           "isUnique": false
         }
       },
@@ -320,12 +300,8 @@
           "name": "customers_table_address_id_addresses_table_address_id_fk",
           "tableFrom": "customers_table",
           "tableTo": "addresses_table",
-          "columnsFrom": [
-            "address_id"
-          ],
-          "columnsTo": [
-            "address_id"
-          ],
+          "columnsFrom": ["address_id"],
+          "columnsTo": ["address_id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -399,12 +375,8 @@
           "name": "invoice_services_table_invoice_id_invoices_table_invoice_id_fk",
           "tableFrom": "invoice_services_table",
           "tableTo": "invoices_table",
-          "columnsFrom": [
-            "invoice_id"
-          ],
-          "columnsTo": [
-            "invoice_id"
-          ],
+          "columnsFrom": ["invoice_id"],
+          "columnsTo": ["invoice_id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -412,12 +384,8 @@
           "name": "invoice_services_table_service_id_services_table_service_id_fk",
           "tableFrom": "invoice_services_table",
           "tableTo": "services_table",
-          "columnsFrom": [
-            "service_id"
-          ],
-          "columnsTo": [
-            "service_id"
-          ],
+          "columnsFrom": ["service_id"],
+          "columnsTo": ["service_id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -425,12 +393,8 @@
           "name": "invoice_services_table_tax_id_taxes_table_tax_id_fk",
           "tableFrom": "invoice_services_table",
           "tableTo": "taxes_table",
-          "columnsFrom": [
-            "tax_id"
-          ],
-          "columnsTo": [
-            "tax_id"
-          ],
+          "columnsFrom": ["tax_id"],
+          "columnsTo": ["tax_id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -553,51 +517,37 @@
       "indexes": {
         "invoices_table_identifier_unique": {
           "name": "invoices_table_identifier_unique",
-          "columns": [
-            "identifier"
-          ],
+          "columns": ["identifier"],
           "isUnique": true
         },
         "invoice_identifier_type_index": {
           "name": "invoice_identifier_type_index",
-          "columns": [
-            "identifier_type"
-          ],
+          "columns": ["identifier_type"],
           "isUnique": false
         },
         "invoice_locale_index": {
           "name": "invoice_locale_index",
-          "columns": [
-            "locale"
-          ],
+          "columns": ["locale"],
           "isUnique": false
         },
         "invoice_country_code_index": {
           "name": "invoice_country_code_index",
-          "columns": [
-            "country_code"
-          ],
+          "columns": ["country_code"],
           "isUnique": false
         },
         "invoice_date_index": {
           "name": "invoice_date_index",
-          "columns": [
-            "date"
-          ],
+          "columns": ["date"],
           "isUnique": false
         },
         "invoice_subtotal_amount_index": {
           "name": "invoice_subtotal_amount_index",
-          "columns": [
-            "subtotal_amount"
-          ],
+          "columns": ["subtotal_amount"],
           "isUnique": false
         },
         "invoice_total_amount_index": {
           "name": "invoice_total_amount_index",
-          "columns": [
-            "total_amount"
-          ],
+          "columns": ["total_amount"],
           "isUnique": false
         }
       },
@@ -606,12 +556,8 @@
           "name": "invoices_table_company_id_companies_table_company_id_fk",
           "tableFrom": "invoices_table",
           "tableTo": "companies_table",
-          "columnsFrom": [
-            "company_id"
-          ],
-          "columnsTo": [
-            "company_id"
-          ],
+          "columnsFrom": ["company_id"],
+          "columnsTo": ["company_id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -619,12 +565,8 @@
           "name": "invoices_table_customer_id_customers_table_customer_id_fk",
           "tableFrom": "invoices_table",
           "tableTo": "customers_table",
-          "columnsFrom": [
-            "customer_id"
-          ],
-          "columnsTo": [
-            "customer_id"
-          ],
+          "columnsFrom": ["customer_id"],
+          "columnsTo": ["customer_id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -700,16 +642,12 @@
       "indexes": {
         "service_name_index": {
           "name": "service_name_index",
-          "columns": [
-            "name"
-          ],
+          "columns": ["name"],
           "isUnique": false
         },
         "service_rate_index": {
           "name": "service_rate_index",
-          "columns": [
-            "rate"
-          ],
+          "columns": ["rate"],
           "isUnique": false
         }
       },
@@ -789,16 +727,12 @@
       "indexes": {
         "tax_name_index": {
           "name": "tax_name_index",
-          "columns": [
-            "name"
-          ],
+          "columns": ["name"],
           "isUnique": false
         },
         "tax_rate_index": {
           "name": "tax_rate_index",
-          "columns": [
-            "rate"
-          ],
+          "columns": ["rate"],
           "isUnique": false
         }
       },
@@ -867,16 +801,12 @@
       "indexes": {
         "user_settings_table_setting_key_unique": {
           "name": "user_settings_table_setting_key_unique",
-          "columns": [
-            "setting_key"
-          ],
+          "columns": ["setting_key"],
           "isUnique": true
         },
         "setting_key_index": {
           "name": "setting_key_index",
-          "columns": [
-            "setting_key"
-          ],
+          "columns": ["setting_key"],
           "isUnique": false
         }
       },

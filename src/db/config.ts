@@ -1,14 +1,12 @@
-import path from "node:path";
-import { drizzle } from "drizzle-orm/libsql";
-import { app } from "electron";
-import * as schema from "~/db/schema";
+import path from 'node:path'
+import { drizzle } from 'drizzle-orm/libsql'
+import { app } from 'electron'
+import * as schema from '~/db/schema'
 
-const isDev = process.env.NODE_ENV === "development";
+const isDev = process.env.NODE_ENV === 'development'
 
 // to be replaced with a proper path later for production database
 // the db will be saved in a user's directory, the path will be saved in the app settings
-const dbFile = isDev
-	? "file:local.db"
-	: `file:${path.join(app.getPath("exe"), "..", "local.db")}`;
+const dbFile = isDev ? 'file:local.db' : `file:${path.join(app.getPath('exe'), '..', 'local.db')}`
 
-export const db = drizzle(dbFile, { schema });
+export const db = drizzle(dbFile, { schema })
