@@ -1,43 +1,92 @@
-# Welcome to React Router!
+# Electron + SolidJS + Solid Router + Vite Starter
 
-- 📖 [React Router docs](https://reactrouter.com/dev)
+A modern starter template for building desktop applications with Electron, SolidJS, Solid Router, and Vite, using the OXC toolchain for linting and formatting.
 
-## Development
+## Tech Stack
 
-Run the dev server:
+- **Electron** - Cross-platform desktop app framework
+- **SolidJS** - Reactive UI library
+- **Solid Router** - Routing for SolidJS
+- **Vite** - Fast build tool and dev server
+- **TypeScript** - Type safety
+- **Tailwind CSS** - Utility-first CSS framework
+- **OXC Toolchain** - Modern linting (oxlint) and formatting (oxc)
 
-```shellscript
-npm run dev
+## Getting Started
+
+### Prerequisites
+
+- Node.js 18+ 
+- npm or yarn or pnpm
+
+### Installation
+
+```bash
+npm install
 ```
 
-## Deployment
+### Development
 
-First, build your app for production:
+Run the app in development mode:
 
-```sh
-npm run build
+```bash
+npm run electron:dev
 ```
 
-Then run the app in production mode:
+This will:
+1. Start the Vite dev server
+2. Wait for it to be ready
+3. Launch Electron
 
-```sh
-npm start
+### Building
+
+Build the renderer and electron main process:
+
+```bash
+npm run build:all
 ```
 
-Now you'll need to pick a host to deploy it to.
+Build a distributable app:
 
-### DIY
+```bash
+npm run electron:build
+```
 
-If you're familiar with deploying Node applications, the built-in app server is
-production-ready.
+### Other Commands
 
-Make sure to deploy the output of `npm run build`
+- `npm run dev` - Start Vite dev server only (for web development)
+- `npm run build` - Build renderer only
+- `npm run lint` - Run oxlint
+- `npm run format` - Format code with oxc
+- `npm run typecheck` - Type check with TypeScript
 
-- `build/server`
-- `build/client`
+## Project Structure
 
-## Styling
+```
+.
+├── electron/          # Electron main process files
+│   ├── main.ts       # Main process entry point
+│   ├── preload.ts    # Preload script
+│   └── vite.config.ts # Electron build config
+├── src/              # SolidJS application source
+│   ├── pages/        # Route pages
+│   ├── App.tsx       # Root component with routes
+│   ├── index.tsx     # Application entry point
+│   └── index.html    # HTML template
+├── dist/             # Built renderer (output)
+├── dist-electron/    # Built electron files (output)
+└── release/          # Packaged app (output)
+```
 
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already
-configured for a simple default starting experience. You can use whatever CSS
-framework you prefer.
+## Features
+
+- ✅ Hot Module Replacement (HMR) in development
+- ✅ TypeScript support
+- ✅ Tailwind CSS for styling
+- ✅ OXC toolchain for linting and formatting
+- ✅ Electron Builder for packaging
+- ✅ Modern ES modules
+
+## License
+
+MIT

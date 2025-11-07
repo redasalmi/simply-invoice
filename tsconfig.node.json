@@ -4,7 +4,12 @@
 		"skipLibCheck": true,
 		"module": "ESNext",
 		"moduleResolution": "bundler",
-		"allowSyntheticDefaultImports": true
+		"allowSyntheticDefaultImports": true,
+		"strict": true,
+		"types": ["node"],
+		"outDir": "./dist-electron",
+		"rootDir": "./electron"
 	},
-	"include": ["vite.config.ts"]
+	"include": ["electron/**/*"],
+	"exclude": ["node_modules"]
 }

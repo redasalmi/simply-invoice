@@ -1,36 +1,27 @@
 {
-	"include": [
-		"./app/**/*",
-		"**/.server/**/*",
-		"**/.client/**/*",
-		".react-router/types/**/*"
-	],
 	"compilerOptions": {
+		"target": "ES2020",
 		"useDefineForClassFields": true,
+		"module": "ESNext",
+		"lib": ["ES2020", "DOM", "DOM.Iterable"],
+		"skipLibCheck": true,
+		"moduleResolution": "bundler",
 		"allowImportingTsExtensions": true,
-		"lib": ["DOM", "DOM.Iterable", "ES2022"],
-		"types": ["vite/client"],
-		"isolatedModules": true,
-		"esModuleInterop": true,
-		"jsx": "react-jsx",
-		"module": "ES2022",
-		"moduleResolution": "Bundler",
 		"resolveJsonModule": true,
-		"target": "ES2022",
+		"isolatedModules": true,
+		"noEmit": true,
+		"jsx": "preserve",
+		"jsxImportSource": "solid-js",
 		"strict": true,
 		"noUnusedLocals": true,
 		"noUnusedParameters": true,
 		"noFallthroughCasesInSwitch": true,
-		"allowJs": true,
-		"skipLibCheck": true,
-		"forceConsistentCasingInFileNames": true,
 		"baseUrl": ".",
 		"paths": {
-			"~/*": ["./app/*"]
+			"~/*": ["./src/*"]
 		},
-		"noEmit": true,
-		"rootDirs": [".", "./.react-router/types"],
-		"verbatimModuleSyntax": true
+		"types": ["vite/client"]
 	},
-	"references": [{ "path": "./tsconfig.node.json" }]
+	"include": ["src", "electron"],
+	"exclude": ["node_modules", "dist", "dist-electron"]
 }

@@ -1,0 +1,18 @@
+appId: com.electron.solid.app
+productName: Electron Solid App
+directories:
+  output: release
+files:
+  - dist/**/*
+  - dist-electron/**/*
+  - package.json
+main: dist-electron/main.js
+win:
+  target:
+    - nsis
+mac:
+  target:
+    - dmg
+linux:
+  target:
+    - AppImage
