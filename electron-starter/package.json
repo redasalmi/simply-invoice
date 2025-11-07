@@ -1,0 +1,32 @@
+{
+  "name": "electron-starter",
+  "version": "1.0.0",
+  "description": "Electron + Solid.js + Vite starter app",
+  "main": ".vite/build/main.js",
+  "scripts": {
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "make": "electron-forge make",
+    "lint": "oxlint .",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@electron-forge/cli": "^7.10.2",
+    "@electron-forge/maker-deb": "^7.10.2",
+    "@electron-forge/maker-rpm": "^7.10.2",
+    "@electron-forge/maker-squirrel": "^7.10.2",
+    "@electron-forge/maker-zip": "^7.10.2",
+    "@electron-forge/plugin-vite": "^7.10.2",
+    "electron": "^39.1.1",
+    "oxlint": "^1.26.0",
+    "typescript": "^5.9.3",
+    "vite-plugin-solid": "^2.11.10"
+  },
+  "dependencies": {
+    "@solidjs/router": "^0.15.3",
+    "solid-js": "^1.9.10"
+  }
+}
